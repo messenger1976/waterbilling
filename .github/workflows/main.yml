@@ -24,6 +24,7 @@ jobs:
           **/application/config/config.php
           **/application/config/database.php
           **/application/config/constant.php
+          **/application/config/**
           **/.buildpath/**
           .ftp-deploy-sync-state.json
           .git-ftp.log

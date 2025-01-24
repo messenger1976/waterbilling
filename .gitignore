@@ -13,8 +13,8 @@
 application/config/config.php
 application/config/database.php
 application/config/constant.php
-application/cache
 application/logs
+application/cache
 .git-ftp.log
 .htaccess
 error_log
