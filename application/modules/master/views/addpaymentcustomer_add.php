@@ -618,6 +618,8 @@ $('#btn_search_box').on('click', function(evt) {
 		}
 	});
 	$('#or_num').val('');
+	$('#deepmala').text('0.00');
+	$('#hideclass').hide();
 	setTimeout(hideSpinner, 1000); // Simulate loading for 3 seconds
 	
 });	
