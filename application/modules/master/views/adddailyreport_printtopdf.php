@@ -103,7 +103,7 @@
                     }
                     
                     echo '<tr>';
-                    echo '<td>'.$gdailytrans['or_number'].'</td><td>'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
+                    echo '<td>'.sprintf('%07d',$gdailytrans['or_number']).'</td><td>'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
                     <td align="right">'.number_format($gdailytrans['grand_total'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['reading_amount'],2).'</td>
                     <td align="right">0.00</td>

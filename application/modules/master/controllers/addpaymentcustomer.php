@@ -403,7 +403,8 @@ class addpaymentcustomer extends CI_Controller {
 
 		//extract($result);
 		//print_r($result);
-		echo $result[0]['doc_series_num'] + 1; 
+		$new_or_number = $result[0]['doc_series_num'] + 1;
+		echo sprintf('%07d',$new_or_number); 
 		 
    }
 

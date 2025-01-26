@@ -158,7 +158,7 @@
 														</td>
 													    <td><?php echo stripslashes($row['last_name'].', '.$row['first_name'].' '.$row['middle_name']); ?></td>
 														<td><?php echo stripslashes($row['month'].' '.$row['year']); ?></td>
-														<td><?php echo stripslashes($row['or_number']); ?></td>
+														<td><?php echo stripslashes(sprintf('%07d',$row['or_number'])); ?></td>
                                                         <td><?php echo stripslashes($row['oldmeter']); ?></td>
 														<td><?php echo stripslashes($row['aftermeter']); ?></td>
 														<!--<?php $consumed_units=$row['aftermeter']-$row['oldmeter'];?>-->

@@ -114,7 +114,7 @@
 													</thead>
 												  <tbody>  
 													<tr class="odd gradeX">
-													  <td align="left" valign="middle" bgcolor="#FFFFFF"><?php echo stripslashes($record['or_number']); ?></td>
+													  <td align="left" valign="middle" bgcolor="#FFFFFF"><?php echo stripslashes(sprintf('%07d',$record['or_number'])); ?></td>
 													  <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" class="forgotpassword">
 														<b>Customer-id: </b><?php echo stripslashes($record['customer_id']); ?><br/>
 														<b>Customer Name: </b><?php echo stripslashes(strtoupper($record['name'])); ?><br/>
