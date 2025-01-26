@@ -32,7 +32,7 @@
 		<!-- #GOOGLE FONT -->
 		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
 	</head>
-	<body class="animated fadeInDown">
+	<body>
 
 		<!--<header id="header">
 
@@ -114,7 +114,7 @@
         <!--================================================== -->	
 
 		<!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
-		<script src="<?php echo base_url();?>js/plugin/pace/pace.min.js"></script>
+		<!--<script src="<?php echo base_url();?>js/plugin/pace/pace.min.js"></script>-->
 
 	    <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
 	    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
