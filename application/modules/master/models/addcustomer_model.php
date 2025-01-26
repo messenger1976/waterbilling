@@ -208,6 +208,7 @@ class addcustomer_model extends CI_Model {
 						'status' => $this->input->post('status'),
 						'classification' => $this->input->post('classification'),
 						'account_type' => $this->input->post('account_type'),
+						'membership_status' => $this->input->post('membership_status'),
 						'special_priviledge' => $this->input->post('special_priviledge'),
 						'create_date' => date('Y-m-d'),
 						'create_date_time' => date('Y-m-d H:i:s'),
@@ -250,7 +251,8 @@ class addcustomer_model extends CI_Model {
 						'classification' => $this->input->post('classification'),
 						'account_type' => $this->input->post('account_type'),
 						'special_priviledge' => $this->input->post('special_priviledge'),
-						'create_date' => date('Y-m-d'),
+						'membership_status' => $this->input->post('membership_status'),
+						'update_date_time' => date('Y-m-d H:i:s'),
 						);
 		$this->db->where('id',$id);
 		$result = $this->db->update($this->table_name, $set_data); 

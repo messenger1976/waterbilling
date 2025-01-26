@@ -1,24 +1,3 @@
-<!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-
-		<title> SmartAdmin </title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-			
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<!-- FAVICONS -->
-		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-
-		<!-- GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-	</head>
-	
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -140,6 +119,18 @@
 																	</select>
 																	<?php echo form_error('acount_group'); ?>
 																</div> */?>
+															</div>
+														</div>
+														<div class="form-group col-lg-6">
+															<div class="col-lg-12 controls">
+																<div class="form-group">
+																	<span class="input-group-addon"><i class="icon-chevron-down"></i><strong> Membership Status: <span style="color:red;font-weight: bold;">*</span> </strong></span>
+																	<select name="membership_status" id="membership_status" class="form-control" required>
+																		<option value="1" <?php if($record['membership_status']=='1'){ ?> selected <?php } ?>>Member</option>
+																		<option value="0" <?php if($record['membership_status']=='0'){ ?> selected <?php } ?>>Non-Member</option>
+																	</select>
+																	<?php echo form_error('membership_status:'); ?>
+																</div>
 															</div>
 														</div>
 														<div class="form-group col-lg-6">

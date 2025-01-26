@@ -1,24 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-		<title> SmartAdmin </title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-			
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<!-- FAVICONS -->
-		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-
-		<!-- GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-	</head>
-	
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -52,19 +33,37 @@
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
-								<h5> My Income <span class="txt-color-blue">$47,171</span></h5>
+							<?php 
+							     $income1 = $this->my_model->get_income_metercustomer();
+							     extract($income1);
+								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 extract($income2);
+								 $intotal = $total1 + $total2;
+							?>
+								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
+							<?php
+							     $expense1 = $this->my_model->get_outcome_expenses();
+							     extract($expense1);
+								 $expense2 = $this->my_model->get_outcome_payroll();
+								 extract($expense2);
+								 $extotal = $extotal1 + $extotal2;
+							?>
 							<li class="sparks-info">
-								<h5> Site Traffic <span class="txt-color-purple"><i class="fa fa-arrow-circle-up"></i>&nbsp;45%</span></h5>
+								<h5> Expense <span class="txt-color-purple">PHP <?php print_r(number_format($extotal,2));?></span></h5>
 								<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
+							<?php 
+							     $total_customer = $this->my_model->total_customer();
+							     extract($total_customer); 
+							?>
 							<li class="sparks-info">
-								<h5> Site Orders <span class="txt-color-greenDark"><i class="fa fa-shopping-cart"></i>&nbsp;2447</span></h5>
+								<h5> Total Customer <span class="txt-color-greenDark">&nbsp;<?php print_r($count_id);?></span></h5>
 								<div class="sparkline txt-color-greenDark hidden-mobile hidden-md hidden-sm">
 									
 								</div>
@@ -100,11 +99,13 @@
 									        <table width="100%" border="0" cellpadding="5" cellspacing="5" bgcolor="#dcdcdc">
 												  <thead>
 													<tr class="table-heading">
-													  <th width="6%" align="left" valign="middle" bgcolor="#ececec">S No</th>
-													  <th width="22%" align="left" valign="middle" bgcolor="#ececec">Customer ID</th>
+													  <th width="6%" align="left" valign="middle" bgcolor="#ececec">OR #</th>
+													  <th width="22%" align="left" valign="middle" bgcolor="#ececec">Customer Info</th>
 													  <th width="16%" align="left" valign="middle" bgcolor="#ececec">Meter Details</th>
-													  <th width="12%" align="left" valign="middle" class="center" bgcolor="#ececec">Per Unit</th>				  
+													  <th width="12%" align="left" valign="middle" class="center" bgcolor="#ececec">Current Bill</th>	
+													  <th width="12%" align="left" valign="middle" class="center" bgcolor="#ececec">SC Discount</th>			  
 													  <th width="8%" align="left" valign="middle" bgcolor="#ececec">Amount</th>
+													  <th width="8%" align="left" valign="middle" bgcolor="#ececec">Penalty</th>
 													  <th width="8%" align="left" valign="middle" class="center" bgcolor="#ececec">Balance</th>
 													  <th width="9%" align="left" valign="middle" class="center" bgcolor="#ececec">Total</th>
 													  <th width="8%" align="left" valign="middle" class="center" bgcolor="#ececec">Status</th>
@@ -113,17 +114,25 @@
 													</thead>
 												  <tbody>  
 													<tr class="odd gradeX">
-													  <td align="left" valign="middle" bgcolor="#FFFFFF">1</td>
+													  <td align="left" valign="middle" bgcolor="#FFFFFF"><?php echo stripslashes($record['or_number']); ?></td>
 													  <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" class="forgotpassword">
-														<b>Employee-id: </b><?php echo stripslashes($record['customer_id']); ?><br/>
+														<b>Customer-id: </b><?php echo stripslashes($record['customer_id']); ?><br/>
+														<b>Customer Name: </b><?php echo stripslashes(strtoupper($record['name'])); ?><br/>
+														<b>Zone: </b><?php echo stripslashes(strtoupper($record['zonename'])); ?><br/>
 													  </td>
 													  <td height="30" align="left" valign="middle" bgcolor="#FFFFFF" class="forgotpassword">
-														<b>Aqrin Hore:</b><?php echo stripslashes($record['oldmeter']); ?><br/>
-														<b>Aqrin dambe :</b> <?php echo stripslashes($record['aftermeter']); ?><br/>
-														<b>Farqiga :</b> <?php echo stripslashes($record['consumedunits']); ?><br/>
+														<b>Previous Reading : </b><?php echo stripslashes($record['oldmeter']); ?><br/>
+														<b>Current Reading : </b> <?php echo stripslashes($record['aftermeter']); ?><br/>
+														<b>Consumed : </b> <?php echo stripslashes($record['consumedunits']); ?><br/>
 													  </td>				  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" >
-														<b>Per Unit :</b> <?php echo stripslashes($record['per_unit']); ?><br/>					
+														<b>Amount :</b> <?php echo stripslashes($record['unit_price']); ?><br/>					
+													  </td>
+													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
+														<?php echo stripslashes($record['sc_discount']); ?>
+													  </td>
+													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
+														<?php echo stripslashes($record['penalty']-$record['amount']); ?>
 													  </td>
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
 														<?php echo stripslashes($record['amount']); ?>
@@ -132,7 +141,7 @@
 													    <?php echo stripslashes($record['balance']); ?>
 													   </td>				  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">
-														<?php echo $record['total']; ?><br>			  
+														<?php echo number_format($record['grand_total'],2); ?><br>			  
 													  </td>
 													 <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">
 														<?php if($record['status'] == '1'){ echo "Paid";}if($record['status'] == '0'){echo "Un-Paid";}?>		  
