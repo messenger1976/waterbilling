@@ -92,7 +92,7 @@
 															?></b><br/><br/>
 										<span class="name">Paid Date : 	<?php echo date("M d, Y ", strtotime($record['date'])); ?></span>
 										<span class="name">Cashier/Teller : 	<?php echo strtoupper($record['employee_name']); ?></span><br/>
-										<span class="name">Admin Address : 	<?php echo (stripslashes(str_replace('\n','',$address['content']))); ?></span>
+										<span class="name">Company Address : 	<?php echo (stripslashes(str_replace('\n','',$address['content']))); ?></span>
 									</div>
 									
 									<div class="image">
