@@ -84,7 +84,7 @@
 									
 									<div class="widget-body">
 				
-										<form class="form-horizontal" role="form" name="myform" id="myform" method="post" action="" enctype="multipart/form-data">
+										
 										  	
 											<?php if($msg != ''){?>
 											<div class="alert alert-block alert-success">
@@ -123,22 +123,29 @@
 															<input type="submit" class="form-control"  id="btn_search_box" name="btn_search_box" id="btn_search_box" value="search" style=" width: auto;">
 															
 													</div>
+
+
+
+													<form class="form-horizontal" role="form" name="myform" id="myform" method="POST" action="" enctype="multipart/form-data">
+
 														<div id="names">
 														</div>	
+														<div class="col-xs-12" id="meterincomeDiv" style="margin-top: 13px; margin-bottom:20px;"></div> 
+
 														<input type="hidden" name="customer_id" id="customer_id" value="">
 														<input type="hidden" name="fullname" id="fullname" value="">
 														<input type="hidden" name="status_id" id="status_id" value="<?php echo $this->input->post('status_id'); ?>">
-														<div class="col-xs-12" id="meterincomeDiv" style="margin-top: 13px; margin-bottom:20px;"></div> 
+														
 														<div style="clear:both"></div>
 														
 														<div id="hideclass" style="display:none; padding:20px; box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.75);    margin: 14px;" >
-														<div class="form-group" style="width : 60% ;">
-															<label class="col-md-4 control-label" for="or_num" style="text-align:right;"> OR # : (<span style="color:red;font-style:italic;">* required</span>)</label>
-															<div class="col-md-4">
-																<input type="text" class="form-control text-input" id="or_num" name="or_num" value="<?php echo $this->input->post('or_num'); ?>" required/>
-																<?php echo form_error('or_num'); ?>
+															<div class="form-group" style="width : 60% ;">
+																<label class="col-md-4 control-label" for="or_num" style="text-align:right;"> OR # : (<span style="color:red;font-style:italic;">* required</span>)</label>
+																<div class="col-md-4">
+																	<input type="text" class="form-control text-input" id="or_num" name="or_num" value="<?php echo $this->input->post('or_num'); ?>" required/>
+																	<?php echo form_error('or_num'); ?>
+																</div>
 															</div>
-														</div>
 														
 
 														  <div id="total_setting_1">	
@@ -291,7 +298,7 @@
 																</div>
 															</div>
                                                         	<div class="form-group" style=" width: 60%;">
-																<label class="col-md-4 control-label" style="text-align:right;"> Tendered Amount :</label>
+																<label class="col-md-4 control-label" style="text-align:right;"> Tendered Amount : (<span style="color:red;font-style:italic;">* required</span>)</label>
 																<div class="col-md-4">
 																	<input  type="text"  class="form-control text-input"  id="pay_amount" name="pay_amount"  value="0.00" required/>
 																	<?php echo form_error('pay_amount'); ?>
@@ -320,7 +327,7 @@
 																	<div class="row">
 																		<div class="col-md-12">
 																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" class="btn btn-default">Cancel</a>
-																			<input type="submit" class="btn btn-primary" name="add" id="add" value="Add">
+																			<input type="submit" class="btn btn-primary" name="add" id="add" value="Add" disabled>
 																		</div>
 																	</div>
 																</div>
@@ -331,7 +338,7 @@
 																	<div class="row">
 																		<div class="col-md-12">
 																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" class="btn btn-default">Cancel</a>
-																			<input type="submit" class="btn btn-primary" id="total_add" name="total_add" value="Add">
+																			<input type="submit" class="btn btn-primary" id="total_add" name="total_add" value="Add" disabled>
 																		</div>
 																	</div>
 																</div>
@@ -344,12 +351,12 @@
 													    	    
 
 														
-															
+														</form>	
 													</fieldset>
 													    
 													
 														
-										</form>
+										
 										
 										
 									</div>
@@ -619,6 +626,7 @@ $('#btn_search_box').on('click', function(evt) {
 	});
 	$('#or_num').val('');
 	$('#deepmala').text('0.00');
+	$('#deepmala_total').text('0.00');
 	$('#hideclass').hide();
 	setTimeout(hideSpinner, 1000); // Simulate loading for 3 seconds
 	
@@ -696,20 +704,38 @@ $(document).on('click','.pay_button',function(e){
 
 
 $(document).on('click','.total_pay',function(e){
+	
 	var total = $('#checkbox_cal').val();
 	
 	var customer = $('#customer_id').val();
 	$('#customer_id').val(customer);
 	$('#deepmala_total').text(total);
-	$('#total_total_amount').val(total);
-	$("#paid_total_amount").val(0);
+	$('#total_total_amount').val(0);
+	$("#paid_total_amount").val(total);
 	$("#grand_total").val(total);
 	$("#total_setting_1").hide();
 	$("#total_setting_2").show();
 	$("#total_settin_pay").show();
 	$("#hideclass").show();
 	$(".pay_setting_1").hide();
-	
+
+	$('#vat_percent').val('');
+	$('#vat_amount').val('0.00');
+	$('#leaking_percent').val('');
+	$('#leaking_amount').val('0.00');
+	$('#pay_amount').val('0.00');
+	$('#change_amount').val('0.00');
+
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/get_or_number/',
+		success: function(data) {
+			$('#or_num').val(data);
+		}
+	});
+
+	//$('#year').val(year);
+	//checkValues();
 });
 
 $('#aftermeter').on('blur', function() {
@@ -781,8 +807,15 @@ $('#leaking_percent').on('blur', function() {
 $('#pay_amount').on('blur', function() {
 	var change_amount = $("#grand_total").val() - $(this).val();
 	$('#change_amount').val(change_amount.toFixed(2));
-	
+	if($(this).val()>0 && $(this).val()>=$("#grand_total").val()){
+		$("#add").prop("disabled", false);
+		$("#total_add").prop("disabled", false);
+	}else{
+		$("#add").prop("disabled", true);
+		$("#total_add").prop("disabled", true);
+	}
 });	
+
 
 $('#add').click(function(evt){
 	var name = $('#fullname').val();
@@ -802,7 +835,9 @@ $('#add').click(function(evt){
 				//window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
 	}
 });
-$('#total_add').click(function(evt){
+$('#total_add').on('click',function(evt){
+	//evt.preventDefault();
+	
 	var name = $('#fullname').val();
 	var address = $('#address').val();
 	var current_reading = $('#current_reading').val();
@@ -813,12 +848,18 @@ $('#total_add').click(function(evt){
 	var unit = $('#unit_d').val();
 	var pay_amount = $('#pay_amount').val();
 	var invoi_id = $('#time_format').val();
-	var currency = $('#currency').val(); alert(customer); alert(currency); alert(pay_amount);
+	var currency = $('#currency').val(); 
+
+	//$('#myform').append($("#meterincomeDiv").html());
+	//alert(customer); 
+	//alert(currency); 
+	//alert(pay_amount);
 	if(customer != '' && currency != '' && pay_amount != '' ){
 				var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt_single/'+customer+'/'+month+'/'+year+'/'+name+'/'+current_reading+'/'+oldmeter+'/'+unit+'/'+pay_amount+'/'+invoi_id+'/'+address+'/'+currency;
 				//var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer;
 				//window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
 	}
+	//$('#myform').submit();
 });
 
 $("#transdate").datepicker({
@@ -839,7 +880,23 @@ $("#transdate").datepicker({
 	$('.text-input').on('focus', function() {
   		$(this).select();
 	});
+
+	function checkValues() {
+		// Get all inputs with the name 'myArray[]'
+		const inputs = document.querySelectorAll('input[name="checkbox[]"]');
+		
+		// Collect their values into an array
+		const values = Array.from(inputs).map(input => input.value);
+		
+		// Log the values
+		console.log(values);
+		
+		// Display values on the page
+		alert("Array values: " + values.join(", "));
+	}
+
 </script>
+
 <style>
 #names .form-group{ width: 70%;}
 </style>

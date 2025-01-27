@@ -469,33 +469,23 @@ class addcustomer_model extends CI_Model {
 		return $result;		
 	}	
 	
-	public function get_addcustomer_unpaid_records($customer_type,$zone,$fromdate,$todate){ 
+	public function get_addcustomer_unpaid_records($membership_status,$zone,$fromdate,$todate){ 
         $this->db->select("*");
 		$this->db->from($this->table_name);
-		if($customer_type =='monthlycustomer'){
-			$this->db->join($this->table_monthly,$this->table_monthly.'.customer_id='.$this->table_name.'.customer_id');
-			$this->db->group_by($this->table_monthly.'.id');
-			if($fromdate !=''){
-			$this->db->where($this->table_monthly.".create_date_time >= ",date('Y-m-d', strtotime($fromdate)));
-			}		
-			if($todate !=''){
-				$this->db->where($this->table_monthly.".create_date_time <= ",date('Y-m-d', strtotime($todate)));
-			}
-			$this->db->where($this->table_monthly.'.status ',0);
-		}	
-		if($customer_type =='metercustomer'){
-			$this->db->join($this->table_meter,$this->table_meter.'.customer_id='.$this->table_name.'.customer_id');
-			$this->db->group_by($this->table_meter.'.id');
-			if($fromdate !=''){
-			$this->db->where($this->table_meter.".create_date_time >= ",date('Y-m-d', strtotime($fromdate)));
-			}		
-			if($todate !=''){
-				$this->db->where($this->table_meter.".create_date_time <= ",date('Y-m-d', strtotime($todate)));
-			}
-			$this->db->where($this->table_meter.'.status',0);
-		}	
-		if($customer_type !=''){
-			$this->db->where($this->table_name.'.customer_type',$customer_type);
+			
+		
+		$this->db->join($this->table_meter,$this->table_meter.'.customer_id='.$this->table_name.'.customer_id');
+		$this->db->group_by($this->table_meter.'.id');
+		if($fromdate !=''){
+		$this->db->where($this->table_meter.".create_date_time >= ",date('Y-m-d', strtotime($fromdate)));
+		}		
+		if($todate !=''){
+			$this->db->where($this->table_meter.".create_date_time <= ",date('Y-m-d', strtotime($todate)));
+		}
+		$this->db->where($this->table_meter.'.status',0);
+		
+		if($membership_status !=''){
+			$this->db->where($this->table_name.'.membership_status',$membership_status);
 		}	
 		if($zone !=''){
 			$this->db->where($this->table_name.'.zone',$zone);

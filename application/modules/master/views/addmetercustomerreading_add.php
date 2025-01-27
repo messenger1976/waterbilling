@@ -558,7 +558,7 @@ $('#current_meter').on('blur', function() {
 				}
 				total_amount = multiprice - discount;
 				amount_total_penalty = 0;
-				console.log('SP:'+$('#special_priviledge').val());
+				//console.log('SP:'+$('#special_priviledge').val());
 				if($('#special_priviledge').val()==='0'){
 					amount_total_penalty = (total_amount * 10)/100;
 					amount_total_penalty = amount_total_penalty + total_amount;

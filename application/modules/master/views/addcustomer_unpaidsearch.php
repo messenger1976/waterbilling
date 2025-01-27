@@ -1,24 +1,3 @@
-<!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-
-		<title> SmartAdmin </title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-			
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<!-- FAVICONS -->
-		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-
-		<!-- GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-	</head>
-	
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -52,45 +31,33 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = mysql_query('SELECT SUM(pay_amount) FROM `tbl_addmetercustomer`');
-								 while($testing = mysql_fetch_array($income1)){
-									$mark=$testing['SUM(pay_amount)'];
-                                }
-							     $income2 = mysql_query('SELECT SUM(paidamount) FROM `tbl_monthlycustomer`');
-								 while($testing2 = mysql_fetch_array($income2)){
-									$mark2=$testing2['SUM(paidamount)'];
-                                }
-								$intotal = $mark + $mark2;
+							     $income1 = $this->my_model->get_income_metercustomer();
+							     extract($income1);
+								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 extract($income2);
+								 $intotal = $total1 + $total2;
 							?>
-								<h5> My Income <span class="txt-color-blue">$<?php print_r($intotal);?></span></h5>
+								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php
-							     
-								 $expense1 = mysql_query('SELECT SUM(total) FROM `tbl_addexpenses`');
-								 while($testinge1 = mysql_fetch_array($expense1)){
-									$extotal1=$testinge1['SUM(total)'];
-                                }
-							     $expense2 = mysql_query('SELECT SUM(total) FROM `tbl_payrols`');
-								 while($testinge2 = mysql_fetch_array($expense2)){
-									$extotal2=$testinge2['SUM(total)'];
-                                }
+							     $expense1 = $this->my_model->get_outcome_expenses();
+							     extract($expense1);
+								 $expense2 = $this->my_model->get_outcome_payroll();
+								 extract($expense2);
 								 $extotal = $extotal1 + $extotal2;
-								 
 							?>
 							<li class="sparks-info">
-								<h5> My Expense <span class="txt-color-purple">$<?php print_r($extotal);?></span></h5>
+								<h5>Expense <span class="txt-color-purple">PHP <?php print_r(number_format($extotal,2));?></span></h5>
 								<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php 
-							     $addcusto = mysql_query('SELECT COUNT(id) FROM `tbl_addcustomer`');
-								 while($addcusto_row = mysql_fetch_array($addcusto)){
-									$count_id=$addcusto_row['COUNT(id)'];
-                                }
+							     $total_customer = $this->my_model->total_customer();
+							     extract($total_customer); 
 							?>
 							<li class="sparks-info">
 								<h5> Total Customer <span class="txt-color-greenDark">&nbsp;<?php print_r($count_id);?></span></h5>
@@ -146,11 +113,11 @@
 													<div class="form-group col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group"> 
-																<span class="input-group-addon"><i class="icon-user"></i><strong>SelectCustomer Type: </strong></span>
-																<select class="form-control" name="customer_type" id="customer_type" required>
-																	<option value="">--Select--</option>
-																	 <option value="monthlycustomer">monthlycustomer</option>
-																	  <option value="metercustomer">metercustomer</option>
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Membership Status: </strong></span>
+																<select class="form-control" name="membership_status" id="membership_status" required>
+																	<option value="">--All--</option>
+																	 <option value="1">Member</option>
+																	  <option value="0">Non-Member</option>
 																 </select>
 															</div>
 														</div>
@@ -160,7 +127,7 @@
 															<div class="form-group"> 
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Zone: </strong></span>
 																<select class="form-control" name="zone" id="zone">
-																<option value="">--Select--</option>
+																<option value="">--All--</option>
 																	<?php foreach($zone as $key => $value){ ?>
 																	 <option value="<?php echo $value['id'];?>"><?php echo $value['zone'];?></option>
 																	<?php } ?>
@@ -468,7 +435,7 @@ $(document).ready(function(){
 	
 		function getaddcustomer_unpaid(){
 			
-			var customer_type = $("#customer_type").val();
+			var membership_status = $("#membership_status").val();
 			var zone = $("#zone").val();
 			var fromdate = $("#fromdate").val();
 			var todate = $("#todate").val();
@@ -478,7 +445,7 @@ $(document).ready(function(){
 				type : "POST",
 				url	: '<?php echo ADMIN_URL;?>addcustomer/getaddcustomersunpaidsearch',
 				//data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate+",
-				data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate,
+				data	: "membership_status="+membership_status+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate,
 				complete: function(data){
 					var op = data.responseText.trim();
 					//alert(op);

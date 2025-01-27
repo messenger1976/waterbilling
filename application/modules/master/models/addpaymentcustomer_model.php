@@ -141,8 +141,7 @@ class addpaymentcustomer_model extends CI_Model {
 				FROM  `tbl_addmetercustomer` am
 				LEFT JOIN  `tbl_addcustomer` ac ON ac.customer_id = am.customer_id
 				LEFT JOIN  `tbl_addcustomer_reading` tac ON am.customer_id = tac.customer_id
-				WHERE  ac.customer_id = '$id' OR ac.mobile1 = '$id' OR ac.mobile2 = '$id' 
-				OR ac.email_id = '$id'
+				WHERE  ac.customer_id = '$id'
                 ORDER BY addmetercustomer_id DESC LIMIT 0,1
 				";
 		$query = $this->db->query($sql);
@@ -197,8 +196,7 @@ class addpaymentcustomer_model extends CI_Model {
 				LEFT JOIN  `tbl_months` tm ON ac.month = tm.month_id
 				LEFT JOIN  `tbl_billing_period` bp ON ac.bp_id = bp.bp_id
 				WHERE ac.month = tm.month_id
-                AND  am.customer_id = '$id' OR am.mobile1 = '$id' OR am.mobile2 = '$id' 
-				OR am.email_id = '$id' 
+                AND  am.customer_id = '$id'
 				ORDER BY meter_id ASC LIMIT 0,10
 				";
 		$query = $this->db->query($sql);
@@ -243,8 +241,7 @@ class addpaymentcustomer_model extends CI_Model {
 				FROM  `tbl_addcustomer_reading` ac
 				LEFT JOIN  `tbl_addcustomer` am ON ac.customer_id = am.customer_id
 				LEFT JOIN  `tbl_months` tm ON ac.month = tm.month_id
-				WHERE  am.customer_id = '$id' OR am.mobile1 = '$id' OR am.mobile2 = '$id' 
-				OR am.email_id = '$id'
+				WHERE  am.customer_id = '$id'
 				ORDER BY meter_id DESC LIMIT 0,1 
 				";
 		$query = $this->db->query($sql);
@@ -382,7 +379,7 @@ class addpaymentcustomer_model extends CI_Model {
 		
 		
 		$consumedunits=$this->input->post('current_reading')-$this->input->post('oldmeter');
-		$meterdollar = $this->get_dollar_value();
+		//$meterdollar = $this->get_dollar_value();
 		//$amount=$meterdollar['per_unit']*$consumedunits;
 		$amount=$this->input->post('paid_total_amount');
 		$total_amount = $amount + $balance;
@@ -398,33 +395,33 @@ class addpaymentcustomer_model extends CI_Model {
 		$remaining = $allamount - $pay_amount;
 		
 	    $set_data = array(
-						'customer_id' => trim($id),
-						'ledger_id' => $this->input->post('ledger_id'),
-						'invoice_id' => $this->input->post('time_format'),
-						'name' => $this->input->post('fullname'),
-						'oldmeter' => $this->input->post('oldmeter'),
-						'aftermeter' => $this->input->post('current_reading'),
-						'per_unit' => $this->input->post('paid_total_amount'),
-						'consumedunits' => $consumedunits,
-						'amount' => $this->input->post('paid_total_amount'),
-					    'balance' => $remaining,
-					    'total' => $allamount,
-						'pay_amount' => $this->input->post('pay_amount'),
-						'currency' => $this->input->post('currency'),
-						'month' => $this->input->post('month'),
-						'year' => $this->input->post('year'),
-						'status' => $this->input->post('status_id'),
-						'or_number' => $this->input->post('or_num'),
-						'vat_percent' => $this->input->post('vat_percent'),
-						'vat_amount' => $this->input->post('vat_amount'),
-						'leaking_percent' => $this->input->post('leaking_percent'),
-						'leaking_amount' => $this->input->post('leaking_amount'),
-						'grand_total' => $this->input->post('grand_total'),
-						'date' => date('Y-m-d',$trans_date),
-						'create_date_time' => date('Y-m-d H:i:s'),
-						'userid' => $this->session->userdata('userid'),
-						'username' => $this->session->userdata('username'),
-					);
+			'customer_id' => trim($id),
+			'ledger_id' => $this->input->post('ledger_id'),
+			'invoice_id' => $this->input->post('time_format'),
+			'name' => $this->input->post('fullname'),
+			'oldmeter' => $this->input->post('oldmeter'),
+			'aftermeter' => $this->input->post('current_reading'),
+			'per_unit' => $this->input->post('paid_total_amount'),
+			'consumedunits' => $consumedunits,
+			'amount' => $this->input->post('paid_total_amount'),
+			'balance' => $remaining,
+			'total' => $allamount,
+			'pay_amount' => $this->input->post('pay_amount'),
+			'currency' => $this->input->post('currency'),
+			'month' => $this->input->post('month'),
+			'year' => $this->input->post('year'),
+			'status' => $this->input->post('status_id'),
+			'or_number' => $this->input->post('or_num'),
+			'vat_percent' => $this->input->post('vat_percent'),
+			'vat_amount' => $this->input->post('vat_amount'),
+			'leaking_percent' => $this->input->post('leaking_percent'),
+			'leaking_amount' => $this->input->post('leaking_amount'),
+			'grand_total' => $this->input->post('grand_total'),
+			'date' => date('Y-m-d',$trans_date),
+			'create_date_time' => date('Y-m-d H:i:s'),
+			'userid' => $this->session->userdata('userid'),
+			'username' => $this->session->userdata('username'),
+		);
 		$result = $this->db->insert($this->table_name, $set_data); //print_r($result1); exit;
 		// save data(first entry) on transaction table
 		$lastId = $this->db->insert_id(); 
@@ -437,90 +434,85 @@ class addpaymentcustomer_model extends CI_Model {
 
 
 		$set_data2 = array(
-						'tableName' => 'addmetercustomer',
-						'transaction_id' => $lastId,
-						'ledger_id' => $this->input->post('ledger_id'),
-						'ledger_id_for' => 'customer_id',
-						'debit' => $this->input->post('grand_total'),//$allamount,
-					    'date' => date('Y-m-d',$this->input->post('trans_date')),
-					    'create_date_time' => date('Y-m-d H:i:s'),
-					    'update_date_time' => date('Y-m-d H:i:s'),
-					);
+			'tableName' => 'addmetercustomer',
+			'transaction_id' => $lastId,
+			'ledger_id' => $this->input->post('ledger_id'),
+			'ledger_id_for' => 'customer_id',
+			'debit' => $this->input->post('grand_total'),//$allamount,
+			'date' => date('Y-m-d',$this->input->post('trans_date')),
+			'create_date_time' => date('Y-m-d H:i:s'),
+			'update_date_time' => date('Y-m-d H:i:s'),
+		);
 		$result2 = $this->db->insert($this->table_transactions, $set_data2); //print_r($result2); //exit;
-		// save data(second entry) on transaction table
-		/*$set_data3 = array(
-						'tableName' => 'addmetercustomer',
-						'transaction_id' => $lastId,
-						'ledger_id' => $this->input->post('ledger_id'),
-						'ledger_id_for' => 'ledger_id',
-		                'credit' => mysql_real_escape_string($this->input->post('pay_amount')),//$allamount,
-					    'date' => date('Y-m-d',strtotime($this->input->post('date'))),
-					    'create_date_time' => date('Y-m-d H:i:s'),
-					    'update_date_time' => date('Y-m-d H:i:s'),
-					);
-		$result3 = $this->db->insert($this->table_transactions, $set_data3); //print_r($result3); exit;*/
-		//print_r($result3);
+		
 		return $result2;
 	}
 	
 	/** In Function Add records for select table **/
 	public function add_record_multiple($id){
+		$trans_date = strtotime($this->input->post('transdate'));
+		$allamount = $this->input->post('paid_total_amount');
 		
-		        //$del_id = $_POST['checkbox'][$id];
-				//print_r($del_id);
-				$customer_id = $_POST['customer_id_next'];
-				$name = $_POST['fullname'];
-				$oldmeter = $_POST['previousreading_'.$id];
-				//print_r($oldmeter);
-				$aftermeter = $_POST['reading_'.$id];
-				$consumedunits = $_POST['consumedunit_'.$id];
-				$per_unit = $_POST['unit_d'];
-				$amount = $_POST['prsentamount_'.$id];
-				$balance = '0';
-				$pay_amount = $_POST['prsentamount_'.$id];
-				$total = $_POST['prsentamount_'.$id];
-				$currency = $_POST['currency'];
-				$month = $_POST['monthid_'.$id];
-				$year =  $_POST['year_'.$id];
-				$status = $_POST['status_'.$id];
-				$date = date('Y-m-d');
-				$create_date_time = date('Y-m-d H:i:s');
-				$update_date_time = date('Y-m-d H:i:s');
-				
-				 
+		$pay_amount = $this->input->post('pay_amount');
+		$remaining = $allamount - $pay_amount;
+		
+		$del_id = $_POST['checkbox'][$id];
+		
+		$customer_id = $_POST['customer_id_next'];
+		$name = $_POST['fullname'];
+		$oldmeter = $_POST['previousreading_'.$id];
+		
+		$aftermeter = $_POST['reading_'.$id];
+		$consumedunits = $_POST['consumedunit_'.$id];
+		$per_unit = $_POST['unit_price_'.$id];
+		
+		$currency = $_POST['currency'];
+		$month = $_POST['monthid_'.$id];
+		$year =  $_POST['year_'.$id];
+		$status = $_POST['status_'.$id];
+		//$date = date('Y-m-d');
+		$create_date_time = date('Y-m-d H:i:s');				 
 			
-			$set_data = array(
-						'customer_id' => $customer_id,
-						'ledger_id'  => $this->input->post('ledger_id'),
-						'invoice_id' => $this->input->post('time_format'),
-						'name' => $name,
-						'oldmeter' => $oldmeter,
-						'aftermeter' => $aftermeter,
-						'consumedunits' => $consumedunits,
-						'per_unit' => $per_unit,
-						'amount' => $amount,
-					    'balance' => $balance,
-						'pay_amount' => $pay_amount,
-					    'total' => $total,
-						'currency' => $currency,
-						'month' => $month,
-						'year' => $year,
-						'status' => $status,
-						'date' => $date,
-						'create_date_time' => $create_date_time,
-						'update_date_time' => $update_date_time,
-					); //print_r($set_data); exit;
+		$set_data = array(
+			'customer_id' => $customer_id,
+			'ledger_id'  => $this->input->post('ledger_id'),
+			'invoice_id' => $this->input->post('time_format'),
+			'name' => $name,
+			'oldmeter' => $oldmeter,
+			'aftermeter' => $aftermeter,
+			'consumedunits' => $consumedunits,
+			'per_unit' => $per_unit,
+			'amount' => $_POST['prsentamount_'.$id],
+			'balance' => $this->input->post('change_amount'),
+			'pay_amount' => $pay_amount,
+			'total' => $allamount,
+			'currency' => $currency,
+			'month' => $month,
+			'year' => $year,
+			'status' => $status,
+			'or_number' => $this->input->post('or_num'),
+			'vat_percent' => $this->input->post('vat_percent'),
+			'vat_amount' => $this->input->post('vat_amount'),
+			'leaking_percent' => $this->input->post('leaking_percent'),
+			'leaking_amount' => $this->input->post('leaking_amount'),
+			'grand_total' => $this->input->post('grand_total'),
+			'date' => date('Y-m-d',$trans_date),
+			'create_date_time' => $create_date_time,
+			'userid' => $this->session->userdata('userid'),
+			'username' => $this->session->userdata('username'),
+		); 
 		$result = $this->db->insert($this->table_name, $set_data); 
 		$lastId = $this->db->insert_id(); 
 		$set_data2 = array(
-						'tableName' => 'addmetercustomer',
-						'transaction_id' => $lastId,
-						'ledger_id' => $this->input->post('tab_id'),//$customer_id,
-						'ledger_id_for' => 'customer_id',
-						'debit' => $pay_amount,//mysql_real_escape_string($this->input->post('pay_amount')),//$allamount,
-					    'create_date_time' => date('Y-m-d H:i:s'),
-					    'update_date_time' => date('Y-m-d H:i:s'),
-					);
+			'tableName' => 'addmetercustomer',
+			'transaction_id' => $lastId,
+			'ledger_id' => $this->input->post('ledger_id'),
+			'ledger_id_for' => 'customer_id',
+			'debit' => $this->input->post('grand_total'),//$allamount,
+			'date' => date('Y-m-d',$this->input->post('trans_date')),
+			'create_date_time' => date('Y-m-d H:i:s'),
+			'update_date_time' => date('Y-m-d H:i:s'),
+		);
 		$result2 = $this->db->insert($this->table_transactions, $set_data2); //print_r($result2); //exit;
 		// save data(second entry) on transaction table
 		/*$set_data3 = array(

@@ -302,11 +302,13 @@ class addcustomer extends CI_Controller {
 		 $this->load->view($this->paidsearchPage,$data);
 	}
 	
-	public function unpaidsearch($id)
+	public function unpaidsearch()
 	{ 
+		
 		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
+		
+		//$data['record'] = $this->my_model->get_single_record();
 		$data['zone'] = $this->my_model->get_zone();
-		$data['record'] = $this->my_model->get_single_record($id);
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->unpaidsearchPage,$data);
 	}
@@ -537,20 +539,20 @@ class addcustomer extends CI_Controller {
 	}	
 	
 	public function getaddcustomersunpaidsearch(){		//*****  Add Search records  *****//
-			$data['msg'] ='';
-			//echo '<pre>'; print_r($this->input->post('zone'));exit;
-			if($this->input->post('customer_type') ==''){
-				$selBox ='<h6><span style="color:red">Dear Admin Please select at least Customer Type</h6>' ;
-				echo $selBox;
-			}
-			if($this->input->post('customer_type') !=''){
-				$customer_type = $this->input->post('customer_type');
-				$zone = $this->input->post('zone');
-				$fromdate = $this->input->post('fromdate');
-				$todate = $this->input->post('todate');
-				$data['record'] = $this->my_model->get_addcustomer_unpaid_records($customer_type,$zone,$fromdate,$todate);
-				$this->load->view($this->addcustomerunpaidajax,$data);
-			}		
+		$data['msg'] ='';
+		//echo '<pre>'; print_r($this->input->post('zone'));exit;
+		if($this->input->post('fromdate') =='' || $this->input->post('todate') ==''){
+			$selBox ='<h6><span style="color:red">Please Enter From-Date and To-Date</h6>' ;
+			echo $selBox;
+		}else{
+			$membership_status = $this->input->post('membership_status');
+			$zone = $this->input->post('zone');
+			$fromdate = $this->input->post('fromdate');
+			$todate = $this->input->post('todate');
+			$data['record'] = $this->my_model->get_addcustomer_unpaid_records($membership_status,$zone,$fromdate,$todate);
+			$this->load->view($this->addcustomerunpaidajax,$data);
+		}
+				
 	}	
 	/** Status Change Function **/
 	/*public function contactStatus($id,$status){

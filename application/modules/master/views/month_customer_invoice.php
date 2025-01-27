@@ -126,15 +126,18 @@
 														<b>Previous Reading : </b><?php echo stripslashes($record['oldmeter']); ?><br/>
 														<b>Current Reading : </b> <?php echo stripslashes($record['aftermeter']); ?><br/>
 														<b>Consumed : </b> <?php echo stripslashes($record['consumedunits']); ?><br/>
-													  </td>				  
+													  </td>			
+													  <?php
+													  $penaltyamount = $record['per_unit']-$record['amount'];
+													  ?>	  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" >
 														<b>Amount :</b> <?php echo stripslashes(number_format($record['unit_price'],2)); ?><br/>
 														<b>SC Discount :</b> (<?php echo stripslashes(number_format($record['sc_discount'],2)); ?>)<br/>	
-														<b>Plus Penalty :</b> <?php echo stripslashes(number_format($record['per_unit']-$record['amount'],2)); ?><br/>					
+														<b>Plus Penalty :</b> <?php echo stripslashes(number_format($penaltyamount,2)); ?><br/>					
 													  </td>
 													  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
-														<?php echo stripslashes(number_format($record['amount'],2)); ?>
+														<?php echo stripslashes(number_format($record['amount']+$penaltyamount,2)); ?>
 													  </td>
 													  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="center">
@@ -158,11 +161,12 @@
 							
 
 					</div>
-
+					
 					<!-- end row -->
 
 				</section>
 				<!-- end widget grid -->
+				<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" class="btn btn-primary">Back</a>
 
 			</div>
 			

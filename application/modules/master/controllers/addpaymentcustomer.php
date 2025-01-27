@@ -57,28 +57,44 @@ class addpaymentcustomer extends CI_Controller {
 			//echo 'Hello';
 		//print_r($_POST);
 		//exit;
-				$result = $this->my_model->add_record();
-				if($result){
-					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
-					redirect($this->listPage_redirect);
-				}else{
-					$data['msg'] = "Not Inserted...";
-					redirect($this->listPage_redirect);
-				}
-
+			$result = $this->my_model->add_record();
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
+				redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Inserted...";
+				redirect($this->listPage_redirect);
 			}
+
+		}
 			
 		
 		if($this->input->post('total_add') != ''){
 			    $insert_ids = $this->input->post('checkbox');
+
+
+				/*if (isset($_POST['checkbox']) && is_array($_POST['checkbox'])) {
+					$items = $_POST['items']; // Retrieve the array
+				
+					// Iterate and display each item
+					foreach ($items as $index => $item) {
+						echo "Item " . ($index + 1) . ": " . htmlspecialchars($item) . "<br>";
+					}
+				} else {
+					echo "No items were submitted.";
+				}*/
+
+
+				//$insert_ids = $_POST['checkbox'];
 				//echo 'Hello';
 				//print_r($_POST);
+				//print_r($insert_ids);
+				//exit;
 				for($i=0;$i<count($insert_ids);$i++){
 					
 					$result = $this->my_model->add_record_multiple($insert_ids[$i]);
 				}
 				
-				//exit;
 				//$result = $this->my_model->add_transaction();
 				if($result){
 					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
@@ -311,7 +327,7 @@ class addpaymentcustomer extends CI_Controller {
 		     <div class="form-group">
 			  <label class="col-sm-4 control-label no-padding-right" for="form-field-1">Name: </label>
 			  <div class="col-sm-8">		
-		    <input type="text" name="first_name" id="first_name" class="col-xs-10 col-sm-10" value="'.$data['record']['first_name'].''.$data['record']['middle_name'].''.$data['record']['last_name'].'"required  readonly >';
+		    <input type="text" name="first_name" id="first_name" class="col-xs-10 col-sm-10" value="'.$data['record']['first_name'].''.$data['record']['middle_name'].''.$data['record']['last_name'].'"required  readonly ></div></div>';
 		
 		echo $selBox;
 	}
