@@ -127,8 +127,8 @@
 														<b>Consumed : </b> <?php echo stripslashes($record['consumedunits']); ?><br/>
 													  </td>				  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" >
-														<b>Amount :</b> <?php echo stripslashes($record['unit_price']); ?><br/>
-														<b>SC Discount :</b> (<?php echo stripslashes($record['sc_discount']); ?>)<br/>	
+														<b>Amount :</b> <?php echo stripslashes(number_format($record['unit_price'],2)); ?><br/>
+														<b>SC Discount :</b> (<?php echo stripslashes(number_format($record['sc_discount'],2)); ?>)<br/>	
 														<b>Plus Penalty :</b> <?php echo stripslashes(number_format($record['per_unit']-$record['amount'],2)); ?><br/>					
 													  </td>
 													  
