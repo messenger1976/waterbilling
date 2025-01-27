@@ -103,12 +103,13 @@
 													  <th width="22%" align="left" valign="middle" bgcolor="#ececec">Customer Info</th>
 													  <th width="16%" align="left" valign="middle" bgcolor="#ececec">Meter Details</th>
 													  <th width="12%" align="left" valign="middle" class="center" bgcolor="#ececec">Current Bill</th>	
-													  <th width="12%" align="left" valign="middle" class="center" bgcolor="#ececec">SC Discount</th>			  
-													  <th width="8%" align="left" valign="middle" bgcolor="#ececec">Amount</th>
-													  <th width="8%" align="left" valign="middle" bgcolor="#ececec">Penalty</th>
-													  <th width="8%" align="left" valign="middle" class="center" bgcolor="#ececec">Balance</th>
+													  		  
+													  <th width="8%" align="left" valign="middle" bgcolor="#ececec">Gross Amount</th>
+													 
+													  <th width="8%" align="left" valign="middle" class="center" bgcolor="#ececec">Leaking Disc</th>
+													  <th width="8%" align="left" valign="middle" class="center" bgcolor="#ececec">VAT</th>
 													  <th width="9%" align="left" valign="middle" class="center" bgcolor="#ececec">Total</th>
-													  <th width="8%" align="left" valign="middle" class="center" bgcolor="#ececec">Status</th>
+													  
 													  <th width="9%" align="left" valign="middle" class="center" bgcolor="#ececec">Date</th>
 													 </tr>
 													</thead>
@@ -126,26 +127,25 @@
 														<b>Consumed : </b> <?php echo stripslashes($record['consumedunits']); ?><br/>
 													  </td>				  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" >
-														<b>Amount :</b> <?php echo stripslashes($record['unit_price']); ?><br/>					
+														<b>Amount :</b> <?php echo stripslashes($record['unit_price']); ?><br/>
+														<b>SC Discount :</b> (<?php echo stripslashes($record['sc_discount']); ?>)<br/>	
+														<b>Plus Penalty :</b> <?php echo stripslashes(number_format($record['per_unit']-$record['amount'],2)); ?><br/>					
 													  </td>
-													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
-														<?php echo stripslashes($record['sc_discount']); ?>
-													  </td>
-													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
-														<?php echo stripslashes($record['penalty']-$record['amount']); ?>
-													  </td>
+													  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
 														<?php echo stripslashes($record['amount']); ?>
 													  </td>
+													  
+													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="center">
+													    (<?php echo stripslashes($record['leaking_amount']); ?>)
+													   </td>
 									                   <td align="left" valign="middle" bgcolor="#FFFFFF" class="center">
-													    <?php echo stripslashes($record['balance']); ?>
+													    (<?php echo stripslashes($record['vat_amount']); ?>)
 													   </td>				  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">
 														<?php echo number_format($record['grand_total'],2); ?><br>			  
 													  </td>
-													 <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">
-														<?php if($record['status'] == '1'){ echo "Paid";}if($record['status'] == '0'){echo "Un-Paid";}?>		  
-													  </td>
+													 
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">
 														<?php echo date("M d, Y ", strtotime($record['create_date_time'])) ;?>			  
 													  </td>
@@ -371,18 +371,4 @@
 
 		</script>
 
-		<!-- Your GOOGLE ANALYTICS CODE Below -->
-		<script type="text/javascript">
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
-			_gaq.push(['_trackPageview']);
-			
-			(function() {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-			})();
-		</script>
+		
