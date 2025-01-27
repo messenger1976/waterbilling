@@ -110,7 +110,7 @@
 													  <th width="8%" align="left" valign="middle" class="center" bgcolor="#ececec">VAT</th>
 													  <th width="9%" align="left" valign="middle" class="center" bgcolor="#ececec">Total</th>
 													  
-													  <th width="9%" align="left" valign="middle" class="center" bgcolor="#ececec">Date</th>
+													  <th width="9%" align="left" valign="middle" class="center" bgcolor="#ececec">Transaction Date</th>
 													 </tr>
 													</thead>
 												  <tbody>  
@@ -133,21 +133,21 @@
 													  </td>
 													  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">   
-														<?php echo stripslashes($record['amount']); ?>
+														<?php echo stripslashes(number_format($record['amount'],2)); ?>
 													  </td>
 													  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="center">
-													    (<?php echo stripslashes($record['leaking_amount']); ?>)
+													    (<?php echo stripslashes(number_format($record['leaking_amount'],2)); ?>)
 													   </td>
 									                   <td align="left" valign="middle" bgcolor="#FFFFFF" class="center">
-													    (<?php echo stripslashes($record['vat_amount']); ?>)
+													    (<?php echo stripslashes(number_format($record['vat_amount'],2)); ?>)
 													   </td>				  
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">
 														<?php echo number_format($record['grand_total'],2); ?><br>			  
 													  </td>
 													 
 													  <td align="left" valign="middle" bgcolor="#FFFFFF" class="right">
-														<?php echo date("M d, Y ", strtotime($record['create_date_time'])) ;?>			  
+														<?php echo date("M d, Y ", strtotime($record['date'])) ;?>			  
 													  </td>
 													  </tr>  
 													</tbody>
