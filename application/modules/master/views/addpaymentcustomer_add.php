@@ -327,7 +327,7 @@
 																	<div class="row">
 																		<div class="col-md-12">
 																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" class="btn btn-default">Cancel</a>
-																			<input type="submit" class="btn btn-primary" name="add" id="add" value="Add" disabled>
+																			<input type="submit" class="btn btn-primary" name="add" id="add" value="Add">
 																		</div>
 																	</div>
 																</div>
@@ -338,7 +338,7 @@
 																	<div class="row">
 																		<div class="col-md-12">
 																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" class="btn btn-default">Cancel</a>
-																			<input type="submit" class="btn btn-primary" id="total_add" name="total_add" value="Add" disabled>
+																			<input type="submit" class="btn btn-primary" id="total_add" name="total_add" value="Add">
 																		</div>
 																	</div>
 																</div>
@@ -807,13 +807,13 @@ $('#leaking_percent').on('blur', function() {
 $('#pay_amount').on('blur', function() {
 	var change_amount = $("#grand_total").val() - $(this).val();
 	$('#change_amount').val(change_amount.toFixed(2));
-	if($(this).val()>0 && $(this).val()>=$("#grand_total").val()){
+	/*if($(this).val()>0){
 		$("#add").prop("disabled", false);
 		$("#total_add").prop("disabled", false);
 	}else{
 		$("#add").prop("disabled", true);
 		$("#total_add").prop("disabled", true);
-	}
+	}*/
 });	
 
 
