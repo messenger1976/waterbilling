@@ -11,6 +11,7 @@ class addcustomer_model extends CI_Model {
 	public $table_expenses = 'tbl_addexpenses';
 	public $table_payrol = 'tbl_payrols';
 	public $table_metercustomer = 'tbl_addmetercustomer';
+	public $table_customerreading = 'tbl_addcustomer_reading';
 	public $table_account ='tbl_subaccountgroup';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
@@ -469,27 +470,38 @@ class addcustomer_model extends CI_Model {
 		return $result;		
 	}	
 	
-	public function get_addcustomer_unpaid_records($membership_status,$zone,$fromdate,$todate){ 
-        $this->db->select("*");
-		$this->db->from($this->table_name);
+	public function get_addcustomer_unpaid_records($membership_status='',$zone='',$billingmonth='',$billingyear=''){ 
+        $this->db->select($this->table_name.".address,".$this->table_name.".customer_id,".$this->table_name.".first_name,".$this->table_name.".last_name, ".$this->table_customerreading.".*, ".$this->table_zone.".zone as zonename");
+		$this->db->from($this->table_customerreading);
 			
 		
-		$this->db->join($this->table_meter,$this->table_meter.'.customer_id='.$this->table_name.'.customer_id');
-		$this->db->group_by($this->table_meter.'.id');
-		if($fromdate !=''){
+		$this->db->join($this->table_meter, $this->table_customerreading.'.customer_id='.$this->table_meter.'.customer_id AND '.$this->table_customerreading.'.month='.$this->table_meter.'.month AND '.$this->table_customerreading.'.year='.$this->table_meter.'.year','left');
+
+		$this->db->join($this->table_name, $this->table_customerreading.'.customer_id='.$this->table_name.'.customer_id','left');
+		$this->db->join($this->table_zone, $this->table_name.'.zone='.$this->table_zone.'.id','left');
+
+		//$this->db->group_by($this->table_meter.'.id');
+		/*if($fromdate !=''){
 		$this->db->where($this->table_meter.".create_date_time >= ",date('Y-m-d', strtotime($fromdate)));
 		}		
 		if($todate !=''){
 			$this->db->where($this->table_meter.".create_date_time <= ",date('Y-m-d', strtotime($todate)));
+		}*/
+		if($billingmonth !='' && $billingyear !=''){
+			$this->db->where($this->table_customerreading.".month",$billingmonth);
+			$this->db->where($this->table_customerreading.".year",$billingyear);
 		}
-		$this->db->where($this->table_meter.'.status',0);
 		
-		if($membership_status !=''){
+		
+		if($membership_status !='all'){
 			$this->db->where($this->table_name.'.membership_status',$membership_status);
 		}	
-		if($zone !=''){
+		if($zone !='all'){
 			$this->db->where($this->table_name.'.zone',$zone);
 		}	
+		$this->db->where($this->table_meter.'.invoice_id IS NULL');
+		$this->db->order_by($this->table_name.'.last_name','ASC');
+		$this->db->order_by($this->table_name.'.first_name','ASC');
 		$query = $this->db->get();
 		$result = $query->result_array();
 		return $result;		

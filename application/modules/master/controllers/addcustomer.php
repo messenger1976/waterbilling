@@ -6,6 +6,9 @@ class addcustomer extends CI_Controller {
 	
 	public $table_name = 'tbl_addcustomer';	  //*****  Table name  *****//
 	public $tbl_addmetercustomer = 'tbl_addmetercustomer';	  //*****  Table name  *****//
+	public $table_customerreading = 'tbl_addcustomer_reading';	  //*****  Table name  *****//
+	public $table_zone = 'tbl_zone';	  //*****  Table name  *****//
+	public $table_meter = 'tbl_addmetercustomer';
 	public $addPage  = 'addcustomer_add';	     //*****  Add page    *****//
 	public $editPage = 'addcustomer_edit';     //*****  Edit page   *****//
 	public $listPage = 'addcustomer';		   //*****  View page   *****//
@@ -43,7 +46,8 @@ class addcustomer extends CI_Controller {
 	public function __construct() {
         parent::__construct();
   		$this->load->model('addcustomer_model','my_model');   //*****    Model Loading     *****//	
-		$this->load->model('common_model','comm_model');	
+		$this->load->model('common_model','comm_model');
+		$this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//		
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
@@ -309,6 +313,7 @@ class addcustomer extends CI_Controller {
 		
 		//$data['record'] = $this->my_model->get_single_record();
 		$data['zone'] = $this->my_model->get_zone();
+		$data['billingperiod'] = $this->billingperiod_model->get_month_billingperiod_records();
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->unpaidsearchPage,$data);
 	}
@@ -541,17 +546,26 @@ class addcustomer extends CI_Controller {
 	public function getaddcustomersunpaidsearch(){		//*****  Add Search records  *****//
 		$data['msg'] ='';
 		//echo '<pre>'; print_r($this->input->post('zone'));exit;
-		if($this->input->post('fromdate') =='' || $this->input->post('todate') ==''){
-			$selBox ='<h6><span style="color:red">Please Enter From-Date and To-Date</h6>' ;
-			echo $selBox;
-		}else{
+		//if($this->input->post('fromdate') =='' || $this->input->post('todate') ==''){
+		//	$selBox ='<h6><span style="color:red">Please Enter From-Date and To-Date</h6>' ;
+		//	echo $selBox;
+		//}else{
 			$membership_status = $this->input->post('membership_status');
+
 			$zone = $this->input->post('zone');
-			$fromdate = $this->input->post('fromdate');
-			$todate = $this->input->post('todate');
-			$data['record'] = $this->my_model->get_addcustomer_unpaid_records($membership_status,$zone,$fromdate,$todate);
+			if($this->input->post('billingperiod')!='all'){
+				$billingperiod = explode(' ',$this->input->post('billingperiod'));
+				$billingmonth = $billingperiod[0];
+				$billingyear = $billingperiod[1];
+			}else{
+				$billingmonth = '';
+				$billingyear = '';
+			}
+			
+			//$todate = $this->input->post('todate');
+			$data['record'] = $this->my_model->get_addcustomer_unpaid_records($membership_status,$zone,$billingmonth,$billingyear);
 			$this->load->view($this->addcustomerunpaidajax,$data);
-		}
+		//}
 				
 	}	
 	/** Status Change Function **/
@@ -1011,7 +1025,45 @@ class addcustomer extends CI_Controller {
 	}
 
 	
-	
+	public function fileDownloadunpaidSearch($membership_status='',$zone='',$billingperiod='')
+	{
+		
+		$this->load->database();
+
+		$this->db->select($this->table_name.".customer_id,".$this->table_name.".first_name,".$this->table_name.".last_name, ".$this->table_name.".address,".$this->table_zone.".zone as zonename,".$this->table_customerreading.".month, ".$this->table_customerreading.".year, ".$this->table_customerreading.".penalty as Amount ");
+		$this->db->from($this->table_customerreading);
+			
+		
+		$this->db->join($this->table_meter, $this->table_customerreading.'.customer_id='.$this->table_meter.'.customer_id AND '.$this->table_customerreading.'.month='.$this->table_meter.'.month AND '.$this->table_customerreading.'.year='.$this->table_meter.'.year','left');
+
+		$this->db->join($this->table_name, $this->table_customerreading.'.customer_id='.$this->table_name.'.customer_id','left');
+		$this->db->join($this->table_zone, $this->table_name.'.zone='.$this->table_zone.'.id','left');
+
+		
+		if($billingperiod !='all'){
+			$billingperiod = explode(' ',$billingperiod);
+			$billingmonth =$billingperiod[0];
+			$billingyear =$billingperiod[1];
+			$this->db->where($this->table_customerreading.".month",$billingmonth);
+			$this->db->where($this->table_customerreading.".year",$billingyear);
+		}
+		
+		
+		if($membership_status !='all'){
+			$this->db->where($this->table_name.'.membership_status',$membership_status);
+		}	
+		if($zone !='all'){
+			$this->db->where($this->table_name.'.zone',$zone);
+		}	
+		$this->db->where($this->table_meter.'.invoice_id IS NULL');
+		$this->db->order_by($this->table_name.'.last_name','ASC');
+		$this->db->order_by($this->table_name.'.first_name','ASC');
+		$query = $this->db->get();
+		
+		$this->load->helper('csv');
+		query_to_csv($query, TRUE, $this->unpaidsearchPage.'-'.date("d-m-Y").'.csv');
+	}
+
 	public function fileDownloadunpaidSerch($customer_type,$zone,$fromdate,$todate)
 	{
 		$this->load->database();

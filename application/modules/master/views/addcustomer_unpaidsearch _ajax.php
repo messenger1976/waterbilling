@@ -16,12 +16,13 @@
 				<th>SNo</th>
 				<th>Customer-id</th>
 				<th>Name</th>																												
-				<!--<th>Gender</th>-->
-				<th>Mobile1</th>
-				<th>Mobile2</th>
-				<th>Email_id </th>
-				<th>Address </th>
-				<th>Customer-Type </th>
+				<th>Address</th>
+				<th>Zone</th>
+				<th>Billing Period</th>
+				<th>Current Unpaid Amount</th>
+				<th>Arrears </th>
+				
+				
 				<th>Status</th>
 			</tr>
 		</thead>
@@ -34,13 +35,14 @@
 			<tr>
 				<td><?php echo $i; ?></td>
 				<td><?php echo stripslashes($row['customer_id']); ?></td>
-				<td><?php echo stripslashes($row['name']); ?></td>																												
-				<!--<td><?php echo stripslashes($row['gender']); ?></td>-->
-				<td><?php echo stripslashes($row['mobile1']); ?></td>
-				<td><?php echo stripslashes($row['mobile2']); ?></td>
-				<td><?php echo stripslashes($row['email_id']); ?></td>
+				<td><?php echo stripslashes($row['last_name'].', '.$row['first_name']); ?></td>																												
 				<td><?php echo stripslashes($row['address']); ?></td>
-				<td><?php echo stripslashes($row['customer_type']); ?></td>
+				<td><?php echo stripslashes($row['zonename']); ?></td>
+				<td><?php echo stripslashes($row['month'].' '.$row['year']); ?></td>
+				<td align="right"><?php echo stripslashes(number_format($row['penalty'],2)); ?></td>
+				<td align="right"><?php echo stripslashes($row['arrears']); ?></td>
+				
+				
 				<td><span <?php if($row['status']== 1){ echo " class='label label-success arrowed-in arrowed-in-right'"; } elseif($row['status']== 0){ echo "class='label label-danger arrowed'"; } ?>><a href="JavaScript:if(confirm('Are you sure want to Chanage the Status?')==true){window.location='<?php echo ADMIN_URL;?>addcustomer/status/<?php echo $row['id']?>/<?php echo $row['status'];?>/<?php echo $this->uri->segment(3);?>';}" style="color:#FFF; text-decoration:none;"><?php if($row['status']== 1){ echo "Paid"; } elseif($row['status']== 0){ echo "Un-Paid"; } ?></a></span>
 				   <!-- <span 
 								 <?php if($row['balance']== 0){ 

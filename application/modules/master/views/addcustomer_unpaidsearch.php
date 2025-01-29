@@ -102,7 +102,7 @@
 												<legend>Un-PaidCustomer-Search   
 												    <div class="pull-right" style="padding-right:20px;">
 														<input type="submit" class="btn btn-primary" name="search" id="search" value="search" onclick="getaddcustomer_unpaid();" style="margin-bottom: 5px;">
-														<a href="<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSerch/<?php if($this->input->post('customer_type')!=''){ echo $this->input->post('customer_type'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;} ?>/<?php if($this->input->post('fromdate')!=''){ echo $this->input->post('fromdate'); }else{ echo 0;} ?>/<?php if($this->input->post('todate')!=''){ echo $this->input->post('todate'); }else{ echo 0;} ?>
+														<a id="exporttoexcel" href="<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/<?php if($this->input->post('customer_type')!=''){ echo $this->input->post('customer_type'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;} ?>/<?php if($this->input->post('fromdate')!=''){ echo $this->input->post('fromdate'); }else{ echo 0;} ?>/<?php if($this->input->post('todate')!=''){ echo $this->input->post('todate'); }else{ echo 0;} ?>
 																		"class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Excel</a>
 														<a href="<?php echo ADMIN_URL;?>addcustomer/filePrintunpaidSerch/<?php if($this->input->post('customer_type')!=''){ echo $this->input->post('customer_type'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;} ?>/<?php if($this->input->post('fromdate')!=''){ echo $this->input->post('fromdate'); }else{ echo 0;} ?>/<?php if($this->input->post('todate')!=''){ echo $this->input->post('todate'); }else{ echo 0;} ?>
 																		"class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Pdf</a>
@@ -115,7 +115,7 @@
 															<div class="form-group"> 
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Membership Status: </strong></span>
 																<select class="form-control" name="membership_status" id="membership_status" required>
-																	<option value="">--All--</option>
+																	<option value="all">--All--</option>
 																	 <option value="1">Member</option>
 																	  <option value="0">Non-Member</option>
 																 </select>
@@ -127,7 +127,7 @@
 															<div class="form-group"> 
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Zone: </strong></span>
 																<select class="form-control" name="zone" id="zone">
-																<option value="">--All--</option>
+																<option value="all">--All--</option>
 																	<?php foreach($zone as $key => $value){ ?>
 																	 <option value="<?php echo $value['id'];?>"><?php echo $value['zone'];?></option>
 																	<?php } ?>
@@ -136,6 +136,20 @@
 														</div>
 													</div>
 													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+															<span class="input-group-addon"><i class="icon-user"></i><strong>Billing Period : </strong></span>
+																<select  class="form-control" name="billingperiod" id="billingperiod">
+																	<option value="all">--All--</option>
+																	<?php foreach($billingperiod as $key =>$value){ ?>
+																	<option value="<?php echo $value['bp_period_month'].' '.$value['bp_period_year']; ?>"><?php echo $value['month_name'].' '.$value['bp_period_year'];?></option>
+																	<?php } ?>
+																</select>
+															</div>
+														</div>
+													
+													</div>
+													<!--<div class="form-group col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>From-Date:</strong></span>
@@ -150,7 +164,7 @@
 																<input class="form-control"  type="text" id="todate" name="todate"  placeholder="dd-mm-yyyy" value="">
 															</div>
 														</div>
-													</div>	
+													</div>	-->
 															
 													
 													
@@ -437,15 +451,16 @@ $(document).ready(function(){
 			
 			var membership_status = $("#membership_status").val();
 			var zone = $("#zone").val();
-			var fromdate = $("#fromdate").val();
-			var todate = $("#todate").val();
-			
+			//var fromdate = $("#fromdate").val();
+			//var todate = $("#todate").val();
+			var billingperiod = $("#billingperiod").val();
+
 			$.ajax({
 				
 				type : "POST",
 				url	: '<?php echo ADMIN_URL;?>addcustomer/getaddcustomersunpaidsearch',
 				//data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate+",
-				data	: "membership_status="+membership_status+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate,
+				data	: "membership_status="+membership_status+"&zone="+zone+"&billingperiod="+billingperiod,
 				complete: function(data){
 					var op = data.responseText.trim();
 					//alert(op);
@@ -454,4 +469,16 @@ $(document).ready(function(){
 			});
 		}
 	
+		$('#exporttoexcel').on('click', function(evt){
+			evt.preventDefault();
+			var membership_status = $("#membership_status").val();
+			var zone = $("#zone").val();
+			
+			var billingperiod = $("#billingperiod").val();
+			//window.location.href = '<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod;
+			
+			//alert('<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod);
+			window.open('<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod, '_blank');
+		});
+		
 		</script>
