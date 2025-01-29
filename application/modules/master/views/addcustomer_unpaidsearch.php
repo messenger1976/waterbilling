@@ -473,12 +473,19 @@ $(document).ready(function(){
 			evt.preventDefault();
 			var membership_status = $("#membership_status").val();
 			var zone = $("#zone").val();
+			if($("#billingperiod").val()=='all'){
+				var billingmonth = 'all';
+				var billingyear = 'all';
+			}else{
+				var billingperiod = $("#billingperiod").val().split(" ");
+				var billingmonth = billingperiod[0];
+				var billingyear = billingperiod[1];
+			}
 			
-			var billingperiod = $("#billingperiod").val();
 			//window.location.href = '<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod;
 			
 			//alert('<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod);
-			window.open('<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod, '_blank');
+			window.open('<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingmonth+'/'+billingyear, '_blank');
 		});
 		
 		</script>

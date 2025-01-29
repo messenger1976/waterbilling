@@ -1025,7 +1025,7 @@ class addcustomer extends CI_Controller {
 	}
 
 	
-	public function fileDownloadunpaidSearch($membership_status='',$zone='',$billingperiod='')
+	public function fileDownloadunpaidSearch($membership_status='',$zone='',$billingmonth,$billingyear)
 	{
 		
 		$this->load->database();
@@ -1040,10 +1040,12 @@ class addcustomer extends CI_Controller {
 		$this->db->join($this->table_zone, $this->table_name.'.zone='.$this->table_zone.'.id','left');
 
 		
-		if($billingperiod !='all'){
-			$billingperiod = explode(' ',$billingperiod);
-			$billingmonth =$billingperiod[0];
-			$billingyear =$billingperiod[1];
+		if($billingmonth !='all' && $billingyear!='all'){
+			
+
+			//$billingperiod = explode(' ',$billingperiod);
+			//$billingmonth =$billingperiod[0];
+			//$billingyear =$billingperiod[1];
 			$this->db->where($this->table_customerreading.".month",$billingmonth);
 			$this->db->where($this->table_customerreading.".year",$billingyear);
 		}
