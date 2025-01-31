@@ -287,6 +287,7 @@ class addbillingperiod extends CI_Controller {
         tbl_addcustomer.address,
 		tbl_zone.zone as zonename,
 		tbl_addcustomer.account_type,
+		tbl_classification.class_name as classification,
 		tbl_addcustomer.meter_number,
 		tbl_addcustomer.meter_brand,
         tbl_addcustomer_reading.previous_reading,
@@ -303,7 +304,7 @@ class addbillingperiod extends CI_Controller {
 
 		$this->db->join('tbl_addcustomer', 'tbl_addcustomer_reading.customer_id=tbl_addcustomer.customer_id','left');
 		$this->db->join('tbl_zone', 'tbl_addcustomer.zone=tbl_zone.id','left');
-
+		$this->db->join('tbl_classification', 'tbl_addcustomer.classification=tbl_classification.class_id','left');
 		
 		if($billingmonth !='all' && $billingyear !='all'){
 			$this->db->where("tbl_addcustomer_reading.month",$billingmonth);
