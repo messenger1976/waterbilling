@@ -101,7 +101,9 @@
                                             <div  class="pull-right" style="padding-right:20px;">
                                                 <input type="submit" class="btn btn-primary" name="search" id="search" value="search" onclick="getaddcustomer_generate();" style="margin-bottom: 5px;">
                                                 <a href="<?php echo ADMIN_URL.'addbillingperiod/add'; ?>"class="btn btn-sm btn-warning" style="margin-bottom: 5px;">Add Billing Period</a>
-                                                
+                                                <a class="btn btn-sm btn-success" name="balanceforward" id="balanceforward" value="Close" data-toggle="modal" data-target="#myModal">Balance Forward</a>
+												<a id="exporttoexcel" href="<?php echo ADMIN_URL;?>addbillingperiod/fileDownloadunpaidSearch/<?php if($this->input->post('customer_type')!=''){ echo $this->input->post('customer_type'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;} ?>/<?php if($this->input->post('fromdate')!=''){ echo $this->input->post('fromdate'); }else{ echo 0;} ?>/<?php if($this->input->post('todate')!=''){ echo $this->input->post('todate'); }else{ echo 0;} ?>
+																		" class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Excel for Mobile</a>
                                             </div>
                                             </legend>
                                                 
@@ -164,6 +166,65 @@
 		</div>
 		<!-- END MAIN PANEL -->
 		
+
+
+
+
+				<!-- Modal -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title" id="myModalLabel">Balance Forwarding</h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-md-12 controls">
+										<div class="form-group">
+											<label for="category">Current Billing Period</label>
+											<select  class="form-control" name="currentbillingperiod" id="currentbillingperiod" class="col-lg-12" required>
+												
+												<?php foreach($billingperiod as $key =>$value){ ?>
+												<option value="<?php echo $value['bp_period_month'].' '.$value['bp_period_year']; ?>"><?php echo $value['month_name'].' '.$value['bp_period_year'];?></option>
+												<?php } ?>
+											</select>
+										</div>
+									</div>
+									
+								</div>
+								
+								<div class="row">
+									<div class="col-md-12 controls">
+										<div class="form-group">
+											<label for="category">Next Billing Period</label>
+											<select  class="form-control" name="forwardbillingperiod" id="forwardbillingperiod" class="col-lg-12" required>
+												
+												<?php foreach($billingperiod as $key =>$value){ ?>
+												<option value="<?php echo $value['bp_period_month'].' '.$value['bp_period_year']; ?>"><?php echo $value['month_name'].' '.$value['bp_period_year'];?></option>
+												<?php } ?>
+											</select>
+										</div>
+									</div>
+									
+								</div>
+								
+				
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">
+									Cancel
+								</button>
+								<button type="button" class="btn btn-primary" id="btn_posting" data-dismiss="modal">
+									Balance Posting
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
+
 
 		<?php include('footer.php');?>
 
@@ -349,7 +410,90 @@
 			});
 			
 			/* END TABLETOOLS */
+
+
+			$('#btn_posting').on('click', function(evt){
+				evt.preventDefault();
+
+				if(confirm('Continue Posting?')==true){
+						showSpinner(); // Call this to show the spinner
+						var selectedItems = [];
+						var billingperiodforward = $('#forwardbillingperiod').val();
+						var currentbillingperiod = $('#currentbillingperiod').val();
+						
+
+						/*$("input[name='delete_ids[]']:checked").each(function(){
+							selectedItems.push($(this).val());
+						});
+
+						if(selectedItems.length === 0) {
+							alert("Please select at least one checkbox.");
+							return;
+						}*/
+
+						$.ajax({
+							url: "<?php echo ADMIN_URL;?>addbillingperiod/billingforwardposting", 
+							type: "POST",
+							data: {
+								//delete_ids: selectedItems,
+								billingperiodforward: billingperiodforward,
+								currentbillingperiod: currentbillingperiod
+							},
+							success: function(response){
+								//alert(response);
+								$('#search').trigger('click');
+								setTimeout(hideSpinner, 1000); // Simulate loading for 3 seconds
+							},
+							error: function(xhr, status, error){
+								console.log(error);
+							}
+						});
+						
+        				
+
+						return true;
+					}else{
+						return false;
+					}
+
+
+
+				/*var checked_num = $('input[name="delete_ids[]"]:checked').length;
+				if (checked_num == 0) {
+					alert('Select Atleast One Check Box... ');
+					return false;
+				}else if (checked_num > 0){ 
+					
+				}*/
+			});
+
 		
+
+
+
+
+			$('#exporttoexcel').on('click', function(evt){
+				evt.preventDefault();
+				//var membership_status = $("#membership_status").val();
+				var zone = $("#zone").val();
+				if(zone==''){
+					zone = 'all';
+				}
+				if($("#billingperiod").val()==''){
+					var billingmonth = 'all';
+					var billingyear = 'all';
+				}else{
+					var billingperiod = $("#billingperiod").val().split(" ");
+					var billingmonth = billingperiod[0];
+					var billingyear = billingperiod[1];
+				}
+				
+				//window.location.href = '<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod;
+				
+				//alert('<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/'+membership_status+'/'+zone+'/'+billingperiod);
+				window.open('<?php echo ADMIN_URL;?>addbillingperiod/fileDownloadBillingPeriodMobileSearch/'+zone+'/'+billingmonth+'/'+billingyear, '_blank');
+			});
+
 		})
 
 		</script>

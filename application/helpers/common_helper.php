@@ -70,6 +70,7 @@ if(!function_exists('convertNumberToWordsPH'))
         return $result;
     }
 }
+
 if(!function_exists('convertToWords'))
 {
     function convertToWords($number, $dictionary, $hyphen, $conjunction, $separator, $isPesos) {
@@ -110,4 +111,154 @@ if(!function_exists('convertToWords'))
         return $string;
     }
 }
+
+if(!function_exists('getCustomerInfo'))
+{
+    function getCustomerInfo()
+    {
+        $CI = &get_instance();
+        $CI->db->where('status', '1');
+        $customerinfo = $CI->db->get('tbl_addcustomer')->result();
+        return $customerinfo;
+
+    }
+}
+
+if(!function_exists('customerbillingperiod'))
+{
+    function customerbillingperiod($bp_month,$bp_year,$bp_current_month,$bp_current_year) {
+        $customerinfoList = getCustomerInfo();
+        
+        foreach($customerinfoList as $customerinfodata){ 
+            $CI20 = &get_instance();
+            $CI20->db->where('bp_period_month', $bp_month);
+            $CI20->db->where('bp_period_year', $bp_year);
+            $CI20->db->where('bp_zone_id', $customerinfodata->zone);
+            $bp = $CI20->db->get('tbl_billing_period')->row();
+            $bp_id = $bp->bp_id;
+
+            $customerinfodataInsertDetails = array( 
+                'customer_id' => $customerinfodata->customer_id,
+                'month' => $bp_month, 
+                'year' => $bp_year, 
+                'bp_id' => $bp_id, 
+                
+            ); 
+            $checkresult_id = check_customerbillingrecord($customerinfodata->customer_id,$bp_id,$bp_month,$bp_year);
+			if($checkresult_id){
+               
+                
+                
+            }else{
+                $CI3 = &get_instance();
+                $CI3->db->where('doc_name', 'BILLING');
+                $billing_number = $CI3->db->get('tbl_doc_series_number')->row();
+                $doc_num = $billing_number->doc_series_num+1;
+                $customerinfodataInsertDetails1 = array( 
+                    'refno' => $doc_num
+                );
+                $customerinfodataInsertDetails = array_merge($customerinfodataInsertDetails,$customerinfodataInsertDetails1);
+                $CI2 = &get_instance();
+                $CI2->db->insert('tbl_addcustomer_reading', $customerinfodataInsertDetails);
+                $checkresult_id = $CI2->db->insert_id();
+
+                $update_counter_array = array( 
+                    'doc_series_num' => $doc_num
+                );
+                $C5 = &get_instance();
+                $C5->db->where('doc_name', 'BILLING');
+                $C5->db->update('tbl_doc_series_number', $update_counter_array);
+                
+            }
+
+            $customer_current_billing_data = currentbalance_forwarding_period($customerinfodata->customer_id,$bp_current_month,$bp_current_year);
+            
+            if($customer_current_billing_data->id){
+                if($customer_current_billing_data->invoice_id!=NULL && $customer_current_billing_data->invoice_id!=''){
+                    $arrears = 0;
+                }else{
+                    $arrears = $customer_current_billing_data->penalty;
+                }
+                $update_counter_array1 = array( 
+                    'previous_reading' => $customer_current_billing_data->reading,
+                    'arrears' => $arrears
+                );
+                $C5 = &get_instance();
+                $C5->db->where('id', $checkresult_id);
+                $C5->db->update('tbl_addcustomer_reading', $update_counter_array1);
+            }
+            
+
+            
+            
+		}
+        return true;
+       
+    }
+}
+
+if (!function_exists("check_customerbillingrecord")) {
+    function check_customerbillingrecord($customer_id,$bp_id,$bp_month,$bp_year) {
+        $CI9 = &get_instance();
+        $CI9->db->select('id');
+        //$CI->db->from("tbl_addcustomer_reading");
+        $CI9->db->where('customer_id', $customer_id); // Example condition
+        $CI9->db->where('bp_id', $bp_id); // Example condition
+        $CI9->db->where('month', $bp_month); // Example condition
+        $CI9->db->where('year', $bp_year); // Example condition
+        //$row_count = $CI9->db->count_all_results('tbl_addcustomer_reading');
+        $query = $CI9->db->get('tbl_addcustomer_reading');
+		$result = $query->row();
+       
+        return $result->id;
+        
+    }
+
+}
+
+if(!function_exists("currentbalance_forwarding_period")){
+    function currentbalance_forwarding_period($customer_id,$billingmonth,$billingyear, $status=''){
+        $CI = &get_instance();
+        $CI->db->select("
+        tbl_addcustomer.address,
+        tbl_addcustomer.customer_id,
+        tbl_addcustomer.first_name,
+        tbl_addcustomer.last_name, 
+        tbl_zone.zone as zonename,
+        tbl_addcustomer_reading.* ,
+        tbl_addmetercustomer.invoice_id
+        ");
+		$CI->db->from("tbl_addcustomer_reading");
+			
+		
+		$CI->db->join("tbl_addmetercustomer", 'tbl_addcustomer_reading.customer_id=tbl_addmetercustomer.customer_id AND tbl_addcustomer_reading.month=tbl_addmetercustomer.month AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year','left');
+
+		$CI->db->join('tbl_addcustomer', 'tbl_addcustomer_reading.customer_id=tbl_addcustomer.customer_id','left');
+		$CI->db->join('tbl_zone', 'tbl_addcustomer.zone=tbl_zone.id','left');
+
+		
+		if($billingmonth !='' && $billingyear !=''){
+			$CI->db->where("tbl_addcustomer_reading.month",$billingmonth);
+			$CI->db->where("tbl_addcustomer_reading.year",$billingyear);
+		}
+		
+		
+		if($customer_id !=''){
+			$CI->db->where('tbl_addcustomer_reading.customer_id',$customer_id);
+		}	
+		/*if($zone !='all'){
+			$CI->db->where('tbl_addcustomer.zone',$zone);
+		}*/	
+		if($status =='unpaid'){
+            $CI->db->where('tbl_addmetercustomer.invoice_id IS NULL');
+        }
+		$CI->db->order_by('tbl_addcustomer.last_name','ASC');
+		$CI->db->order_by('tbl_addcustomer.first_name','ASC');
+		$query = $CI->db->get();
+		$result = $query->row();
+		return $result;		
+    }
+}
+
+
 

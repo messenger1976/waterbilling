@@ -103,7 +103,7 @@
 												    <div class="pull-right" style="padding-right:20px;">
 														<input type="submit" class="btn btn-primary" name="search" id="search" value="search" onclick="getaddcustomer_unpaid();" style="margin-bottom: 5px;">
 														<a id="exporttoexcel" href="<?php echo ADMIN_URL;?>addcustomer/fileDownloadunpaidSearch/<?php if($this->input->post('customer_type')!=''){ echo $this->input->post('customer_type'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;} ?>/<?php if($this->input->post('fromdate')!=''){ echo $this->input->post('fromdate'); }else{ echo 0;} ?>/<?php if($this->input->post('todate')!=''){ echo $this->input->post('todate'); }else{ echo 0;} ?>
-																		"class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Excel</a>
+																		" class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Excel</a>
 														<a href="<?php echo ADMIN_URL;?>addcustomer/filePrintunpaidSerch/<?php if($this->input->post('customer_type')!=''){ echo $this->input->post('customer_type'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;} ?>/<?php if($this->input->post('fromdate')!=''){ echo $this->input->post('fromdate'); }else{ echo 0;} ?>/<?php if($this->input->post('todate')!=''){ echo $this->input->post('todate'); }else{ echo 0;} ?>
 																		"class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Pdf</a>
                                                    </div>									

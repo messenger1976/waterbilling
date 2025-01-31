@@ -1,24 +1,3 @@
-<!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-
-		<title> SmartAdmin </title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-			
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<!-- FAVICONS -->
-		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-
-		<!-- GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-	</head>
-	
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -462,20 +441,4 @@
 		
 		})
 
-		</script>
-
-		<!-- Your GOOGLE ANALYTICS CODE Below -->
-		<script type="text/javascript">
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
-			_gaq.push(['_trackPageview']);
-			
-			(function() {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-			})();
 		</script>

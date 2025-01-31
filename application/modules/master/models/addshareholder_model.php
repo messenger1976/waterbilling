@@ -173,9 +173,9 @@ class addshareholder_model extends CI_Model {
 		
 		$set_data = array(
 						'firstname' => $this->input->post('firstname'),
-						'middlename' => mysql_real_escape_string($this->input->post('middlename')),
-						'lastname' => mysql_real_escape_string($this->input->post('lastname')),
-						'gender' => mysql_real_escape_string($this->input->post('gender')),
+						'middlename' => $this->input->post('middlename'),
+						'lastname' => $this->input->post('lastname'),
+						'gender' => $this->input->post('gender'),
 						'dob' => $this->input->post('dob'),
 						'placeofbirth' => $this->input->post('place_of_birth'),
 						'address' => $this->input->post('address'),
@@ -211,9 +211,9 @@ class addshareholder_model extends CI_Model {
     
 		$set_data = array(
 						'firstname' => $this->input->post('firstname'),
-						'middlename' => mysql_real_escape_string($this->input->post('middlename')),
-						'lastname' => mysql_real_escape_string($this->input->post('lastname')),
-						'gender' => mysql_real_escape_string($this->input->post('gender')),
+						'middlename' => $this->input->post('middlename'),
+						'lastname' => $this->input->post('lastname'),
+						'gender' => $this->input->post('gender'),
 						'dob' => $this->input->post('dob'),
 						'placeofbirth' => $this->input->post('place_of_birth'),
 						'address' => $this->input->post('address'),
@@ -284,9 +284,9 @@ class addshareholder_model extends CI_Model {
 	public function add_profitloss(){
 		$set_data = array(
 						'share_holder' => $this->input->post('share_holder'),
-						'fromdate' => mysql_real_escape_string($this->input->post('from-date')),
-						'todate' => mysql_real_escape_string($this->input->post('to-date')),
-						'comission' => mysql_real_escape_string($this->input->post('comissin')),
+						'fromdate' => $this->input->post('from-date'),
+						'todate' => $this->input->post('to-date'),
+						'comission' => $this->input->post('comissin'),
 						'amount_earn' => $this->input->post('amount_earn'),
 						'datetime' => date('d-m-Y H:i:s'),
 					);

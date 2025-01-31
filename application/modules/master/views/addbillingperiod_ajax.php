@@ -15,6 +15,7 @@
                                             <table  id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
 												<thead>
 													<tr>
+														<th data-hide="phone"><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></th>
 														<th data-hide="sno">SNo</th>
 													    <th data-hide="zone"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i>Zone</th>
 														<th data-hide="billingperiod"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Billing Period</th>																												
@@ -33,6 +34,11 @@
                                                         foreach($record as $key => $row){ 
                                                 ?>                                            
 													<tr>
+														<td><label>
+																<input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['bp_id'];?>" />
+																<span class="lbl"></span>
+															</label>
+														</td>
 														<td><?php echo $i; ?></td>
 														<td><?php echo stripslashes($row['zone_name']); ?></td>
 														<td><?php echo stripslashes($row['month_name'].' '.$row['bp_period_year']); ?></td>																												
@@ -77,6 +83,14 @@
 											</table>
 										</div>
 										
+										<div class="row">
+											<div class="col-lg-12">
+												<input type="submit" class="btn btn-sm btn-primary" name="delete" id="delete" value="Delete All" onClick="return deleteAllData();" />
+												<a class="btn btn-sm btn-danger" name="close" id="close" value="Close">Close</a>
+												<a class="btn btn-sm btn-success" name="open" id="open" value="Close">Open</a>
+												
+											</div>
+										</div>
 										
 		<!-- PAGE RELATED PLUGIN(S) -->
 		<script src="<?php echo base_url();?>js/plugin/datatables/jquery.dataTables.min.js"></script>
@@ -257,9 +271,146 @@
 			});
 			
 			/* END TABLETOOLS */
+
+
+			function deleteAllData(){ 
+				var checked_num = $('input[name="delete_ids[]"]:checked').length;
+				if (checked_num == 0) {
+					alert('Select Atleast One Check Box... ');
+					return false;
+				}else if (checked_num > 0){ 
+					if(confirm('Confirm Delete?')==true){
+						//$('#careers').submit();
+						return true;
+					}else{
+						return false;
+					}
+				}
+			}
+
+			$('#close').on('click', function(evt){
+				evt.preventDefault();
+				var checked_num = $('input[name="delete_ids[]"]:checked').length;
+				if (checked_num == 0) {
+					alert('Select Atleast One Check Box... ');
+					return false;
+				}else if (checked_num > 0){ 
+					if(confirm('Confirm Close?')==true){
+						showSpinner(); // Call this to show the spinner
+						var selectedItems = [];
+						$("input[name='delete_ids[]']:checked").each(function(){
+							selectedItems.push($(this).val());
+						});
+
+						if(selectedItems.length === 0) {
+							alert("Please select at least one checkbox.");
+							return;
+						}
+
+						$.ajax({
+							url: "<?php echo ADMIN_URL;?>addbillingperiod/multi_close", // Your PHP backend file
+							type: "POST",
+							data: {delete_ids: selectedItems},
+							success: function(response){
+								//alert(response);
+								$('#search').trigger('click');
+							},
+							error: function(xhr, status, error){
+								console.log(error);
+							}
+						});
+						//getaddcustomer_generate();
+
+						/*var zone = $("#zone").val();
+						var billingperiod = $("#billingperiod").val();
+						
+						
+						$.ajax({
+							
+							type : "POST",
+							url	: '<?php echo ADMIN_URL;?>addbillingperiod/addbillingperiod_search',
+							//data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate+",
+							data	: "zone="+zone+"&billingperiod="+billingperiod,
+							complete: function(data){
+								var op = data.responseText.trim();
+								//alert(op);
+								$("#billingPeriodDiv").html(op);
+							}
+						});*/
+						
+        				setTimeout(hideSpinner, 1000); // Simulate loading for 3 seconds
+
+						return true;
+					}else{
+						return false;
+					}
+				}
+			});
+
+			$('#open').on('click', function(evt){
+				evt.preventDefault();
+				var checked_num = $('input[name="delete_ids[]"]:checked').length;
+				if (checked_num == 0) {
+					alert('Select Atleast One Check Box... ');
+					return false;
+				}else if (checked_num > 0){ 
+					if(confirm('Confirm Open?')==true){
+						showSpinner(); // Call this to show the spinner
+						var selectedItems = [];
+						$("input[name='delete_ids[]']:checked").each(function(){
+							selectedItems.push($(this).val());
+						});
+
+						if(selectedItems.length === 0) {
+							alert("Please select at least one checkbox.");
+							return;
+						}
+
+						$.ajax({
+							url: "<?php echo ADMIN_URL;?>addbillingperiod/multi_open", // Your PHP backend file
+							type: "POST",
+							data: {
+								delete_ids: selectedItems
+							},
+							success: function(response){
+								//alert(response);
+								$('#search').trigger('click');
+							},
+							error: function(xhr, status, error){
+								console.log(error);
+							}
+						});
+
+						//getaddcustomer_generate();
+
+						/*var zone = $("#zone").val();
+						var billingperiod = $("#billingperiod").val();
+						
+						
+						$.ajax({
+							
+							type : "POST",
+							url	: '<?php echo ADMIN_URL;?>addbillingperiod/addbillingperiod_search',
+							//data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate+",
+							data	: "zone="+zone+"&billingperiod="+billingperiod,
+							complete: function(data){
+								var op = data.responseText.trim();
+								//alert(op);
+								$("#billingPeriodDiv").html(op);
+							}
+						});*/
+						
+        				setTimeout(hideSpinner, 1000); // Simulate loading for 3 seconds
+
+						return true;
+					}else{
+						return false;
+					}
+				}
+			});
 		
 		})
 
 		</script>
 
-																	
+															

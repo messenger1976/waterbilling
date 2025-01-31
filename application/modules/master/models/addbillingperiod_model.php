@@ -150,6 +150,7 @@ class addbillingperiod_model extends CI_Model {
 		return $result;
 	}
 	
+	
   	/** In Function Status Update records for select table **/
 	public function status_record($id,$status){
 		$sts = ($status == 1 ? 0 : 1);

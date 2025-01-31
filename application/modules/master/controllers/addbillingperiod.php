@@ -8,6 +8,7 @@ class addbillingperiod extends CI_Controller {
 	public $addPage  = 'addbillingperiod_add';	     //*****  Add page    *****//
 	public $editPage = 'addbillingperiod_edit';     //*****  Edit page   *****//
 	public $listPage = 'addbillingperiod';		   //*****  View page   *****//
+	public $excelfilename = 'billingperiod';		   //*****  View page   *****//
 	public $addbillingperiod_search_ajax = 'addbillingperiod_ajax';
 
 	public $listPage_redirect = '/master/addbillingperiod';		  //*****  Redirect View  *****//
@@ -19,6 +20,7 @@ class addbillingperiod extends CI_Controller {
   		$this->load->model('addbillingperiod_model','my_model');   //*****    Model Loading     *****//	
 		//$this->load->model('common_model','comm_model');	
 		$this->load->library('form_validation');
+		$this->load->helper('common');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 		error_reporting(0);
@@ -180,6 +182,77 @@ class addbillingperiod extends CI_Controller {
 		}
 	}
 	
+	/** Multiple close Function **/
+	public function multi_close(){
+		$data['msg'] ='';
+		if($this->input->post('delete_ids') != ''){
+			$delete_ids = $this->input->post('delete_ids');
+			for($i=0;$i<count($delete_ids);$i++){
+				$result = $this->my_model->status_record($delete_ids[$i],1);
+			}
+			if($result){
+				echo 'Close Successfully...';
+				//redirect($this->listPage_redirect);
+			}else{
+				echo 'Not Close...';
+				//redirect($this->listPage_redirect);
+			}
+		}else{
+			echo 'Select any Check Box...';
+			//redirect($this->listPage_redirect);
+		}
+	}
+	public function multi_open(){
+		$data['msg'] ='';
+		if($this->input->post('delete_ids') != ''){
+			$delete_ids = $this->input->post('delete_ids');
+			for($i=0;$i<count($delete_ids);$i++){
+				$result = $this->my_model->status_record($delete_ids[$i],0);
+			}
+			if($result){
+				echo 'Close Successfully...';
+				//redirect($this->listPage_redirect);
+			}else{
+				echo 'Not Close...';
+				//redirect($this->listPage_redirect);
+			}
+		}else{
+			echo 'Select any Check Box...';
+			//redirect($this->listPage_redirect);
+		}
+	}
+
+	public function billingforwardposting(){
+		$data['msg'] ='';
+		
+		$billperiodforward = explode(' ',$this->input->post('billingperiodforward'));
+		$currentbillingperiod = explode(' ',$this->input->post('currentbillingperiod'));
+		$billperiodforward_month = $billperiodforward[0];
+		$billperiodforward_year = $billperiodforward[1];
+		//$billperiodforward_id = $billperiodforward[2];
+
+		$currentbillingperiod_month = $currentbillingperiod[0];
+		$currentbillingperiod_year = $currentbillingperiod[1];
+		customerbillingperiod($billperiodforward_month,$billperiodforward_year,$currentbillingperiod_month,$currentbillingperiod_year);
+
+		/*if($this->input->post('delete_ids') != ''){
+			$delete_ids = $this->input->post('delete_ids');
+			for($i=0;$i<count($delete_ids);$i++){
+				$result = $this->my_model->status_record($delete_ids[$i],0);
+			}
+			if($result){
+				echo 'Close Successfully...';
+				//redirect($this->listPage_redirect);
+			}else{
+				echo 'Not Close...';
+				//redirect($this->listPage_redirect);
+			}
+		}else{
+			echo 'Select any Check Box...';
+			//redirect($this->listPage_redirect);
+		}*/
+	}
+
 	public function addbillingperiod_search(){		//*****  Add Search records  *****//
 		$data['msg'] ='';
 		//echo '<pre>'; print_r($this->input->post('billingperiod'));exit;
@@ -196,6 +269,62 @@ class addbillingperiod extends CI_Controller {
 			
 		//}		
 	}	
+
+	public function fileDownloadBillingPeriodMobileSearch($zone='',$billingmonth,$billingyear)
+	{
+		
+		$this->load->database();
+
+
+
+		//$CI = &get_instance();
+
+		$this->db->select("
+		tbl_addcustomer_reading.refno as billing_refno,
+        tbl_addcustomer.customer_id,
+        tbl_addcustomer.first_name,
+        tbl_addcustomer.last_name, 
+        tbl_addcustomer.address,
+		tbl_zone.zone as zonename,
+		tbl_addcustomer.account_type,
+        tbl_addcustomer_reading.previous_reading,
+		tbl_addcustomer_reading.reading as current_reading,
+		tbl_addcustomer_reading.arrears,
+		tbl_addcustomer_reading.month as billing_month,
+		tbl_addcustomer_reading.year as billing_year
+       
+        ");
+		$this->db->from("tbl_addcustomer_reading");
+			
+		
+		$this->db->join("tbl_addmetercustomer", 'tbl_addcustomer_reading.customer_id=tbl_addmetercustomer.customer_id AND tbl_addcustomer_reading.month=tbl_addmetercustomer.month AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year','left');
+
+		$this->db->join('tbl_addcustomer', 'tbl_addcustomer_reading.customer_id=tbl_addcustomer.customer_id','left');
+		$this->db->join('tbl_zone', 'tbl_addcustomer.zone=tbl_zone.id','left');
+
+		
+		if($billingmonth !='all' && $billingyear !='all'){
+			$this->db->where("tbl_addcustomer_reading.month",$billingmonth);
+			$this->db->where("tbl_addcustomer_reading.year",$billingyear);
+		}
+		
+		
+			
+		
+		
+		$this->db->order_by('tbl_addcustomer.last_name','ASC');
+		$this->db->order_by('tbl_addcustomer.first_name','ASC');
+		$query = $this->db->get();
+		
+
+
+
+
+		
+		
+		$this->load->helper('csv');
+		query_to_csv($query, TRUE, $this->excelfilename.'-'.date("d-m-Y").'.csv');
+	}
 	
 }
 ?>
