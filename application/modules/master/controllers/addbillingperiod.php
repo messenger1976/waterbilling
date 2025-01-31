@@ -281,13 +281,14 @@ class addbillingperiod extends CI_Controller {
 
 		$this->db->select("
 		tbl_addcustomer_reading.refno as billing_refno,
-        tbl_addcustomer.customer_id,
+        tbl_addcustomer.customer_id as Account_Number,
         tbl_addcustomer.first_name,
         tbl_addcustomer.last_name, 
         tbl_addcustomer.address,
 		tbl_zone.zone as zonename,
 		tbl_addcustomer.account_type,
 		tbl_addcustomer.meter_number,
+		tbl_addcustomer.meter_brand,
         tbl_addcustomer_reading.previous_reading,
 		tbl_addcustomer_reading.reading as current_reading,
 		tbl_addcustomer_reading.arrears,
