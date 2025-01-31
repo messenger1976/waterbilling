@@ -287,6 +287,7 @@ class addbillingperiod extends CI_Controller {
         tbl_addcustomer.address,
 		tbl_zone.zone as zonename,
 		tbl_addcustomer.account_type,
+		tbl_addcustomer.meter_number,
         tbl_addcustomer_reading.previous_reading,
 		tbl_addcustomer_reading.reading as current_reading,
 		tbl_addcustomer_reading.arrears,
