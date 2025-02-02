@@ -260,5 +260,13 @@ if(!function_exists("currentbalance_forwarding_period")){
     }
 }
 
+if(!function_exists("isValidMySQLDate")){
+    function isValidMySQLDate($date) {
+        $format = 'Y-m-d'; // MySQL DATE format
+        $d = DateTime::createFromFormat($format, $date);
+        
+        return $d && $d->format($format) === $date;
+    }
+}
 
 

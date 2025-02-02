@@ -7,6 +7,8 @@ class addmetercustomerreading extends CI_Controller {
 	public $table_name = 'tbl_addcustomer_reading';	  //*****  Table name  *****//
 	public $addPage  = 'addmetercustomerreading_add';	     //*****  Add page    *****//
 	public $editPage = 'addmetercustomerreading_edit';     //*****  Edit page   *****//
+	public $editSearchDetailPage = 'addmetercustomerreading_search_edit';     //*****  Search Edit page   *****//
+	public $editSearchPage = 'addmetercustomerreading_search';     //*****  Search Edit page   *****//
 	public $listPage = 'addmetercustomerreading';		   //*****  View page   *****//
 	public $searchPage ='addmetercustomer_search';
 	public $addcustomerajax = 'addmetercustomer_search _ajax';
@@ -16,7 +18,7 @@ class addmetercustomerreading extends CI_Controller {
 	public $listPage_redirect = '/master/addmetercustomerreading';		  //*****  Redirect View  *****//
 	public $addPage_redirect = '/master/addmetercustomerreading/add/';	 //*****  Redirect Add   *****//
 	public $editPage_redirect = '/master/addmetercustomerreading/edit/';  //*****  Redirect Edit  *****//
-	
+	public $addcustomer_meterajax = 'addmetercustomerreading_metersearch_ajax';
 	
 	public function __construct() {
         parent::__construct();
@@ -97,10 +99,12 @@ class addmetercustomerreading extends CI_Controller {
 		}
 	}
 	
-	public function edit($id){
+	public function edit($id=''){
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
-		$data['record'] = $this->my_model->get_single_record($id);
-		$data['addmonth'] = $this->my_model->get_months();
+		
+		
+		
+		//$data['addmonth'] = $this->my_model->get_months();
 		$data['msg'] ='';
 		if($this->input->post('edit') != ''){
 			$result = $this->my_model->update_record($id);
@@ -112,7 +116,41 @@ class addmetercustomerreading extends CI_Controller {
 			}
 		}
 		$this->load->view($this->headerPage,$header);
-		$this->load->view($this->editPage,$data);
+		if($id!=''){
+			$data['record'] = $this->my_model->get_single_record($id);
+			$this->load->view($this->editPage,$data);
+		}else{
+			$data['zone'] = $this->comm_model->get_zone_records();
+			$this->load->view($this->editSearchPage,$data);
+		}
+		
+
+	}
+	public function search_edit($id=''){
+		$header['roleResponsible'] = $this->top_model->get_responsibilities();
+		
+		
+		
+		//$data['addmonth'] = $this->my_model->get_months();
+		$data['msg'] ='';
+		if($this->input->post('edit') != ''){
+			$result = $this->my_model->update_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Updated Successfully...');
+				redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Updated...";
+			}
+		}
+		$this->load->view($this->headerPage,$header);
+		if($id!=''){
+			$data['record'] = $this->my_model->get_single_record($id);
+			$this->load->view($this->editPage,$data);
+		}else{
+			$data['zone'] = $this->comm_model->get_zone_records();
+			$this->load->view($this->editSearchPage,$data);
+		}
+		
 
 	}
 	
@@ -152,8 +190,26 @@ class addmetercustomerreading extends CI_Controller {
 		}
 	}
 
-	public function search(){
-		
+	public function getaddcustomersmetersearch()
+	{		//*****  Add Search records  *****//
+		$data['msg'] ='';
+		//echo '<pre>'; print_r($this->input->post('zone'));exit;
+		/*if($this->input->post('customer_id') =='' && $this->input->post('zone') =='' && $this->input->post('fromdate') =='' && $this->input->post('todate') =='')
+		{
+			$selBox ='<h6><span style="color:red">Dear Admin Please select atleast one option to search feilds</h6>' ;
+			echo $selBox;
+		}*/
+		//if($this->input->post('customer_id') !='' || $this->input->post('zone') !='' || $this->input->post('fromdate') !='' || $this->input->post('todate') !='')
+		//{
+			$customer_id = $this->input->post('customer_id');
+			$zone = $this->input->post('zone');
+			$fromdate = $this->input->post('fromdate');	
+			$todate = $this->input->post('todate');
+			
+			$data['record'] = $this->my_model->get_addcustomer_meterreading_records($customer_id,$zone,$fromdate,$todate);
+			//echo'<pre>';print_r($data['record']);exit;
+			$this->load->view($this->addcustomer_meterajax,$data);
+		//}		
 	}
 	
 }

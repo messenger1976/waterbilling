@@ -10,15 +10,18 @@ class addbillingperiod extends CI_Controller {
 	public $listPage = 'addbillingperiod';		   //*****  View page   *****//
 	public $excelfilename = 'billingperiod';		   //*****  View page   *****//
 	public $addbillingperiod_search_ajax = 'addbillingperiod_ajax';
+	public $addbillingperiod_import = 'addbillingperiod_import';
 
 	public $listPage_redirect = '/master/addbillingperiod';		  //*****  Redirect View  *****//
 	public $addPage_redirect = '/master/addbillingperiod/add/';	 //*****  Redirect Add   *****//
 	public $editPage_redirect = '/master/addbillingperiod/edit/';  //*****  Redirect Edit  *****//
-
+	public $importPage_redirect = '/master/addbillingperiod/import/';  //*****  Redirect import  *****//
 	public function __construct() {
         parent::__construct();
+		$this->load->library('session');
   		$this->load->model('addbillingperiod_model','my_model');   //*****    Model Loading     *****//	
-		//$this->load->model('common_model','comm_model');	
+		$this->load->model('common_model','comm_model');	
+		$this->load->model('addmetercustomerreading_model','meterreading_model');	
 		$this->load->library('form_validation');
 		$this->load->helper('common');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
@@ -327,6 +330,58 @@ class addbillingperiod extends CI_Controller {
 		
 		$this->load->helper('csv');
 		query_to_csv($query, TRUE, $this->excelfilename.'-'.date("d-m-Y").'.csv');
+	}
+
+	public function import(){
+		$data['msg'] ='';
+	 
+		$header['roleResponsible'] = $this->top_model->get_responsibilities();	
+		$header['record_info'] = $this->top_model->get_last_login_details(1);
+
+		$data['zone'] = $this->my_model->get_zone_records();
+		$data['month'] = $this->my_model->get_month_records();			
+			
+			
+		$this->load->view($this->headerPage,$header);
+
+		$this->load->view($this->addbillingperiod_import,$data);
+	}
+
+	public function upload(){
+		if (isset($_FILES["csv_file"]["name"])) {
+            $file = $_FILES["csv_file"]["tmp_name"];
+			$reading_date = $this->input->post('reading_date');
+            if (($handle = fopen($file, "r")) !== FALSE) {
+                fgetcsv($handle); // Skip header row
+
+                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                    $readingData = array(
+                        'refno' => (int)$data[0],
+                        'customer_id' => $data[1],
+                        'previous_reading' => (int) $data[10],
+						'current_reading' => (int) $data[11],
+						'billing_month' => (int) $data[13],
+						'billing_year' => (int) $data[14],
+                        'reading_date' => $data[15],
+                    );
+                    $this->meterreading_model->update_meterreading($readingData);
+                }
+                fclose($handle);
+
+                $this->session->set_flashdata('msg', 'CSV file imported successfully!');
+            } else {
+                $this->session->set_flashdata('msg', 'Error opening file!');
+            }
+        } else {
+            $this->session->set_flashdata('msg', 'Please select a file.');
+        }
+
+		//$redirect_uri = ADMIN_URL.'addbillingperiod/import';
+		redirect($this->importPage_redirect);
+		//header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+		exit;	
+        
+    
 	}
 	
 }

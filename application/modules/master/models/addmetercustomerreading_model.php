@@ -56,6 +56,12 @@ class addmetercustomerreading_model extends CI_Model {
 		$count = $query->num_rows();
 		if($count == 0){
 			
+			
+			$this->db->where('doc_name', 'BILLING');
+			$billing_number = $this->db->get('tbl_doc_series_number')->row();
+			$doc_num = $billing_number->doc_series_num+1;
+			
+
 			$set_data = array(
 				'customer_id' => trim($this->input->post('customer_id')),
 				'previous_reading' => $this->input->post('preview'),
@@ -72,8 +78,15 @@ class addmetercustomerreading_model extends CI_Model {
 				'bp_id' => $this->input->post('billing_period_id'),
 				'userid' => $this->session->userdata('userid'),
 				'username' => $this->session->userdata('username'),
+				'refno' =>  $doc_num,
 			);
 			$result = $this->db->insert($this->table_name, $set_data); 
+			$update_counter_array = array( 
+				'doc_series_num' => $doc_num
+			);
+			
+			$this->db->where('doc_name', 'BILLING');
+			$this->db->update('tbl_doc_series_number', $update_counter_array);
 			return $result;
 		}
 		else{
@@ -138,10 +151,23 @@ class addmetercustomerreading_model extends CI_Model {
 		return $result;
     }
 	
+	public function get_billing_period_id($zone='',$bp_month='',$bp_year='') {
+        $this->db->select("*");
+		$this->db->from($this->table_billing_period);
+		//$this->db->join($this->table_months, $this->table_months.'.month_id = '.$this->table_billing_period.'.bp_period_month');
+		//if($zone != ''){
+			$this->db->where("bp_period_month",$bp_month);
+			$this->db->where("bp_period_year",$bp_year);
+			$this->db->where("bp_zone_id",$zone);
+			$query = $this->db->get()->row();
+			//$result = $query->row();
+		//}
+		return $query;
+    }
 	public function get_customer_info($id){
 		
 		$this->db->select('tbl_addcustomer.special_priviledge,tbl_addcustomer.customer_id, tbl_addcustomer.first_name, tbl_addcustomer.middle_name, tbl_addcustomer.last_name,
-		                  tbl_addcustomer.email_id, tbl_addcustomer.mobile1, tbl_addcustomer.mobile2, tbl_addcustomer.customer_type,
+		                  tbl_addcustomer.email_id, tbl_addcustomer.mobile1, tbl_addcustomer.mobile2, tbl_addcustomer.customer_type,tbl_addcustomer.account_type,tbl_addcustomer.classification,
 						  tbl_addcustomer.zone as zone_id, tbl_zone.id, tbl_zone.zone, tbl_classification.class_name, tbl_addcustomer.meter_number, tbl_customer_type.*');
 		$this->db->from('tbl_addcustomer');
 		$this->db->join('tbl_zone', 'tbl_addcustomer.zone = tbl_zone.id');
@@ -157,6 +183,33 @@ class addmetercustomerreading_model extends CI_Model {
 		return $result;
 		
 	}
+
+	public function get_addcustomer_meterreading_records($customer_id,$zone,$fromdate,$todate)
+	{ 
+        $this->db->select($this->table_customername.".customer_id,".$this->table_customername.".first_name,".$this->table_customername.".last_name,".$this->table_customername.".middle_name,".$this->table_customername.".gender,".$this->table_customername.".address,".$this->table_customername.".mobile1,".$this->table_customername.".mobile2,".$this->table_customername.".email_id,".$this->table_customername.".customer_type,".$this->table_name.".previous_reading,".$this->table_name.".reading,".$this->table_name.".consumed,".$this->table_name.".unit_price,".$this->table_name.".sc_discount,".$this->table_name.".penalty,".$this->table_name.".arrears,".$this->table_name.".amount,".$this->table_name.".month,".$this->table_name.".year,".$this->table_name.".arrears,".$this->table_name.".date,".$this->table_name.".refno,".$this->table_name.".id");
+		$this->db->from($this->table_customername);
+		$this->db->join($this->table_name,$this->table_customername.'.customer_id='.$this->table_name.'.customer_id');
+		if($customer_id!='')
+		{
+			$this->db->where($this->table_customername.'.customer_id',$customer_id);
+		}
+		if($zone!='')
+		{
+			$this->db->where($this->table_customername.'.zone',$zone);	
+		}
+		if($fromdate!=''){
+			$this->db->where($this->table_name.'.date >=',date('Y-m-d', strtotime($fromdate)));
+		}		
+		if($todate !=''){
+			$this->db->where($this->table_name.'.date <=',date('Y-m-d', strtotime($todate)));
+		}				
+		$this->db->order_by($this->table_name.'.date','ASC');
+		
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result;			
+	}	
+
 	public function get_cust_class_id($cust_id='') {
         $this->db->select("*");
 		$this->db->from($this->table_customername);
@@ -232,6 +285,33 @@ class addmetercustomerreading_model extends CI_Model {
 		return $result;
 	}
 	
+	public function update_meterreading($data){
+		$customerinfo = $this->get_customer_info($data['customer_id']);
+		$bp = $this->get_billing_period_id($customerinfo[0]['zone_id'],$data['billing_month'],$data['billing_year']);
+		
+		$consumed = $data['current_reading']-$data['previous_reading'];
+		$cubicmeter_rate = $this->get_unit_price($consumed,$customerinfo[0]['classification']); // Get unit price
+		$discount = 0;
+		if($customerinfo[0]['account_type']==3){
+			$discount = ($cubicmeter_rate->per_unit * 5)/100;
+		}
+		$total_amount = $cubicmeter_rate->per_unit - $discount;
+		$amount_total_penalty = 0;
+		if($customerinfo[0]['special_priviledge']==='0'){
+			$amount_total_penalty = ($total_amount * 10)/100;
+			$amount_total_penalty = $amount_total_penalty + $total_amount;
+		}else{
+			$amount_total_penalty = $total_amount;
+		}
+		$reading_date = date('d-m-Y',strtotime($data['reading_date']));
+		//echo 'account type:'.$customerinfo[0]['zone_id'].' '.$data['billing_month'];
+		//print_r($bp);
+		//exit;
+    	$sql = "UPDATE tbl_addcustomer_reading 
+            SET reading = ?, consumed = ?, sc_discount = ?, amount = ?, unit_price = ?, penalty = ?, date = ? , bp_id = ?
+            WHERE refno = ?";
+    	$this->db->query($sql, [$data['current_reading'],  $consumed, $discount, number_format($total_amount,2,".",""), $cubicmeter_rate->per_unit,number_format($amount_total_penalty,2,".",""), $reading_date, $bp->bp_id,$data['refno']]);
+	}
 	
 }
 ?>

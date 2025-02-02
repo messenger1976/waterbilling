@@ -338,7 +338,7 @@ class addcustomer extends CI_Controller {
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->incomesearchPage,$data);
 	}
-	public function monthlysearch()
+	public function monthlysearch($id='')
 	{ 
 		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 		$data['record'] = $this->my_model->get_single_record($id);

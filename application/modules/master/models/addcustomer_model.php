@@ -301,28 +301,27 @@ class addcustomer_model extends CI_Model {
 	
 	public function get_addcustomer_payment_records($customer_id,$zone,$fromdate,$todate)
 	{ 
-        $this->db->select($this->table_name.".customer_id,".$this->table_name.".first_name,".$this->table_name.".gender,".$this->table_name.".address,".$this->table_name.".mobile1,".$this->table_name.".mobile2,".$this->table_name.".email_id,".$this->table_name.".customer_type,".$this->table_meter.".oldmeter,".$this->table_meter.".aftermeter,".$this->table_meter.".amount,".$this->table_meter.".balance,".$this->table_meter.".pay_amount,".$this->table_meter.".status,".$this->table_meter.".total");
+        $this->db->select($this->table_name.".customer_id,".$this->table_name.".first_name,".$this->table_name.".last_name,".$this->table_name.".middle_name,".$this->table_name.".gender,".$this->table_name.".address,".$this->table_name.".mobile1,".$this->table_name.".mobile2,".$this->table_name.".email_id,".$this->table_name.".customer_type,".$this->table_meter.".oldmeter,".$this->table_meter.".aftermeter,".$this->table_meter.".amount,".$this->table_meter.".balance,".$this->table_meter.".pay_amount,".$this->table_meter.".status,".$this->table_meter.".total");
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_meter,$this->table_meter.'.customer_id='.$this->table_name.'.customer_id');
 		if($customer_id!='')
 		{
-		$this->db->where($this->table_name.'.customer_id',$customer_id);
+			$this->db->where($this->table_name.'.customer_id',$customer_id);
 		}
 		if($zone!='')
 		{
-		$this->db->where($this->table_name.'.zone',$zone);	
+			$this->db->where($this->table_name.'.zone',$zone);	
 		}
 		if($fromdate!=''){
-			$this->db->where($this->table_name.'.create_date_time >=',date('Y-m-d', strtotime($fromdate)));
+			$this->db->where($this->table_meter.'.create_date >=',date('Y-m-d', strtotime($fromdate)));
 		}		
 		if($todate !=''){
-			$this->db->where($this->table_name.'.create_date_time <=',date('Y-m-d', strtotime($todate)));
+			$this->db->where($this->table_meter.'.create_date <=',date('Y-m-d', strtotime($todate)));
 		}				
 		$this->db->order_by($this->table_meter.'.id','ASC');
 		$this->db->where($this->table_name.'.customer_type','metercustomer');
 		$query = $this->db->get();
 		$result = $query->result_array();
-		//echo $this->db->last_query();
 		return $result;			
 	}	
 	public function get_addcustomer_meter_records($zone,$mobile)

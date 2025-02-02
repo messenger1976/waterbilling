@@ -32,13 +32,13 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
-								<h5> My Income <span class="txt-color-blue">$<?php print_r($intotal);?></span></h5>
+								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
@@ -51,7 +51,7 @@
 								 $extotal = $extotal1 + $extotal2;
 							?>
 							<li class="sparks-info">
-								<h5> My Expense <span class="txt-color-purple">$<?php print_r($extotal);?></span></h5>
+								<h5> Expense <span class="txt-color-purple">PHP <?php print_r(number_format($extotal,2));?></span></h5>
 								<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
 									
 								</div>
@@ -102,9 +102,8 @@
 											<fieldset>
 												<legend>Meter Customer-Search
 												        <div class="pull-right" style="padding-right:20px;">
-															<input type="submit" class="btn btn-primary" name="search" id="search" value="search" onclick="getaddcustomer_meter();" style="margin-bottom: 5px;">
-															<a href="<?php echo ADMIN_URL;?>addcustomer/fileDownloadajax/<?php if($this->input->post('customer_id')!=''){ echo $this->input->post('customer_id'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;}?>/<?php if($this->input->post('fromdate')!=''){ echo $this->input->post('fromdate'); }else{ echo 0;}?>/<?php if($this->input->post('todate')!=''){ echo $this->input->post('todate'); }else{ echo 0;}?>"class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Excel</a>
-															<a href="<?php echo ADMIN_URL;?>addcustomer/fileDownloadMonthlyMeterprint/<?php if($this->input->post('customer_id')!=''){ echo $this->input->post('customer_id'); }else{ echo 0;} ?>/<?php if($this->input->post('zone')!=''){ echo $this->input->post('zone'); }else{ echo 0;}?>"class="btn btn-sm btn-primary" style="margin-bottom: 4px;">Export Pdf</a>
+															
+															
 														</div>
 												</legend>
 												<div class="form-group col-lg-6">
@@ -147,7 +146,13 @@
 													</div>
 												</div>	
 															
-													
+												<div class="form-group col-lg-12">
+													<div class="col-lg-12 controls">
+														<div class="form-group"> 
+                                                            <input type="submit" class="btn btn-primary" name="search" id="search" value="search" onclick="getaddcustomer_meter();" style="margin-bottom: 5px;">
+														</div>
+													</div>
+												</div>	
 													
 											</fieldset>
 
@@ -185,6 +190,128 @@
 		</div>
 		<!-- END MAIN PANEL -->
 		
+
+
+
+        				<!-- Modal -->
+				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+									&times;
+								</button>
+								<h4 class="modal-title" id="myModalLabel">Edit Customer Meter Reading</h4>
+							</div>
+							<div class="modal-body">
+								
+                                <form name="frm_update" id="frm_update" action="" method="POST">
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
+                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:white;" readonly>
+                                                <?php echo form_error('billing_period'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Previous Reading : </strong></span>
+                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:white;" readonly>
+                                                <?php echo form_error('previous_reading'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Current Reading : <i style="color:red;">*</i></strong></span>
+                                                <input class="form-control" type="text" id="current_reading" name="current_reading" required>
+                                                <?php echo form_error('current_reading'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Consumed : </strong></span>
+                                                <input class="form-control" type="text" id="consumed" name="consumed" style="background-color:white;" readonly>
+                                                <?php echo form_error('consumed'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Current Bill : </strong></span>
+                                                <input class="form-control" type="text" id="current_bill" name="current_bill" style="background-color:white;" readonly>
+                                                <?php echo form_error('current_bill'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>SC Discount : </strong></span>
+                                                <input class="form-control" type="text" id="sc_discount" name="sc_discount" style="background-color:white;">
+                                                <?php echo form_error('sc_discount'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Arrears : </strong></span>
+                                                <input class="form-control" type="text" id="arrears" name="arrears" style="background-color:white;">
+                                                <?php echo form_error('arrears'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Amt before due date : </strong></span>
+                                                <input class="form-control" type="text" id="total_amount" name="total_amount" style="background-color:white;" readonly>
+                                                <?php echo form_error('arrears'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Amt after due date : </strong></span>
+                                                <input class="form-control" type="text" id="penalty" name="penalty" style="background-color:white;" readonly>
+                                                <?php echo form_error('arrears'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Reading date : </strong></span>
+                                                <input class="form-control" type="date" id="reading_date" name="reading_date" style="background-color:white;">
+                                                <?php echo form_error('reading_date'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+								</form>
+				
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">
+									Cancel
+								</button>
+								<button type="button" class="btn btn-primary" id="btn_save" data-dismiss="modal">
+									Update
+								</button>
+							</div>
+						</div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+				</div><!-- /.modal -->
+
+
 
 		<?php include('footer.php');?>
 
@@ -371,6 +498,9 @@
 			});
 			
 			/* END TABLETOOLS */
+
+            
+            
 		
 		})
 
@@ -395,6 +525,10 @@ function fun_calendor(field){
 	$("#"+field).focus();
 } 
 $(document).ready(function(){
+
+    
+
+
 	$("#fromdate").datepicker({
 		showAnim: null,
 		dateFormat: 'dd-mm-yy',
@@ -436,15 +570,17 @@ $(document).ready(function(){
 			var fromdate = $("#fromdate").val();
 			var todate = $("#todate").val();
 			$.ajax({
-				
+				beforeSend: function() {
+                    showSpinner(); // Call this to show the spinner
+                },
 				type : "POST",
-				url	: '<?php echo ADMIN_URL;?>addcustomer/getaddcustomersmetersearch',
-				//data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate+",
+				url	: '<?php echo ADMIN_URL;?>addmetercustomerreading/getaddcustomersmetersearch',
 				data	: "customer_id="+customer_id+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate,
 				complete: function(data){
 					var op = data.responseText.trim();
 					//alert(op);
 					$("#customerDiv").html(op);
+                    hideSpinner();
 				}
 			});
 		}

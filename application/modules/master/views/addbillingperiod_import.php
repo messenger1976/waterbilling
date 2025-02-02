@@ -1,5 +1,4 @@
-
-	
+<!DOCTYPE html>
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -14,31 +13,27 @@
 
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
-					<li><a href="<?php echo ADMIN_URL?>">Home</a></li>
-					<li><a href="<?php echo ADMIN_URL?>addmetercustomerreading/add/">Meter Customer Reading Add</a></li>
-					<li>List View</li>
+					<li><a href="<?php echo ADMIN_URL;?>">Home</a></li>
+					<li><a href="<?php echo ADMIN_URL;?>addbillingperiod/import">Billing Period</a></li>
+					<li>import</li>
 				</ol>
 				
 			</div>
 			<!-- END RIBBON -->
-
-			<!-- MAIN CONTENT -->
+<!-- MAIN CONTENT -->
 			<div id="content">
 
 				<div class="row">
 					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> View <span>> Meter Customer Reading  </span>						</h1>
+						<h1 class="page-title txt-color-blueDark"><i class="glyphicon glyphicon-search"></i>&nbsp;Import <span>>  Billing Period  </span></h1>
 					</div>
-					<div class="col-xs-12 col-sm-10 col-md-7 col-lg-6">
-											
-											</div>
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
@@ -77,157 +72,92 @@
 				<section id="widget-grid" class="">
 
 					<!-- row -->
-					<div class="row">
-				
-						<!-- NEW WIDGET START -->
-						<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-				
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
-								
-								<header style="height: 42px;">
-									<span class="widget-icon"> <i class="fa fa-users"></i> </span>
-									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Meter Customer Reading</strong>
-									<button class="btn btn-sm btn-primary" style="float:right;"><a href="<?php echo ADMIN_URL?>addmetercustomerreading/add" style="color: #fff;"><i class="fa fa-plus"></i> Add Meter Reading</a></button>
-									</p>
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				
-									</div>
-									<!-- end widget edit box -->
-									<script type="text/javascript">
-                                        function deleteAllData(){ 
-                                            var checked_num = $('input[name="delete_ids[]"]:checked').length;
-                                            if (checked_num == 0) {
-                                                alert('Select Atleast One Check Box... ');
-                                                return false;
-                                            }else if (checked_num > 0){ 
-                                                if(confirm('Confirm Delete?')==true){
-                                                    //$('#careers').submit();
-                                                    return true;
-                                                }else{
-													return false;
-												}
-                                            }
-                                        }
-                                    </script>
-				                    <form method="post" action="<?php echo ADMIN_URL;?>addmetercustomerreading/multi_delete">
-										<!-- widget content -->
-										<div class="widget-body no-padding">
-										   <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
-											
-												<thead>			                
-													<tr>
-														<th data-hide="phone"><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></th>
-														<th data-hide="phone">S No</th>
-														<th data-class="expand">Billing Ref No</th>
-														<th data-class="expand">Customer-Id</th>
-														<th data-class="expand">Customer Name</th>
-														<th data-hide="expand">Previous Reading</th>
-														<th data-hide="expand">Current Reading</th>
-														<th data-hide="expand">Consumed</th>
-														<th data-hide="expand">Billing Period</th>
-														<th data-hide="expand">Reading Date</th>
-														<th data-hide="expand">Action</th>
-													</tr>
-												</thead>
-												<tbody>
-												  <?php
-                                                    if(count($record) > 0){
-                                                        $i=1;
-                                                        foreach($record as $key => $row){ 
-                                                ?>   
-													<tr>
-														<td><label>
-																<input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" />
-																<span class="lbl"></span>
-															</label>
-														</td>
-														<td><?php echo $i; ?></td>
-														<td><?php echo stripslashes($row['refno']); ?></td>
-													    <td><?php echo stripslashes($row['customer_id']); ?></td>
-														<td><?php echo stripslashes($row['last_name'].', '.$row['first_name']); ?></td>
-														<td><?php echo stripslashes($row['previous_reading']); ?></td>
-                                                        <td><?php echo stripslashes($row['reading']); ?></td>
-														<td><?php echo stripslashes($row['consumed']); ?></td>
-														<td><?php echo stripslashes($row['month_name']).' '.$row['year']; ?></td>
-														<td>
-														<?php 
-														//if(isValidMySQLDate($row['date']))
-														if($row['date']!='')
-														{
-															echo date('d M Y',strtotime($row['date']));
-														}else{
-															echo '';
-														}
-														 
-														?></td>
-														<td>
-															<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-															    <a class="green" href="<?php echo ADMIN_URL;?>addmetercustomerreading/edit/<?php echo $row['id']; ?>"  title="Edit">
-																	<i class="fa fa-edit"></i>
-																</a>
-																<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addmetercustomerreading/delete/<?php echo $row['id'];?>';}" title="Delete">
-																			<i class="fa fa-remove"></i>
-																</a>
-															</div>
-																<div class="visible-xs visible-sm hidden-md hidden-lg">
-																	<div class="inline position-relative">
-																		<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
-																			<i class="icon-caret-down icon-only bigger-120"></i>
-																		</button>
-																		
-																		<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
-																			<li>
-																			    <a href="<?php echo ADMIN_URL;?>addmetercustomerreading/edit/<?php echo $row['id']; ?>" class="tooltip-success" data-rel="tooltip" title="Edit">
-																					<span class="green">
-																						<img src="<?php echo base_url();?>images/favicon/document-edit.gif">
-																					</span>
-																				</a>
-																				<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addmetercustomerreading/delete/<?php echo $row['id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
-																					<span class="red">
-																						<img src="<?php echo base_url();?>images/favicon/delete.png">
-																					</span>
-																				</a>
-																			</li>
-																		</ul>
-																	</div>
-																</div></td>
-													</tr>
-														<?php $i++;} }?>	
-												</tbody>
-											</table>
-											
 
-										</div>
-										<!-- end widget content -->
-										<div>&nbsp;</div>
-									  <div class="row">
-									   <div class="col-lg-12">
-                                        	<input type="submit" class="btn btn-sm btn-primary" name="add" id="add" value="Delete All" onClick="return deleteAllData();" />
-                                         </div>
+					<div class="row">
+
+						<!-- a blank row to get started -->
+						<div class="col-sm-6 col-lg-12">
+						
+
+								<!-- your contents here -->
+								<div class="panel panel-default">
+									
+									<div class="widget-body">
+				
+										<div class="form-horizontal" >
+										  	
+											<?php if($msg != ''){?>
+											<div class="alert alert-block alert-success">
+												<button type="button" class="close" data-dismiss="alert">
+												<i class="icon-remove"></i>
+												</button>
+												<p>
+													<i class="icon-ok"></i>
+													<?php echo $msg?$msg:'';?>
+												</p>
+											</div>
+											<?php } ?>	
+											
+											<fieldset>
+												<legend>Import Billing Period
+												        <div class="pull-right" style="padding-right:20px;">
+															
+															
+														</div>
+												</legend>
+
+                                                <form action="<?php echo ADMIN_URL;?>addbillingperiod/upload" method="post" enctype="multipart/form-data">
+                                                    <div class="form-group col-lg-6">
+                                                        <div class="col-lg-12 controls">
+                                                            <div class="form-group"> 
+                                                                <span class="input-group-addon"><i class="icon-user"></i><strong>Import File : </strong></span>
+                                                                <input class="form-control" type="file" name="csv_file" accept=".csv" id="csv_file" required>
+                                                                <?php echo form_error('customer_id'); ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--<div class="form-group col-lg-6">
+                                                        <div class="col-lg-12 controls">
+                                                            <div class="form-group"> 
+                                                                <span class="input-group-addon"><i class="icon-user"></i><strong>Reading Date : </strong></span>
+                                                                <input class="form-control" type="date" name="reading_date" accept=".csv" id="reading_date" required>
+                                                                <?php echo form_error('reading_date'); ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>-->
+                                                                
+                                                    <div class="form-group col-lg-12">
+                                                        <div class="col-lg-12 controls">
+                                                            <div class="form-group"> 
+                                                                <input type="submit" class="btn btn-primary" name="import" id="import" value="Import" style="margin-bottom: 5px;">
+                                                            </div>
+                                                        </div>
+                                                    </div>	
+												</form>	
+											</fieldset>
+
+												
+				
 									</div>
-				                    </form>  
-									 
-									 <div>&nbsp;</div>
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
-				
-						</article>
-						<!-- WIDGET END -->
-				
+								    
+									
+								</div>	
+						</div>
+						
+							
+				         </div>
+								
+					
+					                 
+					
 					</div>
-				
+                    
+
+						
 					<!-- end row -->
+
+				</section>
+				<!-- end widget grid -->
 
 					
 
@@ -241,11 +171,17 @@
 		<!-- END MAIN PANEL -->
 		
 
+
+
+
+
+
 		<?php include('footer.php');?>
 
 	</body>
 
 </html>
+
 <!-- PAGE RELATED PLUGIN(S) -->
 		<script src="<?php echo base_url();?>js/plugin/datatables/jquery.dataTables.min.js"></script>
 		<script src="<?php echo base_url();?>js/plugin/datatables/dataTables.colVis.min.js"></script>
@@ -425,9 +361,91 @@
 			});
 			
 			/* END TABLETOOLS */
+
+            
+            
 		
 		})
 
 		</script>
-
+		<script type="text/javascript">
 		
+		function customer_type_values(){
+			$("#showcustomers").hide();			
+			if($("#customer_type").val()=='monthlycustomer'){
+				$("#showcustomers").show();
+			}
+			else if($("#customer_type").val()=='metercustomer'){
+				$("#showcustomers").hide();
+			}
+		}
+	
+		</script>
+		
+		<script type="text/javascript">
+var curDate = '<?php echo date('d-m-Y') ?>';	
+function fun_calendor(field){
+	$("#"+field).focus();
+} 
+$(document).ready(function(){
+
+    
+
+
+	$("#fromdate").datepicker({
+		showAnim: null,
+		dateFormat: 'dd-mm-yy',
+		// showOn: 'both',
+		buttonImage: '/images/calender.jpg',
+		buttonImageOnly: true,
+		firstDay: 1,
+		nextText: '',
+		prevText: '',
+		numberOfMonths: [1, 1],
+		//defaultDate: new Date(curDate),
+		//minDate: curDate,
+		//maxDate: ''
+	});
+	$("#todate").datepicker({
+		showAnim: null,
+		dateFormat: 'dd-mm-yy',
+		// showOn: 'both',
+		buttonImage: '/images/calender.jpg',
+		buttonImageOnly: true,
+		firstDay: 1,
+		nextText: '',
+		prevText: '',
+		numberOfMonths: [1, 1],
+		//defaultDate: new Date(curDate),
+		//minDate: curDate,
+		//maxDate: ''
+	});
+});
+
+</script>	
+
+<script type="text/javascript">
+	
+		function getaddcustomer_meter(){
+			
+			var customer_id = $("#customer_id").val();
+			var zone = $("#zone").val();
+			var fromdate = $("#fromdate").val();
+			var todate = $("#todate").val();
+			$.ajax({
+				beforeSend: function() {
+                    showSpinner(); // Call this to show the spinner
+                },
+				type : "POST",
+				url	: '<?php echo ADMIN_URL;?>addmetercustomerreading/getaddcustomersmetersearch',
+				data	: "customer_id="+customer_id+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate,
+				complete: function(data){
+					var op = data.responseText.trim();
+					//alert(op);
+					$("#customerDiv").html(op);
+                    hideSpinner();
+				}
+			});
+		}
+	
+		</script>
