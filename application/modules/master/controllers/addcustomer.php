@@ -1030,7 +1030,7 @@ class addcustomer extends CI_Controller {
 		
 		$this->load->database();
 
-		$this->db->select($this->table_name.".customer_id,".$this->table_name.".first_name,".$this->table_name.".last_name, ".$this->table_name.".address,".$this->table_zone.".zone as zonename,".$this->table_customerreading.".month, ".$this->table_customerreading.".year, ".$this->table_customerreading.".penalty as Amount ");
+		$this->db->select($this->table_name.".customer_id,".$this->table_name.".first_name,".$this->table_name.".last_name, ".$this->table_name.".address,".$this->table_name.".meter_number,".$this->table_name.".meter_brand,".$this->table_zone.".zone as zonename,".$this->table_customerreading.".month, ".$this->table_customerreading.".year, ".$this->table_customerreading.".penalty as Amount ");
 		$this->db->from($this->table_customerreading);
 			
 		
