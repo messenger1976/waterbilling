@@ -206,10 +206,10 @@
 														    <!--<input class="print_button" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i; ?>" type="button" name="print" value="Print">-->
 															<a href="#" title="Print">
 																 <i class="print_button fa fa-print" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
-																 </a>
+																 </a>&nbsp;&nbsp;&nbsp;
 
 															<a href="#" title="Print New">
-																<i class="print_button_new fa fa-print" id="print_button_new<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
+																<i class="print_button_new fa fa-table" id="print_button_new<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
 																 </a>
 																<!--<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addpaymentcustomer/delete/<?php echo $row['id'];?>';}" title="Delete">
 																			<i class="fa fa-remove"></i>
