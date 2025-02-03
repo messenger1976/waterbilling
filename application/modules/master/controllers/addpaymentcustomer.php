@@ -693,6 +693,268 @@ EOD;
     //============================================================+
 }
 
+
+public function monthly_receipt($customer,$month,$year,$invoice_id) {
+		
+	//print_r($customer);	print_r($month);	print_r($year);	
+    $receiptdata = $this->my_model->getReceipt_Data(trim($customer), $month, $year);
+	
+
+	$getaddress = $this->my_model->get_address();
+	$customerdetials = $this->my_model->customer_deatils(trim($customer));
+	$this->load->model('addcustomer_model','my_model123');
+	$record = $this->my_model123->get_adminrecord();
+	extract($record);
+	 
+	//print_r($customerdetials);
+    extract($receiptdata);
+    extract($getaddress);
+	extract($customerdetials);
+	$first_name = strtoupper(trim($first_name));
+	$last_name = strtoupper(trim($last_name));
+	$middle_name = strtoupper(trim($middle_name));
+	$address = strtoupper(trim($address));
+	$city = strtoupper(trim($city));
+	$state = strtoupper(trim($state));
+	$curdate = date('Y-m-d');
+	$datefor = date('d-m-Y', strtotime($tdate));
+	$panalty_msg ='';
+	if($amount !== $reading_amount){
+		$penalty = $amount - $reading_amount;
+		//$amount = $penalty;
+		$panalty_msg = '<span style="font-size:9px;line-height:8px;"><br/>Penalty = 10% = '. number_format($reading_amount,2).' + '.number_format($penalty,2).'</span>';
+	}
+
+	$amountinwords = convertNumberToWordsPH($grand_total);	
+	//============================================================+
+    // create new PDF document
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, 'Legal', true, 'UTF-8', false);
+
+    // set document information
+    $pdf->SetCreator(PDF_CREATOR);
+
+
+    // remove default header/footer
+    $pdf->setPrintHeader(false);
+    $pdf->setPrintFooter(false);
+
+    // set default header data
+    $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE . ' 001', PDF_HEADER_STRING, array(0, 64, 255), array(0, 64, 128));
+    $pdf->setFooterData(array(0, 64, 0), array(0, 64, 128));
+
+    // set header and footer fonts
+    $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+    $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+    // set default monospaced font
+    $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+    // set margins
+    //$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+    $pdf->SetMargins(0, 0, 0);
+    $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+    // set auto page breaks
+    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+    // set image scale factor
+    //$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+    // set some language-dependent strings (optional)
+    if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+        require_once(dirname(__FILE__) . '/lang/eng.php');
+        $pdf->setLanguageArray($l);
+    }
+
+    // ---------------------------------------------------------    
+    // set default font subsetting mode
+    $pdf->setFontSubsetting(false);
+
+    // Set font
+    // dejavusans is a UTF-8 Unicode font, if you only need to
+    // print standard ASCII chars, you can use core fonts like
+    // helvetica or times to reduce file size.
+    $pdf->SetFont('helvetica', '', 9, '', true);
+	//$pdf->SetBackColor(255,255,255);
+
+    // Add a page
+    // This method has several options, check the source code documentation for more information.
+    $pdf->AddPage();
+
+    /// create some HTML content
+	$base_url = site_url();
+	$amount = number_format($amount,2);
+	$grand_total = number_format($grand_total,2);
+
+	$detailspayment = detailsbillingpayment($invoice_id);
+	$html = <<<EOD
+	<br/>
+	<br/>
+	<br/>
+	
+	<table border="0" cellspacing="5" cellpadding="0" width="100%" style="font-family: "Courier New", Courier, monospace;">
+	
+	<tr>
+	<td>
+	<div class="invoice-inner">
+		 
+		<div class="invoice-address">
+		    <div style="height: 14px;"></div>
+		    <table border="0" cellspacing="5" cellpadding="0" width="100%">
+			  <tbody>	
+					<tr>
+						<td align="left" valign="top">
+							<div style="text-align: right; margin-right:15px;">
+							
+								<span style="font-size:0.6em;"></span>
+							</div>
+							<div style="padding: 0px;">
+								<span style="font-size:0.8em; font-family: Arial,"Courier New", Courier, monospace;">	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$first_name $middle_name $last_name</span>
+							<br/>
+								<span style="font-size:0.8em;font-family: Arial,"Courier New", Courier, monospace; ">     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$address</span>
+							<br/>
+								<span style="font-size:0.8em;font-family: Arial,"Courier New", Courier, monospace;">      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$customer_id</span>
+							</div>
+						</td>
+						<td width="9%">&nbsp;</td>
+						<td><div style="text-align: right; margin-right:15px;">
+							<span style="font-size:0.6em;"></span>
+							</div>
+							<div style="padding: 0px;">
+								<span style="font-size:0.8em; font-family: Arial,"Courier New", Courier, monospace;">	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$first_name $middle_name $last_name</span>
+							<br/>
+								<span style="font-size:0.8em; font-family: Arial,"Courier New", Courier, monospace;">     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$address</span>
+							<br/>
+								<span style="font-size:0.8em;font-family: Arial,"Courier New", Courier, monospace;">      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$customer_id</span>
+							</div>
+						</td>
+					</tr>
+					<tr><td></td><td></td><td></td></tr>
+					<tr><td></td><td></td><td></td></tr>
+					<tr style="font-weight: normal;font-size:8pt;font-family: Arial,"Courier New", Courier, monospace;">
+						<td valign="top" style="height:20px;">$amountinwords</td>
+						<td>&nbsp;</td>
+						<td valign="top" style="height:20px;">$amountinwords</td>
+					</tr>
+					<tr style="font-size:8pt;font-family: Arial,"Courier New", Courier, monospace;">
+						<td valign="top" height="15px;">
+							<br/>
+							
+							<table border=0 cellpadding=5 cellspacing=5 width="100%" style="font-size:9pt;font-family: Arial,"Courier New", Courier, monospace;">
+								$detailspayment
+								<!--<tr>
+									<td></td>
+									<td></td>
+									<td align=center></td>
+									<td align=right style="text-align:right;"></td>
+								</tr>-->
+								
+							</table>
+
+							<table border=0 cellpadding=5 cellspacing=5 width="100%" style="font-size:9pt;font-family: Arial,"Courier New", Courier, monospace;">
+								
+								<tr>
+									<td></td>
+									<td></td>
+									<td align=right></td>
+									<td align=right style="text-align:right;"></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td align=center></td>
+									<td align=right style="text-align:right;width: 70px;">$leaking_amount<br/>$vat_amount<br/>$grand_total</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td align=center></td>
+									<td align=right style="text-align:right;"></td>
+								</tr>
+								
+							</table>
+						</td>
+						<td>&nbsp;</td>
+						<td valign="top">
+							<br/>
+						
+							<table border=0 cellpadding=5 cellspacing=5 width="100%" style="font-size:9pt;font-family: Arial,"Courier New", Courier, monospace;">
+								$detailspayment
+								<!--<tr>
+									<td></td>
+									<td></td>
+									<td align=center></td>
+									<td align=right style="text-align:right;"></td>
+								</tr>-->
+								
+							</table>
+
+							<table border=0 cellpadding=5 cellspacing=5 width="100%" style="font-size:9pt;font-family: Arial,"Courier New", Courier, monospace;">
+								
+								<tr>
+									<td></td>
+									<td></td>
+									<td align=right></td>
+									<td align=right style="text-align:right;"></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td align=center></td>
+									<td align=right style="text-align:right;width: 70px;">$leaking_amount<br/>$vat_amount<br/>$grand_total</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td align=center></td>
+									<td align=right style="text-align:right;"></td>
+								</tr>
+								
+								
+							</table>
+						</td>
+					</tr>
+					
+					
+					<tr style="font-size:9pt;font-family: Arial,"Courier New", Courier, monospace;">
+						<td valign="top">$datefor</td>
+						<td>&nbsp;</td>
+						<td valign="top">$datefor</td>
+					</tr>
+					<tr style="font-size:8pt;font-family: Arial,"Courier New", Courier, monospace;">
+						<td valign="top"></td>
+						<td>&nbsp;</td>
+						<td valign="top"></td>
+					</tr>
+				</tbody>	
+            </table>
+		</div>
+		<br/><br/><br/><br/>
+		
+	 </div>	
+	</td>
+	 </tr>	
+	</table>
+    
+	<script>
+	window.print();
+	</script>
+EOD;
+	echo $html;
+//output the HTML content
+   //$pdf->writeHTML($html, true, false, true, false, '');
+
+    // ---------------------------------------------------------    
+    // Close and output PDF document
+    // This method has several options, check the source code documentation for more information.
+   //$pdf->Output($customer . '.pdf', 'I');
+
+    //============================================================+
+    // END OF FILE
+    //============================================================+
+}
+
     //public function monthlyreceipt_single($customer,$month,$year) {
 	public function monthlyreceipt_single($customer,$month,$year,$name,$current_reading,$oldmeter,$unit,$pay_amount,$invoice_ids,$address,$currency='PHP') {	
 	//print_r($customer);	print_r($month);	print_r($year);	

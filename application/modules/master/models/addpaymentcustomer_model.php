@@ -33,10 +33,11 @@ class addpaymentcustomer_model extends CI_Model {
 	/** In Function Get all records from select table **/
     
 	 public function get_all_records() {
-        $this->db->select($this->table_name.".*,".$this->table_customername.".*,".$this->table_name.".id as id");
+        $this->db->select($this->table_name.".*,SUM(".$this->table_name.".amount) as gross_amount,".$this->table_customername.".*,".$this->table_name.".id as id");
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_customername, $this->table_name.".customer_id = ".$this->table_customername.".customer_id", 'left');
 		$this->db->order_by($this->table_name.'.id','desc');
+		$this->db->group_by($this->table_name.'.invoice_id');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		$result = $query->result_array();
@@ -393,7 +394,7 @@ class addpaymentcustomer_model extends CI_Model {
 		$final_total_amount = $this->input->post('final_total_amount');
 		$pay_amount = $this->input->post('pay_amount');
 		$remaining = $allamount - $pay_amount;
-		
+		$change_amount = $this->input->post('change_amount');
 	    $set_data = array(
 			'customer_id' => trim($id),
 			'ledger_id' => $this->input->post('ledger_id'),
@@ -404,7 +405,7 @@ class addpaymentcustomer_model extends CI_Model {
 			'per_unit' => $this->input->post('paid_total_amount'),
 			'consumedunits' => $consumedunits,
 			'amount' => $this->input->post('paid_total_amount'),
-			'balance' => $remaining,
+			'balance' => $change_amount,
 			'total' => $allamount,
 			'pay_amount' => $this->input->post('pay_amount'),
 			'currency' => $this->input->post('currency'),
@@ -430,8 +431,17 @@ class addpaymentcustomer_model extends CI_Model {
 			'doc_series_num' => $this->input->post('or_num'),
 		);
 		$this->db->where('doc_id',1);
-		$result3 = $this->db->update($this->table_doc_series_number, $set_data3); //print_r($result2); //exit;
+		$this->db->update($this->table_doc_series_number, $set_data3); //print_r($result2); //exit;
 
+		$set_data4 = array(
+			'customer_billing_id' => $lastId,
+			'status' => 1,
+			'or_number' => $this->input->post('or_num'),
+		);
+		$this->db->where('customer_id',trim($id));
+		$this->db->where('month',$this->input->post('month'));
+		$this->db->where('year',$this->input->post('year'));
+		$this->db->update($this->table_meter_reading, $set_data4); //print_r($result2); //exit;
 
 		$set_data2 = array(
 			'tableName' => 'addmetercustomer',
@@ -503,6 +513,17 @@ class addpaymentcustomer_model extends CI_Model {
 		); 
 		$result = $this->db->insert($this->table_name, $set_data); 
 		$lastId = $this->db->insert_id(); 
+
+		$set_data4 = array(
+			'customer_billing_id' => $lastId,
+			'status' => 1,
+			'or_number' => $this->input->post('or_num'),
+		);
+		$this->db->where('customer_id',trim($customer_id));
+		$this->db->where('month',$month);
+		$this->db->where('year',$year);
+		$this->db->update($this->table_meter_reading, $set_data4); 
+
 		$set_data2 = array(
 			'tableName' => 'addmetercustomer',
 			'transaction_id' => $lastId,
@@ -666,6 +687,19 @@ class addpaymentcustomer_model extends CI_Model {
     }
     
 	function getReceiptData($customer, $month, $year){
+		
+		$this->db->select('tbl_months.month_id as monthid, 
+		(SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as reading_amount,
+		tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');				   
+		$this->db->from('tbl_addmetercustomer');
+		$this->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
+		$this->db->where('customer_id',$customer);
+		$this->db->where('month',$month);
+		$this->db->where('year',$year);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+	function getReceipt_Data($customer, $month, $year){
 		
 		$this->db->select('tbl_months.month_id as monthid, 
 		(SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as reading_amount,

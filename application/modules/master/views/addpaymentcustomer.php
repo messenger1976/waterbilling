@@ -126,13 +126,12 @@
 														<th data-hide="phone">S No</th>
 														<th data-class="expand">Customer-Id</th>
 														<th data-hide="expand">Name</th>
-														<th data-hide="expand">Period</th>
-														<th data-hide="expand">OR #</th>
-														<th data-hide="expand">Previous</th>
-														<th data-hide="expand">Current</th>
-														<th data-hide="expand">Consumed</th>
 														
-														<th data-hide="expand">Amount</th>
+														<th data-hide="expand">OR #</th>
+														<th data-hide="expand">Gross Amount</th>
+														<th data-hide="expand">VAT Discount</th>	
+														<th data-hide="expand">Leaking Discount</th>										
+														<th data-hide="expand">Net Amount</th>
 														
 														
                                                         
@@ -157,13 +156,15 @@
 														<td><a href="<?php echo ADMIN_URL;?>addpaymentcustomer/get_monthly_customer_invoice/<?php echo $row['id']; ?>"><?php echo stripslashes($row['customer_id']); ?></a>
 														</td>
 													    <td><?php echo stripslashes($row['last_name'].', '.$row['first_name'].' '.$row['middle_name']); ?></td>
-														<td><?php echo stripslashes($row['month'].' '.$row['year']); ?></td>
+														<!--<td><?php echo stripslashes($row['month'].' '.$row['year']); ?></td>-->
 														<td><?php echo stripslashes(sprintf('%07d',$row['or_number'])); ?></td>
-                                                        <td><?php echo stripslashes($row['oldmeter']); ?></td>
-														<td><?php echo stripslashes($row['aftermeter']); ?></td>
+                                                        <!--<td><?php echo stripslashes($row['oldmeter']); ?></td>
+														<td><?php echo stripslashes($row['aftermeter']); ?></td>-->
 														<!--<?php $consumed_units=$row['aftermeter']-$row['oldmeter'];?>-->
-														<td><?php echo stripslashes($row['consumedunits']); ?></td>
-														
+														<!--<td><?php echo stripslashes($row['consumedunits']); ?></td>-->
+														<td align="right"><?php echo stripslashes(number_format($row['gross_amount'],2)); ?></td>
+														<td align="right"><?php echo stripslashes(number_format($row['leaking_amount'],2)); ?></td>
+														<td align="right"><?php echo stripslashes(number_format($row['vat_amount'],2)); ?></td>
 														<td align="right"><?php echo stripslashes(number_format($row['grand_total'],2)); ?></td>
 														
 														<?php $total=$row['amount']+$row['balance']-$row['pay_amount'];?>
@@ -201,9 +202,14 @@
 														    <input type="hidden" name="customerid_<?php echo $i;?>" id="customerid_<?php echo $i;?>" value = "<?php echo $row['customer_id'];?>">
 															<input type="hidden" name="month_<?php echo $i;?>" id="month_<?php echo $i;?>" value = "<?php echo $row['month'];?>">
 															<input type="hidden" name="year_<?php echo $i;?>" id="year_<?php echo $i;?>" value = "<?php echo $row['year'];?>">
+															<input type="hidden" name="invoiceid_<?php echo $i;?>" id="invoiceid_<?php echo $i;?>" value = "<?php echo $row['invoice_id'];?>">
 														    <!--<input class="print_button" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i; ?>" type="button" name="print" value="Print">-->
 															<a href="#" title="Print">
 																 <i class="print_button fa fa-print" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
+																 </a>
+
+															<a href="#" title="Print New">
+																<i class="print_button_new fa fa-print" id="print_button_new<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
 																 </a>
 																<!--<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addpaymentcustomer/delete/<?php echo $row['id'];?>';}" title="Delete">
 																			<i class="fa fa-remove"></i>
@@ -467,6 +473,21 @@ $(document).on('click','.print_button',function(e){
 	var year = $('#year_'+paybtnid).val();
 	if(customer != '' && month != '' && year != ''){
 				var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer+'/'+month+'/'+year;
+				//var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer;
+				window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
+	}
+	
+});
+$(document).on('click','.print_button_new',function(e){
+	var buttonid = $(this).attr('id');
+	var paybtnid = $(this).data('print-val-id');
+	
+    var customer = $('#customerid_'+paybtnid).val();
+	var month = $('#month_'+paybtnid).val();
+	var year = $('#year_'+paybtnid).val();
+	var invoice_id = $('#invoiceid_'+paybtnid).val();
+	if(customer != '' && month != '' && year != ''){
+				var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthly_receipt/'+customer+'/'+month+'/'+year+'/'+invoice_id;
 				//var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer;
 				window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
 	}
