@@ -36,6 +36,7 @@
 		
 		$this->db->order_by('last_name','asc');
 		$this->db->order_by('first_name','asc');
+		$this->db->group_by('invoice_id');
 		$query = $this->db->get();
 		$result = $query->result_array();
 		return $result;
