@@ -59,7 +59,7 @@
 						     ">
 						<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Finance</span></a>
 						<ul>
-						     <li class="<?php if($this->uri->segment(2)=='addmetercustomerreading'){echo 'active';}?>">
+						     <li class="<?php if($this->uri->segment(2)=='addmetercustomerreading' && $this->uri->segment(3)!='edit'){echo 'active';}?>">
 								<a href="<?php echo ADMIN_URL;?>addmetercustomerreading">Add Meter Customers Reading </a>
 							</li>
 							
@@ -260,6 +260,9 @@
 
 							 <li class="<?php if($this->uri->segment(2)=='or_correction' && $this->uri->segment(2)=='or_correction'){echo 'active';}?>">
 								<a href="<?php echo ADMIN_URL;?>or_correction/"> OR Correction</a>
+							</li>
+							<li class="<?php if($this->uri->segment(2)=='addmetercustomerreading' && $this->uri->segment(3)=='edit'){echo 'active';}?>">
+								<a href="<?php echo ADMIN_URL;?>addmetercustomerreading/edit"> Meter Reading Correction</a>
 							</li>
 								 
 						</ul>

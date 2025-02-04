@@ -98,14 +98,25 @@ class addmetercustomerreading extends CI_Controller {
 			echo json_encode($data['get_unit_price']);
 		}
 	}
-	
+	public function save_edit($id=''){
+		
+
+		//$data['addmonth'] = $this->my_model->get_months();
+		if($this->input->post('edit') != ''){
+			$result = $this->my_model->update_record($id);
+			echo 'success';
+			
+		}
+		
+		
+
+	}
 	public function edit($id=''){
+		$data['msg'] ='';
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
 		
-		
-		
+
 		//$data['addmonth'] = $this->my_model->get_months();
-		$data['msg'] ='';
 		if($this->input->post('edit') != ''){
 			$result = $this->my_model->update_record($id);
 			if($result){
@@ -120,6 +131,7 @@ class addmetercustomerreading extends CI_Controller {
 			$data['record'] = $this->my_model->get_single_record($id);
 			$this->load->view($this->editPage,$data);
 		}else{
+			$data['record'] = $this->customer_model->get_all_records();
 			$data['zone'] = $this->comm_model->get_zone_records();
 			$this->load->view($this->editSearchPage,$data);
 		}
@@ -202,11 +214,8 @@ class addmetercustomerreading extends CI_Controller {
 		//if($this->input->post('customer_id') !='' || $this->input->post('zone') !='' || $this->input->post('fromdate') !='' || $this->input->post('todate') !='')
 		//{
 			$customer_id = $this->input->post('customer_id');
-			$zone = $this->input->post('zone');
-			$fromdate = $this->input->post('fromdate');	
-			$todate = $this->input->post('todate');
-			
-			$data['record'] = $this->my_model->get_addcustomer_meterreading_records($customer_id,$zone,$fromdate,$todate);
+						
+			$data['record'] = $this->my_model->get_addcustomer_meterreading_records($customer_id);
 			//echo'<pre>';print_r($data['record']);exit;
 			$this->load->view($this->addcustomer_meterajax,$data);
 		//}		

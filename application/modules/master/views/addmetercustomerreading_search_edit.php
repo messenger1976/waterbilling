@@ -234,6 +234,8 @@
 				};
 	
 				$('#dt_basic').dataTable({
+					"pageLength": -1, // Show all rows by default
+					"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]], // Add 'All' option
 					"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
 						"t"+
 						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",

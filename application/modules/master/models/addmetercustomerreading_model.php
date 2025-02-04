@@ -100,11 +100,14 @@ class addmetercustomerreading_model extends CI_Model {
 		
 		$set_data = array(
 						'customer_id' => trim($this->input->post('customer_id')),
-						'reading' => $this->input->post('reading'),
-						'month' => $this->input->post('month'),
+						'reading' => $this->input->post('current_reading'),
 						'consumed' => $this->input->post('consumed'),
-						'amount' => $this->input->post('amount'),
-						'unit_price' => $this->input->post('amount'),
+						'unit_price' => $this->input->post('current_bill'),
+						'sc_discount' => $this->input->post('sc_discount'),
+						'arrears' => $this->input->post('arrears'),
+						'amount' => $this->input->post('total_amount'),
+						'penalty' => $this->input->post('penalty'),
+						'date' => $this->input->post('reading_date'),
 					);
 		$this->db->where('id',$id);
 		$result = $this->db->update($this->table_name, $set_data); 
@@ -184,26 +187,18 @@ class addmetercustomerreading_model extends CI_Model {
 		
 	}
 
-	public function get_addcustomer_meterreading_records($customer_id,$zone,$fromdate,$todate)
+	public function get_addcustomer_meterreading_records($customer_id)
 	{ 
-        $this->db->select($this->table_customername.".customer_id,".$this->table_customername.".first_name,".$this->table_customername.".last_name,".$this->table_customername.".middle_name,".$this->table_customername.".gender,".$this->table_customername.".address,".$this->table_customername.".mobile1,".$this->table_customername.".mobile2,".$this->table_customername.".email_id,".$this->table_customername.".customer_type,".$this->table_name.".previous_reading,".$this->table_name.".reading,".$this->table_name.".consumed,".$this->table_name.".unit_price,".$this->table_name.".sc_discount,".$this->table_name.".penalty,".$this->table_name.".arrears,".$this->table_name.".amount,".$this->table_name.".month,".$this->table_name.".year,".$this->table_name.".arrears,".$this->table_name.".date,".$this->table_name.".refno,".$this->table_name.".id");
+        $this->db->select($this->table_customername.".customer_id,".$this->table_customername.".first_name,".$this->table_customername.".last_name,".$this->table_customername.".middle_name,".$this->table_customername.".gender,".$this->table_customername.".address,".$this->table_customername.".mobile1,".$this->table_customername.".mobile2,".$this->table_customername.".email_id,".$this->table_customername.".customer_type,".$this->table_name.".previous_reading,".$this->table_name.".reading,".$this->table_name.".consumed,".$this->table_name.".unit_price,".$this->table_name.".sc_discount,".$this->table_name.".penalty,".$this->table_name.".arrears,".$this->table_name.".amount,".$this->table_name.".month,".$this->table_name.".year,".$this->table_name.".arrears,".$this->table_name.".date,".$this->table_name.".refno,".$this->table_name.".id,".$this->table_months.".month_name,".$this->table_customername.".account_type,".$this->table_customername.".special_priviledge");
 		$this->db->from($this->table_customername);
 		$this->db->join($this->table_name,$this->table_customername.'.customer_id='.$this->table_name.'.customer_id');
+		$this->db->join($this->table_months,$this->table_name.'.month='.$this->table_months.'.month_id');
 		if($customer_id!='')
 		{
 			$this->db->where($this->table_customername.'.customer_id',$customer_id);
 		}
-		if($zone!='')
-		{
-			$this->db->where($this->table_customername.'.zone',$zone);	
-		}
-		if($fromdate!=''){
-			$this->db->where($this->table_name.'.date >=',date('Y-m-d', strtotime($fromdate)));
-		}		
-		if($todate !=''){
-			$this->db->where($this->table_name.'.date <=',date('Y-m-d', strtotime($todate)));
-		}				
-		$this->db->order_by($this->table_name.'.date','ASC');
+						
+		$this->db->order_by($this->table_name.'.date','DESC');
 		
 		$query = $this->db->get();
 		$result = $query->result_array();

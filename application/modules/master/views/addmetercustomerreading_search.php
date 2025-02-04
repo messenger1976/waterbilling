@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -108,51 +107,31 @@
 												</legend>
 												<div class="form-group col-lg-6">
 													<div class="col-lg-12 controls">
-														<div class="form-group"> 
-															<span class="input-group-addon"><i class="icon-user"></i><strong>Customer-Id : </strong></span>
-															<input class="form-control" type="text" id="customer_id" name="customer_id" value="<?php echo $record['customer_id']; ?>" required>
-															<?php echo form_error('customer_id'); ?>
+														<div class="form-group">
+															<span class="input-group-addon"><i class="icon-user"></i><strong>Search : </strong></span>
+															<select class="form-control"  id="search_box_id" name="search_box_id" id="search_box_id" placeholder="Type text to search..." required>
+																	
+																	<?php
+																	$selected = $member_id;
+																	foreach ($record as $key => $value) {
+																		?>
+																		<option <?php echo ($selected ? ($selected == $value->member_id ? 'selected="selected"' : '') : ''); ?> value="<?php echo $value['customer_id']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
+																	<?php }
+																	?>
+																</select>
+
+																<!--<input  class="form-control"  id="search_box_id" name="name" id="name" required/>-->
+															<?php echo form_error('search_box_id'); ?>
 														</div>
 													</div>
 												</div>
-												<div class="form-group col-lg-6">
-													<div class="col-lg-12 controls">
-														<div class="form-group"> 
-															<span class="input-group-addon"><i class="icon-user"></i><strong>Zone: </strong></span>
-															<select class="form-control" name="zone" id="zone">
-																<option value="">--Select--</option>
-																	<?php foreach($zone as $key => $value){ ?>
-																	 <option value="<?php echo $value['id'];?>"><?php echo $value['zone'];?></option>
-																	<?php } ?>
-																
-															</select>
-														</div>
-													</div>
-												</div>
-												<div class="form-group col-lg-6">
-													<div class="col-lg-12 controls">
-														<div class="form-group"> 
-															<span class="input-group-addon"><i class="icon-user"></i><strong>From-Date:</strong></span>
-															<input class="form-control"  type="text" id="fromdate" name="fromdate"  placeholder="dd-mm-yyyy" value="">
-														</div>
-													</div>
-												</div>
-												<div class="form-group col-lg-6">
-													<div class="col-lg-12 controls">
-														<div class="form-group"> 
-															<span class="input-group-addon"><i class="icon-user"></i><strong> To-Date:</strong></span>
-																<input class="form-control"  type="text" id="todate" name="todate"  placeholder="dd-mm-yyyy" value="">
-														</div>
-													</div>
-												</div>	
+												<input type="submit" class="btn btn-primary" name="search" id="search" value="search" style="margin-bottom: 5px;">
+												<input type="hidden" name="record_id"	id="record_id"/>
+												<input type="hidden" name="customer_id"	id="customer_id"/>
+												<input type="hidden" name="cust_type_id" id="cust_type_id"/>
+												<input type="hidden" name="special_priviledge" id="special_priviledge"/>
 															
-												<div class="form-group col-lg-12">
-													<div class="col-lg-12 controls">
-														<div class="form-group"> 
-                                                            <input type="submit" class="btn btn-primary" name="search" id="search" value="search" onclick="getaddcustomer_meter();" style="margin-bottom: 5px;">
-														</div>
-													</div>
-												</div>	
+												
 													
 											</fieldset>
 
@@ -210,7 +189,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:white;" readonly>
+                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('billing_period'); ?>
                                             </div>
                                         </div>
@@ -219,7 +198,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Previous Reading : </strong></span>
-                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:white;" readonly>
+                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('previous_reading'); ?>
                                             </div>
                                         </div>
@@ -237,7 +216,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Consumed : </strong></span>
-                                                <input class="form-control" type="text" id="consumed" name="consumed" style="background-color:white;" readonly>
+                                                <input class="form-control" type="text" id="consumed" name="consumed" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('consumed'); ?>
                                             </div>
                                         </div>
@@ -246,7 +225,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Current Bill : </strong></span>
-                                                <input class="form-control" type="text" id="current_bill" name="current_bill" style="background-color:white;" readonly>
+                                                <input class="form-control" type="text" id="current_bill" name="current_bill" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('current_bill'); ?>
                                             </div>
                                         </div>
@@ -273,7 +252,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Amt before due date : </strong></span>
-                                                <input class="form-control" type="text" id="total_amount" name="total_amount" style="background-color:white;" readonly>
+                                                <input class="form-control" type="text" id="total_amount" name="total_amount" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('arrears'); ?>
                                             </div>
                                         </div>
@@ -282,7 +261,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Amt after due date : </strong></span>
-                                                <input class="form-control" type="text" id="penalty" name="penalty" style="background-color:white;" readonly>
+                                                <input class="form-control" type="text" id="penalty" name="penalty" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('arrears'); ?>
                                             </div>
                                         </div>
@@ -291,7 +270,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Reading date : </strong></span>
-                                                <input class="form-control" type="date" id="reading_date" name="reading_date" style="background-color:white;">
+                                                <input class="form-control" type="text" id="reading_date" name="reading_date" style="background-color:white;">
                                                 <?php echo form_error('reading_date'); ?>
                                             </div>
                                         </div>
@@ -361,6 +340,7 @@
 				};
 	
 				$('#dt_basic').dataTable({
+					"pageLength": -1, // Show all rows by default
 					"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
 						"t"+
 						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
@@ -525,11 +505,153 @@ function fun_calendor(field){
 	$("#"+field).focus();
 } 
 $(document).ready(function(){
-
+	$('#search_box_id').select2();
     
+	$('#search').on('click', function(evt){
+		evt.preventDefault();
+		let search_text = $("#search_box_id").val();
+		const search_text_result = search_text.split("==>");
+		var id = search_text_result[0];
+		$('#customer_id').val(id);
+
+		$.ajax({
+			beforeSend: function() {
+				showSpinner(); // Call this to show the spinner
+			},
+			type : "POST",
+			url	: '<?php echo ADMIN_URL;?>addmetercustomerreading/getaddcustomersmetersearch',
+			data	: "customer_id="+id,
+			complete: function(data){
+				var op = data.responseText.trim();
+				//alert(op);
+				$("#customerDiv").html(op);
+				hideSpinner();
+			}
+		});
+	});
+	
+$('#btn_save').on('click', function(evt){
+	evt.preventDefault();
+	var record_id = $('#record_id').val();
+	const formData = new FormData();
+	formData.append("customer_id", $('#customer_id').val());
+	formData.append("current_reading", $('#current_reading').val());
+	formData.append("consumed", $('#consumed').val());
+	formData.append("current_bill", $('#current_bill').val());
+	formData.append("sc_discount", $('#sc_discount').val());
+	formData.append("arrears", $('#arrears').val());
+	formData.append("total_amount", $('#total_amount').val());
+	formData.append("penalty", $('#penalty').val());
+	formData.append("reading_date", $('#reading_date').val());
+	formData.append("edit", 'edit');
+
+	$.ajax({
+		url: '<?php echo ADMIN_URL;?>addmetercustomerreading/save_edit/'+record_id,
+		type: 'POST',
+		data: formData,
+		contentType: false,
+		processData: false,
+		success: function (response) {
+			
+			if (response=='success') {
+				$('#search').trigger('click');
+				//alert('Successfully Save');
+				
+
+			} 
+		},
+		error: function () {
+			alert("An error occurred while processing data.");
+		}
+	});
+});
+
+$('#sc_discount').on('blur', function(evt){
+	evt.preventDefault();
+	var unit_price = $('#current_bill').val();
+	//var multiprice = parseInt(difer) * parseInt(unit_price);
+	var multiprice = parseFloat(unit_price);
+	var discount =$(this).val();
+	
+	total_amount = multiprice - discount;
+	amount_total_penalty = 0;
+	if($('#special_priviledge').val()==='0'){
+		amount_total_penalty = (total_amount * 10)/100;
+		amount_total_penalty = amount_total_penalty + total_amount;
+	}else{
+		amount_total_penalty = total_amount;
+	}
+	//$('#discount').val(amount_formatted(discount));
+	$("#amount_pay").val(amount_formatted(multiprice));
+	$("#total_amount").val(amount_formatted(total_amount));
+	$("#penalty").val(amount_formatted(amount_total_penalty));	
+});
 
 
-	$("#fromdate").datepicker({
+$('#current_reading').on('blur', function() {
+	var current_meter = $(this).val();
+	var previous_reading = $('#previous_reading').val();
+	var differences = parseFloat(current_meter) - parseFloat(previous_reading);
+	$("#consumed").val(differences);
+	var difer = $("#consumed").val();
+	const formData = new FormData();
+	formData.append("cubic_meter_reading", difer);
+	formData.append("customer_id", $('#customer_id').val());
+
+	
+
+	$.ajax({
+		url: '<?php echo ADMIN_URL;?>addmetercustomerreading/get_cubic_meter_price/',
+		type: 'POST',
+		data: formData,
+		contentType: false,
+		processData: false,
+		success: function (response) {
+			const result = JSON.parse(response);
+			if (result.per_unit) {
+				
+				$('#current_bill').val(amount_formatted(result.per_unit));
+				var unit_price = $('#current_bill').val();
+				//var multiprice = parseInt(difer) * parseInt(unit_price);
+				var multiprice = parseFloat(unit_price);
+				var discount =0;
+				if($('#cust_type_id').val()==3){
+					discount = (multiprice * 5)/100;
+				}
+				total_amount = multiprice - discount;
+				amount_total_penalty = 0;
+				//console.log('SP:'+$('#special_priviledge').val());
+				if($('#special_priviledge').val()==='0'){
+					amount_total_penalty = (total_amount * 10)/100;
+					amount_total_penalty = amount_total_penalty + total_amount;
+				}else{
+					amount_total_penalty = total_amount;
+				}
+				$('#sc_discount').val(amount_formatted(discount));
+				$("#amount_pay").val(amount_formatted(multiprice));
+				$("#total_amount").val(amount_formatted(total_amount));
+				$("#penalty").val(amount_formatted(amount_total_penalty));
+				
+
+			} else {
+				$('#current_bill').val(amount_formatted(0));
+				var unit_price = $('#current_bill').val();
+				
+				$("#amount_pay").val(amount_formatted(0));
+				alert("No Amount per cubic meter.");
+			}
+		},
+		error: function () {
+			alert("An error occurred while processing data.");
+		}
+	});
+
+	
+});
+
+
+
+	$("#reading_date").datepicker({
 		showAnim: null,
 		dateFormat: 'dd-mm-yy',
 		// showOn: 'both',
@@ -539,7 +661,7 @@ $(document).ready(function(){
 		nextText: '',
 		prevText: '',
 		numberOfMonths: [1, 1],
-		//defaultDate: new Date(curDate),
+		defaultDate: new Date(curDate),
 		//minDate: curDate,
 		//maxDate: ''
 	});
@@ -558,31 +680,12 @@ $(document).ready(function(){
 		//maxDate: ''
 	});
 });
-
+function amount_formatted(amount){
+	const formatted = new Intl.NumberFormat('en-US', {
+  		minimumFractionDigits: 2,
+  		maximumFractionDigits: 2,
+  		useGrouping: false, // No thousands separator
+	}).format(amount);
+	return formatted;
+}
 </script>	
-
-<script type="text/javascript">
-	
-		function getaddcustomer_meter(){
-			
-			var customer_id = $("#customer_id").val();
-			var zone = $("#zone").val();
-			var fromdate = $("#fromdate").val();
-			var todate = $("#todate").val();
-			$.ajax({
-				beforeSend: function() {
-                    showSpinner(); // Call this to show the spinner
-                },
-				type : "POST",
-				url	: '<?php echo ADMIN_URL;?>addmetercustomerreading/getaddcustomersmetersearch',
-				data	: "customer_id="+customer_id+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate,
-				complete: function(data){
-					var op = data.responseText.trim();
-					//alert(op);
-					$("#customerDiv").html(op);
-                    hideSpinner();
-				}
-			});
-		}
-	
-		</script>

@@ -18,6 +18,7 @@
 													<tr>
 														<th data-hide="phone">S No</th>
                                                         <th data-class="expand">ID</th>
+														<th data-class="expand">Billing Period</th>
                                                         <th data-class="expand">Billing Number</th>
 														<th data-class="expand">Customer id</th>
 														<th data-hide="expand">Name </th>
@@ -43,6 +44,7 @@
 													<tr>
 														<td><?php echo $i; ?></td>
                                                         <td class="id"><?php echo stripslashes($row['id']); ?></td>
+														<td class="billing_period"><?php echo stripslashes($row['month_name'].' '.$row['year']); ?></td>
                                                         <td class="refno"><?php echo stripslashes($row['refno']); ?></td>
 														<td class="customer_id"><?php echo stripslashes($row['customer_id']); ?></td>
 														<td class="fullname"><?php echo stripslashes($row['last_name'].', '.$row['first_name'].' '.$row['middle_name']); ?></td>																												
@@ -54,16 +56,26 @@
 														<td class="total_amount" align="right"><?php echo stripslashes(number_format($row['amount'],2)); ?></td>
 														<td class="penalty" align="right"><?php echo stripslashes(number_format($row['penalty'],2)); ?></td>
                                                         <td class="arrears" align="right"><?php echo stripslashes(number_format($row['arrears'],2)); ?></td>
-                                                        <td class="reading_date" align="center"><?php echo stripslashes($row['date']); ?></td>
+                                                        <td class="reading_date" align="center"><?php echo date('d-m-Y',strtotime($row['date'])); ?></td>
 														<!--<?php echo ADMIN_URL;?>addmetercustomerreading/edit/<?php echo $row['id'];?>-->
 														<td align="center">
                                                             <a class="label label-info btn_edit" 
                                                         data-id="<?php echo stripslashes($row['id']); ?>" 
+														data-billing_period="<?php echo stripslashes($row['month_name'].' '.$row['year']); ?>"
                                                         data-refno="<?php echo stripslashes($row['refno']); ?>"
                                                         data-customerid="<?php echo stripslashes($row['customer_id']); ?>"
                                                         data-fullname="<?php echo stripslashes($row['last_name'].', '.$row['first_name'].' '.$row['middle_name']); ?>"
                                                         data-previous_reading="<?php echo stripslashes($row['previous_reading']); ?>"
                                                         data-current_reading="<?php echo stripslashes($row['reading']); ?>"
+														data-consumed="<?php echo stripslashes($row['consumed']); ?>"
+														data-current_bill="<?php echo stripslashes($row['unit_price']); ?>"
+														data-sc_discount="<?php echo stripslashes($row['sc_discount']); ?>"
+														data-arrears="<?php echo stripslashes($row['arrears']); ?>"
+														data-total_amount="<?php echo stripslashes($row['amount']); ?>"
+														data-penalty="<?php echo stripslashes($row['penalty']); ?>"
+														data-reading_date="<?php echo date('d-m-Y',strtotime($row['date'])); ?>"
+														data-account_type="<?php echo stripslashes($row['account_type']); ?>"
+														data-special_priviledge="<?php echo stripslashes($row['special_priviledge']); ?>"
                                                         data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i> Edit</a></td>
 														<div class="visible-xs visible-sm hidden-md hidden-lg">
 																<div class="inline position-relative">
@@ -123,6 +135,8 @@
 				};
 	
 				$('#dt_basic').dataTable({
+					"pageLength": -1, // Show all rows by default
+					"lengthMenu": [[10, 50, 100, -1], [10, 50, 100, "All"]], // Add 'All' option
 					"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
 						"t"+
 						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
@@ -267,15 +281,36 @@
             $(".btn_edit").on('click',function(evt) {
                 evt.preventDefault();
                 let id = $(this).data("id");
+				let billing_period = $(this).data("billing_period");
                 let refno = $(this).data("refno");
                 let email = $(this).data("email");
                 let previous_reading = $(this).data("previous_reading");
                 let current_reading = $(this).data("current_reading");
-
+				let consumed = $(this).data("consumed");
+				let current_bill = $(this).data("current_bill");
+				let sc_discount = $(this).data("sc_discount");
+				let arrears = $(this).data("arrears");
+				let total_amount = $(this).data("total_amount");
+				let penalty = $(this).data("penalty");
+				let reading_date = $(this).data("reading_date");
+				let account_type = $(this).data("account_type");
+				let special_priviledge = $(this).data("special_priviledge");
+				
                 // Set modal fields
+				$("#record_id").val(id);
+				$("#billing_period").val(billing_period);
                 $("#previous_reading").val(previous_reading);
                 $("#current_reading").val(current_reading);
-                console.log(current_reading);
+				$("#consumed").val(consumed);
+				$("#current_bill").val(current_bill);
+				$("#sc_discount").val(sc_discount);
+				$("#arrears").val(arrears);
+				$("#total_amount").val(total_amount);
+				$("#penalty").val(penalty);
+				$("#reading_date").val(reading_date);
+				$("#cust_type_id").val(account_type);
+				$("#special_priviledge").val(special_priviledge);
+                console.log($("#reading_date").val());
                 // Show the modal
                 //$("#editModal").modal("show");
             });

@@ -526,6 +526,27 @@ $(document).on('click','.pay_button',function(e){
 	}
 	
 });
+
+$('#discount').on('blur', function(evt){
+	evt.preventDefault();
+	var unit_price = $('#unit_price').val();
+	//var multiprice = parseInt(difer) * parseInt(unit_price);
+	var multiprice = parseFloat(unit_price);
+	var discount =$(this).val();
+	
+	total_amount = multiprice - discount;
+	amount_total_penalty = 0;
+	if($('#special_priviledge').val()==='0'){
+		amount_total_penalty = (total_amount * 10)/100;
+		amount_total_penalty = amount_total_penalty + total_amount;
+	}else{
+		amount_total_penalty = total_amount;
+	}
+	$('#discount').val(amount_formatted(discount));
+	$("#amount_pay").val(amount_formatted(multiprice));
+	$("#total_amount").val(amount_formatted(total_amount));
+	$("#amount_total_penalty").val(amount_formatted(amount_total_penalty));	
+});
 $('#current_meter').on('blur', function() {
 	var current_meter = $(this).val();
 	var preview = $('#preview').val();
