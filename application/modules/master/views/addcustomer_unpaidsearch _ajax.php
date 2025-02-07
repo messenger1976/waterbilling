@@ -43,7 +43,7 @@
 				<td align="right"><?php echo stripslashes($row['arrears']); ?></td>
 				
 				
-				<td><span <?php if($row['status']== 1){ echo " class='label label-success arrowed-in arrowed-in-right'"; } elseif($row['status']== 0){ echo "class='label label-danger arrowed'"; } ?>><a href="JavaScript:if(confirm('Are you sure want to Chanage the Status?')==true){window.location='<?php echo ADMIN_URL;?>addcustomer/status/<?php echo $row['id']?>/<?php echo $row['status'];?>/<?php echo $this->uri->segment(3);?>';}" style="color:#FFF; text-decoration:none;"><?php if($row['status']== 1){ echo "Paid"; } elseif($row['status']== 0){ echo "Un-Paid"; } ?></a></span>
+				<td><span <?php if($row['status']== 1){ echo " class='label label-success arrowed-in arrowed-in-right'"; } elseif($row['status']== 0){ echo "class='label label-danger arrowed'"; } ?>><a href="#" style="color:#FFF; text-decoration:none;"><?php if($row['status']== 1){ echo "Paid"; } elseif($row['status']== 0){ echo "Un-Paid"; } ?></a></span>
 				   <!-- <span 
 								 <?php if($row['balance']== 0){ 
 										 echo " class='label label-success arrowed-in arrowed-in-right'"; 
