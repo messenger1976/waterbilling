@@ -29,14 +29,28 @@
 					</div>
 					<div class="col-xs-12 col-sm-10 col-md-7 col-lg-6">
 											
-											</div>
+					</div>
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
+							<!--<li class="sparks-info">
+							
+								<h5> Billing Period <span class="txt-color-blue">
+									
+									<select>
+										
+										<option>January 2025</option>
+										<option>December 2024</option>
+									</select>
+								</span></h5>
+								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
+									
+								</div>
+							</li>-->
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>

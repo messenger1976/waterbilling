@@ -4,7 +4,7 @@ header("cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");  
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 //echo '<pre>'; print_r($this->session->all_userdata()); 
-if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('username')=="")||($this->session->userdata('logged_in')=='')){
+if(($this->session->userdata('username')=="")||($this->session->userdata('logged_in')=='')){
 	redirect('/master/');
 }
 ?>

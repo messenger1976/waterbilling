@@ -134,7 +134,7 @@
 														<th data-hide="expand">Consumed</th>
 														<th data-hide="expand">Billing Period</th>
 														<th data-hide="expand">Reading Date</th>
-														<th data-hide="expand">Action</th>
+														<!--<th data-hide="expand">Action</th>-->
 													</tr>
 												</thead>
 												<tbody>
@@ -168,7 +168,7 @@
 														}
 														 
 														?></td>
-														<td>
+														<!--<td>
 															<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
 															    <a class="green" href="<?php echo ADMIN_URL;?>addmetercustomerreading/edit/<?php echo $row['id']; ?>"  title="Edit">
 																	<i class="fa fa-edit"></i>
@@ -198,7 +198,7 @@
 																			</li>
 																		</ul>
 																	</div>
-																</div></td>
+																</div></td>-->
 													</tr>
 														<?php $i++;} }?>	
 												</tbody>

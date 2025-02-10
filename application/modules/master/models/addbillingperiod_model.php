@@ -215,12 +215,33 @@ class addbillingperiod_model extends CI_Model {
 			$this->db->where($where);
 		}	
 			
-		$query = $this->db->get();;
+		$query = $this->db->get();
 		$result = $query->result_array();
 		return $result;		
 	}
     
-	
+	public function get_monthly_billing_report_records($zone,$billingperiod,$status='')
+	{ 
+        $billingperiod_array = explode(" ", $billingperiod);
+
+		$this->db->select("*,
+        (Select zone from ".$this->table_name." where ".$this->table_billing_period.".bp_zone_id	= ".$this->table_name.".id ) as zone_name,
+        (Select month_name from ".$this->table_months." where ".$this->table_months.".month_id	= ".$this->table_billing_period.".bp_period_month ) as month_name"
+        );
+		$this->db->from($this->table_billing_period);
+		
+		if($zone!=''){
+			$this->db->where('bp_zone_id',$zone);
+		}	
+		if($billingperiod !=''){
+			$where = '( `bp_period_month` = "'.$billingperiod_array[0].'" AND `bp_period_year` = "'.$billingperiod_array[1].'")';
+			$this->db->where($where);
+		}	
+			
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result;		
+	}
 }
 
 

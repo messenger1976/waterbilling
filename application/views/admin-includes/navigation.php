@@ -147,7 +147,7 @@
 						</ul>
 					</li>
 					<?php } ?>
-					<li class="<?php if($this->uri->segment(2)=='addshareholder'){echo 'active open';}?>
+					<!--<li class="<?php if($this->uri->segment(2)=='addshareholder'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='profitloss'){echo 'active open';}?>">
 						<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Share Holder</span></a>
 						<ul>
@@ -158,7 +158,7 @@
 								<a href="<?php echo ADMIN_URL;?>addshareholder/profitloss/">profit or Lose share Holders</a>
 							</li>
 						</ul>
-					</li>
+					</li>-->
 					 <?php if((array_key_exists('addexpenses',$roleResponsible) && ($roleResponsible['addexpenses'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 					<li class="<?php if($this->uri->segment(2)=='addexpenses'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='bsearch'){echo 'active open';}?>">
@@ -200,11 +200,45 @@
 						</ul>
 					</li>
 					 <?php } ?>	
-					<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
-						<li class="<?php if($this->uri->segment(2)=='adddailyreport') echo 'active';?>">
-							<a href="<?php echo ADMIN_URL;?>adddailyreport"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Daily Report</span></a>
-						</li>	
-					<?php } ?>
+
+
+					
+
+
+
+
+					<li class="<?php if($this->uri->segment(2)=='reports'){echo 'active open';}?>">
+						<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Reports</span></a>
+						<ul>
+							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
+							<li class="<?php if($this->uri->segment(2)=='adddailyreport') echo 'active';?>">
+								<a href="<?php echo ADMIN_URL;?>adddailyreport"> <span class="menu-item-parent">Daily Report</span></a>
+							</li>	
+							<?php } ?>
+
+							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
+							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='monthly_billing_report') echo 'active';?>">
+								<a href="<?php echo ADMIN_URL;?>reports/monthly_billing_report"> <span class="menu-item-parent">Monthly Billing Report</span></a>
+							</li>	
+							<?php } ?>
+
+							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
+							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='aging_ar_report') echo 'active';?>">
+								<a href="<?php echo ADMIN_URL;?>reports/aging_ar_report"> <span class="menu-item-parent">Aging A/R Report</span></a>
+							</li>	
+							<?php } ?>
+
+							
+						   
+						</ul>
+					</li>
+
+
+
+
+
+
+
                     <?php if((array_key_exists('addassets',$roleResponsible) && ($roleResponsible['addassets'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 						<li class="<?php if($this->uri->segment(2)=='addassets') echo 'active';?>">
 							<a href="<?php echo ADMIN_URL;?>addassets"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Assets</span></a>

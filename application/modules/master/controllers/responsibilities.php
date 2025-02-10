@@ -81,7 +81,7 @@ class responsibilities extends CI_Controller
 				'payrolssearch' => 'Payrols search',
 				'addexpenses' => 'Add Expenses',
 				'bsearch' => 'Balance Sheet Search',
-				'addassets' => 'Add Assetss',
+				'addassets' => 'Add Assets',
 				'technicalproblems' => 'Technical Problems',
 				'technicalsearch' => 'Technical Problems View',
 				'web_settings' => 'Admin Address',
