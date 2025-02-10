@@ -15,7 +15,7 @@ class Reports extends CI_Controller {
         parent::__construct();
         $this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//	
   		$this->load->model('adddailyreport_model','my_model');   //*****    Model Loading     *****//	
-        $this->load->model('reports_model','reports_model');   //*****    Model Loading     *****//	
+        $this->load->model('reports_model');   //*****    Model Loading     *****//	
         $this->load->model('common_model','comm_model');
 		$this->load->model('addcustomer_model','customer_model');	
 		$this->load->model('addmetercustomerreading_model','meterreading_model'); 
