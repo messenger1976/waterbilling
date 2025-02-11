@@ -198,7 +198,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Previous Reading : </strong></span>
-                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;" readonly>
+                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:white;" value="0" required>
                                                 <?php echo form_error('previous_reading'); ?>
                                             </div>
                                         </div>
@@ -535,6 +535,7 @@ $('#btn_save').on('click', function(evt){
 	var record_id = $('#record_id').val();
 	const formData = new FormData();
 	formData.append("customer_id", $('#customer_id').val());
+	formData.append("previous_reading", $('#previous_reading').val());
 	formData.append("current_reading", $('#current_reading').val());
 	formData.append("consumed", $('#consumed').val());
 	formData.append("current_bill", $('#current_bill').val());

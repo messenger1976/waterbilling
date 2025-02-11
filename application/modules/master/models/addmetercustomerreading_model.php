@@ -100,6 +100,7 @@ class addmetercustomerreading_model extends CI_Model {
 		
 		$set_data = array(
 						'customer_id' => trim($this->input->post('customer_id')),
+						'previous_reading' => $this->input->post('previous_reading'),
 						'reading' => $this->input->post('current_reading'),
 						'consumed' => $this->input->post('consumed'),
 						'unit_price' => $this->input->post('current_bill'),
