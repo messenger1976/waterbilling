@@ -20,23 +20,35 @@ class reports_model extends CI_Model {
 	/** In Function Get all records from select table **/
     
 	 public function get_monthly_billing_report_records($zone,$billingperiod,$status=''){
-		$this->db->select('tbl_addcustomer.customer_id, tbl_addcustomer.customer_type, tbl_addcustomer.first_name,tbl_addcustomer.last_name,tbl_addcustomer.middle_name,
+        $billingperiod = explode(' ',$billingperiod);
+
+		$this->db->select($this->table_name.'.customer_type, '.$this->table_name.'.first_name,'.$this->table_name.'.last_name,'.$this->table_name.'.middle_name,'.$this->table_name.'.meter_number,
 		(SELECT zone FROM tbl_zone WHERE tbl_zone.id='.$this->table_name.'.zone) as zone, 
-		tbl_addcustomer_reading.amount as reading_amount, 
-		tbl_addcustomer_reading.sc_discount as sc_discount,
-		tbl_addmetercustomer.*');
+        (SELECT bp_due_date FROM tbl_billing_period WHERE tbl_billing_period.bp_id='.$this->table_meter_reading.'.bp_id) as due_date, '.
+        $this->table_meter.'.invoice_id,'.
+        $this->table_meter.'.date as payment_date,'.
+        $this->table_meter.'.amount as payment_amount,
+        '.$this->table_meter_reading.'.*');
 		$this->db->from($this->table_meter_reading);
-		$this->db->join('tbl_addcustomer', $this->table_meter_reading.'tbl_addmetercustomer.customer_id = tbl_addcustomer.customer_id');
-		$this->db->join('tbl_addcustomer_reading', 'tbl_addmetercustomer.customer_id = tbl_addcustomer_reading.customer_id and tbl_addmetercustomer.month=tbl_addcustomer_reading.month and tbl_addmetercustomer.year=tbl_addmetercustomer.year','left');
-		$this->db->where('tbl_addmetercustomer.date',$from);
+		$this->db->join($this->table_name, $this->table_meter_reading.'.customer_id = '.$this->table_name.'.customer_id');
+
+		$this->db->join($this->table_meter, $this->table_meter_reading.'.customer_id='.$this->table_meter.'.customer_id AND '.$this->table_meter_reading.'.month='.$this->table_meter.'.month AND '.$this->table_meter_reading.'.year='.$this->table_meter.'.year','left');
+
+		$this->db->where($this->table_meter_reading.'.month',$billingperiod[0]);
+        $this->db->where($this->table_meter_reading.'.year',$billingperiod[1]);
 		//$this->db->where('tbl_addmetercustomer.date <=',$to);
 		if($zone!=0){
 			$this->db->where('tbl_addcustomer.zone',$zone);
 		}
+        if($status==='1'){
+            $this->db->where($this->table_meter.'.invoice_id IS NOT NULL');
+        }elseif($status==='0'){
+            $this->db->where($this->table_meter.'.invoice_id IS NULL');
+        }
 		
-		$this->db->order_by('last_name','asc');
-		$this->db->order_by('first_name','asc');
-		$this->db->group_by('invoice_id');
+		$this->db->order_by($this->table_name.'.last_name','asc');
+		$this->db->order_by($this->table_name.'.first_name','asc');
+		//$this->db->group_by('invoice_id');
 		$query = $this->db->get();
 		$result = $query->result_array();
 		return $result;

@@ -14,49 +14,101 @@
         <table  class="table table-bordered">
 			<thead>
 				<tr>
-					<th data-hide="phone">OR #</th>
-					<th data-hide="phone">ZONE</th>
-					<th data-hide="phone">Customer Name</th>																												
-					<th data-hide="phone">Date</th>
-					<th data-hide="phone">Amount </th>
-					
-					<th>Cashier</th>
+					<th data-hide="phone">SN#</th>
+					<th data-hide="phone">Customer Name</th>
+					<th data-hide="phone">Customer ID</th>	
+					<th data-hide="phone">Zone</th>																											
+					<th data-hide="phone">Meter Number</th>
+					<th data-hide="phone">Billing No. </th>
+					<th data-hide="phone">Consumed </th>
+					<th data-hide="phone">Metered Sales </th>
+					<th data-hide="phone">Penalty Charges </th>
+					<th>Due Date</th>
+					<!--<th>Invoice</th>-->
+					<th>Payment Date</th>
+					<th>Total Amount</th>
+					<th>Status</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
                     if(count($record) > 0){
 						$cr = 0;
+						$grand_total_penalty = 0;
+						$grand_total_metered_sales = 0;
+						$index = 1;
+						$grand_total_cubic_meter =0;
                         foreach($record as $key => $row){ 
 				?>                                            
 					<tr>
-						<td><?php echo stripslashes($row['or_number']); ?></td>
+						<td><?php echo $index; ?></td>
+						<td><?php echo stripslashes(trim($row['last_name']).', '.trim($row['first_name']).' '.trim($row['middle_name'])); ?></td>
+						<td><?php echo stripslashes($row['customer_id']); ?></td>	
 						<td><?php echo stripslashes($row['zone']); ?></td>
-						<td><?php echo stripslashes($row['name']); ?></td>																												
-						<!--<td><?php echo stripslashes($row['gender']); ?></td>-->
-						<td><?php $date = stripslashes($row['date']); echo date('d-m-Y', strtotime($date)); ?></td>
+						<td><?php echo stripslashes($row['meter_number']); ?></td>																											
 						
-						<td align='right'><?php echo stripslashes(number_format($row['grand_total'],2)); ?></td>
-						<td><?php echo $row['user']!=''?$row['user']:'Admin'; ?></td>
+						<td><?php echo stripslashes(sprintf('%07d',$row['refno'])); ?></td>
+						<td align='center'><?php echo stripslashes($row['consumed']); ?></td>
+						<td align='right'><?php echo stripslashes(number_format($row['amount'],2)); ?></td>
+						<td align='right'><?php 
+						$current_date = date('Y-m-d');
+						$pdate = stripslashes($row['payment_date']);
+						$date = stripslashes($row['due_date']);
+						$penalty = 0;
+						if($pdate>$date){
+							$penalty = $row['penalty']-$row['amount'];
+						}
 						
-						<!--<td><span <?php if($row['status']== 1){ 
+						if($row['invoice_id']==''){
+							$total_payment = $row['amount'];
+							$date1 = $row['due_date'];
+							if($current_date>$date1){
+								$penalty = $row['penalty']-$row['amount'];
+								$total_payment = $row['penalty'];
+								
+							}else{
+								$penalty = 0;
+								
+								//$total_payment = $row['amount'];
+							}
+							
+						}else{
+							$total_payment = $row['payment_amount'];
+						}
+						echo stripslashes(number_format($penalty,2)); 
+						?></td>
+						<td><?php 
+						 
+						echo date('d-m-Y', strtotime($date)); 
+						?></td>
+						<!--<td><?php echo stripslashes($row['invoice_id']); ?></td>-->
+						<td><?php 
+						if($pdate!=''){
+							echo date('d-m-Y', strtotime($pdate));  
+						}else{
+							//echo $current_date;
+						}
+						
+						?></td>
+						<td align='right'><?php echo stripslashes(number_format($total_payment,2)); ?></td>
+						
+						
+						<td><span <?php if($row['invoice_id']!= ''){ 
 						                  echo " class='label label-success arrowed-in arrowed-in-right'"; 
-										} elseif($row['status']== 0){ 
+										} else{ 
 										  echo "class='label label-danger arrowed'";
 										} 
 								  ?>>
-								  <a href="JavaScript:if(confirm('Are you sure want to Chanage the Status?')==true){
-									  window.location='<?php echo ADMIN_URL;?>addcustomer/status/<?php echo $row['id']?>/<?php echo $row['status'];?>/<?php echo $this->uri->segment(3);?>';
-									  }" style="color:#FFF; text-decoration:none;">
-									  <?php if($row['status']== 1){ 
+								  <a href="#" style="color:#FFF; text-decoration:none;">
+									  <?php if($row['invoice_id']!= ''){ 
 									  echo "Paid"; 
-									  } elseif($row['status']== 0){ 
+									  } else{ 
 									  echo "Un-Paid"; 
 									  } ?>
 								</a>
 							</span>
 							
-						</td> -->   
+						</td>  
 						
 							<div class="visible-xs visible-sm hidden-md hidden-lg">
 								<div class="inline position-relative">
@@ -67,18 +119,27 @@
 							</div>
 						</td>
 					</tr>
-				<?php  $cr += $row['grand_total']; } ?>
+				<?php 
+					$cr += $total_payment;
+					$grand_total_penalty+=$penalty;
+					$grand_total_metered_sales+=$row['amount'];
+					$grand_total_cubic_meter+=$row['consumed'];
+					$index++;
+			} ?>
                  <?php } ?>
                 
                 
                 
                 <tr>
-					<th></th>
-					<th></th>
-					<th></th>																												
-					<th>Total</th>
+					<th style="text-align:right" colspan="6">GRAND TOTAL</th>
 					
-					<th style="text-align:right"><?php echo number_format($cr+$dr,2);?></th>
+					<th style="text-align:center"><?php echo number_format($grand_total_cubic_meter,0);?></th>
+					<th style="text-align:right"><?php echo number_format($grand_total_metered_sales,2);?></th>	
+					<th style="text-align:right"><?php echo number_format($grand_total_penalty,2);?></th>
+					<th></th>																									
+					<th></th>
+					
+					<th style="text-align:right"><?php echo number_format($cr,2);?></th>
 					
 					<th></th>
 				</tr>
