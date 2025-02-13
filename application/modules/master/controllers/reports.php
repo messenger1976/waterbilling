@@ -9,7 +9,7 @@ class Reports extends CI_Controller {
     public $monthlyBillingReportPage = 'monthly_billing_report';		   //*****  View page   *****//
 	public $searchPage ='adddaily_search _ajax';
     public $monthlybillingreport_ajaxPage ='monthly_billing_report_ajax';
-	public $printtopdfPage ='adddailyreport_printtopdf';
+	public $printtopdfPage ='monthlybillingreport_printtopdf';
 
 	public function __construct() {
         parent::__construct();
@@ -20,6 +20,7 @@ class Reports extends CI_Controller {
 		$this->load->model('addcustomer_model','customer_model');	
 		$this->load->model('addmetercustomerreading_model','meterreading_model'); 
         $this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//	
+        $this->load->helper('common');
 		$this->load->library('form_validation');
 		$this->load->library('Pdf');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
@@ -56,13 +57,28 @@ class Reports extends CI_Controller {
 		$this->load->view($this->listPage,$data);
 	}
 
-	public function printtopdf($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
-		$header['roleResponsible'] = $this->top_model->get_responsibilities();
+	public function printtopdf($billingperiod,$status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
+		//$data['zone'] = $this->my_model->get_zone($zone);
 		$data['zone'] = $this->my_model->get_zone($zone);
-		$data['trans_date'] = date('M d, Y', strtotime($trans_date));
+		$billing_period = explode(' ',urldecode($billingperiod));
+		$data['billingperiod_month'] = $billing_period[0];
+        $data['billingperiod_year'] = $billing_period[1];
+        $data['billingperiod_month_name'] = getMonthName($billing_period[0])[0]->month_name;
+        $data['billingperiod'] = $billingperiod;
+        $data['status'] = ($status=='99')?'':$status;
 		$data['preparedby'] = $this->my_model->get_employee($preparedby);
 		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
 		$data['approvedby'] = $this->my_model->get_employee($approvedby);
+
+
+        //$zone = $this->input->post('zone');
+            //$billingperiod = $this->input->post('billingperiod');
+            
+            //$status = $this->input->post('status');
+            
+        //$data['record'] = $this->reports_model->get_monthly_billing_report_records($zone,$billingperiod,$status);
+
 		//$this->load->view($this->headerPage,$header);
 		$this->load->view($this->printtopdfPage,$data);
 	}

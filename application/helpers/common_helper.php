@@ -124,6 +124,18 @@ if(!function_exists('getCustomerInfo'))
     }
 }
 
+if(!function_exists('getMonthName'))
+{
+    function getMonthName($id)
+    {
+        $CI = &get_instance();
+        $CI->db->where('month_id', $id);
+        $monthname = $CI->db->get('tbl_months')->result();
+        return $monthname;
+
+    }
+}
+
 if(!function_exists('customerbillingperiod'))
 {
     function customerbillingperiod($bp_month,$bp_year,$bp_current_month,$bp_current_year) {

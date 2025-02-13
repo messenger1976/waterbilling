@@ -472,8 +472,15 @@
             var approvedby = $("#approvedby").val();
             var billingperiod = $("#billingperiod").val();
             var status = $("#status").val();
+
+            if(billingperiod===''){
+                billingperiod=0;
+            }
+            if(status===''){
+                status=99;
+            }
             const popup = window.open(
-                "adddailyreport/printtopdf/"+fromdate+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby, // URL to display 
+                "printtopdf/"+billingperiod+'/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby, // URL to display 
                 "PopupWindowPrint", // Name of the window
                 "width=1200,height=600,resizable=yes,scrollbars=yes" // Window settings
             );
