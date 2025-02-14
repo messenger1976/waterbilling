@@ -83,7 +83,7 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                         $grand_total_penalty =0;
                         $grand_total_reading =0;
                         $grand_total_billamount =0;
-                        
+                        $class_category = array();
                         foreach($zone as $key => $row){ 
 				?>                                            
 					<tr>
@@ -151,15 +151,43 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                     $total_penalty_zone += $penalty;
                     $total_reading_zone += $gdailytrans['consumed'];
                     $total_billamount_zone +=$total_payment;
+
+
+                    // Step 1: Loop through each array and search for the key
+                    $found = false;
+
+                    $keyToSearch = "city";
+                    $fieldToUpdate = "country";
+                    $newValue = "Canada"; // New value to update
+
+                    foreach ($class_category as &$array) { // Use & to modify the original array
+                        if (array_key_exists($keyToSearch, $class_category)) {
+                            //echo "The key '$keyToSearch' exists in one of the arrays. Its value is: " . $class_category[$keyToSearch] . "<br>";
+
+                            // Update the specified field
+                            if (array_key_exists($fieldToUpdate, $class_category)) {
+                                $class_category[$fieldToUpdate] = $newValue;
+                                //echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
+                            } else {
+                                //echo "The field '$fieldToUpdate' does not exist in this array.<br>";
+                            }
+
+                            $found = true;
+                        }
+                    }
+
+                    // Step 2: If the key is not found, insert the new array
+                    if (!$found) {
+                        echo "The key '$keyToSearch' does not exist in any of the arrays. Inserting a new array.<br>";
+                        $class_category[] = $newArray; // Add the new array to the collection
+                    }
+
+
                     
                 }
                  echo '<tr>
-                 
-                 
                  <th colspan="5" style="text-align:right">TOTAL</th>
-                 
                  <th style="text-align:right">'.number_format($total_reading_zone,0).'</th>
-                 
                  <th style="text-align:right">'.number_format($total_amount_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_penalty_zone,2).'</th>
                   <th style="text-align:right">'.number_format($total_billamount_zone,2).'</th>
@@ -173,6 +201,7 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                     $grand_total_reading += $total_reading_zone;
                     $grand_total_billamount += $total_billamount_zone;
                     
+
             
                 } 
                 ?>

@@ -12,6 +12,8 @@ class reports_model extends CI_Model {
 	public $table_zone = 'tbl_zone';
 	public $table_employee = 'tbl_addemployee';
 	public $table_jobtitle = 'tbl_jobtitle';
+    public $table_classification = 'tbl_classification';
+    public $table_classification_category = 'tbl_classification_category';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -27,12 +29,16 @@ class reports_model extends CI_Model {
         (SELECT bp_due_date FROM tbl_billing_period WHERE tbl_billing_period.bp_id='.$this->table_meter_reading.'.bp_id) as due_date, '.
         $this->table_meter.'.invoice_id,'.
         $this->table_meter.'.date as payment_date,'.
-        $this->table_meter.'.amount as payment_amount,
+        $this->table_meter.'.amount as payment_amount,'.
+        $this->table_classification_category.'.*,'.
+        $this->table_classification.'.*, 
         '.$this->table_meter_reading.'.*');
 		$this->db->from($this->table_meter_reading);
 		$this->db->join($this->table_name, $this->table_meter_reading.'.customer_id = '.$this->table_name.'.customer_id');
 
 		$this->db->join($this->table_meter, $this->table_meter_reading.'.customer_id='.$this->table_meter.'.customer_id AND '.$this->table_meter_reading.'.month='.$this->table_meter.'.month AND '.$this->table_meter_reading.'.year='.$this->table_meter.'.year','left');
+        $this->db->join($this->table_classification, $this->table_name.'.classification = '.$this->table_classification.'.class_id','left');
+        $this->db->join($this->table_classification_category, $this->table_classification.'.class_cat_id = '.$this->table_classification_category.'.class_cat_id','left');
 
 		$this->db->where($this->table_meter_reading.'.month',$billingperiod[0]);
         $this->db->where($this->table_meter_reading.'.year',$billingperiod[1]);
