@@ -150,16 +150,16 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                     if($gdailytrans['invoice_id']!= ''){ 
                         $status_msg= "Paid"; 
                     } else{ 
-                        $status_msg=  "Un-Paid"; 
+                        $status_msg=  "Unpaid"; 
                     }
                     $index++;
                     echo '<tr>';
                     echo '<td>'.$index.'</td>
-                    <td style="width:20%;">'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
+                    <td style="width:25%;">'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
                     <td style="width:15%;">'.$gdailytrans['customer_id'].'</td>
                     <td align="left">'.$gdailytrans['meter_number'].'</td>
                     <td align="left">'.sprintf('%07d',$gdailytrans['refno']).'</td>
-                    <td align="right">'. number_format($gdailytrans['consumed'],0).'</td>
+                    <td align="right" style="width:5%;">'. number_format($gdailytrans['consumed'],0).'</td>
                     <td align="right">'.stripslashes(number_format($gdailytrans['amount'],2)).'</td>
                     <td align="right">'. number_format($penalty,2).'</td>
                     <td align="right">'.number_format($total_payment,2).'</td>
