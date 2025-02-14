@@ -359,7 +359,7 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
 
 
        <h2>BREAKDOWN OF METERED SALES</h2>
-	   <table width="100%"  style="font-size:smaller;" cellspacing="5" cellpadding="5">
+	   <table class="table" style="font-size:smaller;" cellpadding="0">
 			<thead>
 				<tr>
 					<th>CATEGORY</th>
