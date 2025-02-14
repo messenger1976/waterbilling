@@ -317,7 +317,7 @@
                
 			</tbody>
        </table>
-		<h2>BEAKDOWN OF METERED SALES</h2>
+		<h2>BREAKDOWN OF METERED SALES</h2>
 	   <table class="table table-bordered">
 			<thead>
 				<tr>
