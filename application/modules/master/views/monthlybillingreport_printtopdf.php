@@ -83,7 +83,27 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                         $grand_total_penalty =0;
                         $grand_total_reading =0;
                         $grand_total_billamount =0;
+
                         $class_category = array();
+						$no_of_customer_1 =0;
+                        $no_of_customer_2 =0;
+                        $no_of_customer_3 =0;
+                        $no_of_customer_4 =0;
+
+						$no_of_consumption_1 =0;
+                        $no_of_consumption_2 =0;
+						$no_of_consumption_3 =0;
+						$no_of_consumption_4 =0;
+
+						$metered_sales_1 =0;
+						$metered_sales_2 =0;
+						$metered_sales_3 =0;
+						$metered_sales_4 =0;
+
+						$penalty_1 =0;
+						$penalty_2 =0;
+						$penalty_3 =0;
+						$penalty_4 =0;
                         foreach($zone as $key => $row){ 
 				?>                                            
 					<tr>
@@ -156,31 +176,143 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                     // Step 1: Loop through each array and search for the key
                     $found = false;
 
-                    $keyToSearch = "city";
-                    $fieldToUpdate = "country";
-                    $newValue = "Canada"; // New value to update
+                    // Step 3: Define the key, value to search for, and the field to update
+					$keyToSearch = "class_cat_id";
+					$valueToFind = $gdailytrans['class_cat_id'];
 
-                    foreach ($class_category as &$array) { // Use & to modify the original array
-                        if (array_key_exists($keyToSearch, $class_category)) {
-                            //echo "The key '$keyToSearch' exists in one of the arrays. Its value is: " . $class_category[$keyToSearch] . "<br>";
+					$fieldToUpdate = "no_of_customer";
+					$fieldToUpdate1 = "no_of_consumption";
+					$fieldToUpdate2 = "metered_sales";
+					$fieldToUpdate3 = "penalty";
+					$newArray = array(
+						"class_cat_id" => $gdailytrans['class_cat_id'],
+						"class_cat_name" => $gdailytrans['class_cat_name'],
+					);
 
-                            // Update the specified field
-                            if (array_key_exists($fieldToUpdate, $class_category)) {
-                                $class_category[$fieldToUpdate] = $newValue;
-                                //echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
-                            } else {
-                                //echo "The field '$fieldToUpdate' does not exist in this array.<br>";
-                            }
-
-                            $found = true;
-                        }
+					if($gdailytrans['class_cat_id']=='1'){
+						$no_of_customer_1++; // New value to update
+						$no_of_consumption_1 +=$gdailytrans['consumed'];
+						$metered_sales_1 += $gdailytrans['amount'];
+						$penalty_1 += $penalty;
+						$newArray1 = array(
+							"no_of_customer" => $no_of_customer_1,
+							"no_of_consumption" => $no_of_consumption_1,
+							"metered_sales" => $metered_sales_1,
+							"penalty" => $penalty_1
+						);
+						
+					}elseif($gdailytrans['class_cat_id']=='2'){
+						$no_of_customer_2++; // New value to update
+						$no_of_consumption_2 +=$gdailytrans['consumed'];
+						$metered_sales_2 += $gdailytrans['amount'];
+						$penalty_2 += $penalty;
+						$newArray1 = array(
+							"no_of_customer" => $no_of_customer_2,
+							"no_of_consumption" => $no_of_consumption_2,
+							"metered_sales" => $metered_sales_2,
+							"penalty" => $penalty_2
+						);
+					}elseif($gdailytrans['class_cat_id']=='3'){
+						$no_of_customer_3++; // New value to update
+						$no_of_consumption_3 +=$gdailytrans['consumed'];
+						$metered_sales_3 += $gdailytrans['amount'];
+						$penalty_3 += $penalty;
+						$newArray1 = array(
+							"no_of_customer" => $no_of_customer_3,
+							"no_of_consumption" => $no_of_consumption_3,
+							"metered_sales" => $metered_sales_3,
+							"penalty" => $penalty_3
+						);
+					}elseif($gdailytrans['class_cat_id']=='4'){
+						$no_of_customer_4++; // New value to update
+						$no_of_consumption_4 +=$gdailytrans['consumed'];
+						$metered_sales_4 += $gdailytrans['amount'];
+						$penalty_4 += $penalty;
+						$newArray1 = array(
+							"no_of_customer" => $no_of_customer_4,
+							"no_of_consumption" => $no_of_consumption_4,
+							"metered_sales" => $metered_sales_4,
+							"penalty" => $penalty_4
+						);
+					}
+					$newArray = array_merge($newArray,$newArray1);
+                    foreach ($class_category as &$class_category_key) { // Use & to modify the original array
+                        if (array_key_exists($keyToSearch, $class_category_key) && $class_category_key[$keyToSearch] === $valueToFind) {
+							//echo "The value '$valueToFind' exists in the key '$keyToSearch' in one of the arrays.<br>";
+					
+							// Update the specified field
+							if (array_key_exists($fieldToUpdate, $class_category_key)) {
+								if($gdailytrans['class_cat_id']=='1'){
+									$class_category_key[$fieldToUpdate] = $no_of_customer_1;
+								}
+								if($gdailytrans['class_cat_id']=='2'){
+									$class_category_key[$fieldToUpdate] = $no_of_customer_2;
+								}
+								if($gdailytrans['class_cat_id']=='3'){
+									$class_category_key[$fieldToUpdate] = $no_of_customer_3;
+								}
+								if($gdailytrans['class_cat_id']=='4'){
+									$class_category_key[$fieldToUpdate] = $no_of_customer_4;
+								}
+								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
+							}
+							if (array_key_exists($fieldToUpdate1, $class_category_key)) {
+								if($gdailytrans['class_cat_id']=='1'){
+									$class_category_key[$fieldToUpdate1] = $no_of_consumption_1;
+								}
+								if($gdailytrans['class_cat_id']=='2'){
+									$class_category_key[$fieldToUpdate1] = $no_of_consumption_2;
+								}
+								if($gdailytrans['class_cat_id']=='3'){
+									$class_category_key[$fieldToUpdate1] = $no_of_consumption_3;
+								}
+								if($gdailytrans['class_cat_id']=='4'){
+									$class_category_key[$fieldToUpdate1] = $no_of_consumption_4;
+								}
+								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
+							}
+							if (array_key_exists($fieldToUpdate2, $class_category_key)) {
+								if($gdailytrans['class_cat_id']=='1'){
+									$class_category_key[$fieldToUpdate2] = $metered_sales_1;
+								}
+								if($gdailytrans['class_cat_id']=='2'){
+									$class_category_key[$fieldToUpdate2] = $metered_sales_2;
+								}
+								if($gdailytrans['class_cat_id']=='3'){
+									$class_category_key[$fieldToUpdate2] = $metered_sales_3;
+								}
+								if($gdailytrans['class_cat_id']=='4'){
+									$class_category_key[$fieldToUpdate2] = $metered_sales_4;
+								}
+								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
+							}
+							if (array_key_exists($fieldToUpdate3, $class_category_key)) {
+								if($gdailytrans['class_cat_id']=='1'){
+									$class_category_key[$fieldToUpdate3] = $penalty_1;
+								}
+								if($gdailytrans['class_cat_id']=='2'){
+									$class_category_key[$fieldToUpdate3] = $penalty_2;
+								}
+								if($gdailytrans['class_cat_id']=='3'){
+									$class_category_key[$fieldToUpdate3] = $penalty_3;
+								}
+								if($gdailytrans['class_cat_id']=='4'){
+									$class_category_key[$fieldToUpdate3] = $penalty_4;
+								}
+								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
+							}
+					
+							$found = true;
+						}
                     }
+
+					
 
                     // Step 2: If the key is not found, insert the new array
                     if (!$found) {
-                        echo "The key '$keyToSearch' does not exist in any of the arrays. Inserting a new array.<br>";
+                        //echo "The key '$keyToSearch' does not exist in any of the arrays. Inserting a new array.<br>";
                         $class_category[] = $newArray; // Add the new array to the collection
-                    }
+                    }                   
 
 
                     
@@ -224,6 +356,43 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                
 			</tbody>
        </table>
+
+
+       <h2>BREAKDOWN OF METERED SALES</h2>
+	   <table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>CATEGORY</th>
+					<th>No. of Consumer</th>
+					<th>Consumption</th>
+					<th>Amount</th>
+					<th>Penalty</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				$grand_no_of_customer = 0;
+				$grand_no_of_consumption = 0;
+				$grand_metered_sales = 0;
+				$grand_penalty = 0;
+foreach ($class_category as $person) {
+    echo "<tr>";
+    echo "<td>" . $person["class_cat_name"] . "</td>"; // Name column
+    echo "<td align=center>" . $person["no_of_customer"] . "</td>";  // Age column
+    echo "<td align=center>" . $person["no_of_consumption"] . "</td>";  // Age column
+	echo "<td align=right>" . number_format($person["metered_sales"],2) . "</td>";  // Age column
+	echo "<td align=right>" . number_format($person["penalty"],2) . "</td>";  // Age column
+    echo "</tr>";
+	$grand_no_of_customer +=$person["no_of_customer"];
+	$grand_no_of_consumption +=$person["no_of_consumption"];
+	$grand_metered_sales +=$person["metered_sales"];
+	$grand_penalty +=$person["penalty"];
+}
+echo '<tr><th>GRAND TOTAL</th><th align=center style="text-align: center;"> '. $grand_no_of_customer .' </th><th align=center style="text-align: center;">'. $grand_no_of_consumption .'</th><th align=right style="text-align: right;">'. number_format($grand_metered_sales,2) .'</th><th align=right style="text-align: right;">'. number_format($grand_penalty,2) .'</th></tr>';
+				?>
+				
+			</tbody>
+	   </table>
 
        <table width="100%"  style="font-size:smaller;" cellspacing="5" cellpadding="5">
             <tr>
