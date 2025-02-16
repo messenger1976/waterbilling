@@ -159,7 +159,7 @@
                     // Step 3: Define the key, value to search for, and the field to update
 					$keyToSearch = "class_cat_id";
 					$valueToFind = $row['class_cat_id'];
-
+				//if($valueToFind!=''){
 					$fieldToUpdate = "no_of_customer";
 					$fieldToUpdate1 = "no_of_consumption";
 					$fieldToUpdate2 = "metered_sales";
@@ -215,6 +215,7 @@
 							"penalty" => $penalty_4
 						);
 					}
+
 					$newArray = array_merge($newArray,$newArray1);
                     foreach ($class_category as &$class_category_key) { // Use & to modify the original array
                         if (array_key_exists($keyToSearch, $class_category_key) && $class_category_key[$keyToSearch] === $valueToFind) {
@@ -234,6 +235,7 @@
 								if($row['class_cat_id']=='4'){
 									$class_category_key[$fieldToUpdate] = $no_of_customer_4;
 								}
+								
 								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
 							}
 							if (array_key_exists($fieldToUpdate1, $class_category_key)) {
@@ -249,9 +251,10 @@
 								if($row['class_cat_id']=='4'){
 									$class_category_key[$fieldToUpdate1] = $no_of_consumption_4;
 								}
+								
 								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
 							}
-							if (array_key_exists($fieldToUpdate2, $class_category_key)) {
+							if(array_key_exists($fieldToUpdate2, $class_category_key)) {
 								if($row['class_cat_id']=='1'){
 									$class_category_key[$fieldToUpdate2] = $metered_sales_1;
 								}
@@ -264,9 +267,10 @@
 								if($row['class_cat_id']=='4'){
 									$class_category_key[$fieldToUpdate2] = $metered_sales_4;
 								}
+								$found = true;
 								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
 							}
-							if (array_key_exists($fieldToUpdate3, $class_category_key)) {
+							if(array_key_exists($fieldToUpdate3, $class_category_key)) {
 								if($row['class_cat_id']=='1'){
 									$class_category_key[$fieldToUpdate3] = $penalty_1;
 								}
@@ -279,10 +283,11 @@
 								if($row['class_cat_id']=='4'){
 									$class_category_key[$fieldToUpdate3] = $penalty_4;
 								}
+								
 								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
 							}
-					
 							$found = true;
+							
 						}
                     }
 
@@ -293,7 +298,7 @@
                         //echo "The key '$keyToSearch' does not exist in any of the arrays. Inserting a new array.<br>";
                         $class_category[] = $newArray; // Add the new array to the collection
                     }
-
+				//}
 
 			} ?>
                  <?php } ?>
@@ -335,17 +340,20 @@
 				$grand_metered_sales = 0;
 				$grand_penalty = 0;
 foreach ($class_category as $person) {
-    echo "<tr>";
-    echo "<td>" . $person["class_cat_name"] . "</td>"; // Name column
-    echo "<td align=center>" . $person["no_of_customer"] . "</td>";  // Age column
-    echo "<td align=center>" . $person["no_of_consumption"] . "</td>";  // Age column
-	echo "<td align=right>" . number_format($person["metered_sales"],2) . "</td>";  // Age column
-	echo "<td align=right>" . number_format($person["penalty"],2) . "</td>";  // Age column
-    echo "</tr>";
-	$grand_no_of_customer +=$person["no_of_customer"];
-	$grand_no_of_consumption +=$person["no_of_consumption"];
-	$grand_metered_sales +=$person["metered_sales"];
-	$grand_penalty +=$person["penalty"];
+	if($person["class_cat_name"]!=''){
+		echo "<tr>";
+		echo "<td>" . $person["class_cat_name"] . "</td>"; // Name column
+		echo "<td align=center>" . $person["no_of_customer"] . "</td>";  // Age column
+		echo "<td align=center>" . $person["no_of_consumption"] . "</td>";  // Age column
+		echo "<td align=right>" . number_format($person["metered_sales"],2) . "</td>";  // Age column
+		echo "<td align=right>" . number_format($person["penalty"],2) . "</td>";  // Age column
+		echo "</tr>";
+		$grand_no_of_customer +=$person["no_of_customer"];
+		$grand_no_of_consumption +=$person["no_of_consumption"];
+		$grand_metered_sales +=$person["metered_sales"];
+		$grand_penalty +=$person["penalty"];
+	}
+    
 }
 echo '<tr><th>GRAND TOTAL</th><th align=center style="text-align: center;"> '. $grand_no_of_customer .' </th><th align=center style="text-align: center;">'. $grand_no_of_consumption .'</th><th align=right style="text-align: right;">'. number_format($grand_metered_sales,2) .'</th><th align=right style="text-align: right;">'. number_format($grand_penalty,2) .'</th></tr>';
 				?>

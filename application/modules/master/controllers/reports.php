@@ -6,9 +6,11 @@ class Reports extends CI_Controller {
 	
 	
 	public $listPage = 'adddailyreport_add';
+	public $agingARreportPage = 'aging_ar_report';
     public $monthlyBillingReportPage = 'monthly_billing_report';		   //*****  View page   *****//
 	public $searchPage ='adddaily_search _ajax';
     public $monthlybillingreport_ajaxPage ='monthly_billing_report_ajax';
+	public $agingARreport_ajaxPage ='aging_ar_report_ajax';
 	public $printtopdfPage ='monthlybillingreport_printtopdf';
 
 	public function __construct() {
@@ -54,7 +56,7 @@ class Reports extends CI_Controller {
 		$data['employee'] = $this->my_model->get_employee();
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
 		$this->load->view($this->headerPage,$header);
-		$this->load->view($this->listPage,$data);
+		$this->load->view($this->agingARreportPage,$data);
 	}
 
 	public function printtopdf($billingperiod,$status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
@@ -98,6 +100,21 @@ class Reports extends CI_Controller {
             $this->load->view($this->monthlybillingreport_ajaxPage,$data);
 				
 	}	
+	public function getagingARreportsearch()
+	{		//*****  Add Search records  *****//
+			$data['msg'] ='';
+			
+			
+            $zone = $this->input->post('zone');
+            $asofdate = $this->input->post('asofdate');
+            
+            //$status = $this->input->post('status');
+            
+            $data['record'] = $this->reports_model->get_aging_ar_report_records($asofdate,$zone);
+            
+            $this->load->view($this->agingARreport_ajaxPage,$data);
+				
+	}
 	
 }
 ?>

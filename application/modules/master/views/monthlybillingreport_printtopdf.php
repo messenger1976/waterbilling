@@ -376,17 +376,19 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
 				$grand_metered_sales = 0;
 				$grand_penalty = 0;
 foreach ($class_category as $person) {
-    echo "<tr>";
-    echo "<td>" . $person["class_cat_name"] . "</td>"; // Name column
-    echo "<td align=center>" . $person["no_of_customer"] . "</td>";  // Age column
-    echo "<td align=center>" . $person["no_of_consumption"] . "</td>";  // Age column
-	echo "<td align=right>" . number_format($person["metered_sales"],2) . "</td>";  // Age column
-	echo "<td align=right>" . number_format($person["penalty"],2) . "</td>";  // Age column
-    echo "</tr>";
-	$grand_no_of_customer +=$person["no_of_customer"];
-	$grand_no_of_consumption +=$person["no_of_consumption"];
-	$grand_metered_sales +=$person["metered_sales"];
-	$grand_penalty +=$person["penalty"];
+	if($person["class_cat_name"]!=''){
+		echo "<tr>";
+		echo "<td>" . $person["class_cat_name"] . "</td>"; // Name column
+		echo "<td align=center>" . $person["no_of_customer"] . "</td>";  // Age column
+		echo "<td align=center>" . $person["no_of_consumption"] . "</td>";  // Age column
+		echo "<td align=right>" . number_format($person["metered_sales"],2) . "</td>";  // Age column
+		echo "<td align=right>" . number_format($person["penalty"],2) . "</td>";  // Age column
+		echo "</tr>";
+		$grand_no_of_customer +=$person["no_of_customer"];
+		$grand_no_of_consumption +=$person["no_of_consumption"];
+		$grand_metered_sales +=$person["metered_sales"];
+		$grand_penalty +=$person["penalty"];
+	}
 }
 echo '<tr><th>GRAND TOTAL</th><th align=center style="text-align: center;"> '. $grand_no_of_customer .' </th><th align=center style="text-align: center;">'. $grand_no_of_consumption .'</th><th align=right style="text-align: right;">'. number_format($grand_metered_sales,2) .'</th><th align=right style="text-align: right;">'. number_format($grand_penalty,2) .'</th></tr>';
 				?>
