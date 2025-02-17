@@ -436,9 +436,9 @@ $(document).ready(function(){
 		var preparedby = $("#preparedby").val();
 		var verifiedby = $("#verifiedby").val();
 		var approvedby = $("#approvedby").val();
-		var fromdate = $("#asofdate").val();
+		var asofdate = $("#asofdate").val();
 		const popup = window.open(
-			"adddailyreport/printtopdf/"+fromdate+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby, // URL to display 
+			"agingprinttopdf/"+asofdate+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby, // URL to display 
 			"PopupWindowPrint", // Name of the window
 			"width=1200,height=600,resizable=yes,scrollbars=yes" // Window settings
 		);

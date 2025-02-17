@@ -67,10 +67,10 @@ class reports_model extends CI_Model {
 			$sql_query_zone =' AND tbl_addcustomer.zone=?';
 		}
 		$sql_query = "SELECT  tbl_addcustomer.customer_id,
-	tbl_addcustomer.last_name,
-	tbl_addcustomer.first_name,
-	tbl_addcustomer.middle_name, 
-	tbl_billing_period.bp_end_date AS reading_date,
+		tbl_addcustomer.last_name,
+		tbl_addcustomer.first_name,
+		tbl_addcustomer.middle_name, 
+		tbl_billing_period.bp_end_date AS reading_date,
         (SELECT zone FROM tbl_zone WHERE tbl_zone.id=tbl_addcustomer.zone) AS zone, 
         
         SUM( tbl_addcustomer_reading.penalty) AS total_balance,
@@ -82,10 +82,10 @@ class reports_model extends CI_Model {
         SUM(CASE WHEN DATEDIFF(?, tbl_billing_period.bp_due_date) > 151 THEN tbl_addcustomer_reading.amount ELSE 0 END) AS `150-DaysUp`
         
         FROM tbl_addcustomer_reading
-	INNER JOIN tbl_addcustomer ON tbl_addcustomer_reading.customer_id = tbl_addcustomer.customer_id
-	LEFT JOIN tbl_billing_period ON tbl_addcustomer_reading.bp_id = tbl_billing_period.bp_id
-	LEFT JOIN tbl_addmetercustomer ON tbl_addcustomer_reading.customer_id=tbl_addmetercustomer.customer_id AND tbl_addcustomer_reading.month=tbl_addmetercustomer.month 
-	AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year
+		INNER JOIN tbl_addcustomer ON tbl_addcustomer_reading.customer_id = tbl_addcustomer.customer_id
+		LEFT JOIN tbl_billing_period ON tbl_addcustomer_reading.bp_id = tbl_billing_period.bp_id
+		LEFT JOIN tbl_addmetercustomer ON tbl_addcustomer_reading.customer_id=tbl_addmetercustomer.customer_id AND tbl_addcustomer_reading.month=tbl_addmetercustomer.month 
+		AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year
         LEFT JOIN tbl_classification ON tbl_addcustomer.classification = tbl_classification.class_id
         LEFT JOIN tbl_classification_category ON tbl_classification.class_cat_id = tbl_classification_category.class_cat_id
 	WHERE  tbl_addmetercustomer.invoice_id IS NULL and tbl_addcustomer_reading.reading<>'' AND tbl_billing_period.bp_due_date<? $sql_query_zone

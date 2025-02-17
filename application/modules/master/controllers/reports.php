@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Reports extends CI_Controller {
+class reports extends CI_Controller {
 	// Declare globle variable here
 	
 	public $headerPage = '../../views/admin-includes/header'; 
@@ -12,7 +12,7 @@ class Reports extends CI_Controller {
     public $monthlybillingreport_ajaxPage ='monthly_billing_report_ajax';
 	public $agingARreport_ajaxPage ='aging_ar_report_ajax';
 	public $printtopdfPage ='monthlybillingreport_printtopdf';
-
+	public $agingprinttopdfPage ='agingarreport_printtopdf';
 	public function __construct() {
         parent::__construct();
         $this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//	
@@ -83,6 +83,30 @@ class Reports extends CI_Controller {
 
 		//$this->load->view($this->headerPage,$header);
 		$this->load->view($this->printtopdfPage,$data);
+	}
+
+	public function agingprinttopdf($asofdate,$zone,$preparedby='',$verifiedby='',$approvedby=''){
+		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
+		//$data['zone'] = $this->my_model->get_zone($zone);
+		$data['zone'] = $this->my_model->get_zone($zone);
+		//$billing_period = explode(' ',urldecode($billingperiod));
+		
+        $data['asofdate'] = $asofdate;
+        //$data['status'] = ($status=='99')?'':$status;
+		$data['preparedby'] = $this->my_model->get_employee($preparedby);
+		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
+		$data['approvedby'] = $this->my_model->get_employee($approvedby);
+
+
+        //$zone = $this->input->post('zone');
+            //$billingperiod = $this->input->post('billingperiod');
+            
+            //$status = $this->input->post('status');
+            
+        //$data['record'] = $this->reports_model->get_monthly_billing_report_records($zone,$billingperiod,$status);
+
+		//$this->load->view($this->headerPage,$header);
+		$this->load->view($this->agingprinttopdfPage,$data);
 	}
 	
 	public function getmonthlyreportsearch()
