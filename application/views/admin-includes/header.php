@@ -113,7 +113,7 @@ if(($this->session->userdata('username')=="")||($this->session->userdata('logged
 		</script>
 	</head>
 	
-	<body class="desktop-detected smart-style-1">
+	<body class="desktop-detected smart-style-1 fixed-header fixed-navigation fixed-ribbon">
 		<div id="spinner-overlay" class="spinner-overlay">
 			<div class="spinner"></div>
 		</div>

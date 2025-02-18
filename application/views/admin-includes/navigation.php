@@ -37,7 +37,7 @@
 						<ul>
 						  
 							<li class="<?php if($this->uri->segment(2)=='addcustomer'){echo 'active';}?>">
-								<a href="<?php echo ADMIN_URL;?>addcustomer" title="Adding Customer"><i class="fa fa-lg fa-fw fa-user-plus"></i> <span class="menu-item-parent">Adding Customer</span></a>
+								<a href="<?php echo ADMIN_URL;?>addcustomer" title="Customers Listing"><i class="fa fa-lg fa-fw fa-user-plus"></i> <span class="menu-item-parent">Customers Listing</span></a>
 							</li>
 							<li class="<?php if($this->uri->segment(2)=='add_zone'){echo 'active';}?>">
 								<a href="<?php echo ADMIN_URL;?>add_zone" title="Zone Names"><i class="fa fa-lg fa-fw fa-picture-o"></i> <span class="menu-item-parent">Zone Names</span></a>
