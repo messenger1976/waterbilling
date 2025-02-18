@@ -77,19 +77,19 @@
 									<a href="<?php echo ADMIN_URL;?>feesplaning">Monthly Fees Plans</a>
 								</li>
 							<?php } ?>
-                           
-							<li class="<?php if($this->uri->segment(2)=='paymentmonthlycustomer'){echo 'active';}?>">
-								<a href="<?php echo ADMIN_URL;?>paymentmonthlycustomer">Monthly Customers Bills</a>
-							</li>
-																
+							<?php if((array_key_exists('paymentmonthlycustomer',$roleResponsible) && ($roleResponsible['paymentmonthlycustomer'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+								<li class="<?php if($this->uri->segment(2)=='paymentmonthlycustomer'){echo 'active';}?>">
+									<a href="<?php echo ADMIN_URL;?>paymentmonthlycustomer">Monthly Customers Bills</a>
+								</li>
+							<?php } ?>						
 							<li class="<?php if($this->uri->segment(3)=='metersearch' && $this->uri->segment(2)=='addcustomer'){echo 'active';}?>">
 									<a href="<?php echo ADMIN_URL;?>addcustomer/metersearch"> Meter Customer Search</a>
 							</li>
-							
+							<?php if((array_key_exists('monthlysearch',$roleResponsible) && ($roleResponsible['monthlysearch'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>	
 							<li class="<?php if($this->uri->segment(3)=='monthlysearch' && $this->uri->segment(2)=='addcustomer'){echo 'active';}?>">
 								<a href="<?php echo ADMIN_URL;?>addcustomer/monthlysearch">Monthly Customer Search</a>
 							</li>
-							
+							<?php } ?>
 							<?php if((array_key_exists('generatemetercustomer_search',$roleResponsible) && ($roleResponsible['generatemetercustomer_search'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 								<li class="<?php if($this->uri->segment(3)=='generatemetercustomer_search' && $this->uri->segment(2)=='addcustomer') echo 'active';?>">
 									<a href="<?php echo ADMIN_URL;?>addcustomer/generatemetercustomer_search/">Both Type Of Customers </a>
