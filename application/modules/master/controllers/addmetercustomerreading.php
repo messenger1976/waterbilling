@@ -95,7 +95,7 @@ class addmetercustomerreading extends CI_Controller {
 			$customer_id = $_POST['customer_id'];
 			$data['record'] = $this->my_model->get_cust_class_id($customer_id);
 			$data['get_unit_price'] = $this->my_model->get_unit_price($cubic_meter_reading,$data['record']['classification']);
-			print_r($data['get_unit_price']); 
+			//print_r($data['get_unit_price']); 
 			echo json_encode($data['get_unit_price']);
 		}
 	}
