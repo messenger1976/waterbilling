@@ -7,7 +7,14 @@
 
 				<div class="col-xs-6 col-sm-6 text-right hidden-xs">
 					<div class="txt-color-white inline-block">
-						<i class="txt-color-blueLight hidden-mobile">Last account activity <i class="fa fa-clock-o"></i> <strong>52 mins ago &nbsp;</strong> </i>
+						<i class="txt-color-blueLight hidden-mobile"><i class="fa fa-clock-o"></i> <strong>
+						<?php
+ini_set('date.timezone', 'Asia/Manila');
+echo "Current timezone: " . date_default_timezone_get();
+// Output the current time in the Philippines
+echo "Current time: " . date('Y-m-d H:i:s');
+?>	
+						</strong> </i>
 						<div class="btn-group dropup">
 							<button class="btn btn-xs dropdown-toggle bg-color-blue txt-color-white" data-toggle="dropdown">
 								<i class="fa fa-link"></i> <span class="caret"></span>
