@@ -24,6 +24,7 @@ class responsibilities extends CI_Controller
 	public function __construct() {
         parent::__construct();
   		$this->load->model('responsibilities_model','my_model');// Loading the dashboard Model
+		$this->load->model('common_model','comm_model'); 
 		//$this->load->model('admin_common_model','count_model'); 
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
@@ -87,6 +88,7 @@ class responsibilities extends CI_Controller
 				'web_settings' => 'Admin Address',
 				'admin' => 'Admin',
 				'adddailyreport' => 'Daily Reports',
+				'leakingentry' => 'Leaking Entry'
 				);
 	}
 

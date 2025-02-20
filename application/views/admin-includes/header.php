@@ -1,4 +1,5 @@
 <?PHP 
+date_default_timezone_set('Asia/Manila');
 header("cache-Control: no-store, no-cache, must-revalidate");
 header("cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");  

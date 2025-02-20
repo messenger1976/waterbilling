@@ -55,7 +55,8 @@
 								<?php if($this->uri->segment(2)=='feesplaning'){echo 'active open';}?>
 								<?php if($this->uri->segment(2)=='paymentmonthlycustomer'){echo 'active open';}?>
 								<?php if($this->uri->segment(2)=='addpaymentcustomer'){echo 'active open';}?>
-								<?php if($this->uri->segment(2)=='amountrate'){echo 'active open';}?>								   
+								<?php if($this->uri->segment(2)=='amountrate'){echo 'active open';}?>	
+								<?php if($this->uri->segment(2)=='leakingentry'){echo 'active open';}?>							   
 						     ">
 						<a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">Finance</span></a>
 						<ul>
@@ -67,6 +68,13 @@
 								<a href="<?php echo ADMIN_URL;?>addpaymentcustomer">Meter Customers Bills</a>
 							</li>
 							
+							<?php if((array_key_exists('leakingentry',$roleResponsible) && ($roleResponsible['leakingentry'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>	
+							<li class="<?php if($this->uri->segment(2)=='leakingentry'){echo 'active';}?>">
+								<a href="<?php echo ADMIN_URL;?>leakingentry">Leaking Entry</a>
+							</li>
+							<?php } ?>
+
+
 							<?php if((array_key_exists('amountrate',$roleResponsible) && ($roleResponsible['amountrate'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 								<li class="<?php if($this->uri->segment(2)=='amountrate'){echo 'active';}?>">
 									<a href="<?php echo ADMIN_URL;?>amountrate">Per Unit Value</a>

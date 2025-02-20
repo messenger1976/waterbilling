@@ -5,6 +5,10 @@ class Common_model extends CI_Model {
 	public $table_zone = 'tbl_zone'; //zone table
 	public $table_meter = 'tbl_addmetercustomer';
 	public $table_monthly = 'tbl_monthlycustomer';
+	
+	public $table_expenses = 'tbl_addexpenses';
+	public $table_payrol = 'tbl_payrols';
+	public $table_customer = 'tbl_addcustomer';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -40,6 +44,28 @@ class Common_model extends CI_Model {
 	public function get_income_monthlycustomer(){
 		$this->db->select('SUM(paidamount) as total2');
 		$this->db->from($this->table_monthly);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
+
+	public function get_outcome_expenses(){
+		$this->db->select('SUM(total) as extotal1');
+		$this->db->from($this->table_expenses);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
+	public function get_outcome_payroll(){
+		$this->db->select('SUM(total) as extotal2');
+		$this->db->from($this->table_payrol);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
+	public function total_customer(){
+		$this->db->select('COUNT(id) as count_id');
+		$this->db->from($this->table_customer);
 		$query = $this->db->get();
 		$result = $query->row_array();
 		return $result;
