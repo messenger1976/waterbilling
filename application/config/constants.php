@@ -1,5 +1,5 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+ini_set('date.timezone', 'Asia/Manila');	
 /*
 |--------------------------------------------------------------------------
 | File and Directory Modes

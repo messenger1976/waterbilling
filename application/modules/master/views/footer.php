@@ -12,7 +12,7 @@
 
 echo "Current timezone: " . date_default_timezone_get();
 // Output the current time in the Philippines
-echo "Current time: " . date('Y-m-d H:i:s');
+echo " Current time: " . date('Y-m-d H:i:s');
 ?>	
 						</strong> </i>
 						<div class="btn-group dropup">
