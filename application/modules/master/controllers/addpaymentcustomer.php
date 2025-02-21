@@ -31,7 +31,8 @@ class addpaymentcustomer extends CI_Controller {
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 		error_reporting(0);
-		ini_set('display_errors','off'); 				
+		ini_set('display_errors','off'); 		
+		ini_set('date.timezone', 'Asia/Manila');		
 		$this->load->model('adminheader_model','top_model');
 		$this->load->model('addcustomer_model','customer_model');
     }
