@@ -11,6 +11,7 @@ class adminheader_model extends CI_Model {
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 		error_reporting(0);
 		ini_set('display_errors','off'); 
+		ini_set('date.timezone', 'Asia/Manila');	
 		if($this->session->userdata("browser_session_id") == ''){
 			$uniqueId = uniqid($_SERVER['REMOTE_ADDR'], TRUE);		
 			$this->session->set_userdata("browser_session_id", md5($uniqueId));
