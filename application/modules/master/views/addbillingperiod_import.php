@@ -98,6 +98,19 @@
 											</div>
 											<?php } ?>	
 											
+
+											<?php if($this->session->flashdata('msg_succ') != ''){?>
+											<div class="alert alert-block alert-success">
+												<button type="button" class="close" data-dismiss="alert">
+												<i class="icon-remove"></i>
+												</button>
+												<p>
+													<i class="icon-ok"></i>
+													<?php echo $this->session->flashdata('msg_succ')?$this->session->flashdata('msg_succ'):'';?>
+												</p>
+											</div>
+											<?php } ?>
+
 											<fieldset>
 												<legend>Import Billing Period
 												        <div class="pull-right" style="padding-right:20px;">
@@ -389,7 +402,9 @@ function fun_calendor(field){
 } 
 $(document).ready(function(){
 
-    
+    $('#import').on('click', function(){
+		showSpinner();
+	});
 
 
 	$("#fromdate").datepicker({

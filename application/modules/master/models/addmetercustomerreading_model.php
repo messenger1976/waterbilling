@@ -18,6 +18,7 @@ class addmetercustomerreading_model extends CI_Model {
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
+		ini_set('date.timezone', 'Asia/Manila');	
     }
 	
 	/** In Function Get all records from select table **/
@@ -170,11 +171,27 @@ class addmetercustomerreading_model extends CI_Model {
     }
 	public function get_customer_info($id){
 		
-		$this->db->select('tbl_addcustomer.special_priviledge,tbl_addcustomer.customer_id, tbl_addcustomer.first_name, tbl_addcustomer.middle_name, tbl_addcustomer.last_name,
-		                  tbl_addcustomer.email_id, tbl_addcustomer.mobile1, tbl_addcustomer.mobile2, tbl_addcustomer.customer_type,tbl_addcustomer.account_type,tbl_addcustomer.classification,
-						  tbl_addcustomer.zone as zone_id, tbl_zone.id, tbl_zone.zone, tbl_classification.class_name, tbl_addcustomer.meter_number, tbl_customer_type.*');
+		$this->db->select('
+			tbl_addcustomer.special_priviledge,
+			tbl_addcustomer.customer_id, 
+			tbl_addcustomer.first_name, 
+			tbl_addcustomer.middle_name, 
+			tbl_addcustomer.last_name,
+			tbl_addcustomer.email_id, 
+			tbl_addcustomer.mobile1, 
+			tbl_addcustomer.mobile2, 
+			tbl_addcustomer.customer_type,
+			tbl_addcustomer.account_type,
+			tbl_addcustomer.classification,
+			tbl_addcustomer.zone as zone_id, 
+			tbl_zone.id, 
+			tbl_zone.zone, 
+			tbl_classification.class_name, 
+			tbl_addcustomer.meter_number, 
+			tbl_customer_type.*'
+			);
 		$this->db->from('tbl_addcustomer');
-		$this->db->join('tbl_zone', 'tbl_addcustomer.zone = tbl_zone.id');
+		$this->db->join('tbl_zone', 'tbl_addcustomer.zone = tbl_zone.id','left');
 		$this->db->join('tbl_classification', 'tbl_addcustomer.classification = tbl_classification.class_id','left');
 		$this->db->join('tbl_customer_type', 'tbl_addcustomer.account_type = tbl_customer_type.cust_type_id','left');
 		//$this->db->where('tbl_addcustomer.customer_type','metercustomer');
@@ -300,13 +317,22 @@ class addmetercustomerreading_model extends CI_Model {
 			$amount_total_penalty = $total_amount;
 		}
 		$reading_date = date('d-m-Y',strtotime($data['reading_date']));
-		//echo 'account type:'.$customerinfo[0]['zone_id'].' '.$data['billing_month'];
-		//print_r($bp);
+
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		
+		$updated_date = $dt_date->format("Y-m-d H:i:s");
+
+
+		//echo 'account type:'.$customerinfo[0]['special_priviledge'].' '.$data['billing_month'];
+		//print_r($customerinfo);
 		//exit;
-    	$sql = "UPDATE tbl_addcustomer_reading 
-            SET reading = ?, consumed = ?, sc_discount = ?, amount = ?, unit_price = ?, penalty = ?, date = ? , bp_id = ?
+		if($data['refno']!=''){
+			$sql = "UPDATE tbl_addcustomer_reading 
+            SET reading = ?, consumed = ?, sc_discount = ?, amount = ?, unit_price = ?, penalty = ?, date = ? , bp_id = ?, update_date_time = ?
             WHERE refno = ?";
-    	$this->db->query($sql, [$data['current_reading'],  $consumed, $discount, number_format($total_amount,2,".",""), $cubicmeter_rate->per_unit,number_format($amount_total_penalty,2,".",""), $reading_date, $bp->bp_id,$data['refno']]);
+    		$this->db->query($sql, [$data['current_reading'],  $consumed, $discount, number_format($total_amount,2,".",""), $cubicmeter_rate->per_unit,number_format($amount_total_penalty,2,".",""), $reading_date, $bp->bp_id,$updated_date,$data['refno']]);
+		}
+    	
 	}
 	
 }

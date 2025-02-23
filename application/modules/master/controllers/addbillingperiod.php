@@ -348,6 +348,7 @@ class addbillingperiod extends CI_Controller {
 	}
 
 	public function upload(){
+		$data['msg'] ='';
 		if (isset($_FILES["csv_file"]["name"])) {
             $file = $_FILES["csv_file"]["tmp_name"];
 			$reading_date = $this->input->post('reading_date');
@@ -368,12 +369,12 @@ class addbillingperiod extends CI_Controller {
                 }
                 fclose($handle);
 
-                $this->session->set_flashdata('msg', 'CSV file imported successfully!');
+                $this->session->set_flashdata('msg_succ', 'CSV file imported successfully!');
             } else {
-                $this->session->set_flashdata('msg', 'Error opening file!');
+                $this->session->set_flashdata('msg_succ', 'Error opening file!');
             }
         } else {
-            $this->session->set_flashdata('msg', 'Please select a file.');
+            $this->session->set_flashdata('msg_succ', 'Please select a file.');
         }
 
 		//$redirect_uri = ADMIN_URL.'addbillingperiod/import';
