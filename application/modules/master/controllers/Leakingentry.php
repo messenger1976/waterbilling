@@ -16,12 +16,12 @@ class Leakingentry extends CI_Controller{
     }
 
     public function index(){
-        if($this->session->userdata('usertype') == 'subadmin'){
+        //if($this->session->userdata('usertype') == 'subadmin'){
 			$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 			
-		}else{
-			$this->head['roleResponsible'] = array();
-		}
+		//}else{
+		//	$this->head['roleResponsible'] = array();
+		//}
 		if(	array_key_exists('leakingentry',$this->head['roleResponsible']) && $this->session->userdata('usertype') == 'subadmin' ){
 			$this->top_model->get_responsibilities_conditions($this->head['roleResponsible']['leakingentry']);
 		}

@@ -50,7 +50,7 @@ class adminheader_model extends CI_Model {
 				'technicalsearch' => 'Technical Problems View',
 				'web_settings' => 'Admin Address',
 				'admin' => 'Admin',
-				
+				'leakingentry' => 'Leaking Entry',
 				);
 	}
 

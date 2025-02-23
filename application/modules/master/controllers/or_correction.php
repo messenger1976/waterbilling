@@ -30,8 +30,8 @@ class or_correction extends CI_Controller {
 		}else{
 			$this->head['roleResponsible'] = array();
 		}
-		if(	array_key_exists('add_zone',$this->head['roleResponsible']) && $this->session->userdata('usertype') == 'subadmin' ){
-			$this->top_model->get_responsibilities_conditions($this->head['roleResponsible']['add_zone']);
+		if(	array_key_exists('admin',$this->head['roleResponsible']) && $this->session->userdata('usertype') == 'subadmin' ){
+			$this->top_model->get_responsibilities_conditions($this->head['roleResponsible']['admin']);
 		}
 		//*****  View Loading  *****//
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
