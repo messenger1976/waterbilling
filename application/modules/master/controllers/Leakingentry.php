@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Leakingentry extends CI_Controller{
+class leakingentry extends CI_Controller{
     public $headerPage = '../../views/admin-includes/header';  //Header template
 
     public $listPage = 'leakingentry';
@@ -22,9 +22,9 @@ class Leakingentry extends CI_Controller{
 		//}else{
 		//	$this->head['roleResponsible'] = array();
 		//}
-		if(	array_key_exists('leakingentry',$this->head['roleResponsible']) && $this->session->userdata('usertype') == 'subadmin' ){
+		/*if(	array_key_exists('leakingentry',$this->head['roleResponsible']) && $this->session->userdata('usertype') == 'subadmin' ){
 			$this->top_model->get_responsibilities_conditions($this->head['roleResponsible']['leakingentry']);
-		}
+		}*/
 		//*****  View Loading  *****//
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
         $header['record_info'] = $this->top_model->get_last_login_details(1);
