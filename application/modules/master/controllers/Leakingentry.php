@@ -17,7 +17,7 @@ class leakingentry extends CI_Controller{
 
     public function index(){
         //if($this->session->userdata('usertype') == 'subadmin'){
-			$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
+			//$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 			
 		//}else{
 		//	$this->head['roleResponsible'] = array();
