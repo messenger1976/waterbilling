@@ -6,6 +6,7 @@ class or_correction_model extends CI_Model {
 	public $table_expenses = 'tbl_addexpenses';
 	public $table_payrol = 'tbl_payrols';
 	public $table_customer = 'tbl_addcustomer';
+	public $table_meter_reading = 'tbl_addcustomer_reading';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -97,6 +98,17 @@ class or_correction_model extends CI_Model {
 	public function delete_record($id){
 		$this->db->where('id',$id);
 		$result = $this->db->delete($this->table_meter); 
+
+		$set_data = array(
+		                  
+			'status' => 0,
+			'or_number' => '',
+		  	'update_date_time' => date('Y-m-d H:i:s'),
+			'customer_billing_id' => ''
+			
+		);
+		$this->db->where('customer_billing_id',$id);
+		$result = $this->db->update($this->table_meter_reading,$set_data); 
 		return $result;
 	}
 	
