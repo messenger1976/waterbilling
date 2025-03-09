@@ -247,7 +247,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
+                                                <input class="form-control" type="text" id="billing_period" name="billing_period">
                                                 <?php echo form_error('billing_period'); ?>
                                             </div>
                                         </div>

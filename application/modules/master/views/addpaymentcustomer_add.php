@@ -599,36 +599,54 @@ $(document).ready(function(){
 
 $('#btn_search_box').on('click', function(evt) {
 	evt.preventDefault();
-	showSpinner(); // Call this to show the spinner
+	
 	let search_text = $("#search_box_id").val();
 	const search_text_result = search_text.split("==>");
 	var id = search_text_result[0];
 	$('#customer_id').val(id);
+	showSpinner(); // Call this to show the spinner
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/get_custmer_name/',
+		data: {id: id},
+		//async: false, // Make the request synchronous
+		beforeSend: function() {
+			//showSpinner(); // Call this to show the spinner
+  		},
+		success: function(data) {
+			$("#names").html(data);
+			var fullname = document.querySelector('#first_name').value;
+			$('#fullname').val(fullname);
+			//console.log('fullname:'+$('#fullname').val());
+						
+		},
+		complete: function() {
+			//hideSpinner(); // Simulate loading for 3 seconds
+		}
+	});
+
 	//console.log('customer id:'+id)
 	$.ajax({
 		type: 'POST',
 		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/get_custmer_all_data/',
 		data: {id: id},
+		//async: false, // Make the request synchronous
+		beforeSend: function() {
+			//showSpinner(); // Call this to show the spinner
+  		},
 		success: function(data) {
 			$("#meterincomeDiv").html(data);		
+		},
+		complete: function() {
+			hideSpinner(); // Simulate loading for 3 seconds
 		}
 	});
-	$.ajax({
-		type: 'POST',
-		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/get_custmer_name/',
-		data: {id: id},
-		success: function(data) {
-			$("#names").html(data);
-			var fullname = document.querySelector('#first_name').value;
-			$('#fullname').val(fullname);
-			//console.log('fullname:'+$('#fullname').val());			
-		}
-	});
+	//hideSpinner(); // Simulate loading for 3 seconds
 	$('#or_num').val('');
 	$('#deepmala').text('0.00');
 	$('#deepmala_total').text('0.00');
 	$('#hideclass').hide();
-	setTimeout(hideSpinner, 1000); // Simulate loading for 3 seconds
+	
 	
 });	
 
