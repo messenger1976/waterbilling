@@ -281,6 +281,32 @@ if(!function_exists("isValidMySQLDate")){
     }
 }
 
+if(!function_exists("customer_id_generate")){
+    function customer_id_generate($class_code='000', $zone_code='000') {
+        if($class_code!=='000'){
+            $CI1 = &get_instance();
+            $CI1->db->where('class_id', $class_code);
+            $classification = $CI1->db->get('tbl_classification')->row();
+            $class_code = $classification->class_code;
+        }
+       
+        if($zone_code!=='000'){
+            $CI2 = &get_instance();
+            $CI2->db->where('id', $zone_code);
+            $zone = $CI2->db->get('tbl_zone')->row();
+            $zone_code = $zone->zone_code;
+        }
+        
+
+        $CI3 = &get_instance();
+        $CI3->db->where('doc_name', 'MEMBER');
+        $member_number = $CI3->db->get('tbl_doc_series_number')->row();
+        $doc_num = $member_number->doc_series_num+1;
+        
+        return $class_code.'-'.$zone_code.'-'.sprintf('%05d',$doc_num);
+    }
+}
+
 if(!function_exists("detailsbillingpayment")){
     function detailsbillingpayment($invoice_id) {
         $str_invoicepayment ='';

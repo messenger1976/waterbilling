@@ -32,9 +32,9 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
@@ -140,7 +140,7 @@
 																<div class="col-lg-12 controls">
 																	<div class="form-group">
 																		<span class="input-group-addon"><i class="icon-user"></i><strong>Customer-Id : <span style="color:red;font-weight: bold;">*</span></strong></span>
-																		<input  class="form-control"  type="text" id="customer_id" name="customer_id" value="<?php echo $this->input->post('customer_id'); ?>" required/>
+																		<input  class="form-control"  type="text" id="customer_id" name="customer_id" value="<?php echo $customer_id; ?>" readonly required/>
 																		<?php echo form_error('customer_id'); ?>
 																		<span id="val_roll_img"></span>
 																	</div>		
@@ -365,6 +365,7 @@
 																		<option value="<?php echo $value['class_id'];?>"><?php echo $value['class_name'];?></option>
 																		<?php } ?>
 																		</select>
+																		<span id="val_classification_img"></span>
 																	</div>
 																</div>
 															</div>
@@ -784,6 +785,101 @@ $("#mobile2").on('change', function(){
 			}
 			
 		});
+	}
+	
+});
+
+$("#classification").on('change', function(){
+	var class_id = $("#classification").val();
+	if(class_id===''){
+		class_id='000';
+	}
+	var zone_id = $("#zone").val();
+	if(zone_id===''){
+		zone_id='000';
+	}
+	
+	var member_stat = $(membership_status).val();	
+	if(member_stat == 1){
+		
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo ADMIN_URL;?>addcustomer/get_customer_id_generate/'+class_id+'/'+zone_id,
+			data:{ class_id:class_id,
+				zone_id:zone_id
+			},
+			success: function(data){
+				$('#customer_id').val(data);
+				//console.log(data);
+			}
+			
+		});
+	}
+	
+});
+
+$("#zone").on('change', function(){
+	var class_id = $("#classification").val();
+	if(class_id===''){
+		class_id='000';
+	}
+	var zone_id = $("#zone").val();
+	if(zone_id===''){
+		zone_id='000';
+	}
+	var member_stat = $(membership_status).val();	
+	if(member_stat == 1){
+		
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo ADMIN_URL;?>addcustomer/get_customer_id_generate/'+class_id+'/'+zone_id,
+			data:{ class_id:class_id,
+				zone_id:zone_id
+			},
+			success: function(data){
+				$('#customer_id').val(data);
+				//console.log(data);
+			}
+			
+		});
+	}
+	
+});
+
+$("#membership_status").on('change', function(evt){
+	evt.preventDefault();
+	var member_stat = $(this).val();
+	$('#customer_id').val('');
+	if(member_stat==1){
+		$('#customer_id').prop('readonly',true)
+
+		var class_id = $("#classification").val();
+
+		if(class_id===''){
+			class_id='000';
+		}
+		var zone_id = $("#zone").val();
+		if(zone_id===''){
+			zone_id='000';
+		}
+		
+		
+			
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo ADMIN_URL;?>addcustomer/get_customer_id_generate/'+class_id+'/'+zone_id,
+			data:{ class_id:class_id,
+				zone_id:zone_id
+			},
+			success: function(data){
+				$('#customer_id').val(data);
+				//console.log(data);
+			}
+			
+		});
+		
+	}else{
+		$('#customer_id').prop('readonly',false)
 	}
 	
 });

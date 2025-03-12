@@ -45,6 +45,7 @@ class addcustomer extends CI_Controller {
 	public $editPage_redirect = '/master/addcustomer/edit/';  //*****  Redirect Edit  *****//
 	public function __construct() {
         parent::__construct();
+		$this->load->helper('common_helper');
   		$this->load->model('addcustomer_model','my_model');   //*****    Model Loading     *****//	
 		$this->load->model('common_model','comm_model');
 		$this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//		
@@ -85,36 +86,36 @@ class addcustomer extends CI_Controller {
 		 if($this->input->post('add') != ''){
             //echo'<pre>';print_r($_POST);
 			
-						$config = array(
-										'upload_path'   => './images/upload',
-										'allowed_types' => 'gif|jpg|png',
-										'max_size'      => '10000',
-										'max_width'     => '1024',
-										'max_height'    => '768',
-										'encrypt_name'  => false,
-									   );
-						$this->load->library('upload', $config);
+				$config = array(
+					'upload_path'   => './images/upload',
+					'allowed_types' => 'gif|jpg|png',
+					'max_size'      => '10000',
+					'max_width'     => '1024',
+					'max_height'    => '768',
+					'encrypt_name'  => false,
+				);
+				$this->load->library('upload', $config);
 						
 				$result = $this->my_model->add_record();
 				//print_r($_POST);
 				//exit;
 				if($result){
-							if ($this->upload->do_upload('userfile')) 
-							{	
-							   	$upload_data = $this->upload->data();
-									$data_ary = array(
-														'title'     => $upload_data['client_name'],
-														'file'      => $upload_data['file_name'],
-														'width'     => $upload_data['image_width'],
-														'height'    => $upload_data['image_height'],
-														'type'      => $upload_data['image_type'],
-														'size'      => $upload_data['file_size'],
-														'date'      => date('Y-m-d'),
-														'customerid'=> $result
-													  );
-														$this->load->database();
-														$this->db->insert('tbl_userphotoupload', $data_ary);
-							}					
+					if ($this->upload->do_upload('userfile')) 
+					{	
+						$upload_data = $this->upload->data();
+						$data_ary = array(
+							'title'     => $upload_data['client_name'],
+							'file'      => $upload_data['file_name'],
+							'width'     => $upload_data['image_width'],
+							'height'    => $upload_data['image_height'],
+							'type'      => $upload_data['image_type'],
+							'size'      => $upload_data['file_size'],
+							'date'      => date('Y-m-d'),
+							'customerid'=> $result
+						);
+						$this->load->database();
+						$this->db->insert('tbl_userphotoupload', $data_ary);
+					}					
 					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
 					redirect($this->listPage_redirect);
 				}else{
@@ -124,7 +125,9 @@ class addcustomer extends CI_Controller {
 		//$header['host'] = $this->comm_model->get_single_record();				
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
 		$data['account'] = $this->my_model->accountgroup();
-		//print_r($data['account']);exit;
+		$data['customer_id'] = customer_id_generate();
+		
+		//print_r($data['customer_id']);exit;
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->addPage,$data);
 	}
@@ -568,6 +571,11 @@ class addcustomer extends CI_Controller {
 		//}
 				
 	}	
+
+	public function get_customer_id_generate($class_id,$zone_id){
+		
+		echo customer_id_generate($class_id,$zone_id);
+	}
 	/** Status Change Function **/
 	/*public function contactStatus($id,$status){
 		$data['msg'] ='';
@@ -1190,7 +1198,7 @@ function tables()
         'email' => 'E-mail Address'
     );
 
-    $this->cezpdf->ezTable($table_data, $col_names, 'Contact List', array('width'=>550));
+    $this->cezpdf->ezTable($this->table_name, $col_names, 'Contact List', array('width'=>550));
     $this->cezpdf->ezStream();
 }
     function check_customer_id($customer_id){

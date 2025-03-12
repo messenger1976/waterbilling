@@ -182,6 +182,17 @@ class addcustomer_model extends CI_Model {
 		//$customer_id  = 'WT'.$brcE;
 		$date_installed = strtotime($this->input->post('date_installed'));
 
+		$doc_num = explode('-',$this->input->post('customer_id'));
+		$update_counter_array = array( 
+			'doc_series_num' => $doc_num[2]
+		);
+		$C5 = &get_instance();
+		$C5->db->where('doc_name', 'MEMBER');
+		$C5->db->update('tbl_doc_series_number', $update_counter_array);
+
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$created_date = $dt_date->format("Y-m-d H:i:s");
+
 		$set_data = array(
 						'account_id' =>'0',
 						'customer_id' =>trim($this->input->post('customer_id')),
@@ -211,8 +222,8 @@ class addcustomer_model extends CI_Model {
 						'account_type' => $this->input->post('account_type'),
 						'membership_status' => $this->input->post('membership_status'),
 						'special_priviledge' => $this->input->post('special_priviledge'),
-						'create_date' => date('Y-m-d'),
-						'create_date_time' => date('Y-m-d H:i:s'),
+						'create_date' => $dt_date->format('Y-m-d'),
+						'create_date_time' => $created_date,
 						
 					);
 		$this->db->insert($this->table_name, $set_data); 
@@ -224,6 +235,9 @@ class addcustomer_model extends CI_Model {
 				//$brcE     	= substr(rand(1,1000000),0,4); 
 		//$customer_id  = 'WT'.$brcE;
 		$date_installed = strtotime($this->input->post('date_installed'));
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$update_date = $dt_date->format("Y-m-d H:i:s");
+
 		$set_data = array(
 						//'account_id' =>mysql_real_escape_string($this->input->post('acount_group')),
 						'customer_id' =>trim($this->input->post('customer_id')),
@@ -253,7 +267,7 @@ class addcustomer_model extends CI_Model {
 						'account_type' => $this->input->post('account_type'),
 						'special_priviledge' => $this->input->post('special_priviledge'),
 						'membership_status' => $this->input->post('membership_status'),
-						'update_date_time' => date('Y-m-d H:i:s'),
+						'update_date_time' => $update_date,
 						);
 		$this->db->where('id',$id);
 		$result = $this->db->update($this->table_name, $set_data); 
