@@ -32,10 +32,16 @@ class addpaymentcustomer_model extends CI_Model {
     }	
 	/** In Function Get all records from select table **/
     
-	 public function get_all_records() {
+	 public function get_all_records($billing_period='') {
         $this->db->select($this->table_name.".*,SUM(".$this->table_name.".amount) as gross_amount,".$this->table_customername.".*,".$this->table_name.".id as id");
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_customername, $this->table_name.".customer_id = ".$this->table_customername.".customer_id", 'left');
+		if($billing_period!=''){
+			$billperiod = explode(' ',$billing_period);
+			$this->db->where($this->table_name.'.month',$billperiod[0]);
+			$this->db->where($this->table_name.'.year',$billperiod[1]);
+		}
+		
 		$this->db->order_by($this->table_name.'.id','desc');
 		$this->db->group_by($this->table_name.'.invoice_id');
 		$query = $this->db->get();

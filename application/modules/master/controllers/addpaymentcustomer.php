@@ -1,4 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+session_start();
 class addpaymentcustomer extends CI_Controller {
 	// Declare globle variable here
 	
@@ -24,7 +25,7 @@ class addpaymentcustomer extends CI_Controller {
         parent::__construct();
   		$this->load->model('addpaymentcustomer_model','my_model');   //*****    Model Loading     *****//	
 		$this->load->model('common_model','comm_model');
-			
+		$this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//		
 		$this->load->helper('common_helper');
 		$this->load->library('form_validation');
 		$this->load->library('Pdf');
@@ -38,9 +39,16 @@ class addpaymentcustomer extends CI_Controller {
     }
 	public function index(){ 		 //*****  View Loading  *****//
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
-		$data['record'] = $this->my_model->get_all_records();	
+
+		if(!isset($_SESSION['current_billingperiod'])){
+			$data['current_billingperiod'] = $this->comm_model->get_billingperiod_record();
+			
+			$_SESSION['current_billingperiod'] = $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year'];
+		}
+		$data['record'] = $this->my_model->get_all_records($_SESSION['current_billingperiod']);	
 		$data['amountrate'] = $this->my_model->get_amountrate();				
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		$data['billingperiod'] = $this->billingperiod_model->get_month_billingperiod_records();	
 		$this->load->view($this->headerPage,$header);
 		$this->load->view($this->listPage,$data);
 	}

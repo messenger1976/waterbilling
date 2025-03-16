@@ -23,7 +23,16 @@
 
 			<!-- MAIN CONTENT -->
 			<div id="content">
-
+			<?php
+//$bp_current_array = $this->session->userdata('current_billingperiod'); 
+//print_r($this->session->userdata('current_billingperiod'));
+//print_r($_SESSION['current_billingperiod']);
+//echo '<br/>';
+//print_r($current_billingperiod);
+//echo '<br/>';
+//echo 'month:'.$bp_current_array[0]['bp_period_month'];
+//exit;
+									?>
 				<div class="row">
 					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> View <span>> Schedule Billing Period</span></h1>
@@ -31,10 +40,29 @@
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
+								<h5> Billing Period <span class="txt-color-blue">
+									
+								<select  class="form-control" name="header_billingperiod" id="header_billingperiod" class="col-lg-12" required>
+									<option value="">--All--</option>
+									<?php
+									
+									foreach($billingperiod as $key =>$value){ 
+										$val_val = $value['bp_period_month'].' '.$value['bp_period_year'];
+										$selected_val = '';
+										if($_SESSION['current_billingperiod']==$val_val){
+											$selected_val = 'selected';
+										}
+									?>
+									<option value="<?php echo $value['bp_period_month'].' '.$value['bp_period_year']; ?>" <?php echo $selected_val;?>><?php echo $value['month_name'].' '.$value['bp_period_year'];?></option>
+									<?php } ?>
+								</select>								
+								</span></h5>
+							</li>
+							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
@@ -467,11 +495,33 @@
 				}else if (checked_num > 0){ 
 					
 				}*/
+
+
+				
 			});
 
 		
 
+			$('#header_billingperiod').on('change', function(evt){
+				evt.preventDefault();
+				var header_billing_period = $(this).val();
+				//showSpinner();
+				$.ajax({
+            		type : "POST",
+					url	: '<?php echo ADMIN_URL;?>addbillingperiod/updated_headerbillingperiod',
+					data	: "billing_period="+header_billing_period,
+					complete: function(data){
+						console.log(data);
+						//if(data=='success'){
+							location.reload();
+							//window.location.replace(window.location.href);
+							//window.location.href = '<?php echo ADMIN_URL;?>addbillingperiod';
+						//}
+					}
+				});
 
+				//alert($(this).val());
+			});
 
 
 			$('#exporttoexcel').on('click', function(evt){

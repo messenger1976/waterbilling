@@ -1,4 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+session_start();
 class addbillingperiod extends CI_Controller {
 	// Declare globle variable here
 	
@@ -44,6 +45,28 @@ class addbillingperiod extends CI_Controller {
 		//*****  View Loading  *****//
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
 		$data['zone'] = $this->my_model->get_zone_records();
+		
+		//if(!$this->session->userdata('current_billingperiod')){
+		if(!isset($_SESSION['current_billingperiod'])){
+			$data['current_billingperiod'] = $this->comm_model->get_billingperiod_record();
+			//print_r($data['current_billingperiod']);
+			//echo 'session: '.$this->session->userdata('current_billingperiod');
+			//exit;
+			//$this->session->set_userdata('current_billingperiod', $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year']);
+			$_SESSION['current_billingperiod'] = $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year'];
+		}else{
+			//$sess_data = explode('-',$this->session->userdata('current_billingperiod'));
+			//$sess_data = explode('-',$_SESSION['current_billingperiod']);
+			
+			//$data['current_billingperiod'] = $this->comm_model->get_billingperiod_record($sess_data[0].' '.$sess_data[1]);
+			//$this->session->set_userdata('current_billingperiod', $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year']);
+			//$_SESSION['current_billingperiod'] = $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year'];
+			//echo 'session2: '.$sess_data;
+			//exit;
+		}
+		//$data['current_billingperiod'] = $this->comm_model->get_billingperiod_record();
+		//print_r($this->session->userdata('current_billingperiod'));
+		//exit;
 		$data['billingperiod'] = $this->my_model->get_month_billingperiod_records();	
 		//$header['host'] = $this->comm_model->get_single_record();				
 		$header['record_info'] = $this->top_model->get_last_login_details(1);
@@ -383,6 +406,36 @@ class addbillingperiod extends CI_Controller {
 		exit;	
         
     
+	}
+
+	public function updated_headerbillingperiod($billing_period=''){
+		if($billing_period!=''){
+			$_SESSION['current_billingperiod']=urldecode($billing_period);
+		}else{
+			$_SESSION['current_billingperiod']=$this->input->post('billing_period');
+		}
+		
+
+		/*if(isset($_SESSION['current_billingperiod'])){
+			$data['current_billingperiod'] = $this->comm_model->get_billingperiod_record();
+			
+			$_SESSION['current_billingperiod'] = $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year'];
+		}else{
+			$sess_data = explode('-',$_SESSION['current_billingperiod']);
+			
+			$data['current_billingperiod'] = $this->comm_model->get_billingperiod_record($sess_data[0].' '.$sess_data[1]);
+			
+			$_SESSION['current_billingperiod'] = $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year'];
+			
+		}*/
+		//redirect($this->listPage_redirect);
+		
+		echo 'success';
+	}
+
+	public function display_session(){
+		echo $_SESSION['current_billingperiod'];
+		exit;
 	}
 	
 }

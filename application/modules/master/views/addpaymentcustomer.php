@@ -47,6 +47,25 @@
 								</div>
 							</li>-->
 							<li class="sparks-info">
+								<h5> Billing Period <span class="txt-color-blue">
+									
+								<select  class="form-control" name="header_billingperiod" id="header_billingperiod" class="col-lg-12" required>
+									<option value="">--All--</option>
+									<?php
+									
+									foreach($billingperiod as $key =>$value){ 
+										$val_val = $value['bp_period_month'].' '.$value['bp_period_year'];
+										$selected_val = '';
+										if($_SESSION['current_billingperiod']==$val_val){
+											$selected_val = 'selected';
+										}
+									?>
+									<option value="<?php echo $value['bp_period_month'].' '.$value['bp_period_year']; ?>" <?php echo $selected_val;?>><?php echo $value['month_name'].' '.$value['bp_period_year'];?></option>
+									<?php } ?>
+								</select>								
+								</span></h5>
+							</li>
+							<li class="sparks-info">
 							<?php 
 							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
@@ -471,6 +490,27 @@
 			});
 			
 			/* END TABLETOOLS */
+
+			$('#header_billingperiod').on('change', function(evt){
+				evt.preventDefault();
+				var header_billing_period = $(this).val();
+				//showSpinner();
+				$.ajax({
+            		type : "POST",
+					url	: '<?php echo ADMIN_URL;?>addbillingperiod/updated_headerbillingperiod',
+					data	: "billing_period="+header_billing_period,
+					complete: function(data){
+						console.log(data);
+						//if(data=='success'){
+							location.reload();
+							//window.location.replace(window.location.href);
+							//window.location.href = '<?php echo ADMIN_URL;?>addbillingperiod';
+						//}
+					}
+				});
+
+				//alert($(this).val());
+			});
 		
 		})
 
