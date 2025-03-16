@@ -32,9 +32,16 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     
+							?>
+								<h5> Transaction Date <span class="txt-color-blue"><input type="text" name="header_transdate" id="header_transdate" class="form-control"/></span></h5>
+								
+							</li>
+							<li class="sparks-info">
+							<?php 
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
@@ -122,11 +129,13 @@
 														<th data-hide="phone"><input type="checkbox"/></th>
 														<th data-hide="phone">S No</th>
 														<th data-hide="expand">ID</th>
+														<th data-hide="expand">Billing Period</th>
 														<th data-hide="expand">OR Number</th>
                                                         <th data-hide="expand">Transactin Date</th>
                                                         <th data-hide="expand">Customer ID</th>
                                                         <th data-hide="expand">Customer Name</th>
-                                                        <th data-hide="expand">Amount</th>
+														<th data-hide="expand">Amount</th>
+                                                        <th data-hide="expand">Grand Total</th>
 														<th data-hide="expand">Action</th>
 													</tr>
 												</thead>
@@ -140,11 +149,13 @@
 														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></td>
 														<td><?php echo $i; ?></td>
 														<td><?php echo stripslashes($row['id']); ?></td>
+														<td><?php echo stripslashes($row['month'].'/'.$row['year']); ?></td>
 														<td><?php echo stripslashes($row['or_number']); ?></td>
                                                         <td><?php echo stripslashes($row['date']); ?></td>
                                                         <td><?php echo stripslashes($row['customer_id']); ?></td>
                                                         <td><?php echo stripslashes($row['name']); ?></td>
-                                                        <td><?php echo stripslashes($row['grand_total']); ?></td>
+														<td align="right"><?php echo stripslashes($row['amount']); ?></td>
+                                                        <td align="right"><?php echo stripslashes($row['grand_total']); ?></td>
 														
 														<td>
 														    <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
@@ -414,20 +425,24 @@
 		
 		})
 
+
+
+		var curDate = '<?php echo date('d-m-Y') ?>';
+		$("#header_transdate").datepicker({
+			showAnim: null,
+			dateFormat: 'dd-mm-yy',
+			// showOn: 'both',
+			buttonImage: '/images/calender.jpg',
+			buttonImageOnly: true,
+			firstDay: 1,
+			nextText: '',
+			prevText: '',
+			numberOfMonths: [1, 1],
+			defaultDate: new Date(curDate),
+			//minDate: curDate,
+			//maxDate: ''
+		});
+
 		</script>
 
-		<!-- Your GOOGLE ANALYTICS CODE Below -->
-		<script type="text/javascript">
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
-			_gaq.push(['_trackPageview']);
-			
-			(function() {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-			})();
-		</script>
+		

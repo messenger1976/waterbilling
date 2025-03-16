@@ -15,7 +15,7 @@ class or_correction extends CI_Controller {
 	public function __construct() {
         parent::__construct();
   		$this->load->model('or_correction_model','my_model');   //*****    Model Loading     *****//	
-		//$this->load->model('common_model','comm_model');	
+		$this->load->model('common_model','comm_model');	
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);

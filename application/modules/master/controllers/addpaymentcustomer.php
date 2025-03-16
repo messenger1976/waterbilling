@@ -379,7 +379,7 @@ class addpaymentcustomer extends CI_Controller {
 				     <input class="form-control" type="text" name="first_name" id="first_name" value="'.$data['record']['first_name'].'&nbsp;'.$data['record']['middle_name'].'&nbsp;'.$data['record']['last_name'].'"required  readonly >
 				     <input class="form-control" type="hidden" name="tab_id" id="tab_id" value="'.$data['record']['id'].'"required  readonly >
 				  </div>
-				  <label class="col-sm-1 control-label" style="width: 12%;">Meter Brand : </label>
+				  <label class="col-sm-1 control-label" style="width: 12%;">Meter NUmber : </label>
 				  <div class="col-sm-2">		
 				     <input class="form-control" type="text" name="meter_number" id="meter_number" value="'.$data['record']['meter_number'].'"required  readonly >
 				  </div>
