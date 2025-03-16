@@ -151,7 +151,7 @@
 														<td><?php echo stripslashes($row['id']); ?></td>
 														<td><?php echo stripslashes($row['month_name'].' '.$row['year']); ?></td>
 														<td><?php echo stripslashes($row['or_number']); ?></td>
-                                                        <td><?php echo stripslashes($row['date']); ?></td>
+                                                        <td><?php echo date('d-m-Y',strtotime($row['date'])); ?></td>
                                                         <td><?php echo stripslashes($row['customer_id']); ?></td>
                                                         <td><?php echo stripslashes($row['name']); ?></td>
 														<td align="right"><?php echo stripslashes($row['amount']); ?></td>
