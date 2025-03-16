@@ -1,4 +1,5 @@
 <?php 
+
 class or_correction_model extends CI_Model {
 	public $table_name = 'tbl_zone';
 	public $table_meter = 'tbl_addmetercustomer';
@@ -7,15 +8,22 @@ class or_correction_model extends CI_Model {
 	public $table_payrol = 'tbl_payrols';
 	public $table_customer = 'tbl_addcustomer';
 	public $table_meter_reading = 'tbl_addcustomer_reading';
+	public $table_months = 'tbl_months';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
     }
 	
 	/** In Function Get all records from select table **/
-    public function get_all_records() {
-        $this->db->select("*");
+    public function get_all_records($trans_date='') {
+		
+        $this->db->select("*,(Select month_name from ".$this->table_months." where ".$this->table_months.".month_id	= ".$this->table_meter.".month ) as month_name");
 		$this->db->from($this->table_meter);
+		if($trans_date!=''){
+			$dt_date = new DateTime($trans_date, new DateTimeZone("Asia/Manila"));
+			$trans_date = $dt_date->format("Y-m-d");
+			$this->db->where($this->table_meter.".date",$trans_date);
+		}
 		$this->db->order_by('id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();

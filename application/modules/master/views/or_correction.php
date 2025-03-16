@@ -34,7 +34,7 @@
 							<?php 
 							     
 							?>
-								<h5> Transaction Date <span class="txt-color-blue"><input type="text" name="header_transdate" id="header_transdate" class="form-control"/></span></h5>
+								<h5> Transaction Date <span class="txt-color-blue"><input type="text" name="header_transdate" id="header_transdate" class="form-control" value="<?php echo $_SESSION['trans_date'];?>"/></span></h5>
 								
 							</li>
 							<li class="sparks-info">
@@ -149,7 +149,7 @@
 														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></td>
 														<td><?php echo $i; ?></td>
 														<td><?php echo stripslashes($row['id']); ?></td>
-														<td><?php echo stripslashes($row['month'].'/'.$row['year']); ?></td>
+														<td><?php echo stripslashes($row['month_name'].' '.$row['year']); ?></td>
 														<td><?php echo stripslashes($row['or_number']); ?></td>
                                                         <td><?php echo stripslashes($row['date']); ?></td>
                                                         <td><?php echo stripslashes($row['customer_id']); ?></td>
@@ -422,6 +422,29 @@
 			});
 			
 			/* END TABLETOOLS */
+
+			
+
+			$('#header_transdate').on('change', function(evt){
+				evt.preventDefault();
+				var header_trans_date = $(this).val();
+				showSpinner();
+				$.ajax({
+            		type : "POST",
+					url	: '<?php echo ADMIN_URL;?>addbillingperiod/updated_headertransdate',
+					data	: "trans_date="+header_trans_date,
+					complete: function(data){
+						console.log(data);
+						//if(data=='success'){
+							location.reload();
+							//window.location.replace(window.location.href);
+							//window.location.href = '<?php echo ADMIN_URL;?>addbillingperiod';
+						//}
+					}
+				});
+
+				//alert($(this).val());
+			});
 		
 		})
 

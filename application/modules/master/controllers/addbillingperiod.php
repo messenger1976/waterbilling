@@ -433,8 +433,21 @@ class addbillingperiod extends CI_Controller {
 		echo 'success';
 	}
 
+	public function updated_headertransdate($trans_date=''){
+		if($trans_date!=''){
+			$_SESSION['trans_date']=urldecode($trans_date);
+		}else{
+			$_SESSION['trans_date']=$this->input->post('trans_date');
+		}
+		
+
+		
+		
+		echo 'success';
+	}
 	public function display_session(){
-		echo $_SESSION['current_billingperiod'];
+		echo $_SESSION['current_billingperiod'].'<br/>';
+		echo $_SESSION['trans_date'].'<br/>';
 		exit;
 	}
 	

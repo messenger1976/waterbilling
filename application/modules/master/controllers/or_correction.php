@@ -1,4 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+session_start();
 class or_correction extends CI_Controller {
 	// Declare globle variable here
 	
@@ -35,7 +36,17 @@ class or_correction extends CI_Controller {
 		}
 		//*****  View Loading  *****//
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
-		$data['record'] = $this->my_model->get_all_records();	
+
+		if(!isset($_SESSION['trans_date'])){
+			$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+			$trans_date = $dt_date->format("d-m-Y");
+
+			$data['trans_date'] = $trans_date;
+			
+			$_SESSION['trans_date'] = $data['trans_date'];
+		}
+
+		$data['record'] = $this->my_model->get_all_records($_SESSION['trans_date']);	
 		//$header['host'] = $this->comm_model->get_single_record();				
 		$header['record_info'] = $this->top_model->get_last_login_details(1);
 		$this->load->view($this->headerPage,$header);
