@@ -62,10 +62,11 @@ class addpaymentcustomer extends CI_Controller {
 		$data['addcustomer'] = $this->my_model->get_addcustomer();
 		$data['record'] = $this->customer_model->get_all_records();
 
+		
+
 		if($this->input->post('add') != ''){ 
-			//echo 'Hello';
-		//print_r($_POST);
-		//exit;
+			
+		
 			$result = $this->my_model->add_record();
 			if($result){
 				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
@@ -80,8 +81,7 @@ class addpaymentcustomer extends CI_Controller {
 		
 		if($this->input->post('total_add') != ''){
 			    $insert_ids = $this->input->post('checkbox');
-
-
+				
 				/*if (isset($_POST['checkbox']) && is_array($_POST['checkbox'])) {
 					$items = $_POST['items']; // Retrieve the array
 				
@@ -432,6 +432,22 @@ class addpaymentcustomer extends CI_Controller {
 		echo sprintf('%07d',$new_or_number); 
 		 
    }
+
+public function check_or_number($or_number){ 
+	
+		
+	$this->db->select("id");
+	$this->db->from('tbl_addmetercustomer');
+	$this->db->where("CAST(or_number AS UNSIGNED)=",$or_number);
+
+	$query = $this->db->get();
+	if ($query->num_rows() > 0) {
+		echo 1; // Value found
+	} else {
+		echo 0; // Value not found
+	}
+	 
+}
 
 public function monthlyreceipt($customer,$month,$year) {
 		

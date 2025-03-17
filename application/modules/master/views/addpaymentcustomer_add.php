@@ -120,8 +120,9 @@
 															</div>
 														</div>
 													</div>
-															<input type="submit" class="form-control"  id="btn_search_box" name="btn_search_box" id="btn_search_box" value="search" style=" width: auto;">
-															
+															<!--<input type="submit" class="form-control"  id="btn_search_box" name="btn_search_box" id="btn_search_box" value="search" style=" width: auto;">-->
+															<input type="submit" class="form-control"  id="btn_search_box" name="btn_search_box" value = "Search" style="width: auto; float: left;  background: #3276b1; color:#fff;" /> 
+															<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" id="btn_search_cancel" class="btn btn-default" name="btn_search_cancel" style="width: auto; float: left;margin-left: 10px;">Back</a> 
 													</div>
 
 
@@ -300,7 +301,7 @@
                                                         	<div class="form-group" style=" width: 60%;">
 																<label class="col-md-4 control-label" style="text-align:right;"> Tendered Amount : (<span style="color:red;font-style:italic;">* required</span>)</label>
 																<div class="col-md-4">
-																	<input  type="text"  class="form-control text-input"  id="pay_amount" name="pay_amount"  value="0.00" required/>
+																	<input  type="text" class="form-control text-input"  id="pay_amount" name="pay_amount" value="0.00" required/>
 																	<?php echo form_error('pay_amount'); ?>
 																</div>
 															</div>
@@ -319,14 +320,14 @@
 																	<?php echo form_error('transdate'); ?>
 																</div>
 															</div>
-
+															
 
 
 															<div class="pay_setting_1">
 																<div class="form-actions">
 																	<div class="row">
 																		<div class="col-md-12">
-																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" class="btn btn-default">Cancel</a>
+																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-default">Cancel</a>
 																			<input type="submit" class="btn btn-primary" name="add" id="add" value="Add">
 																		</div>
 																	</div>
@@ -337,7 +338,7 @@
 																<div class="form-actions">
 																	<div class="row">
 																		<div class="col-md-12">
-																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer" class="btn btn-default">Cancel</a>
+																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-default">Cancel</a>
 																			<input type="submit" class="btn btn-primary" id="total_add" name="total_add" value="Add">
 																		</div>
 																	</div>
@@ -835,8 +836,36 @@ $('#pay_amount').on('blur', function() {
 });	
 
 
-$('#add').click(function(evt){
-	var name = $('#fullname').val();
+$('#add').on('click',function(evt){
+	var pay_amount = parseFloat($('#pay_amount').val());
+	var ornumber = parseInt($('#or_num').val());
+	var res_checkor=0;
+
+	if(pay_amount<=0){
+		evt.preventDefault();
+		alert('Tender amount should be greater then zero.');
+		
+	}
+
+
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/check_or_number/'+ornumber,
+		async:false,
+		success: function(data) {
+			if(data==1){
+				evt.preventDefault();
+				alert('OR Number already Exist.');
+			}
+		}
+	});
+		
+	
+
+	
+	
+	
+	/*var name = $('#fullname').val();
 	var address = $('#address').val();
 	var current_reading = $('#current_reading').val();
 	var oldmeter = $('#oldmeter').val();
@@ -851,12 +880,15 @@ $('#add').click(function(evt){
 		var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt_single/'+customer+'/'+month+'/'+year+'/'+name+'/'+current_reading+'/'+oldmeter+'/'+unit+'/'+pay_amount+'/'+invoi_id+'/'+address+'/'+currency;
 				//var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer;
 				//window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
-	}
+	}*/
+	//$('#myform').submit();
 });
+
+
 $('#total_add').on('click',function(evt){
 	//evt.preventDefault();
 	
-	var name = $('#fullname').val();
+	/*var name = $('#fullname').val();
 	var address = $('#address').val();
 	var current_reading = $('#current_reading').val();
 	var oldmeter = $('#oldmeter').val();
@@ -878,6 +910,30 @@ $('#total_add').on('click',function(evt){
 				//window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
 	}
 	//$('#myform').submit();
+	*/
+
+	var pay_amount = parseFloat($('#pay_amount').val());
+	var ornumber = parseInt($('#or_num').val());
+	var res_checkor=0;
+
+	if(pay_amount<=0){
+		evt.preventDefault();
+		alert('Tender amount should be greater then zero.');
+		
+	}
+
+
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/check_or_number/'+ornumber,
+		async:false,
+		success: function(data) {
+			if(data==1){
+				evt.preventDefault();
+				alert('OR Number already Exist.');
+			}
+		}
+	});
 });
 
 $("#transdate").datepicker({
@@ -911,6 +967,21 @@ $("#transdate").datepicker({
 		
 		// Display values on the page
 		alert("Array values: " + values.join(", "));
+	}
+
+	function check_or_number(ornumber){
+		var returnorval=0;
+		$.ajax({
+			type: 'POST',
+			url: '<?php echo ADMIN_URL;?>addpaymentcustomer/check_or_number/'+ornumber,
+			success: function(data) {
+				returnorval=data;
+				console.log('return val:'+returnorval);
+				return returnorval;
+			}
+		});
+		
+		return returnorval;
 	}
 
 </script>
