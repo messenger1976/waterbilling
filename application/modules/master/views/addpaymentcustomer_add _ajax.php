@@ -25,7 +25,10 @@
 						<th>Bill Amount</th>
 						<th>Discount</th>
 						<th>Penalty</th>
+						<th>OR Number</th>
+						<th>Date Paid</th>
 						<th>Total Amount</th>
+						
 					    <th>Action</th>
 					</tr>
 				</thead>
@@ -62,15 +65,46 @@
 								}
 								
 								
-								$result = $this->my_model->get_metercustomer_add_all_records($id,$mon_id,$year);
-								if($result == 0){	
+								$record_reading = $this->my_model->get_metercustomer_add_all_records($id,$mon_id,$year);
+								$result = count($record_reading);
+								//echo 'count:'.$result.'<br/>';
+								//print_r($record_reading);
+								//if($result == 0){	
 								?> 
 							<tr>
 								<td>
-								<?php if($result == 0){?>   
+								<?php if($result == 0){
+									$or_number_paid = '';
+									$trans_date ='';
+									?>   
 								<input type="checkbox" name="checkbox[]" id="<?php echo $i;?>" value="<?php echo  $i;?>" class="my_check" > 
-								<?php }else{?>
+								<?php }else{
+										$trans_date = date('M j, Y',strtotime($record_reading[0]['trans_date']));
+										$or_number_paid = $record_reading[0]['or_number'];
+										$due_date = strtotime('M j, Y',$due_date);
+										
+
+										if($special_priviledge==0){
+											if($trans_date>$due_date){
+												//$balance = $row['penalty']; 
+												$balance = $record_reading[0]['amount'];
+												$penalty = $balance - $unit_price;
+												if($penalty<0){
+													$penalty = 0;
+												}
+											}else{
+												$balance = $record_reading[0]['amount'];
+												$penalty = 0;
+											}
+										}else{
+											$balance = $record_reading[0]['amount'];
+											$penalty = 0;
+										}
+
+										
+									?>
 								<input type="checkbox" name="checkbox[]" id="<?php echo $i;?>" value="<?php echo  $i;?>" class="my_check" disabled>
+
 								<?php } ?>
 								</td>
 
@@ -96,8 +130,11 @@
 								</td>
 								<td align="right"><?php echo stripslashes($row['sc_discount']); ?>
 								</td>
-								<td align="right"><?php echo stripslashes($penalty); ?>
+								<td align="right"><?php echo stripslashes(number_format($penalty,2)); ?>
 								</td>
+								<td align="center"><?php echo stripslashes($or_number_paid); ?></td>
+								<td align="center"><?php echo stripslashes($trans_date); ?></td>
+								
 								<td align="right"><?php echo $balance;?><input type="hidden" name="prsentamount_<?php echo $i;?>" id="prsentamount_<?php echo $i;?>" value = "<?php echo  $balance;?>">
 								    <?php 
 									   $count = $this->my_model->get_addcustomer_show_all_records($id,$mon_id,$year);
@@ -106,18 +143,20 @@
 									<?php   }
 									?>
 								</td>
+								
 								<td>
 								  <?php 
 								  if($result == 0){?>
-									<input class="pay_button" id="paybutton_<?php echo $i;?>" data-pay-val-id="<?php echo $i; ?>" type="button" name="pay" value="Unpaid">  
+									<input class="btn btn-danger btn-xs pay_button" id="paybutton_<?php echo $i;?>" data-pay-val-id="<?php echo $i; ?>" type="button" name="pay" value="Unpaid">  
 								  <?php }else{?>
-								    <input class="pay_button" id="paybutton_<?php echo $i;?>" data-pay-val-id="<?php echo $i; ?>" type="button" name="pay" value="Paid" <?php echo "disabled";?>>
+								    <input class="btn btn-default btn-xs pay_button" id="paybutton_<?php echo $i;?>" data-pay-val-id="<?php echo $i; ?>" type="button" name="pay" value="Paid" <?php echo "disabled";?>>
 								  <?php } ?>
 								</td>
 								
+								
 					</tr>	
 					<?php $i++; 
-				} ?>
+				//} ?>
                     	
 							<?php }?>
 						
@@ -132,8 +171,11 @@
 						<th></th>
 						<th></th>
 						<th></th>
+						<td></td>
+						<td></td>
 						<th align="right"><input type="text" name="checkbox_cal" id="checkbox_cal" value = "0" style="text-align:right;float:right;" readonly></th>
 					    <th><input class="total_pay" id="total_pay"  type="button" name="total_pay" value="Total Pay" ></th>
+						
 					</tr>	
                     </form>						
 					<?php	} else { ?>

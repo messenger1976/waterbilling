@@ -204,7 +204,7 @@ class addpaymentcustomer_model extends CI_Model {
 				LEFT JOIN  `tbl_billing_period` bp ON ac.bp_id = bp.bp_id
 				WHERE ac.month = tm.month_id
                 AND  am.customer_id = '$id'
-				ORDER BY meter_id ASC LIMIT 0,10
+				ORDER BY meter_id DESC
 				";
 		$query = $this->db->query($sql);
 		$result = $query->result_array();
@@ -256,14 +256,14 @@ class addpaymentcustomer_model extends CI_Model {
 		return $result;
 	}
 	
-	public function get_metercustomer_add_all_records($id,$mon_id){
+	public function get_metercustomer_add_all_records($id,$mon_id,$year_id){
 		$sql = "SELECT ac.id AS addcustomer_id, ac.customer_id, am.id AS addmetercustomer_id, am.customer_id, 
-		        am.date, am.month, am.year, ac.mobile1, ac.mobile2, ac.email_id
+		        am.date, am.month, am.year, ac.mobile1, ac.mobile2, ac.email_id, am.amount, am.per_unit, am.or_number, am.date as trans_date
 				FROM  `tbl_addmetercustomer` am
 				LEFT JOIN  `tbl_addcustomer` ac ON ac.customer_id = am.customer_id
-                WHERE am.month = '$mon_id' AND ac.customer_id = '$id'";
+                WHERE am.month = '$mon_id' AND am.year = '$year_id' AND ac.customer_id = '$id'";
 		$query = $this->db->query($sql);
-		$result = $query->num_rows();
+		$result = $query->result_array();
 		return $result;
 	}
 	
