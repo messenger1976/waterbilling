@@ -139,24 +139,41 @@
 														
 														<div style="clear:both"></div>
 														
-														<div id="hideclass" style="display:none; padding:20px; box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.75);    margin: 14px;" >
-															<div class="form-group" style="width : 60% ;">
-																<label class="col-md-4 control-label" for="or_num" style="text-align:right;"> OR # : (<span style="color:red;font-style:italic;">* required</span>)</label>
-																<div class="col-md-4">
-																	<input type="text" class="form-control text-input" id="or_num" name="or_num" value="<?php echo $this->input->post('or_num'); ?>" required/>
-																	<?php echo form_error('or_num'); ?>
+										<div class="modal" id="myModalPay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+												<div class="modal-header">
+													<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+														&times;
+													</button>
+													<h4 class="modal-title" id="myModalLabel">Cash Payment Module</h4>
+												</div>
+													<div class="modal-body">
+
+														<div id="hideclass" style="display:none; padding:20px; box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.75); margin: 0px;" >
+															<div class="row">
+																<div class="col-md-12 controls">
+																	<div class="form-group" style="width: 100%;">
+																		<label class="col-md-5 control-label" for="or_num" style="text-align:right;"> OR/SI # : (<span style="color:red;font-style:italic;">*</span>)</label>
+																		<div class="col-md-7">
+																			<input type="text" class="form-control text-input" id="or_num" name="or_num" value="<?php echo $this->input->post('or_num'); ?>" required/>
+																			<?php echo form_error('or_num'); ?>
+																		</div>
+																	</div>
 																</div>
 															</div>
-														
 
 														  <div id="total_setting_1">	
-														  	
-															<div class="form-group" style="width : 60% ;">
-																<label class="col-md-4 control-label" style="text-align:right;">Current Bill Amount : </label>
-																<div class="col-md-4">
-																	<div class="test_deep"><h1>&#8369;&nbsp;&nbsp;<span id="deepmala">0</span></h1></div>
-																	<input type="hidden"  class="form-control"  id="paid_total_amount" name="paid_total_amount"  value="<?php echo $this->input->post('paid_total_amount'); ?>" readonly ="readonly"/>
-																	<input type="hidden"  class="form-control"  id="time_format" name="time_format"  value="WTME-<?php echo strtotime("now"); ?>" readonly ="readonly"/>
+															<div class="row">
+																<div class="col-md-12 controls">
+																	<div class="form-group" style="width: 100%;">
+																		<label class="col-md-5 control-label" style="text-align:right;">Current Bill Amount : </label>
+																		<div class="col-md-7">
+																			<div class="test_deep"><h1>&#8369;&nbsp;&nbsp;<span id="deepmala">0</span></h1></div>
+																			<input type="hidden"  class="form-control"  id="paid_total_amount" name="paid_total_amount"  value="<?php echo $this->input->post('paid_total_amount'); ?>" readonly ="readonly"/>
+																			<input type="hidden"  class="form-control"  id="time_format" name="time_format"  value="WTME-<?php echo strtotime("now"); ?>" readonly ="readonly"/>
+																		</div>
+																	</div>
 																</div>
 															</div>
 															<!--<div class="form-group">
@@ -173,11 +190,15 @@
 																	<input type="hidden"  class="form-control"  id="final_total_amount" name="final_total_amount"  value="<?php echo $this->input->post('final_total_amount'); ?>" readonly ="readonly"/>
 																</div>
 															</div>-->
-															<div class="form-group" style="width : 60% ;display:none;">
-																<label class="col-md-4 control-label" style="text-align:right;"> Current Reading : </label>
-																<div class="col-md-4">
-																	<input type="text"  class="form-control"  id="current_reading" name="current_reading"  value="<?php echo $this->input->post('current_reading'); ?>" readonly ="readonly"/>
-																	<?php echo form_error('current_reading'); ?>
+															<div class="row">
+																<div class="col-md-12 controls">
+																	<div class="form-group" style="display:none;">
+																		<label class="col-md-4 control-label" style="text-align:right;"> Current Reading : </label>
+																		<div class="col-md-4">
+																			<input type="text"  class="form-control"  id="current_reading" name="current_reading"  value="<?php echo $this->input->post('current_reading'); ?>" readonly ="readonly"/>
+																			<?php echo form_error('current_reading'); ?>
+																		</div>
+																	</div>
 																</div>
 															</div>
 															<div class="form-group" style="width : 60% ;display:none;">
@@ -223,19 +244,21 @@
 															</div>-->
 													    </div>
 														
-                                                        <div style="clear:both;"></div>														
+                                                        													
 															<div id="total_setting_2">   	
-															 
-																   <div class="form-group" style=" width: 60%;">
-																		<label class="col-md-4 control-label" style="text-align:right;">Total Bill Amount : </label>
-																		<div class="col-md-4">
-																			<div class="test_deep"><h1>&#8369;&nbsp;&nbsp;<span id="deepmala_total">0</span></h1></div>
-																			<input type="hidden"  class="form-control"  id="total_total_amount" name="total_total_amount"  value="<?php echo $this->input->post('total_total_amount'); ?>" readonly ="readonly"/>
-																			</div>
+																<div class="row">
+																	<div class="col-md-12 controls">
+																	<div class="form-group" style="width : 100% ;">
+																			<label class="col-md-5 control-label" style="text-align:right;">Total Bill Amount : </label>
+																			<div class="col-md-7">
+																				<div class="test_deep"><h1>&#8369;&nbsp;&nbsp;<span id="deepmala_total">0</span></h1></div>
+																				<input type="hidden"  class="form-control"  id="total_total_amount" name="total_total_amount"  value="<?php echo $this->input->post('total_total_amount'); ?>" readonly ="readonly"/>
+																				</div>
+																		</div>
 																	</div>
-																	
+																</div>	
 															</div>
-															<div style="clear:both;"></div>	
+															
 															<div class="form-group" style=" width: 60%;display:none;">
 															<label class="col-md-4 control-label">Ledger : </label>
 															<div class="col-md-4">
@@ -251,7 +274,7 @@
 															<div class="form-group"style=" width: 60%; display:none;">
 																		<label class="col-md-4 control-label"> Currency :</label>
 																		<div class="col-md-4">
-																			<select class="form-control"  id="currency" name="currency"  value="<?php echo $this->input->post('currency'); ?>" required/>                               
+																			<select class="form-control"  id="currency" name="currency"  value="<?php echo $this->input->post('currency'); ?>" required>                               
                                                                             
                                                                             <option value="PHP" selected>PHP</option>
                                                                             
@@ -259,75 +282,98 @@
 																			<?php echo form_error('currency'); ?>
 																		</div>
 																	</div>
-										        	
-															<div class="form-group" style=" width: 60%;">
-																<label class="col-md-4 control-label" style="text-align:right;">Less: Leaking Disc :</label>
-																<div class="col-md-2">
-																	<div class="input-group">
-																		<input  type="text" step="1" min="0" max="100" class="form-control text-input"  id="leaking_percent" name="leaking_percent"  value="0"/>
-																		<span class="input-group-addon" style="min-width:5px;">%</span>
+																	<div class="row">
+																		<div class="col-md-12 controls">
+																			<div class="form-group" style=" width: 100%;">
+																				<label class="col-md-5 control-label" style="text-align:right;">Less: Leaking Disc :</label>
+																				<div class="col-md-3">
+																					<div class="input-group">
+																						<input  type="text" step="1" min="0" max="100" class="form-control text-input"  id="leaking_percent" name="leaking_percent"  value="0"/>
+																						<span class="input-group-addon" style="min-width:5px;">%</span>
+																					</div>
+																					
+																					
+																				</div>
+																				<div class="col-md-3">
+																					<input  type="text" class="form-control"  id="leaking_amount" name="leaking_amount"  value="0.00" readonly/>
+																					<?php echo form_error('leaking_amount'); ?>
+																				</div>
+																			</div>
+																		</div>
 																	</div>
-																	
-																	
-																</div>
-																<div class="col-md-2">
-																	<input  type="text" class="form-control"  id="leaking_amount" name="leaking_amount"  value="0.00" readonly/>
-																	<?php echo form_error('leaking_amount'); ?>
-																</div>
-															</div>
-															<div class="form-group" style=" width: 60%;">
-																<label class="col-md-4 control-label" style="text-align:right;">Less: VAT :</label>
-																<div class="col-md-2">
-																	<div class="input-group">
-																		<input  type="text" step="1" min="0" max="100" class="form-control text-input"  id="vat_percent" name="vat_percent"  value="0"/>
-																		<span class="input-group-addon" style="min-width:5px;">%</span>
+																	<div class="row">
+																		<div class="col-md-12 controls">
+																			<div class="form-group" style=" width: 100%;">
+																				<label class="col-md-5 control-label" style="text-align:right;">Less: VAT :</label>
+																				<div class="col-md-3">
+																					<div class="input-group">
+																						<input  type="text" step="1" min="0" max="100" class="form-control text-input"  id="vat_percent" name="vat_percent"  value="0"/>
+																						<span class="input-group-addon" style="min-width:5px;">%</span>
+																					</div>
+																					
+																					
+																				</div>
+																				<div class="col-md-3">
+																					<input  type="text" class="form-control"  id="vat_amount" name="vat_amount"  value="0.00" readonly/>
+																					<?php echo form_error('vat_amount'); ?>
+																				</div>
+																			</div>
+																		</div>
 																	</div>
-																	
-																	
-																</div>
-																<div class="col-md-2">
-																	<input  type="text" class="form-control"  id="vat_amount" name="vat_amount"  value="0.00" readonly/>
-																	<?php echo form_error('vat_amount'); ?>
-																</div>
-															</div>
 
-															<div class="form-group" style=" width: 60%;">
-																<label class="col-md-4 control-label" style="text-align:right;"> Grand Total :</label>
-																<div class="col-md-4">
-																	<input  type="text"  class="form-control"  id="grand_total" name="grand_total"  value="<?php echo $this->input->post('grand_total'); ?>" readonly/>
-																	<?php echo form_error('grand_total'); ?>
-																</div>
-															</div>
-                                                        	<div class="form-group" style=" width: 60%;">
-																<label class="col-md-4 control-label" style="text-align:right;"> Tendered Amount : (<span style="color:red;font-style:italic;">* required</span>)</label>
-																<div class="col-md-4">
-																	<input  type="text" class="form-control text-input"  id="pay_amount" name="pay_amount" value="0.00" required/>
-																	<?php echo form_error('pay_amount'); ?>
-																</div>
-															</div>
-															<div class="form-group" style=" width: 60%;">
-																<label class="col-md-4 control-label" style="text-align:right;"> Change Amount :</label>
-																<div class="col-md-4">
-																	<input  type="text"  class="form-control"  id="change_amount" name="change_amount"  value="0.00" readonly/>
-																	
-																</div>
-															</div>
-										        	
-															<div class="form-group" style=" width: 60%; ">
-																<label class="col-md-4 control-label" for="transdate" style="text-align:right;">Transaction Date : (<span style="color:red;font-style:italic;">* required</span>)</label>
-																<div class="col-md-4">
-																	<input  type="text"  class="form-control"  id="transdate" name="transdate"  value="<?php echo $this->input->post('transdate')!=''?$this->input->post('transdate'):Date('d-m-Y'); ?>" required/>
-																	<?php echo form_error('transdate'); ?>
-																</div>
-															</div>
-															
+																	<div class="row">
+																		<div class="col-md-12 controls">
+																			<div class="form-group" style=" width: 100%;">
+																				<label class="col-md-5 control-label" style="text-align:right;"> Grand Total :</label>
+																				<div class="col-md-7">
+																					<input  type="text"  class="form-control"  id="grand_total" name="grand_total"  value="<?php echo $this->input->post('grand_total'); ?>" readonly/>
+																					<?php echo form_error('grand_total'); ?>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="row">
+																		<div class="col-md-12 controls">
+																			<div class="form-group" style=" width: 100%;">
+																				<label class="col-md-5 control-label" style="text-align:right;"> Tendered Amount : (<span style="color:red;font-style:italic;">*</span>)</label>
+																				<div class="col-md-7">
+																					<input  type="text" class="form-control text-input"  id="pay_amount" name="pay_amount" value="0.00" required/>
+																					<?php echo form_error('pay_amount'); ?>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="row">
+																		<div class="col-md-12 controls">
+																			<div class="form-group" style=" width: 100%;">
+																				<label class="col-md-5 control-label" style="text-align:right;"> Change Amount :</label>
+																				<div class="col-md-7">
+																					<input  type="text"  class="form-control"  id="change_amount" name="change_amount"  value="0.00" readonly/>
+																					
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="row">
+																		<div class="col-md-12 controls">
+																			<div class="form-group" style=" width: 100%; ">
+																				<label class="col-md-5 control-label" for="transdate" style="text-align:right;">Transaction Date : (<span style="color:red;font-style:italic;">*</span>)</label>
+																				<div class="col-md-7">
+																					<input  type="text"  class="form-control"  id="transdate" name="transdate"  value="<?php echo $this->input->post('transdate')!=''?$this->input->post('transdate'):Date('d-m-Y'); ?>" required/>
+																					<?php echo form_error('transdate'); ?>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
 
 
 															<div class="pay_setting_1">
 																<div class="form-actions">
 																	<div class="row">
 																		<div class="col-md-12">
-																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-default">Cancel</a>
+																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-default btn_cancel_pay">Cancel</a>
 																			<input type="submit" class="btn btn-primary" name="add" id="add" value="Add">
 																		</div>
 																	</div>
@@ -338,7 +384,7 @@
 																<div class="form-actions">
 																	<div class="row">
 																		<div class="col-md-12">
-																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-default">Cancel</a>
+																			<a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-default btn_cancel_pay">Cancel</a>
 																			<input type="submit" class="btn btn-primary" id="total_add" name="total_add" value="Add">
 																		</div>
 																	</div>
@@ -349,7 +395,10 @@
 
 
 														</div>
-													    	    
+													</div>
+												</div>
+											</div>
+										</div>	    
 
 														
 														</form>	
@@ -596,6 +645,11 @@ $(document).ready(function(){
 	$("#total_setting_1").hide();
 	$("#total_setting_2").hide();
 	$("#total_settin_pay").hide();
+
+	$('.btn_cancel_pay').on('click',function(evt){
+		evt.preventDefault();
+		$('#myModalPay').modal('hide');
+	});
 });
 
 $('#btn_search_box').on('click', function(evt) {
@@ -654,7 +708,7 @@ $('#btn_search_box').on('click', function(evt) {
 
 
 $(document).on('click','.pay_button',function(e){
-	
+	$('#myModalPay').modal('show');
 	$('#hideclass').show();
 	$(".pay_setting_1").show();
 	$("#total_setting_1").show();
@@ -735,6 +789,7 @@ $(document).on('click','.total_pay',function(e){
 	$("#total_setting_1").hide();
 	$("#total_setting_2").show();
 	$("#total_settin_pay").show();
+	$('#myModalPay').modal('show');
 	$("#hideclass").show();
 	$(".pay_setting_1").hide();
 
@@ -843,7 +898,14 @@ $('#add').on('click',function(evt){
 
 	if(pay_amount<=0){
 		evt.preventDefault();
-		alert('Tender amount should be greater then zero.');
+		//alert('Tender amount should be greater then zero.');
+		$.smallBox({
+			title : "TENDER AMOUNT field required",
+			content : "Tender amount should be greater then zero.",
+			color : "#D30000",
+			timeout: 8000,
+			icon : "fa fa-exclamation-circle swing animated"
+		});
 		
 	}
 
@@ -855,7 +917,14 @@ $('#add').on('click',function(evt){
 		success: function(data) {
 			if(data==1){
 				evt.preventDefault();
-				alert('OR Number already Exist.');
+				//alert('OR Number already Exist.');
+				$.smallBox({
+					title : "OR/SI NUMBER field error",
+					content : "OR/SI Number already Exist",
+					color : "#D30000",
+					timeout: 8000,
+					icon : "fa fa-exclamation swing animated"
+				});
 			}
 		}
 	});
@@ -917,9 +986,16 @@ $('#total_add').on('click',function(evt){
 	var res_checkor=0;
 
 	if(pay_amount<=0){
-		evt.preventDefault();
-		alert('Tender amount should be greater then zero.');
 		
+		//alert('Tender amount should be greater then zero.');
+		$.smallBox({
+			title : "TENDER AMOUNT field required",
+			content : "Tender amount should be greater then zero.",
+			color : "#D30000",
+			timeout: 8000,
+			icon : "fa fa-exclamation-circle swing animated"
+		});
+		evt.preventDefault();
 	}
 
 
@@ -929,8 +1005,15 @@ $('#total_add').on('click',function(evt){
 		async:false,
 		success: function(data) {
 			if(data==1){
+				$.smallBox({
+					title : "OR/SI NUMBER field error",
+					content : "OR/SI Number already Exist",
+					color : "#D30000",
+					timeout: 8000,
+					icon : "fa fa-exclamation swing animated"
+				});
 				evt.preventDefault();
-				alert('OR Number already Exist.');
+				//alert('OR Number already Exist.');
 			}
 		}
 	});
