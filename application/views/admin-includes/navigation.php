@@ -103,7 +103,7 @@
 									<a href="<?php echo ADMIN_URL;?>addcustomer/generatemetercustomer_search/">Both Type Of Customers </a>
 								</li>
 							<?php } ?>
-							<?php if((array_key_exists('income_reportsearch',$roleResponsible) && ($roleResponsible['income_reportsearch'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+							<?php if(array_key_exists('income_reportsearch',$roleResponsible) && ($roleResponsible['income_reportsearch'] == 1)){ ?>
 								<li class="<?php if($this->uri->segment(3)=='income_reportsearch' && $this->uri->segment(2)=='addcustomer') echo 'active';?>">
 									<a href="<?php echo ADMIN_URL;?>addcustomer/income_reportsearch/">Income Report search</a>
 								</li>

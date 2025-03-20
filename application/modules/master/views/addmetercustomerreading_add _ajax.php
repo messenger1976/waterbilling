@@ -92,9 +92,9 @@
 				
 		</table>
 		<?php
-		if($mon_id!=$get_billing_period['bp_period_month'] && $year!=$get_billing_period['bp_period_year']){
+		//if($mon_id!=$get_billing_period['bp_period_month'] && $year!=$get_billing_period['bp_period_year']){
 			echo '<input class="pay_button" id="add_meter_reading"  type="button" name="add_meter_reading" value="Add Meter reading">';
-		}
+		//}
 		?>
 		
 	</div>
