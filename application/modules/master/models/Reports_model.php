@@ -70,6 +70,7 @@ class reports_model extends CI_Model {
 		tbl_addcustomer.last_name,
 		tbl_addcustomer.first_name,
 		tbl_addcustomer.middle_name, 
+		tbl_addcustomer.meter_number,
 		tbl_billing_period.bp_end_date AS reading_date,
         (SELECT zone FROM tbl_zone WHERE tbl_zone.id=tbl_addcustomer.zone) AS zone, 
         

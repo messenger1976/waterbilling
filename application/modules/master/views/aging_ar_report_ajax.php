@@ -17,6 +17,7 @@
 					<th data-hide="phone">SN#</th>
 					<th data-hide="phone">Customer Name</th>
 					<th data-hide="phone">Customer ID</th>	
+					<th data-hide="phone">Meter Number</th>
 					<th data-hide="phone">Zone</th>		
 					<th data-hide="phone">Current</th>	
 																												
@@ -49,6 +50,7 @@
 						<td><?php echo $index; ?></td>
 						<td><?php echo stripslashes(trim($row['last_name']).', '.trim($row['first_name']).' '.trim($row['middle_name'])); ?></td>
 						<td><?php echo stripslashes($row['customer_id']); ?></td>	
+						<td><?php echo stripslashes($row['meter_number']); ?></td>
 						<td><?php echo stripslashes($row['zone']); ?></td>
 						<td align='right'><?php echo stripslashes(number_format($row['current'],2)); ?></td>
 						
@@ -84,7 +86,7 @@
                 
                 
                 <tr>
-					<th style="text-align:right" colspan="4">GRAND TOTAL</th>
+					<th style="text-align:right" colspan="5">GRAND TOTAL</th>
 					
 					<th style="text-align:right"><?php echo number_format($grand_total_current,2);?></th>
 					<th style="text-align:right"><?php echo number_format($grand_total_30days,2);?></th>	

@@ -63,7 +63,8 @@ echo 'As of '.$asofdate;?></h6>
 					<th>SN #</th>
 					
 					<th>Concessionaires</th>
-                    <th>Cust Acct No.</th>																												
+                    <th>Cust Acct No.</th>		
+					<th style="width:10px;">Meter Number</th>																										
 					<th  style="text-align:right;">Current</th>
 					<th  style="text-align:right;">30 Days</th>
 					<th  style="text-align:right;">60 Days</th>
@@ -114,6 +115,7 @@ echo 'As of '.$asofdate;?></h6>
                     echo '<td>'.$index.'</td>
                     <td style="width:25%;">'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
                     <td style="width:15%;">'.$gdailytrans['customer_id'].'</td>
+					<td style="width:15%;">'.$gdailytrans['meter_number'].'</td>
                     <td align="right">'. number_format($gdailytrans['current'],2).'</td>
 					<td align="right">'. number_format($gdailytrans['30-days'],2).'</td>
 					<td align="right">'. number_format($gdailytrans['60-days'],2).'</td>
@@ -146,7 +148,7 @@ echo 'As of '.$asofdate;?></h6>
                     
                 }
                  echo '<tr>
-                 <th colspan="3" style="text-align:right">TOTAL</th>
+                 <th colspan="4" style="text-align:right">TOTAL</th>
                  <th style="text-align:right">'.number_format($grand_total_current_zone,2).'</th>
                  <th style="text-align:right">'.number_format($grand_total_30days_zone,2).'</th>
                  <th style="text-align:right">'.number_format($grand_total_60days_zone,2).'</th>
@@ -176,7 +178,7 @@ echo 'As of '.$asofdate;?></h6>
                 
                 <tr>
 					
-                    <th colspan="3" style="text-align:right">GRAND TOTAL</th>
+                    <th colspan="4" style="text-align:right">GRAND TOTAL</th>
                     <th style="text-align:right"><?php echo number_format($grand_total_current,2);?></th>
 					<th style="text-align:right"><?php echo number_format($grand_total_30days,2);?></th>
                     <th style="text-align:right"><?php echo number_format($grand_total_60days,2);?></th>
