@@ -2,7 +2,7 @@
 class leakingentry extends CI_Controller{
     public $headerPage = '../../views/admin-includes/header';  //Header template
 
-    public $listPage = 'leakingentry';
+    public $listPage = 'Leakingentry';
     public function __construct(){
         parent::__construct();
         $this->load->model('leakingentry_model','my_model');   //*****    Model Loading     *****//		
