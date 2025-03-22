@@ -13,6 +13,8 @@ class leakingentry extends CI_Controller{
 		ini_set('display_errors','off'); 	
         $this->load->model('common_model','comm_model');			
 		$this->load->model('adminheader_model','top_model');
+		$this->load->model('addcustomer_model','customer_model');
+		$this->load->model('addmetercustomerreading_model','meterreading_model');
     }
 
     public function index(){
@@ -29,8 +31,20 @@ class leakingentry extends CI_Controller{
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
         $header['record_info'] = $this->top_model->get_last_login_details(1);
         $data['record'] = $this->my_model->get_all_records();
+		$data['customer_listing'] = $this->customer_model->get_all_records();
 		$this->load->view($this->headerPage,$header);
 		$this->load->view($this->listPage,$data);
         
     }
+
+	public function get_customer_meter_reading(){
+		$customer_id = $this->input->post('customer_id');
+		if($customer_id != ''){
+			$result = $this->meterreading_model->get_addcustomer_meterreading_records($customer_id);
+			echo json_encode($result);
+			
+		}else{
+			echo '{}';
+		}
+	}
 }

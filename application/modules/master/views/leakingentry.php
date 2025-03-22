@@ -1,4 +1,8 @@
-
+<style>
+	.select2-container{
+		width: 100% !important;
+	}
+</style>
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -243,15 +247,36 @@
 							<div class="modal-body">
 								
                                 <form name="frm_update" id="frm_update" action="" method="POST">
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Customer : </strong></span>
+                                                <select name="customer_id" id="customer_id" placeholder="Type text to search..." required>
+													<option value="">--Select--</option>	
+													<?php
+													
+													foreach ($customer_listing as $key => $value) {
+														?>
+														<option value="<?php echo $value['customer_id']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
+													<?php }
+													?>
+												</select>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <input class="form-control" type="text" id="billing_period" name="billing_period">
+                                                <select class="form-control" type="text" id="billing_period" name="billing_period">
+													<option value="">--Select--</option>
+												</select>
                                                 <?php echo form_error('billing_period'); ?>
                                             </div>
                                         </div>
                                     </div>
+
+<section id="leaking_option">
                                     <div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
@@ -333,6 +358,10 @@
                                             </div>
                                         </div>
                                     </div>
+
+</section>
+
+
 								</form>
 				
 							</div>
@@ -536,12 +565,48 @@
 			/* END TABLETOOLS */
 
 
+			$('#customer_id').select2();
+			$('#customer_id').on('change', function(evt){
+				evt.preventDefault();
+				var cust_id = $(this).val();
+				if(cust_id){
+				// Send an AJAX request to the backend
+				$.ajax({
+					url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
+					type: 'POST',
+					data: { customer_id: cust_id },
+					dataType: 'json',
+					success: function(response) {
+						// Clear the child dropdown
+						$('#billing_period').empty().append('<option value="">--Select--</option>');
 
+						// Populate the child dropdown with the response data
+						if (response.length > 0) {
+							$.each(response, function(index, item) {
+								if(item.status==0){
+									$('#billing_period').append('<option value="' + item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
+								}
+								
+							});
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error('AJAX Error: ' + status + error);
+					}
+				});
+				}else {
+					// If no parent is selected, clear the child dropdown
+					$('#billing_period').empty().append('<option value="">--Select--</option>');
+				}
+			});
+			
             $('#add_record').on('click', function(evt){
                 evt.preventDefault();
                 $('#myModal').modal('show');
+				$('#leaking_option').hide();
                 $('#myModalLabel').text('Add New Leaking Record');
                 $('#btn_save').text('Save');
+                $('#btn_save').prop('disabled', true);
                 
             });
 		
