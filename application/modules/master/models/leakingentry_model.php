@@ -6,6 +6,7 @@ class leakingentry_model extends CI_Model {
 	public $table_expenses = 'tbl_addexpenses';
 	public $table_payrol = 'tbl_payrols';
 	public $table_customer = 'tbl_addcustomer';
+	public $table_customer_meter_reading = 'tbl_addcustomer_reading';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -13,9 +14,11 @@ class leakingentry_model extends CI_Model {
 	
 	/** In Function Get all records from select table **/
     public function get_all_records() {
-        $this->db->select("*");
+        $this->db->select($this->table_name.".*,".$this->table_customer.".*,".$this->table_customer_meter_reading.".month, ".$this->table_customer_meter_reading.".year, ".$this->table_customer_meter_reading.".amount ");
 		$this->db->from($this->table_name);
-		$this->db->order_by('leaking_id','desc');
+		$this->db->join($this->table_customer, $this->table_name.".leaking_customer_id = ".$this->table_customer.".customer_id", 'left');
+		$this->db->join($this->table_customer_meter_reading, $this->table_name.".leaking_refno = ".$this->table_customer_meter_reading.".refno", 'left');
+		$this->db->order_by($this->table_name.'.leaking_id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		$result = $query->result_array();
@@ -71,11 +74,13 @@ class leakingentry_model extends CI_Model {
 	
 		$set_data = array(
 		                   
-						'zone' => $this->input->post('zone'),
-						'status' => $this->input->post('status'),
-					  'create_date_time' => date('Y-m-d H:i:s'),
-						
-					);
+			'leaking_refno' => $this->input->post('refno'),
+			'leaking_customer_id' => $this->input->post('customer_id'),
+			'leaking_discount_percent' => $this->input->post('leaking_percent'),
+			'leaking_status' => $this->input->post('leaking_status'),
+			'leaking_created_datetime' => date('Y-m-d H:i:s')
+			
+		);
 		$result = $this->db->insert($this->table_name, $set_data); 
 		return $result;
 	}

@@ -29,6 +29,26 @@ class leakingentry extends CI_Controller{
         
     }
 
+	public function add(){
+		if($this->input->post('btn_save') != ''){ 
+			
+		
+			$result = $this->my_model->add_record();
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
+				echo 'success';
+				//redirect($this->listPage);
+			}else{
+				$data['msg'] = "Not Inserted...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+
+		}else{
+			echo 'error';
+		}
+	}
+
 	public function get_customer_meter_reading(){
 		$customer_id = $this->input->post('customer_id');
 		if($customer_id != ''){

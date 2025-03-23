@@ -148,47 +148,28 @@
 													<tr>
 														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></td>
 														<td><?php echo $i; ?></td>
-														<td><?php echo stripslashes($row['zone']); ?></td>
-														<td><span <?php if($row['status']== 1){ echo " class='label label-success arrowed-in arrowed-in-right'"; } elseif($row['status']== 0){ echo "class='label label-danger arrowed'"; } ?>><a href="JavaScript:if(confirm('Are you sure want to Chanage the Status?')==true){window.location='<?php echo ADMIN_URL;?>add_zone/status/<?php echo $row['id']?>/<?php echo $row['status'];?>';}" style="color:#FFF; text-decoration:none;"><?php if($row['status']== 1){ echo "Active"; } elseif($row['status']== 0){ echo "De-Active"; } ?></a></span></td>
-														<td>
-														    <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-																<a class="green" href="<?php echo ADMIN_URL;?>add_zone/edit/<?php echo $row['id']; ?>" title="Edit">
-																	<i class="fa fa-edit"></i>
-																</a>
-																<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>add_zone/delete/<?php echo $row['id'];?>';}" title="Delete">
-																	<i class="fa fa-remove"></i>
-																</a>
-															</div>
-															<div class="visible-xs visible-sm hidden-md hidden-lg">
-																<div class="inline position-relative">
-																	<button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
-																		<i class="icon-caret-down icon-only bigger-120"></i>
-																	</button>
-																		
-																	<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
-																		<li>
-																			<a href="<?php echo ADMIN_URL;?>add_zone/edit/<?php echo $row['id']; ?>" class="tooltip-success" data-rel="tooltip" title="Edit">
-																					<span class="green">
-																						<img src="<?php echo base_url();?>images/favicon/document-edit.gif">
-																					</span>
-																			</a>
-																			<a href="<?php echo ADMIN_URL;?>add_zone/view/<?php echo $row['id'];?>" class="tooltip-success" data-rel="tooltip" title="Edit">
-																					<span class="green">
-																						<img src="<?php echo base_url();?>images/favicon/view_icon.gif">
-																					</span>
-																			</a>
-																		</li>
-																		<li>
-																				<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>add_zone/delete/<?php echo $row['id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
-																					<span class="red">
-																						<img src="<?php echo base_url();?>images/favicon/delete.png">
-																					</span>
-																				</a>
-																		</li>
-																	</ul>
-																</div>
-															</div>
-														</td>
+														<td><?php echo stripslashes($row['last_name'].', '.$row['first_name'].' '.$row['middle_name']); ?></td>
+														<td><?php echo stripslashes($row['customer_id']); ?></td>
+														<td><?php echo stripslashes($row['leaking_refno']); ?></td>
+														<td><?php echo stripslashes($row['month'].' '.$row['year']); ?></td>
+														<td><?php echo stripslashes($row['amount']); ?></td>
+														<td><?php echo stripslashes($row['leaking_discount_percent']); ?></td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td><?php 
+															if($row['leaking_status']==1){
+																echo 'Pending'; 
+															}else if($row['leaking_status']==2){
+																echo 'Approved'; 
+
+															}else{
+																echo 'Denied'; 
+															}
+														
+														?></td>
+														<td></td>
+														
 													</tr>
 														<?php $i++;} }?>	
 												</tbody>
@@ -275,6 +256,7 @@
                                             </div>
                                         </div>
                                     </div>
+									<input type="hidden" name="refno" id="refno"/>
 
 <section id="leaking_option">
                                     <div class="row">
@@ -362,7 +344,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Leaking Disc(%) : </strong></span>
-                                                <input class="form-control" type="text" id="leaking_percent" name="leaking_percent" style="background-color:yellow;" required>
+                                                <input class="form-control" type="text" id="leaking_percent" name="leaking_percent" style="background-color:white;" required>
                                                 <?php echo form_error('leaking_percent'); ?>
                                             </div>
                                         </div>
@@ -387,8 +369,8 @@
 								<button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">
 									Cancel
 								</button>
-								<button type="button" class="btn btn-sm btn-primary" id="btn_save" data-dismiss="modal">
-									Update
+								<button type="submit" class="btn btn-sm btn-primary" id="btn_save" name="btn_save" value="add">
+									Add
 								</button>
 							</div>
 						</div><!-- /.modal-content -->
@@ -646,7 +628,7 @@
 								$('#total_amount').val(response.amount);
 								$('#penalty').val(response.penalty);
 								$('#reading_date').val(response.date);
-								
+								$('#refno').val(response.refno);
 								
 							}
 						},
@@ -670,6 +652,73 @@
                 $('#btn_save').prop('disabled', true);
                 
             });
+
+			$('#leaking_percent').on('change', function(evt){
+				var leakval = $(this).val();
+				if(leakval){
+					$('#btn_save').prop('disabled', false);
+				}else{
+					$('#btn_save').prop('disabled', true);
+				}
+
+			});
+
+			$('#btn_save').on('click', function(evt){
+				evt.preventDefault();
+				var refno = $('#refno').val();
+				var customer_id = $('#customer_id').val();
+				var leaking_percent = $('#leaking_percent').val();
+				
+				const formData = new FormData();
+				formData.append("refno",refno);
+				formData.append("customer_id", customer_id);
+				formData.append("leaking_percent", leaking_percent);
+				formData.append("btn_save", 1);
+				formData.append("leaking_status", 1);
+
+				$.ajax({
+					url: '<?php echo ADMIN_URL;?>leakingentry/add/',
+					type: 'POST',
+					data: formData,
+					contentType: false,
+					processData: false,
+					success: function (response) {
+						//const result = JSON.parse(response);
+						if (response=='success') {
+							showSpinner(); // Call this to show the spinner
+							$.smallBox({
+								title : "Saving Data",
+								content : "Saving Data Successfully!",
+								color : "#296191",
+								timeout: 5000,
+								icon : "fa fa-bell swing animated"
+							}, function(){
+								location.reload();
+							});
+
+						}else{
+							$.smallBox({
+								title : "Saving Data",
+								content : "Saving Data failed!",
+								color : "#296191",
+								timeout: 5000,
+								icon : "fa fa-bell swing animated"
+							});
+						}
+					},
+					error: function () {
+						alert("An error occurred while processing data.");
+						$.smallBox({
+								title : "Saving Data",
+								content : "An error occurred while processing data.",
+								color : "#296191",
+								timeout: 5000,
+								icon : "fa fa-bell swing animated"
+							});
+					}
+				});
+
+			});
 		
 		})
 
