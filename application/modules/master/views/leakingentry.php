@@ -358,6 +358,24 @@
                                             </div>
                                         </div>
                                     </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Leaking Disc(%) : </strong></span>
+                                                <input class="form-control" type="text" id="leaking_percent" name="leaking_percent" style="background-color:yellow;" required>
+                                                <?php echo form_error('leaking_percent'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Leaking Disc(Amt) : </strong></span>
+                                                <input class="form-control" type="text" id="leaking_amount" name="leaking_amount" style="background-color:yellow;" readonly>
+                                                <?php echo form_error('leaking_percent'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
 
 </section>
 

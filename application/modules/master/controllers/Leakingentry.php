@@ -45,7 +45,6 @@ class leakingentry extends CI_Controller{
 		if($meterreading_id != ''){
 			$result = $this->meterreading_model->get_single_record($meterreading_id);
 			echo json_encode($result);
-			
 		}else{
 			echo '{}';
 		}
