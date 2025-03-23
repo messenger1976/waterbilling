@@ -46,5 +46,18 @@ class leakingentry extends CI_Controller{
 		}else{
 			echo '{}';
 		}
+
+		
+	}
+
+	public function get_customer_meter_reading_detail(){
+		$meterreading_id = $this->input->post('meterreading_id');
+		if($meterreading_id != ''){
+			$result = $this->meterreading_model->get_single_record($meterreading_id);
+			echo json_encode($result);
+			
+		}else{
+			echo '{}';
+		}
 	}
 }

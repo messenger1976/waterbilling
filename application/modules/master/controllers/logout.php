@@ -1,4 +1,5 @@
 <?php
+session_start();
 class logout extends CI_Controller{
 	public $login_redirect = '/master/index';
 	public function __construct(){
@@ -18,7 +19,9 @@ class logout extends CI_Controller{
 			}
 			$this->session->unset_userdata('username');
 			$this->session->unset_userdata('logged_in');
+			
 			$this->session->sess_destroy();
+			session_destroy();
 			redirect($this->login_redirect,'refresh');
 		//}
    }

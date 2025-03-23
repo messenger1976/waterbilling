@@ -281,7 +281,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Previous Reading : </strong></span>
-                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:white;" value="0" required>
+                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;" value="0" readonly>
                                                 <?php echo form_error('previous_reading'); ?>
                                             </div>
                                         </div>
@@ -290,7 +290,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Current Reading : <i style="color:red;">*</i></strong></span>
-                                                <input class="form-control" type="text" id="current_reading" name="current_reading" required>
+                                                <input class="form-control" type="text" id="current_reading" name="current_reading" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('current_reading'); ?>
                                             </div>
                                         </div>
@@ -317,7 +317,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>SC Discount : </strong></span>
-                                                <input class="form-control" type="text" id="sc_discount" name="sc_discount" style="background-color:white;">
+                                                <input class="form-control" type="text" id="sc_discount" name="sc_discount" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('sc_discount'); ?>
                                             </div>
                                         </div>
@@ -326,7 +326,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Arrears : </strong></span>
-                                                <input class="form-control" type="text" id="arrears" name="arrears" style="background-color:white;">
+                                                <input class="form-control" type="text" id="arrears" name="arrears" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('arrears'); ?>
                                             </div>
                                         </div>
@@ -353,7 +353,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Reading date : </strong></span>
-                                                <input class="form-control" type="text" id="reading_date" name="reading_date" style="background-color:white;">
+                                                <input class="form-control" type="text" id="reading_date" name="reading_date" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('reading_date'); ?>
                                             </div>
                                         </div>
@@ -569,6 +569,7 @@
 			$('#customer_id').on('change', function(evt){
 				evt.preventDefault();
 				var cust_id = $(this).val();
+				$('#leaking_option').hide();
 				if(cust_id){
 				// Send an AJAX request to the backend
 				$.ajax({
@@ -583,9 +584,9 @@
 						// Populate the child dropdown with the response data
 						if (response.length > 0) {
 							$.each(response, function(index, item) {
-								if(item.status==0){
-									$('#billing_period').append('<option value="' + item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
-								}
+								//if(item.status==0){
+									$('#billing_period').append('<option value="' + item.id+' '+item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
+								//}
 								
 							});
 						}
@@ -597,9 +598,51 @@
 				}else {
 					// If no parent is selected, clear the child dropdown
 					$('#billing_period').empty().append('<option value="">--Select--</option>');
+					//$('#leaking_option').hide();
 				}
 			});
 			
+			$('#billing_period').on('change', function(evt){
+				evt.preventDefault();
+				var meterreading_id = $(this).val();
+				if(meterreading_id){
+					// Send an AJAX request to the backend
+					$.ajax({
+						url: 'leakingentry/get_customer_meter_reading_detail', // Backend PHP script
+						type: 'POST',
+						data: { meterreading_id: meterreading_id },
+						dataType: 'json',
+						success: function(response) {
+							
+							// Populate the child dropdown with the response data
+							if (response) {
+								console.log(response);
+								
+								$('#leaking_option').show();
+								$('#previous_reading').val(response.previous_reading);
+								$('#current_reading').val(response.reading);
+								$('#consumed').val(response.consumed);
+								$('#current_bill').val(response.unit_price);
+								$('#sc_discount').val(response.sc_discount);
+								$('#arrears').val(response.arrears);
+								$('#total_amount').val(response.amount);
+								$('#penalty').val(response.penalty);
+								$('#reading_date').val(response.date);
+								
+								
+							}
+						},
+						error: function(xhr, status, error) {
+							console.error('AJAX Error: ' + status + error);
+						}
+					});
+				}else {
+					// If no parent is selected, clear the child dropdown
+					//$('#billing_period').empty().append('<option value="">--Select--</option>');
+					$('#leaking_option').hide();
+				}
+			});
+
             $('#add_record').on('click', function(evt){
                 evt.preventDefault();
                 $('#myModal').modal('show');
