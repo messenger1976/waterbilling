@@ -3,6 +3,7 @@ class leakingentry extends CI_Controller{
     public $headerPage = '../../views/admin-includes/header';  //Header template
 
     public $listPage = 'leakingentry';
+
     public function __construct(){
         parent::__construct();
         $this->load->model('leakingentry_model','my_model');   //*****    Model Loading     *****//		
@@ -18,16 +19,7 @@ class leakingentry extends CI_Controller{
     }
 
     public function index(){
-        //if($this->session->userdata('usertype') == 'subadmin'){
-			//$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
-			
-		//}else{
-		//	$this->head['roleResponsible'] = array();
-		//}
-		/*if(	array_key_exists('leakingentry',$this->head['roleResponsible']) && $this->session->userdata('usertype') == 'subadmin' ){
-			$this->top_model->get_responsibilities_conditions($this->head['roleResponsible']['leakingentry']);
-		}*/
-		//*****  View Loading  *****//
+        //*****  View Loading  *****//
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
         $header['record_info'] = $this->top_model->get_last_login_details(1);
         $data['record'] = $this->my_model->get_all_records();
@@ -46,8 +38,6 @@ class leakingentry extends CI_Controller{
 		}else{
 			echo '{}';
 		}
-
-		
 	}
 
 	public function get_customer_meter_reading_detail(){
