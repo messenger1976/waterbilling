@@ -2,6 +2,9 @@
 	.select2-container{
 		width: 100% !important;
 	}
+	.setStatus{
+		cursor: pointer;
+	}
 </style>
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
@@ -94,7 +97,20 @@
 				
 								<!-- widget div-->
 								<div>
-				
+								
+								<?php if($this->session->flashdata('msg_succ') != ''){?>
+									
+                                    <!--<div class="alert alert-block alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">
+                                        <i class="icon-remove"></i>
+                                        </button>
+                                        <p>
+                                            <i class="icon-ok"></i>
+                                            <?php echo $this->session->flashdata('msg_succ')?$this->session->flashdata('msg_succ'):'';?>
+                                        </p>
+                                    </div>-->
+                                    <?php } ?>
+
 									<!-- widget edit box -->
 									<div class="jarviswidget-editbox">
 										<!-- This area used as dropdown edit box -->
@@ -117,7 +133,7 @@
                                             }
                                         }
                                         </script>
-				                    <form method="post" action="<?php echo ADMIN_URL;?>add_zone/multi_delete">
+				                    <form method="post" action="<?php echo ADMIN_URL;?>leakingentry/multi_delete">
 										<!-- widget content -->
 										<div class="widget-body no-padding">
 										   <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
@@ -132,6 +148,7 @@
                                                         <th data-hide="expand">Billing Period</th>
                                                         <th data-hide="expand">Billing Amount</th>
                                                         <th data-hide="expand">Discount %</th>
+														<th data-hide="expand">Discount Amount</th>
                                                         <th data-hide="expand">Total Amount</th>
                                                         <th data-hide="expand">Payment Terms</th>
                                                         <th data-hide="expand">Trans Date</th>
@@ -146,29 +163,60 @@
                                                         foreach($record as $key => $row){ 
 													?>   
 													<tr>
-														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></td>
+														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leaking_id'];?>" /></td>
 														<td><?php echo $i; ?></td>
 														<td><?php echo stripslashes($row['last_name'].', '.$row['first_name'].' '.$row['middle_name']); ?></td>
 														<td><?php echo stripslashes($row['customer_id']); ?></td>
 														<td><?php echo stripslashes($row['leaking_refno']); ?></td>
-														<td><?php echo stripslashes($row['month'].' '.$row['year']); ?></td>
+														<td><?php echo stripslashes(getMonthName($row['month'])[0]->month_name.' '.$row['year']); ?></td>
 														<td><?php echo stripslashes($row['amount']); ?></td>
 														<td><?php echo stripslashes($row['leaking_discount_percent']); ?></td>
-														<td></td>
+														<td><?php echo stripslashes($row['leaking_discount_amount']); ?></td>
+														<td><?php echo stripslashes($row['leaking_total_amount']); ?></td>
 														<td></td>
 														<td></td>
 														<td><?php 
 															if($row['leaking_status']==1){
-																echo 'Pending'; 
+																echo '<label class="label label-primary setStatus" data-id="'.$row['leaking_id'].'" data-status="'.$row['leaking_status'].'">Pending</label>'; 
 															}else if($row['leaking_status']==2){
-																echo 'Approved'; 
+																echo '<label class="label label-success">Approved</label>'; 
 
 															}else{
-																echo 'Denied'; 
+																echo '<label class="label label-danger">Denied</label>'; 
 															}
 														
 														?></td>
-														<td></td>
+														<td>
+														<!--<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+																<a class="green" href="<?php echo ADMIN_URL;?>employee_logins/edit/<?php echo $row['id'];?>" title="Edit">
+																	<i class="fa fa-edit"></i>
+																</a>
+                                                                <a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>employee_logins/delete/<?php echo $row['id'];?>';}" title="Delete">                                                                
+																	<i class="fa fa-remove"></i>
+																</a>														</div>-->
+																
+																
+																<a href="<?php echo ADMIN_URL;?>leakingentry/edit/<?php echo $row['leaking_id'];?>" class="tooltip-success" data-rel="tooltip" title="Edit">
+																	<span class="green">
+																		<img src="<?php echo base_url();?>images/favicon/document-edit.gif">
+																	</span>
+																</a>
+
+
+														<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>leakingentry/delete/<?php echo $row['leaking_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
+															<span class="red">
+																<img src="<?php echo base_url();?>images/favicon/delete.png">
+															</span>
+														</a>
+														<a href="<?php echo ADMIN_URL;?>leakingentry/ledger/<?php echo $row['leaking_id'];?>" class="tooltip-success" data-rel="tooltip" title="Ledger">
+																	<span class="blue">
+																		<img src="<?php echo base_url();?>images/favicon/ledger.png">
+																	</span>
+																</a>
+													
+													</td>
+
+														
 														
 													</tr>
 														<?php $i++;} }?>	
@@ -343,6 +391,24 @@
 									<div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Due date : </strong></span>
+                                                <input class="form-control" type="text" id="due_date" name="due_date" style="background-color:yellow;" readonly>
+                                                <?php echo form_error('due_date'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Payment Date : </strong></span>
+                                                <input class="form-control" type="text" id="payment_date" name="payment_date" style="background-color:white;" value="<?php echo date('d-m-Y');?>" required>
+                                                <?php echo form_error('payment_date'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Leaking Disc(%) : </strong></span>
                                                 <input class="form-control" type="text" id="leaking_percent" name="leaking_percent" style="background-color:white;" required>
                                                 <?php echo form_error('leaking_percent'); ?>
@@ -355,6 +421,15 @@
                                                 <span class="input-group-addon"><strong>Leaking Disc(Amt) : </strong></span>
                                                 <input class="form-control" type="text" id="leaking_amount" name="leaking_amount" style="background-color:yellow;" readonly>
                                                 <?php echo form_error('leaking_percent'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Bill Amount : </strong></span>
+                                                <input class="form-control" type="text" id="bill_amount" name="bill_amount" style="background-color:yellow;" readonly>
+                                                <?php echo form_error('bill_amount'); ?>
                                             </div>
                                         </div>
                                     </div>
@@ -561,8 +636,35 @@
 					responsiveHelper_datatable_tabletools.respond();
 				}
 			});
+
+
+			<?php if($this->session->flashdata('msg_succ') != ''){?>
+				$.smallBox({
+					title : "Saving Data",
+					content : "<?php echo $this->session->flashdata('msg_succ');?>",
+					color : "#296191",
+					timeout: 5000,
+					icon : "fa fa-bell swing animated"
+				});
+			<?php } ?>
+
 			
 			/* END TABLETOOLS */
+			var curDate = '<?php echo date('d-m-Y') ?>';	
+			$("#payment_date").datepicker({
+				showAnim: null,
+				dateFormat: 'dd-mm-yy',
+				// showOn: 'both',
+				buttonImage: '<?php echo site_url();?>images/calender.jpg',
+				buttonImageOnly: true,
+				firstDay: 1,
+				nextText: '',
+				prevText: '',
+				numberOfMonths: [1, 1],
+				defaultDate: new Date(curDate),
+				//minDate: curDate,
+				//maxDate: ''
+			});
 
 
 			$('#customer_id').select2();
@@ -617,7 +719,10 @@
 							// Populate the child dropdown with the response data
 							if (response) {
 								console.log(response);
-								
+								const sqlDate = response.bp_due_date;
+								const parts = sqlDate.split('-');//y-m-d
+								//const jsDate = new Date(parts[0], parts[1] - 1, parts[2]); // Month is 0-indexed
+								const duedate = parts[2]+'-'+ parts[1]+'-'+ parts[0];
 								$('#leaking_option').show();
 								$('#previous_reading').val(response.previous_reading);
 								$('#current_reading').val(response.reading);
@@ -628,6 +733,7 @@
 								$('#total_amount').val(response.amount);
 								$('#penalty').val(response.penalty);
 								$('#reading_date').val(response.date);
+								$('#due_date').val(duedate);
 								$('#refno').val(response.refno);
 								
 							}
@@ -652,14 +758,14 @@
                 $('#btn_save').prop('disabled', true);
                 
             });
-
-			$('#leaking_percent').on('change', function(evt){
-				var leakval = $(this).val();
-				if(leakval){
-					$('#btn_save').prop('disabled', false);
-				}else{
-					$('#btn_save').prop('disabled', true);
-				}
+			$('#payment_date').on('change', function(evt){
+				evt.preventDefault();
+				computeDiscount();
+				
+			});
+			$('#leaking_percent').on('blur', function(evt){
+				evt.preventDefault();
+				computeDiscount();
 
 			});
 
@@ -668,11 +774,17 @@
 				var refno = $('#refno').val();
 				var customer_id = $('#customer_id').val();
 				var leaking_percent = $('#leaking_percent').val();
-				
+				var payment_date = $('#payment_date').val();
+				var leaking_amount = $('#leaking_amount').val();
+				var bill_amount = $('#bill_amount').val();
+
 				const formData = new FormData();
 				formData.append("refno",refno);
 				formData.append("customer_id", customer_id);
 				formData.append("leaking_percent", leaking_percent);
+				formData.append("payment_date", payment_date);
+				formData.append("leaking_amount", leaking_amount);
+				formData.append("bill_amount", bill_amount);
 				formData.append("btn_save", 1);
 				formData.append("leaking_status", 1);
 
@@ -682,19 +794,22 @@
 					data: formData,
 					contentType: false,
 					processData: false,
+					beforeSend: function() {
+						showSpinner(); // Call this to show the spinner
+					},
 					success: function (response) {
 						//const result = JSON.parse(response);
 						if (response=='success') {
-							showSpinner(); // Call this to show the spinner
-							$.smallBox({
+							window.location='<?php echo ADMIN_URL;?>leakingentry';
+							/*$.smallBox({
 								title : "Saving Data",
 								content : "Saving Data Successfully!",
 								color : "#296191",
 								timeout: 5000,
 								icon : "fa fa-bell swing animated"
 							}, function(){
-								location.reload();
-							});
+								
+							});*/
 
 						}else{
 							$.smallBox({
@@ -719,9 +834,70 @@
 				});
 
 			});
+
+			$(".setStatus").click(function(e) {
+				var getStatus = $(this).data('status');
+				var id = $(this).data('id');
+				if(getStatus==1){
+					$.SmartMessageBox({
+						title : "Approval Action",
+						content : "Please select option below",
+						buttons : '[Cancel][Denied][Approved]'
+					}, function(ButtonPressed) {
+						if (ButtonPressed === "Cancel") {
+							
+						}
+						if (ButtonPressed === "Approved") {
+			
+							window.location='<?php echo ADMIN_URL;?>leakingentry/status/'+id+'/2';
+						}
+						if (ButtonPressed === "Denied") {
+							window.location='<?php echo ADMIN_URL;?>leakingentry/status/'+id+'/3';
+						}
+						
+			
+					});
+				}
+				
+				e.preventDefault();
+			})
 		
 		})
 
+		function parseDmyString(dateStr) {
+  			const [day, month, year] = dateStr.split('-');
+  			return new Date(year, month - 1, day); // month - 1 because months are 0-indexed
+		}
+
+		function computeDiscount(){
+			var leakval = $('#leaking_percent').val();
+			if(leakval){
+				$('#btn_save').prop('disabled', false);
+				var duedate = $('#due_date').val();
+				var paymentdate = $('#payment_date').val();
+				var date1 = parseDmyString(duedate);
+				var date2 = parseDmyString(paymentdate);
+				 
+				if(date1 < date2){
+					var leakingdisc =($('#penalty').val() * leakval)/100;
+					var billamount = $('#penalty').val() - leakingdisc;
+					$('#leaking_amount').val(leakingdisc.toFixed(2));
+					$('#bill_amount').val(billamount.toFixed(2));
+				}else{
+					var leakingdisc =($('#total_amount').val() * leakval)/100;
+					var billamount = $('#total_amount').val() - leakingdisc;
+					$('#leaking_amount').val(leakingdisc.toFixed(2));
+					$('#bill_amount').val(billamount.toFixed(2));
+				}
+			}else{
+				
+				$('#btn_save').prop('disabled', true);
+			}
+		}
+
+		
 		</script>
+
+
 
 		

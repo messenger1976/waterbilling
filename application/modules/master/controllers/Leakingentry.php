@@ -3,9 +3,11 @@ class leakingentry extends CI_Controller{
     public $headerPage = '../../views/admin-includes/header';  //Header template
 
     public $listPage = 'leakingentry';
-
+	public $listPage_redirect ='master/leakingentry';
     public function __construct(){
         parent::__construct();
+		$this->load->helper('date');
+		$this->load->helper('common');
         $this->load->model('leakingentry_model','my_model');   //*****    Model Loading     *****//		
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
@@ -37,7 +39,7 @@ class leakingentry extends CI_Controller{
 			if($result){
 				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
 				echo 'success';
-				//redirect($this->listPage);
+				//redirect($this->listPage_redirect);
 			}else{
 				$data['msg'] = "Not Inserted...";
 				//redirect($this->listPage);
@@ -49,6 +51,56 @@ class leakingentry extends CI_Controller{
 		}
 	}
 
+	public function delete($id){ 
+		$data['msg'] ='';
+		if($id){
+			$result = $this->my_model->delete_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Deleted Successfully...');
+				redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Deleted...";
+			}
+		}
+	}
+
+	/** Multiple Delete Function **/
+	public function multi_delete(){
+		$data['msg'] ='';
+		if($this->input->post('delete_ids') != ''){
+			$delete_ids = $this->input->post('delete_ids');
+			for($i=0;$i<count($delete_ids);$i++){
+				$result = $this->my_model->delete_record($delete_ids[$i]);
+			}
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Deleted Successfully...');
+				redirect($this->listPage_redirect);
+			}else{
+				$this->session->set_flashdata('msg_succ', 'Not Deleted...');
+				redirect($this->listPage_redirect);
+			}
+		}else{
+			$this->session->set_flashdata('msg_succ', 'Select any Check Box...');
+			redirect($this->listPage_redirect);
+		}
+	}
+	
+	/** Status Change Function **/
+	public function status($id,$status){
+		$data['msg'] ='';
+		//echo $id.' '.$status;
+		//exit;
+		//$status = ($status == 1 ? 'Deactive' : 'Active');
+		if($id){
+			$result = $this->my_model->status_record($id,$status);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Status Updated Successfully...');
+				redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = " Status Not Updated...";
+			}
+		}
+	}
 	public function get_customer_meter_reading(){
 		$customer_id = $this->input->post('customer_id');
 		if($customer_id != ''){

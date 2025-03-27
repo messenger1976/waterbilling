@@ -133,8 +133,9 @@ class addmetercustomerreading_model extends CI_Model {
 	}
 		
 	public function get_single_record($id='') {
-        $this->db->select("*");
+        $this->db->select($this->table_name.".*,".$this->table_billing_period.".bp_due_date");
 		$this->db->from($this->table_name);
+		$this->db->join($this->table_billing_period, $this->table_name.'.bp_id = '.$this->table_billing_period.'.bp_id');
 		if($id != ''){
 			$this->db->where("id",$id);
 			$query = $this->db->get();

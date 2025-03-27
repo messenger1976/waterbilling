@@ -71,14 +71,22 @@ class leakingentry_model extends CI_Model {
   	/** In Function Add records for select table **/
 	public function add_record(){
 		
-	
+		$paymentdate = date('Y-m-d',strtotime($this->input->post('payment_date')));
+
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		
+		$created_date = $dt_date->format("Y-m-d H:i:s");
+
 		$set_data = array(
 		                   
 			'leaking_refno' => $this->input->post('refno'),
 			'leaking_customer_id' => $this->input->post('customer_id'),
 			'leaking_discount_percent' => $this->input->post('leaking_percent'),
+			'leaking_discount_amount' => $this->input->post('leaking_amount'),
+			'leaking_date' => $paymentdate,
+			'leaking_total_amount' => $this->input->post('bill_amount'),
 			'leaking_status' => $this->input->post('leaking_status'),
-			'leaking_created_datetime' => date('Y-m-d H:i:s')
+			'leaking_created_datetime' => $created_date
 			
 		);
 		$result = $this->db->insert($this->table_name, $set_data); 
@@ -101,18 +109,22 @@ class leakingentry_model extends CI_Model {
 	
   	/** In Function Delete records for select table **/
 	public function delete_record($id){
-		$this->db->where('id',$id);
+		$this->db->where('leaking_id',$id);
 		$result = $this->db->delete($this->table_name); 
 		return $result;
 	}
 	
   	/** In Function Status Update records for select table **/
 	public function status_record($id,$status){
-		$sts = ($status == 1 ? 0 : 1);
+		//$sts = ($status == 1 ? 0 : 1);
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		
+		$updated_date = $dt_date->format("Y-m-d H:i:s");
 		$set_data = array(
-						'status' => $sts
-					);
-		$this->db->where('id',$id);
+			'leaking_status' => $status,
+			'leaking_updated_datetime' => $updated_date
+		);
+		$this->db->where('leaking_id',$id);
 		$result = $this->db->update($this->table_name, $set_data); 
 		return $result;
 	}
