@@ -355,6 +355,65 @@ class addbillingperiod extends CI_Controller {
 		query_to_csv($query, TRUE, $this->excelfilename.'-'.date("d-m-Y").'.csv');
 	}
 
+	public function sync_export($billingmonth,$billingyear)
+	{
+		
+		$this->load->database();
+
+
+
+		//$CI = &get_instance();
+
+		$this->db->select("
+		tbl_addcustomer_reading.refno as billing_refno,
+        tbl_addcustomer.customer_id as Account_Number,
+        tbl_addcustomer.first_name,
+        tbl_addcustomer.last_name, 
+        tbl_addcustomer.address,
+		tbl_zone.zone as zonename,
+		tbl_addcustomer.account_type,
+		tbl_classification.class_name as classification,
+		tbl_addcustomer.meter_number,
+		tbl_addcustomer.meter_brand,
+        tbl_addcustomer_reading.previous_reading,
+		tbl_addcustomer_reading.reading as current_reading,
+		tbl_addcustomer_reading.arrears,
+		tbl_addcustomer_reading.month as billing_month,
+		tbl_addcustomer_reading.year as billing_year
+       
+        ");
+		$this->db->from("tbl_addcustomer_reading");
+			
+		
+		$this->db->join("tbl_addmetercustomer", 'tbl_addcustomer_reading.customer_id=tbl_addmetercustomer.customer_id AND tbl_addcustomer_reading.month=tbl_addmetercustomer.month AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year','left');
+
+		$this->db->join('tbl_addcustomer', 'tbl_addcustomer_reading.customer_id=tbl_addcustomer.customer_id','left');
+		$this->db->join('tbl_zone', 'tbl_addcustomer.zone=tbl_zone.id','left');
+		$this->db->join('tbl_classification', 'tbl_addcustomer.classification=tbl_classification.class_id','left');
+		
+		if($billingmonth !='all' && $billingyear !='all'){
+			$this->db->where("tbl_addcustomer_reading.month",$billingmonth);
+			$this->db->where("tbl_addcustomer_reading.year",$billingyear);
+		}
+		
+		
+			
+		
+		
+		$this->db->order_by('tbl_addcustomer.last_name','ASC');
+		$this->db->order_by('tbl_addcustomer.first_name','ASC');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		
+
+
+		echo json_encode($result);
+		exit;
+		
+		//$this->load->helper('csv');
+		//query_to_csv($query, TRUE, $this->excelfilename.'-'.date("d-m-Y").'.csv');
+	}
+
 	public function import(){
 		$data['msg'] ='';
 	 
