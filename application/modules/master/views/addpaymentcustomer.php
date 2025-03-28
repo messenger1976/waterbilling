@@ -162,8 +162,8 @@
 														
 														<th data-hide="expand">OR #</th>
 														<th data-hide="expand">Gross Amount</th>
-														<th data-hide="expand">VAT Discount</th>	
-														<th data-hide="expand">Leaking Discount</th>										
+														<th data-hide="expand">Leaking Discount</th>	
+														<th data-hide="expand">VAT Discount</th>										
 														<th data-hide="expand">Net Amount</th>
 														
 														
@@ -195,7 +195,7 @@
 														<td><?php echo stripslashes($row['aftermeter']); ?></td>-->
 														<!--<?php $consumed_units=$row['aftermeter']-$row['oldmeter'];?>-->
 														<!--<td><?php echo stripslashes($row['consumedunits']); ?></td>-->
-														<td align="right"><?php echo stripslashes(number_format($row['gross_amount'],2)); ?></td>
+														<td align="right"><?php echo stripslashes(number_format($row['total'],2)); ?></td>
 														<td align="right"><?php echo stripslashes(number_format($row['leaking_amount'],2)); ?></td>
 														<td align="right"><?php echo stripslashes(number_format($row['vat_amount'],2)); ?></td>
 														<td align="right"><?php echo stripslashes(number_format($row['grand_total'],2)); ?></td>

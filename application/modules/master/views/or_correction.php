@@ -159,10 +159,10 @@
 														
 														<td>
 														    <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-																<a class="green" href="<?php echo ADMIN_URL;?>or_correction/edit/<?php echo $row['id']; ?>" title="Edit">
+																<a class="green" href="<?php echo ADMIN_URL;?>or_correction/edit/<?php echo $row['or_number']; ?>" title="Edit">
 																	<i class="fa fa-edit"></i>
 																</a>
-																<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>or_correction/delete/<?php echo $row['id'];?>';}" title="Delete">
+																<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>or_correction/delete/<?php echo $row['or_number'];?>';}" title="Delete">
 																	<i class="fa fa-remove"></i>
 																</a>
 															</div>
@@ -174,19 +174,19 @@
 																		
 																	<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
 																		<li>
-																			<a href="<?php echo ADMIN_URL;?>add_zone/edit/<?php echo $row['id']; ?>" class="tooltip-success" data-rel="tooltip" title="Edit">
+																			<a href="<?php echo ADMIN_URL;?>or_correction/edit/<?php echo $row['id']; ?>" class="tooltip-success" data-rel="tooltip" title="Edit">
 																					<span class="green">
 																						<img src="<?php echo base_url();?>images/favicon/document-edit.gif">
 																					</span>
 																			</a>
-																			<a href="<?php echo ADMIN_URL;?>add_zone/view/<?php echo $row['id'];?>" class="tooltip-success" data-rel="tooltip" title="Edit">
+																			<a href="<?php echo ADMIN_URL;?>or_correction/view/<?php echo $row['id'];?>" class="tooltip-success" data-rel="tooltip" title="Edit">
 																					<span class="green">
 																						<img src="<?php echo base_url();?>images/favicon/view_icon.gif">
 																					</span>
 																			</a>
 																		</li>
 																		<li>
-																				<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>add_zone/delete/<?php echo $row['id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
+																				<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>or_correction/delete/<?php echo $row['or_number'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
 																					<span class="red">
 																						<img src="<?php echo base_url();?>images/favicon/delete.png">
 																					</span>

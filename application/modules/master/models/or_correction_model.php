@@ -24,6 +24,7 @@ class or_correction_model extends CI_Model {
 			$trans_date = $dt_date->format("Y-m-d");
 			$this->db->where($this->table_meter.".date",$trans_date);
 		}
+		$this->db->group_by('or_number');
 		$this->db->order_by('id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -36,7 +37,8 @@ class or_correction_model extends CI_Model {
         $this->db->select("*");
 		$this->db->from($this->table_meter);
 		if($id != ''){
-			$this->db->where("id",$id);
+			$this->db->where("or_number",$id);
+			$this->db->group_by("or_number");
 			$query = $this->db->get();
 			//echo $this->db->last_query();
 			$result = $query->row_array();
@@ -76,35 +78,41 @@ class or_correction_model extends CI_Model {
     }
   	/** In Function Add records for select table **/
 	public function add_record(){
-		
+		$dt_date = new DateTime('now', new DateTimeZone("Asia/Manila"));
+		$trans_date = $dt_date->format("Y-m-d H:i:s");
 	
 		$set_data = array(
 		                   
 						'zone' => $this->input->post('zone'),
 						'status' => $this->input->post('status'),
-					  'create_date_time' => date('Y-m-d H:i:s'),
+					  'create_date_time' => $trans_date,
 						
 					);
 		$result = $this->db->insert($this->table_name, $set_data); 
 		return $result;
 	}
   	/** In Function Update records for select table **/
-	public function update_record($id){
-		
+	public function update_record($old_or){
+		$dt_date = new DateTime('now', new DateTimeZone("Asia/Manila"));
+		$trans_date = $dt_date->format("Y-m-d H:i:s");
 		$set_data = array(
 		                  
-						'or_number' => $this->input->post('or_number'),
-					  'update_date_time' => date('Y-m-d H:i:s'),
+						'or_number' => sprintf('%07d',$this->input->post('or_number')),
+					  'update_date_time' => $trans_date,
 						
 					);
-		$this->db->where('id',$id);
+		$this->db->where('or_number',$old_or);
 		$result = $this->db->update($this->table_meter, $set_data); 
+		
+		$this->db->where('or_number',$old_or);
+		$result = $this->db->update($this->table_meter_reading, $set_data); 
+		
 		return $result;
 	}
 	
   	/** In Function Delete records for select table **/
-	public function delete_record($id){
-		$this->db->where('id',$id);
+	public function delete_record($or_number){
+		$this->db->where('or_number',$or_number);
 		$result = $this->db->delete($this->table_meter); 
 
 		$set_data = array(
@@ -115,7 +123,7 @@ class or_correction_model extends CI_Model {
 			'customer_billing_id' => ''
 			
 		);
-		$this->db->where('customer_billing_id',$id);
+		$this->db->where('or_number',$or_number);
 		$result = $this->db->update($this->table_meter_reading,$set_data); 
 		return $result;
 	}

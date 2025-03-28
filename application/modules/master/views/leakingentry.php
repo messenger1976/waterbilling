@@ -150,8 +150,8 @@
                                                         <th data-hide="expand">Discount %</th>
 														<th data-hide="expand">Discount Amount</th>
                                                         <th data-hide="expand">Total Amount</th>
-                                                        <th data-hide="expand">Payment Terms</th>
-                                                        <th data-hide="expand">Trans Date</th>
+                                                        
+                                                        <th data-hide="expand">Payment Date</th>
                                                         <th data-hide="expand">Status</th>
 														<th data-hide="expand">Action</th>
 													</tr>
@@ -169,12 +169,17 @@
 														<td><?php echo stripslashes($row['customer_id']); ?></td>
 														<td><?php echo stripslashes($row['leaking_refno']); ?></td>
 														<td><?php echo stripslashes(getMonthName($row['month'])[0]->month_name.' '.$row['year']); ?></td>
-														<td><?php echo stripslashes($row['amount']); ?></td>
+														<td><?php echo stripslashes($row['leaking_bill_amount']); ?></td>
 														<td><?php echo stripslashes($row['leaking_discount_percent']); ?></td>
 														<td><?php echo stripslashes($row['leaking_discount_amount']); ?></td>
 														<td><?php echo stripslashes($row['leaking_total_amount']); ?></td>
-														<td></td>
-														<td></td>
+														
+														<td>
+															<?php
+																$paydate = date('M j, Y',strtotime($row['leaking_date']));
+																echo $paydate;
+															?>
+														</td>
 														<td><?php 
 															if($row['leaking_status']==1){
 																echo '<label class="label label-primary setStatus" data-id="'.$row['leaking_id'].'" data-status="'.$row['leaking_status'].'">Pending</label>'; 
@@ -305,6 +310,7 @@
                                         </div>
                                     </div>
 									<input type="hidden" name="refno" id="refno"/>
+									<input type="hidden" name="gross_amount" id="gross_amount" value="0.00"/>
 
 <section id="leaking_option">
                                     <div class="row">
@@ -673,31 +679,31 @@
 				var cust_id = $(this).val();
 				$('#leaking_option').hide();
 				if(cust_id){
-				// Send an AJAX request to the backend
-				$.ajax({
-					url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
-					type: 'POST',
-					data: { customer_id: cust_id },
-					dataType: 'json',
-					success: function(response) {
-						// Clear the child dropdown
-						$('#billing_period').empty().append('<option value="">--Select--</option>');
+					// Send an AJAX request to the backend
+					$.ajax({
+						url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
+						type: 'POST',
+						data: { customer_id: cust_id },
+						dataType: 'json',
+						success: function(response) {
+							// Clear the child dropdown
+							$('#billing_period').empty().append('<option value="">--Select--</option>');
 
-						// Populate the child dropdown with the response data
-						if (response.length > 0) {
-							$.each(response, function(index, item) {
-								//if(item.status==0){
-									$('#billing_period').append('<option value="' + item.id+' '+item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
-								//}
-								
-							});
+							// Populate the child dropdown with the response data
+							if (response.length > 0) {
+								$.each(response, function(index, item) {
+									if(item.status==0){
+										$('#billing_period').append('<option value="' + item.id+' '+item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
+									}
+									
+								});
+							}
+						},
+						error: function(xhr, status, error) {
+							console.error('AJAX Error: ' + status + error);
 						}
-					},
-					error: function(xhr, status, error) {
-						console.error('AJAX Error: ' + status + error);
-					}
-				});
-				}else {
+					});
+				}else{
 					// If no parent is selected, clear the child dropdown
 					$('#billing_period').empty().append('<option value="">--Select--</option>');
 					//$('#leaking_option').hide();
@@ -777,6 +783,7 @@
 				var payment_date = $('#payment_date').val();
 				var leaking_amount = $('#leaking_amount').val();
 				var bill_amount = $('#bill_amount').val();
+				var gross_amount = $('#gross_amount').val();
 
 				const formData = new FormData();
 				formData.append("refno",refno);
@@ -785,6 +792,7 @@
 				formData.append("payment_date", payment_date);
 				formData.append("leaking_amount", leaking_amount);
 				formData.append("bill_amount", bill_amount);
+				formData.append("gross_amount", gross_amount);
 				formData.append("btn_save", 1);
 				formData.append("leaking_status", 1);
 
@@ -879,11 +887,13 @@
 				var date2 = parseDmyString(paymentdate);
 				 
 				if(date1 < date2){
+					$('#gross_amount').val($('#penalty').val());
 					var leakingdisc =($('#penalty').val() * leakval)/100;
 					var billamount = $('#penalty').val() - leakingdisc;
 					$('#leaking_amount').val(leakingdisc.toFixed(2));
 					$('#bill_amount').val(billamount.toFixed(2));
 				}else{
+					$('#gross_amount').val($('#total_amount').val());
 					var leakingdisc =($('#total_amount').val() * leakval)/100;
 					var billamount = $('#total_amount').val() - leakingdisc;
 					$('#leaking_amount').val(leakingdisc.toFixed(2));

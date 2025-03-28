@@ -85,6 +85,7 @@ class leakingentry_model extends CI_Model {
 			'leaking_discount_amount' => $this->input->post('leaking_amount'),
 			'leaking_date' => $paymentdate,
 			'leaking_total_amount' => $this->input->post('bill_amount'),
+			'leaking_bill_amount' => $this->input->post('gross_amount'),
 			'leaking_status' => $this->input->post('leaking_status'),
 			'leaking_created_datetime' => $created_date
 			

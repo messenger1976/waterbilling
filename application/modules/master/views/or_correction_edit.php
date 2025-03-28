@@ -32,9 +32,9 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
@@ -101,7 +101,7 @@
 											
 											<fieldset>
 														<legend>OR Transaction-Edit </legend>
-														<div class="form-group col-lg-12">
+														<div class="form-group col-lg-12" style="display: none;">
 															<div class="col-lg-6 controls">
 																<div class="form-group">
 																	<span class="input-group-addon"><i class="icon-user"></i><strong>Transaction ID : </strong></span>
@@ -134,6 +134,15 @@
 																	<span class="input-group-addon"><i class="icon-user"></i><strong>Customer Name : </strong></span>
 																	<input  class="form-control"  id="custname" name="custname" value="<?php echo $record['name']; ?>" readonly/>
 																	<?php echo form_error('custname'); ?>
+																</div>
+															</div>
+														</div>
+														<div class="form-group col-lg-12">
+															<div class="col-lg-6 controls">
+																<div class="form-group">
+																	<span class="input-group-addon"><i class="icon-user"></i><strong>OR Amount : </strong></span>
+																	<input  class="form-control"  id="grand_total" name="grand_total" value="<?php echo $record['grand_total']; ?>" readonly/>
+																	<?php echo form_error('grand_total'); ?>
 																</div>
 															</div>
 														</div>
@@ -382,20 +391,4 @@
 		
 		})
 
-		</script>
-
-		<!-- Your GOOGLE ANALYTICS CODE Below -->
-		<script type="text/javascript">
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
-			_gaq.push(['_trackPageview']);
-			
-			(function() {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-			})();
 		</script>
