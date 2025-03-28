@@ -129,12 +129,12 @@
 														<th data-hide="phone"><input type="checkbox"/></th>
 														<th data-hide="phone">S No</th>
 														<th data-hide="expand">ID</th>
-														<th data-hide="expand">Billing Period</th>
+														<!--<th data-hide="expand">Billing Period</th>-->
 														<th data-hide="expand">OR Number</th>
                                                         <th data-hide="expand">Transactin Date</th>
                                                         <th data-hide="expand">Customer ID</th>
                                                         <th data-hide="expand">Customer Name</th>
-														<th data-hide="expand">Amount</th>
+														<!--<th data-hide="expand">Amount</th>-->
                                                         <th data-hide="expand">Grand Total</th>
 														<th data-hide="expand">Action</th>
 													</tr>
@@ -149,12 +149,12 @@
 														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></td>
 														<td><?php echo $i; ?></td>
 														<td><?php echo stripslashes($row['id']); ?></td>
-														<td><?php echo stripslashes($row['month_name'].' '.$row['year']); ?></td>
+														<!--<td><?php echo stripslashes($row['month_name'].' '.$row['year']); ?></td>-->
 														<td><?php echo stripslashes($row['or_number']); ?></td>
                                                         <td><?php echo date('d-m-Y',strtotime($row['date'])); ?></td>
                                                         <td><?php echo stripslashes($row['customer_id']); ?></td>
                                                         <td><?php echo stripslashes($row['name']); ?></td>
-														<td align="right"><?php echo stripslashes($row['amount']); ?></td>
+														<!--<td align="right"><?php echo stripslashes($row['amount']); ?></td>-->
                                                         <td align="right"><?php echo stripslashes($row['grand_total']); ?></td>
 														
 														<td>
