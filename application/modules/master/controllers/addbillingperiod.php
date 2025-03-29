@@ -408,12 +408,30 @@ class addbillingperiod extends CI_Controller {
 
 
 		echo json_encode($result);
+		//echo $result;
 		exit;
 		
 		//$this->load->helper('csv');
 		//query_to_csv($query, TRUE, $this->excelfilename.'-'.date("d-m-Y").'.csv');
 	}
 
+	public function sync_import($refno,$customer_id,$previous_reading,$current_reading,$billing_month,$billing_year,$reading_date){
+		
+		$readingData = array(
+			'refno' => (int)$refno,
+			'customer_id' => $customer_id,
+			'previous_reading' => (int) $previous_reading,
+			'current_reading' => (int) $current_reading,
+			'billing_month' => (int) $billing_month,
+			'billing_year' => (int) $billing_year,
+			'reading_date' => $reading_date
+		);
+		$this->meterreading_model->update_meterreading($readingData);
+        echo '[{"msg":"success"}]';        
+		exit;	
+        
+    
+	}
 	public function import(){
 		$data['msg'] ='';
 	 
