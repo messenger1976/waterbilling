@@ -300,37 +300,38 @@ class addmetercustomerreading_model extends CI_Model {
 	}
 	
 	public function update_meterreading($data){
-		$customerinfo = $this->get_customer_info($data['customer_id']);
-		$bp = $this->get_billing_period_id($customerinfo[0]['zone_id'],$data['billing_month'],$data['billing_year']);
+		if(($data['refno']!='' && $data['refno']!=null) && ($data['customer_id']!='' && $data['customer_id']!=null) && ($data['current_reading']!='0' && $data['current_reading']!='' && $data['current_reading']!=null) && ($data['previous_reading']!='0' && $data['previous_reading']!='' && $data['previous_reading']!=null)){
+			$customerinfo = $this->get_customer_info($data['customer_id']);
+			$bp = $this->get_billing_period_id($customerinfo[0]['zone_id'],$data['billing_month'],$data['billing_year']);
+			
+			$consumed = $data['current_reading']-$data['previous_reading'];
+			$cubicmeter_rate = $this->get_unit_price($consumed,$customerinfo[0]['classification']); // Get unit price
+			$discount = 0;
+			if($customerinfo[0]['account_type']==3){
+				$discount = ($cubicmeter_rate->per_unit * 5)/100;
+			}
+			$total_amount = $cubicmeter_rate->per_unit - $discount;
+			$amount_total_penalty = 0;
+			if($customerinfo[0]['special_priviledge']==='0'){
+				$amount_total_penalty = ($total_amount * 10)/100;
+				$amount_total_penalty = $amount_total_penalty + $total_amount;
+			}else{
+				$amount_total_penalty = $total_amount;
+			}
+			$reading_date = date('d-m-Y',strtotime($data['reading_date']));
+
+			$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+			
+			$updated_date = $dt_date->format("Y-m-d H:i:s");
+
+
+			//echo 'account type:'.$customerinfo[0]['special_priviledge'].' '.$data['billing_month'];
+			//print_r($customerinfo);
+			//exit;
 		
-		$consumed = $data['current_reading']-$data['previous_reading'];
-		$cubicmeter_rate = $this->get_unit_price($consumed,$customerinfo[0]['classification']); // Get unit price
-		$discount = 0;
-		if($customerinfo[0]['account_type']==3){
-			$discount = ($cubicmeter_rate->per_unit * 5)/100;
-		}
-		$total_amount = $cubicmeter_rate->per_unit - $discount;
-		$amount_total_penalty = 0;
-		if($customerinfo[0]['special_priviledge']==='0'){
-			$amount_total_penalty = ($total_amount * 10)/100;
-			$amount_total_penalty = $amount_total_penalty + $total_amount;
-		}else{
-			$amount_total_penalty = $total_amount;
-		}
-		$reading_date = date('d-m-Y',strtotime($data['reading_date']));
-
-		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
-		
-		$updated_date = $dt_date->format("Y-m-d H:i:s");
-
-
-		//echo 'account type:'.$customerinfo[0]['special_priviledge'].' '.$data['billing_month'];
-		//print_r($customerinfo);
-		//exit;
-		if($data['refno']!=''){
 			$sql = "UPDATE tbl_addcustomer_reading 
             SET reading = ?, consumed = ?, sc_discount = ?, amount = ?, unit_price = ?, penalty = ?, date = ? , bp_id = ?, update_date_time = ?
-            WHERE refno = ?";
+            WHERE refno = ? AND (reading ='' OR reading = 0)";
     		$this->db->query($sql, [$data['current_reading'],  $consumed, $discount, number_format($total_amount,2,".",""), $cubicmeter_rate->per_unit,number_format($amount_total_penalty,2,".",""), $reading_date, $bp->bp_id,$updated_date,$data['refno']]);
 		}
     	
