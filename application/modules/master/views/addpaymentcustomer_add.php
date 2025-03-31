@@ -31,9 +31,9 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
@@ -136,7 +136,9 @@
 														<input type="hidden" name="customer_id" id="customer_id" value="">
 														<input type="hidden" name="fullname" id="fullname" value="">
 														<input type="hidden" name="status_id" id="status_id" value="<?php echo $this->input->post('status_id'); ?>">
-														
+														<input type="hidden" name="refno" id="refno" value="">
+														<input type="hidden" name="leaking_id" id="leaking_id" value="">
+
 														<div style="clear:both"></div>
 														
 										<div class="modal" id="myModalPay" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -288,7 +290,7 @@
 																				<label class="col-md-5 control-label" style="text-align:right;">Less: Leaking Disc :</label>
 																				<div class="col-md-3">
 																					<div class="input-group">
-																						<input  type="text" step="1" min="0" max="100" class="form-control text-input"  id="leaking_percent" name="leaking_percent"  value="0"/>
+																						<input  type="text" step="1" min="0" max="100" class="form-control text-input"  id="leaking_percent" name="leaking_percent"  value="0" readonly/>
 																						<span class="input-group-addon" style="min-width:5px;">%</span>
 																					</div>
 																					
@@ -724,6 +726,7 @@ $(document).on('click','.pay_button',function(e){
 	var year = $('#year_'+paybtnid).val();
 	var status = $('#status_'+paybtnid).val();
 	var sc_discount = $('#sc_discount_'+paybtnid).val();
+	var refno = $('#refno_'+paybtnid).val();
 
 	var balanace_name = $('#balanceid_'+paybtnid).val();
 	var pay_roll_id = $('#hid_payamount_roll').val();
@@ -756,6 +759,7 @@ $(document).on('click','.pay_button',function(e){
 	$('#leaking_amount').val('0.00');
 	$('#pay_amount').val('0.00');
 	$('#change_amount').val('0.00');
+	$('#leaking_id').val('');
 	
 
 	$.ajax({
@@ -765,6 +769,23 @@ $(document).on('click','.pay_button',function(e){
 			$('#or_num').val(data);
 		}
 	});
+	if(refno!=''){
+		$('#refno').val(refno);
+		$.ajax({
+		type: 'POST',
+		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/chk_leakingentry/'+refno,
+		data: {id: customer_id, month: month, year: year},
+		success: function(data) {
+			const resultdata = JSON.parse(data);
+			$('#leaking_id').val(resultdata[0]['leaking_id']);
+			$('#leaking_percent').val(resultdata[0]['discount_percent']);
+			$('#leaking_amount').val(resultdata[0]['discount_amount']);
+			$("#grand_total").val(resultdata[0]['total_amount']);
+			//console.log(resultdata);
+		}
+	});
+	}
+	
 
 	$('#year').val(year);
 	//alert(customer);
@@ -857,6 +878,7 @@ $('#vat_percent').on('blur', function() {
 	}
 	
 });	
+
 $('#leaking_percent').on('blur', function() {
 	var leakingpercent = $(this).val();
 	var total_total_amount = $('#total_total_amount').val();
@@ -895,8 +917,20 @@ $('#add').on('click',function(evt){
 	var pay_amount = parseFloat($('#pay_amount').val());
 	var ornumber = parseInt($('#or_num').val());
 	var res_checkor=0;
+	var leaking_id = $('#leaking_id').val();
 
-	if(pay_amount<=0){
+	if(leaking_id!='' && pay_amount<=0){
+		evt.preventDefault();
+		$.smallBox({
+			title : "TENDER AMOUNT field required",
+			content : "Tender amount should be greater then zero.",
+			color : "#D30000",
+			timeout: 8000,
+			icon : "fa fa-exclamation-circle swing animated"
+		});
+		
+	}
+	if(leaking_id=='' && pay_amount<=0){
 		evt.preventDefault();
 		//alert('Tender amount should be greater then zero.');
 		$.smallBox({

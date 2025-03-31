@@ -16,6 +16,9 @@ class addpaymentcustomer_model extends CI_Model {
 	public $table_zone ='tbl_zone';
 	public $table_meter_reading ='tbl_addcustomer_reading';
 	public $table_users ='tbl_responsibilities_user';
+	public $table_leaking_ledger ='tbl_leaking_ledger';
+	public $table_leaking_ledger_details ='tbl_leaking_ledger_details';
+
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -197,6 +200,7 @@ class addpaymentcustomer_model extends CI_Model {
 				ac.unit_price,
 				ac.bp_id as bp_id,
 				ac.penalty,
+				ac.refno,
 				bp.*
 				FROM  `tbl_addcustomer_reading` ac
 				LEFT JOIN  `tbl_addcustomer` am ON ac.customer_id = am.customer_id
@@ -367,6 +371,8 @@ class addpaymentcustomer_model extends CI_Model {
 		$id = trim($this->input->post('customer_id'));
 		$getData=$this->my_model->select_getoldmeter($id);
 		$trans_date = strtotime($this->input->post('transdate'));
+		$leaking_id = $this->input->post('leaking_id');
+
 		//echo 'Customer ID:'.$this->input->post('name');
 		//exit;
 		if(!empty($getData)){
@@ -455,11 +461,40 @@ class addpaymentcustomer_model extends CI_Model {
 			'ledger_id' => $this->input->post('ledger_id'),
 			'ledger_id_for' => 'customer_id',
 			'debit' => $this->input->post('grand_total'),//$allamount,
-			'date' => date('Y-m-d',$this->input->post('trans_date')),
+			'date' => date('Y-m-d',$trans_date),
 			'create_date_time' => date('Y-m-d H:i:s'),
 			'update_date_time' => date('Y-m-d H:i:s'),
 		);
 		$result2 = $this->db->insert($this->table_transactions, $set_data2); //print_r($result2); //exit;
+		
+		if($leaking_id){
+			if($this->input->post('pay_amount')>=$this->input->post('grand_total')){
+				$leaking_balance = 0;
+				$leaking_status = 5;
+				$pay_amount = $this->input->post('grand_total');
+			}else{
+				$leaking_status = 4;
+				$leaking_balance =$change_amount;
+				$pay_amount = $this->input->post('pay_amount');
+			}
+			$set_data5 = array(
+				'leaking_total_amount' => $this->input->post('grand_total'),
+				'leaking_balance' => $leaking_balance,
+				'leaking_status' => $leaking_status,
+				'leaking_updated_datetime' => date('Y-m-d H:i:s'),
+			);
+			$this->db->where('leaking_id',trim($leaking_id));
+			$this->db->update($this->table_leaking_ledger, $set_data5); 
+
+			$set_data6 = array(
+				'leaking_id' => $leaking_id,
+				'leakingledgerdetails_or_number' => $this->input->post('or_num'),
+				'leakingledgerdetails_amount' => $pay_amount,
+				'leakingledgerdetails_transdate' => date('Y-m-d',$trans_date),
+				'leakingledgerdetails_created_datetime' => date('Y-m-d H:i:s'),
+			);
+			$result2 = $this->db->insert($this->table_leaking_ledger_details, $set_data6); //print_r($result2); //exit;
+		}
 		
 		return $result2;
 	}

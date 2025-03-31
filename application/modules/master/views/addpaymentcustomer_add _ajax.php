@@ -17,6 +17,7 @@
 					<tr>
 					    <th></th>
 						<th>S No</th>
+						<th>Billing No.</th>
 						<th>Billing Period</th>
 						<th>Due Date</th>
 						<th>Previous Reading</th>
@@ -109,12 +110,14 @@
 								</td>
 
 								<td><?php echo $i; ?></td>
+								<td><?php echo $row['refno']; ?></td>
 								<td><?php echo stripslashes($row['month_name'].'&nbsp'.$row['year']); ?>
 								    <input type="hidden" name="previousreading_<?php echo $i;?>" id="previousreading_<?php echo $i;?>" value = "<?php echo  $row['previous_reading'];?>">
 								    <input type="hidden" name="monthid_<?php echo $i;?>" id="monthid_<?php echo $i;?>" value = "<?php echo  $row['month'];?>">
 									<input type="hidden" name="month_<?php echo $i;?>" id="month_<?php echo $i;?>" value = "<?php echo $row['month_name'];?>">
 									<input type="hidden" name="year_<?php echo $i;?>" id="year_<?php echo $i;?>" value = "<?php echo $row['year'];?>">
 									<input type="hidden" name="status_<?php echo $i;?>" id="status_<?php echo $i;?>" value = "<?php echo $row['status'];?>">
+									<input type="hidden" name="refno_<?php echo $i;?>" id="refno_<?php echo $i;?>" value = "<?php echo $row['refno'];?>">
 								</td>
 								<td><?php echo date('M j, Y',strtotime($row['bp_due_date'])); ?>
 								<td align="center"><?php echo stripslashes($row['previous_reading']); ?>
@@ -171,6 +174,7 @@
 						<th></th>
 						<th></th>
 						<th></th>
+						<td></td>
 						<td></td>
 						<td></td>
 						<th align="right"><input type="text" name="checkbox_cal" id="checkbox_cal" value = "0" style="text-align:right;float:right;" readonly></th>

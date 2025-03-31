@@ -3,6 +3,7 @@ class leakingentry extends CI_Controller{
     public $headerPage = '../../views/admin-includes/header';  //Header template
 
     public $listPage = 'leakingentry';
+	public $leakingledgerPage = 'leakingentry_ledger';
 	public $listPage_redirect ='master/leakingentry';
     public function __construct(){
         parent::__construct();
@@ -31,8 +32,19 @@ class leakingentry extends CI_Controller{
         
     }
 
+	public function ledger($leader_id){
+        //*****  View Loading  *****//
+		$header['roleResponsible'] = $this->top_model->get_responsibilities();
+        $header['record_info'] = $this->top_model->get_last_login_details(1);
+        $data['record'] = $this->my_model->get_ledger_details_records($leader_id);
+		$data['customer_listing'] = $this->customer_model->get_all_records();
+		$this->load->view($this->headerPage,$header);
+		$this->load->view($this->leakingledgerPage,$data);
+        
+    }
+
 	public function add(){
-		if($this->input->post('btn_save') != ''){ 
+		if($this->input->post('btn_save') == 'add'){ 
 			
 		
 			$result = $this->my_model->add_record();
@@ -46,6 +58,18 @@ class leakingentry extends CI_Controller{
 				echo 'error';
 			}
 
+		}elseif($this->input->post('btn_save') == 'edit'){
+			$id = $this->input->post('leaking_id');
+			$result = $this->my_model->update_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Updated Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Updated...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
 		}else{
 			echo 'error';
 		}

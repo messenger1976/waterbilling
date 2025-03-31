@@ -1,6 +1,7 @@
 <?php 
 class leakingentry_model extends CI_Model {
 	public $table_name = 'tbl_leaking_ledger';
+	public $table_leaking_ledger_details = 'tbl_leaking_ledger_details';
 	public $table_meter = 'tbl_addmetercustomer';
 	public $table_monthly = 'tbl_monthlycustomer';
 	public $table_expenses = 'tbl_addexpenses';
@@ -14,11 +15,22 @@ class leakingentry_model extends CI_Model {
 	
 	/** In Function Get all records from select table **/
     public function get_all_records() {
-        $this->db->select($this->table_name.".*,".$this->table_customer.".*,".$this->table_customer_meter_reading.".month, ".$this->table_customer_meter_reading.".year, ".$this->table_customer_meter_reading.".amount ");
+        $this->db->select($this->table_name.".*,".$this->table_customer.".*,".$this->table_customer_meter_reading.".month, ".$this->table_customer_meter_reading.".year, ".$this->table_customer_meter_reading.".amount, ".$this->table_customer_meter_reading.".previous_reading, ".$this->table_customer_meter_reading.".reading, ".$this->table_customer_meter_reading.".refno as meter_refno, ".$this->table_customer_meter_reading.".consumed, ".$this->table_customer_meter_reading.".sc_discount, ".$this->table_customer_meter_reading.".arrears, ".$this->table_customer_meter_reading.".unit_price, ".$this->table_customer_meter_reading.".penalty, ".$this->table_customer_meter_reading.".date");
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_customer, $this->table_name.".leaking_customer_id = ".$this->table_customer.".customer_id", 'left');
 		$this->db->join($this->table_customer_meter_reading, $this->table_name.".leaking_refno = ".$this->table_customer_meter_reading.".refno", 'left');
 		$this->db->order_by($this->table_name.'.leaking_id','desc');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		$result = $query->result_array();
+		return $result;
+    }
+
+	public function get_ledger_details_records($leaking_id) {
+        $this->db->select('*');
+		$this->db->from($this->table_leaking_ledger_details);
+		$this->db->where($this->table_leaking_ledger_details.'.leaking_id',$leaking_id);
+		$this->db->order_by($this->table_leaking_ledger_details.'.leakingledgerdetails_id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		$result = $query->result_array();
@@ -72,6 +84,7 @@ class leakingentry_model extends CI_Model {
 	public function add_record(){
 		
 		$paymentdate = date('Y-m-d',strtotime($this->input->post('payment_date')));
+		$duedate = date('Y-m-d',strtotime($this->input->post('due_date')));
 
 		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
 		
@@ -84,6 +97,7 @@ class leakingentry_model extends CI_Model {
 			'leaking_discount_percent' => $this->input->post('leaking_percent'),
 			'leaking_discount_amount' => $this->input->post('leaking_amount'),
 			'leaking_date' => $paymentdate,
+			'leaking_bill_duedate' => $duedate,
 			'leaking_total_amount' => $this->input->post('bill_amount'),
 			'leaking_bill_amount' => $this->input->post('gross_amount'),
 			'leaking_status' => $this->input->post('leaking_status'),
@@ -95,15 +109,23 @@ class leakingentry_model extends CI_Model {
 	}
   	/** In Function Update records for select table **/
 	public function update_record($id){
+		$paymentdate = date('Y-m-d',strtotime($this->input->post('payment_date')));
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
 		
+		$updated_date = $dt_date->format("Y-m-d H:i:s");
+
 		$set_data = array(
 		                  
-						'zone' => $this->input->post('zone'),
-						'status' => $this->input->post('status'),
-					  'create_date_time' => date('Y-m-d H:i:s'),
+			'leaking_discount_percent' => $this->input->post('leaking_percent'),
+			'leaking_discount_amount' => $this->input->post('leaking_amount'),
+			'leaking_date' => $paymentdate,
+			'leaking_total_amount' => $this->input->post('bill_amount'),
+			'leaking_bill_amount' => $this->input->post('gross_amount'),
+			'leaking_status' => $this->input->post('leaking_status'),
+			'leaking_created_datetime' => $updated_date
 						
 					);
-		$this->db->where('id',$id);
+		$this->db->where('leaking_id',$id);
 		$result = $this->db->update($this->table_name, $set_data); 
 		return $result;
 	}

@@ -431,7 +431,25 @@ class addpaymentcustomer extends CI_Controller {
 		$new_or_number = $result[0]['doc_series_num'] + 1;
 		echo sprintf('%07d',$new_or_number); 
 		 
-   }
+   	}
+
+	   public function chk_leakingentry($bill_no){ 
+	
+		
+		$this->db->select("leaking_id, SUM(leaking_discount_amount) as discount_amount, SUM(leaking_discount_percent) as discount_percent, SUM(leaking_total_amount) as total_amount");
+		$this->db->from('tbl_leaking_ledger');
+		$this->db->where("leaking_refno",$bill_no);
+		$this->db->where("leaking_status",2);
+		$this->db->group_by("leaking_customer_id");
+		$query = $this->db->get();
+		$result = $query->result_array();
+		echo json_encode($result);
+		exit;
+		
+		//$new_or_number = $result[0]['doc_series_num'] + 1;
+		//echo sprintf('%07d',$new_or_number); 
+		 
+   	}
 
 public function check_or_number($or_number){ 
 	

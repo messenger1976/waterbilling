@@ -26,7 +26,7 @@
 				<ol class="breadcrumb">
 					<li><a href="<?php echo ADMIN_URL;?>dashboard">Home</a></li>
 					<li><a href="<?php echo ADMIN_URL;?>leakingentry"> Leaking Ledger Listing </a></li>
-					
+					<li><a href=""> Leaking Ledger Details Listing </a></li>
 				</ol>
 				
 			</div>
@@ -37,7 +37,7 @@
 
 				<div class="row">
 					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> View <span>> Leaking Ledger </span></h1>
+						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> View <span>> Leaking Ledger Details</span></h1>
 					</div>
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
@@ -94,7 +94,7 @@
 								
 								<header style="height: 42px;">
 									<span class="widget-icon"> <i class="fa fa-tasks"></i> </span>
-									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Manage Leaking Ledger </strong>
+									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Manage Leaking Ledger Details</strong>
                                     <button class="btn btn-sm btn-primary" style="float:right;" id="add_record"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Record</button>
 									</p>
 								</header>
@@ -146,18 +146,11 @@
 													<tr>
 														<th data-hide="phone"><input type="checkbox"/></th>
 														<th data-hide="phone">S No</th>
-														<th data-hide="expand">Customer Name</th>
-														<th data-hide="expand">Customer ID</th>
-                                                        <th data-hide="expand">Billing No.</th>
-                                                        <th data-hide="expand">Billing Period</th>
-                                                        <th data-hide="expand">Billing Amount</th>
-                                                        <th data-hide="expand">Discount %</th>
-														<th data-hide="expand">Discount Amount</th>
-                                                        <th data-hide="expand">Total Amount</th>
-                                                        <th data-hide="expand">Balance Amount</th>
+														<th data-hide="expand">OR Number</th>
+														<!--<th data-hide="expand">Billing Period</th>-->
                                                         <th data-hide="expand">Payment Date</th>
-                                                        <th data-hide="expand">Status</th>
-														<th data-hide="expand">Action</th>
+                                                        <th data-hide="expand">Total Amount</th>
+                                                        <!--<th data-hide="expand">Action</th>-->
 													</tr>
 												</thead>
 												<tbody>
@@ -167,85 +160,19 @@
                                                         foreach($record as $key => $row){ 
 													?>   
 													<tr>
-														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leaking_id'];?>" /></td>
+														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leakingledgerdetails_id'];?>" /></td>
 														<td><?php echo $i; ?></td>
-														<td><?php echo stripslashes($row['last_name'].', '.$row['first_name'].' '.$row['middle_name']); ?></td>
-														<td><?php echo stripslashes($row['customer_id']); ?></td>
-														<td><?php echo stripslashes($row['leaking_refno']); ?></td>
-														<td><?php echo stripslashes(getMonthName($row['month'])[0]->month_name.' '.$row['year']); ?></td>
-														<td><?php echo stripslashes($row['leaking_bill_amount']); ?></td>
-														<td><?php echo stripslashes($row['leaking_discount_percent']); ?></td>
-														<td><?php echo stripslashes($row['leaking_discount_amount']); ?></td>
-														<td><?php echo stripslashes($row['leaking_total_amount']); ?></td>
-														<td><?php echo stripslashes($row['leaking_balance']); ?></td>
+														<td><?php echo stripslashes($row['leakingledgerdetails_or_number']); ?></td>
+														<!--<td><?php echo stripslashes(getMonthName($row['month'])[0]->month_name.' '.$row['year']); ?></td>-->
 														<td>
 															<?php
-																$paydate = date('M j, Y',strtotime($row['leaking_date']));
+																$paydate = date('M j, Y',strtotime($row['leakingledgerdetails_transdate']));
 																echo $paydate;
 															?>
 														</td>
-														<td><?php 
-															if($row['leaking_status']==1){
-																echo '<label class="label label-primary setStatus" data-id="'.$row['leaking_id'].'" data-status="'.$row['leaking_status'].'">Pending</label>'; 
-															}else if($row['leaking_status']==2){
-																echo '<label class="label label-success">Approved</label>'; 
-
-															}elseif($row['leaking_status']==4){
-																echo '<label class="label label-success">Posted</label>';
-															}elseif($row['leaking_status']==5){
-																echo '<label class="label label-success">Full Paid</label>';
-															}else{
-																echo '<label class="label label-danger">Denied</label>'; 
-															}
+														<td><?php echo stripslashes($row['leakingledgerdetails_amount']); ?></td>
 														
-														?></td>
-														<td>
-														<!--<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-																<a class="green" href="<?php echo ADMIN_URL;?>employee_logins/edit/<?php echo $row['id'];?>" title="Edit">
-																	<i class="fa fa-edit"></i>
-																</a>
-                                                                <a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>employee_logins/delete/<?php echo $row['id'];?>';}" title="Delete">                                                                
-																	<i class="fa fa-remove"></i>
-																</a>														</div>-->
-																
-																
-																<a href="<?php echo ADMIN_URL;?>leakingentry/edit/<?php echo $row['leaking_id'];?>" class="tooltip-success btn_edit" data-rel="tooltip" title="Edit" 
-																data-leaking_id="<?php echo $row['leaking_id'];?>"
-																data-fullname="<?php echo $row['customer_id'].'==>'.$row['last_name'].', '.$row['first_name'];?>"
-																data-billing_period="<?php echo getMonthName($row['month'])[0]->month_name.' '.$row['year'];?>"
-																data-previous_reading="<?php echo $row['previous_reading'];?>"
-																data-current_reading="<?php echo $row['reading'];?>"
-																data-consumed="<?php echo $row['consumed'];?>"
-																data-current_bill="<?php echo $row['unit_price'];?>"
-																data-sc_discount="<?php echo $row['sc_discount'];?>"
-																data-arrears="<?php echo $row['arrears'];?>"
-																data-total_amount="<?php echo $row['amount'];?>"
-																data-penalty="<?php echo $row['penalty'];?>"
-																data-reading_date="<?php echo $row['date'];?>"
-																data-bill_duedate="<?php echo date('d-m-Y',strtotime($row['leaking_bill_duedate']));?>"
-																data-leaking_discount_percent="<?php echo $row['leaking_discount_percent'];?>"
-																data-leaking_discount_amount="<?php echo $row['leaking_discount_amount'];?>"
-																data-leaking_bill_amount="<?php echo $row['leaking_total_amount'];?>"
-																data-leaking_date="<?php echo date('d-m-Y',strtotime($row['leaking_date']));?>"
-																>
-																	<span class="green">
-																		<img src="<?php echo base_url();?>images/favicon/document-edit.gif">
-																	</span>
-																</a>
-
-
-														<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>leakingentry/delete/<?php echo $row['leaking_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
-															<span class="red">
-																<img src="<?php echo base_url();?>images/favicon/delete.png">
-															</span>
-														</a>
-														<a href="<?php echo ADMIN_URL;?>leakingentry/ledger/<?php echo $row['leaking_id'];?>" class="tooltip-success" data-rel="tooltip" title="Ledger">
-																	<span class="blue">
-																		<img src="<?php echo base_url();?>images/favicon/ledger.png">
-																	</span>
-																</a>
 													
-													</td>
 
 														
 														
