@@ -18,7 +18,7 @@
 <article class="col-sm-12 col-md-12 col-lg-12">
 					
 					<!-- Widget ID (each widget will need unique ID)-->
-					<div class="jarviswidget" id="wid-id-1" data-widget-editbutton="false" data-widget-custombutton="false">
+					<div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false" data-widget-custombutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
 						<!-- widget options:
 							usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 							
@@ -32,11 +32,11 @@
 							data-widget-sortable="false"
 							
 						-->
-						<header>
+						<!--<header>
 							<span class="widget-icon"> <i class="fa fa-edit"></i> </span>
 							<h2>Customer Info</h2>				
 							
-						</header>
+						</header>-->
 
 						<!-- widget div-->
 						<div>
@@ -52,23 +52,33 @@
 							<div class="widget-body no-padding">
 								
 								<form id="checkout-form" class="smart-form" novalidate="novalidate">
-                                    <fieldset>
+                                    <section style="margin: 5px 15px;">
                                         <div class="row">
-                                            <label class="label col col-2">Search</label>
-                                            <section class="col col-8">
-                                                <label class="input"> <i class="icon-prepend fa fa-search"></i>
+											<div class="form-group" style="width:100%;">
+												<label class="label col col-2">Search Customer</label>
+												<div class="col col-8">
+													<label class="input"> <i class="icon-prepend fa fa-search"></i>
+														
+														<select class="form-control" id="search_box_id">
+															option value="">--Select--</option>
+															<?php
 													
-													<select class="form-control" id="search_box_id">
-														<option>1</option>
-													</select>
-                                                    
-												</label>
-                                                
-                                            </section>
-                                            <input type="submit" class="form-control"  id="btn_search_box" name="btn_search_box" value = "Search" style="width: auto; float: left;  background: #3276b1; color:#fff;" />
+															foreach ($customer_listing as $key => $value) {
+																?>
+																<option value="<?php echo $value['customer_id']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
+															<?php }
+															?>
+														</select>
+														
+													</label>
+													
+												</div>
+												<!--<input type="submit" class="form-control"  id="btn_search_box" name="btn_search_box" value = "Search" style="width: auto; float: left;  background: #3276b1; color:#fff;" />-->
+											</div>
+                                            
                                         </div>
 										
-                                    </fieldset>
+                                    </section>
 									<fieldset>
 										<div class="row">
 											<section class="col col-10">
