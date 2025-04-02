@@ -65,7 +65,7 @@
 													
 															foreach ($customer_listing as $key => $value) {
 																?>
-																<option value="<?php echo $value['customer_id']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
+																<option value="<?php echo $value['id']; ?>" data-customer_id="<?php echo $value['customer_id']; ?>" data-fullname="<?php echo $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?>" data-meter_number="<?php echo $value['meter_number']; ?>" data-address="<?php echo $value['address']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
 															<?php }
 															?>
 														</select>
@@ -79,11 +79,11 @@
                                         </div>
 										
                                     </section>
-									<fieldset>
+									<fieldset style="padding-top:5px;">
 										<div class="row">
 											<section class="col col-10">
 												<label class="input"> <i class="icon-prepend fa fa-user"></i>
-													<input type="text" name="fname" id="fname" placeholder="Full name" readonly>
+													<input type="text" name="fullname" id="fullname" placeholder="Full name" readonly>
                                                     <input type="hidden" name="customer_id" id="customer_id">
 												</label>
 											</section>
@@ -93,27 +93,43 @@
 										<div class="row">
 											<section class="col col-6">
 												<label class="input"> <i class="icon-prepend fa fa-tachometer"></i>
-													<input type="text" name="meter_number" id="meter_number" placeholder="Meter Number">
+													<input type="text" name="meter_number" id="meter_number" placeholder="Meter Number" readonly>
 												</label>
 											</section>
 											<section class="col col-6">
 												<label class="input"> <i class="icon-prepend fa fa-home"></i>
-													<input type="text" name="address" id="address" placeholder="Address">
+													<input type="text" name="address" id="address" placeholder="Address" readonly>
 												</label>
 											</section>
 										</div>
 									</fieldset>
 
 									
-									<fieldset>
-									<div class="row">
+									<fieldset style="padding-top:5px;">
+										<div class="row">
                                             <label class="label col col-2">Billing Period</label>
-											<section class="col col-10">
+											<div class="col col-10">
 												<label class="input">
-													<input type="text" class="input-lg" name="billing_period" placeholder="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" readonly>
+													<input type="text" class="form-control" name="billing_period" placeholder="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" readonly>
 												</label>
-											</section>
+											</div>
                                         </div>
+										<div class="row">
+                                            <label class="label col col-2">Previous Reading</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" name="prev_reading" placeholder="Previous Reading" readonly>
+												</label>
+											</div>
+                                        </div>
+										<div class="row">
+                                        <label class="label col col-2">Current Reading</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" name="curr_reading" placeholder="Current Reading">
+												</label>
+											</div>
+										</div>
                                         <label class="label col col-2">Amount</label>
 										<section>
 											<label class="input">
@@ -121,22 +137,8 @@
 											</label>
 										</section>
 
-										<div class="row">
-                                            <label class="label col col-2">Previous Reading</label>
-											<section class="col col-10">
-												<label class="input">
-													<input type="text" class="input-lg" name="prev_reading" placeholder="Previous Reading">
-												</label>
-											</section>
-                                        </div>
-                                        <div class="row">
-                                        <label class="label col col-2">Current Reading</label>
-											<section class="col col-10">
-												<label class="input">
-													<input type="text" class="input-lg" name="curr_reading" placeholder="Current Reading">
-												</label>
-											</section>
-										</div>
+										
+                                        
 
 										<div class="row" style="display: none;">
 											<label class="label col col-4">Month date</label>
@@ -223,9 +225,17 @@
 			
 			$(document).on('change',"#search_box_id",function(evt){
 				evt.preventDefault();
-				var cust_id = $(this).val();
-				$('#leaking_option').hide();
-				if(cust_id){
+				var id = $(this).val();
+				var cust_fullname = $(this).find(':selected').data('fullname');
+				$('#fullname').val(cust_fullname);
+				var cust_meter_number = $(this).find(':selected').data('meter_number');
+				$('#meter_number').val(cust_meter_number);
+				var cust_address = $(this).find(':selected').data('address');
+				$('#address').val(cust_address);
+				var customer_id = $(this).find(':selected').data('customer_id');
+				
+				
+/*				if(cust_id){
 					// Send an AJAX request to the backend
 					$.ajax({
 						url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
@@ -254,7 +264,7 @@
 					// If no parent is selected, clear the child dropdown
 					$('#billing_period').empty().append('<option value="">--Select--</option>');
 					//$('#leaking_option').hide();
-				}
+				}*/
 			});
 			
 		
