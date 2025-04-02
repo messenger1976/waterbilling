@@ -83,7 +83,7 @@
 										<div class="row">
 											<section class="col col-10">
 												<label class="input"> <i class="icon-prepend fa fa-user"></i>
-													<input type="text" name="fname" id="fname" placeholder="Full name">
+													<input type="text" name="fname" id="fname" placeholder="Full name" readonly>
                                                     <input type="hidden" name="customer_id" id="customer_id">
 												</label>
 											</section>
@@ -106,7 +106,14 @@
 
 									
 									<fieldset>
-										
+									<div class="row">
+                                            <label class="label col col-2">Billing Period</label>
+											<section class="col col-10">
+												<label class="input">
+													<input type="text" class="input-lg" name="billing_period" placeholder="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" readonly>
+												</label>
+											</section>
+                                        </div>
                                         <label class="label col col-2">Amount</label>
 										<section>
 											<label class="input">
@@ -131,7 +138,7 @@
 											</section>
 										</div>
 
-										<div class="row">
+										<div class="row" style="display: none;">
 											<label class="label col col-4">Month date</label>
 											<section class="col col-5">
 												<label class="select">
@@ -164,6 +171,7 @@
 										<button type="submit" class="btn btn-primary">
 											Preview
 										</button>
+										<a href="<?php echo ADMIN_URL;?>mobile_dashboard/logout" class="btn btn-danger" id="btn_logout" name="btn_logout" value="logout">Logout</a>
 									</footer>
 								</form>
 
@@ -209,44 +217,51 @@
 			
 			pageSetUp();
 			
-			$('#search_box_id').select2();			
+			$('#search_box_id').select2();		
+			
+			
+			
+			$(document).on('change',"#search_box_id",function(evt){
+				evt.preventDefault();
+				var cust_id = $(this).val();
+				$('#leaking_option').hide();
+				if(cust_id){
+					// Send an AJAX request to the backend
+					$.ajax({
+						url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
+						type: 'POST',
+						data: { customer_id: cust_id },
+						dataType: 'json',
+						success: function(response) {
+							// Clear the child dropdown
+							$('#billing_period').empty().append('<option value="">--Select--</option>');
+
+							// Populate the child dropdown with the response data
+							if (response.length > 0) {
+								$.each(response, function(index, item) {
+									if(item.status==0){
+										$('#billing_period').append('<option value="' + item.id+' '+item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
+									}
+									
+								});
+							}
+						},
+						error: function(xhr, status, error) {
+							console.error('AJAX Error: ' + status + error);
+						}
+					});
+				}else{
+					// If no parent is selected, clear the child dropdown
+					$('#billing_period').empty().append('<option value="">--Select--</option>');
+					//$('#leaking_option').hide();
+				}
+			});
+			
 		
 		
-    $("#btn-search").on('click', function(evt){
-        evt.preventDefault();
-        alert($("#search").val());
-    });
-    $("#search1").autocomplete({
-        source: function (request, response) {
-            $.ajax({
-                url: "search.php",
-                type: "GET",
-                data: { term: request.term },
-                dataType: "json",
-                success: function (data) {
-                    response($.map(data, function (item) {
-                        return {
-                            label: item.first_name + " (" + item.last_name + ")",
-                            value: item.first_name+' '+item.last_name, // What appears in the input field
-                            id: item.customer_id       // Custom property to store the id
-                        };
-                    }));
-                },
-                error: function (err) {
-                    console.log("Error fetching data."+err.message);
-                }
-            });
-        },
-        minLength: 2, // Start search after 2 characters
-        select: function (event, ui) {
-            // Populate the input with the selected item's name
-            $("#search").val(ui.item.value);
-            // Store the selected item's ID in a hidden field
-            $("#customer_id").val(ui.item.id);
-            return false; // Prevent the default action
-        }
-    });
-});
+    
+    
+		});
 
 
 		</script>
