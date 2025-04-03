@@ -131,7 +131,7 @@
                                         	<label class="label col col-2">Current Reading</label>
 											<div class="col col-10">
 												<label class="input">
-													<input type="text" class="form-control" id="current_reading" name="current_reading">
+													<input type="number" class="form-control" id="current_reading" name="current_reading" value="0" required>
 												</label>
 											</div>
 										</div>
@@ -344,11 +344,25 @@
 							var unit_price = $('#current_bill').val();
 							
 							$("#amount_pay").val(amount_formatted(0));
-							alert("No Amount per cubic meter.");
+							//alert("No Amount per cubic meter.");
+							$.smallBox({
+								title : "Current Bill field required",
+								content : "No Amount per cubic meter.",
+								color : "#D30000",
+								timeout: 8000,
+								icon : "fa fa-exclamation-circle swing animated"
+							});
 						}
 					},
 					error: function () {
-						alert("An error occurred while processing data.");
+						//alert("An error occurred while processing data.");
+						$.smallBox({
+							title : "Error Query Data",
+							content : "An error occurred while processing data.",
+							color : "#D30000",
+							timeout: 8000,
+							icon : "fa fa-exclamation-circle swing animated"
+						});
 					}
 				});
 
@@ -358,9 +372,16 @@
 				
 				var current_reading = $('#current_reading').val();
 				var previous_reading = $('#previous_reading').val();
-				if(current_reading == '' || previous_reading == ''){
+				if(current_reading == '' || current_reading == '0' || previous_reading == ''){
 					evt.preventDefault();
-					alert('Please enter the current reading and previous reading.');
+					//alert('Please enter the current reading and previous reading.');
+					$.smallBox({
+						title : "Field required",
+						content : "Please enter the current reading and previous reading.",
+						color : "#D30000",
+						timeout: 8000,
+						icon : "fa fa-exclamation-circle swing animated"
+					});
 					return false;
 				}
 			});
