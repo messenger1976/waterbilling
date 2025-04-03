@@ -60,12 +60,13 @@
 													<label class="input"> <i class="icon-prepend fa fa-search"></i>
 														
 														<select class="form-control" id="search_box_id">
-															option value="">--Select--</option>
+															<option value="">--Select--</option>
 															<?php
 													
 															foreach ($customer_listing as $key => $value) {
 																?>
-																<option value="<?php echo $value['id']; ?>" data-customer_id="<?php echo $value['customer_id']; ?>" data-fullname="<?php echo $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?>" data-meter_number="<?php echo $value['meter_number']; ?>" data-address="<?php echo $value['address']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
+																<option value="<?php echo $value['id']; ?>" data-customer_id="<?php echo $value['customer_id']; ?>" data-fullname="<?php echo $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?>" data-meter_number="<?php echo $value['meter_number']; ?>" data-address="<?php echo $value['address']; ?>"
+																data-cust_type_id="<?php echo $value['account_type']; ?>" data-special_priviledge="<?php echo $value['special_priviledge']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
 															<?php }
 															?>
 														</select>
@@ -85,6 +86,10 @@
 												<label class="input"> <i class="icon-prepend fa fa-user"></i>
 													<input type="text" name="fullname" id="fullname" placeholder="Full name" readonly>
                                                     <input type="hidden" name="customer_id" id="customer_id">
+													<input type="hidden" name="cust_type_id" id="cust_type_id">
+													<input type="hidden" name="special_priviledge" id="special_priviledge" value="0">
+													
+													
 												</label>
 											</section>
 											
@@ -110,7 +115,7 @@
                                             <label class="label col col-2">Billing Period</label>
 											<div class="col col-10">
 												<label class="input">
-													<input type="text" class="form-control" name="billing_period" placeholder="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" readonly>
+													<input type="text" class="form-control" name="billing_period" placeholder="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" style="background-color:yellow;" readonly>
 												</label>
 											</div>
                                         </div>
@@ -118,59 +123,72 @@
                                             <label class="label col col-2">Previous Reading</label>
 											<div class="col col-10">
 												<label class="input">
-													<input type="text" class="form-control" name="prev_reading" placeholder="Previous Reading" readonly>
+													<input type="text" class="form-control" id="previous_reading" name="previous_reading" style="background-color:yellow;"  readonly>
 												</label>
 											</div>
                                         </div>
 										<div class="row">
-                                        <label class="label col col-2">Current Reading</label>
+                                        	<label class="label col col-2">Current Reading</label>
 											<div class="col col-10">
 												<label class="input">
-													<input type="text" class="form-control" name="curr_reading" placeholder="Current Reading">
+													<input type="text" class="form-control" id="current_reading" name="current_reading">
 												</label>
 											</div>
 										</div>
-                                        <label class="label col col-2">Amount</label>
-										<section>
-											<label class="input">
-												<input type="text" class="input-lg" name="pay" placeholder="Amount">
-											</label>
-										</section>
+										<div class="row">
+                                        	<label class="label col col-2">Difference</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" id="consumed" name="consumed" style="background-color:yellow;" readonly>
+												</label>
+											</div>
+										</div>
+										<div class="row">
+                                        	<label class="label col col-2">Current Bill</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" id="current_bill" name="current_bill" style="background-color:yellow;" readonly>
+												</label>
+											</div>
+										</div>
+                                        <div class="row">
+                                        	<label class="label col col-2">SC Discount</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" id="sc_discount" name="sc_discount" style="background-color:yellow;" readonly>
+												</label>
+											</div>
+										</div>
+										<div class="row">
+                                        	<label class="label col col-2">Arrears</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" id="arrears" name="arrears" style="background-color:yellow;" readonly>
+												</label>
+											</div>
+										</div>
+										<div class="row">
+                                        	<label class="label col col-2">Amt before due date</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" id="total_amount" name="total_amount" style="background-color:yellow;" readonly>
+												</label>
+											</div>
+										</div>
+                                        <div class="row">
+                                        	<label class="label col col-2">Amt after due date</label>
+											<div class="col col-10">
+												<label class="input">
+													<input type="text" class="form-control" id="penalty" name="penalty" style="background-color:yellow;" readonly>
+												</label>
+											</div>
+										</div>
 
 										
-                                        
-
-										<div class="row" style="display: none;">
-											<label class="label col col-4">Month date</label>
-											<section class="col col-5">
-												<label class="select">
-													<select name="month">
-														<option value="0" selected="" disabled="">Month</option>
-														<option value="1">January</option>
-														<option value="1">February</option>
-														<option value="3">March</option>
-														<option value="4">April</option>
-														<option value="5">May</option>
-														<option value="6">June</option>
-														<option value="7">July</option>
-														<option value="8">August</option>
-														<option value="9">September</option>
-														<option value="10">October</option>
-														<option value="11">November</option>
-														<option value="12">December</option>
-													</select> <i></i> </label>
-											</section>
-                                            <label class="label col col-2">Year</label>
-											<section class="col col-3">
-												<label class="input">
-													<input type="text" name="year" placeholder="Year" data-mask="2099">
-												</label>
-											</section>
-										</div>
 									</fieldset>
 
 									<footer>
-										<button type="submit" class="btn btn-primary">
+										<button type="submit" class="btn btn-primary" id="preview" name="preview">
 											Preview
 										</button>
 										<a href="<?php echo ADMIN_URL;?>mobile_dashboard/logout" class="btn btn-danger" id="btn_logout" name="btn_logout" value="logout">Logout</a>
@@ -233,25 +251,30 @@
 				var cust_address = $(this).find(':selected').data('address');
 				$('#address').val(cust_address);
 				var customer_id = $(this).find(':selected').data('customer_id');
+				var special_priviledge = $(this).find(':selected').data('special_priviledge');
+				$('#special_priviledge').val(special_priviledge);
+				var bp_month = <?php echo $_SESSION['bp_month']; ?>;
+				var bp_year = <?php echo $_SESSION['bp_year']; ?>;
 				
-				
-/*				if(cust_id){
+				if(id){
 					// Send an AJAX request to the backend
 					$.ajax({
-						url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
+						url: 'mobile_dashboard/get_customer_meter_reading', // Backend PHP script
 						type: 'POST',
-						data: { customer_id: cust_id },
+						data: { customer_id: customer_id,
+							bp_month: bp_month,
+							bp_year: bp_year
+						},
 						dataType: 'json',
 						success: function(response) {
 							// Clear the child dropdown
-							$('#billing_period').empty().append('<option value="">--Select--</option>');
+							//$('#billing_period').empty().append('<option value="">--Select--</option>');
 
 							// Populate the child dropdown with the response data
 							if (response.length > 0) {
 								$.each(response, function(index, item) {
-									if(item.status==0){
-										$('#billing_period').append('<option value="' + item.id+' '+item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
-									}
+									$('#previous_reading').val(item.previous_reading);
+									
 									
 								});
 							}
@@ -262,16 +285,94 @@
 					});
 				}else{
 					// If no parent is selected, clear the child dropdown
-					$('#billing_period').empty().append('<option value="">--Select--</option>');
+					//$('#billing_period').empty().append('<option value="">--Select--</option>');
 					//$('#leaking_option').hide();
-				}*/
+				}
 			});
 			
 		
-		
-    
+			$('#current_reading').on('blur', function() {
+				var current_meter = $(this).val();
+				var previous_reading = $('#previous_reading').val();
+				var differences = parseFloat(current_meter) - parseFloat(previous_reading);
+				$("#consumed").val(differences);
+				var difer = $("#consumed").val();
+				var customer_id = $('#search_box_id').find(':selected').data('customer_id');
+				var cust_type_id = $(this).find(':selected').data('cust_type_id');
+				$('#cust_type_id').val(cust_type_id);
+				const formData = new FormData();
+				formData.append("cubic_meter_reading", difer);
+				formData.append("customer_id", customer_id);
+
+				
+
+				$.ajax({
+					url: '<?php echo ADMIN_URL;?>addmetercustomerreading/get_cubic_meter_price/',
+					type: 'POST',
+					data: formData,
+					contentType: false,
+					processData: false,
+					success: function (response) {
+						const result = JSON.parse(response);
+						if (result.per_unit) {
+							
+							$('#current_bill').val(amount_formatted(result.per_unit));
+							var unit_price = $('#current_bill').val();
+							//var multiprice = parseInt(difer) * parseInt(unit_price);
+							var multiprice = parseFloat(unit_price);
+							var discount =0;
+							if($('#cust_type_id').val()==3){
+								discount = (multiprice * 5)/100;
+							}
+							total_amount = multiprice - discount;
+							amount_total_penalty = 0;
+							//console.log('SP:'+$('#special_priviledge').val());
+							if($('#special_priviledge').val()==='0'){
+								amount_total_penalty = (total_amount * 10)/100;
+								amount_total_penalty = amount_total_penalty + total_amount;
+							}else{
+								amount_total_penalty = total_amount;
+							}
+							$('#sc_discount').val(amount_formatted(discount));
+							$("#amount_pay").val(amount_formatted(multiprice));
+							$("#total_amount").val(amount_formatted(total_amount));
+							$("#penalty").val(amount_formatted(amount_total_penalty));
+							
+
+						} else {
+							$('#current_bill').val(amount_formatted(0));
+							var unit_price = $('#current_bill').val();
+							
+							$("#amount_pay").val(amount_formatted(0));
+							alert("No Amount per cubic meter.");
+						}
+					},
+					error: function () {
+						alert("An error occurred while processing data.");
+					}
+				});
+
+				
+			});
+			$('#preview').on('click', function(evt) {
+				
+				var current_reading = $('#current_reading').val();
+				var previous_reading = $('#previous_reading').val();
+				if(current_reading == '' || previous_reading == ''){
+					evt.preventDefault();
+					alert('Please enter the current reading and previous reading.');
+					return false;
+				}
+			});
     
 		});
 
-
+		function amount_formatted(amount){
+			const formatted = new Intl.NumberFormat('en-US', {
+				minimumFractionDigits: 2,
+				maximumFractionDigits: 2,
+				useGrouping: false, // No thousands separator
+			}).format(amount);
+			return formatted;
+		}
 		</script>
