@@ -111,8 +111,36 @@
 
 									
 									<fieldset style="padding-top:5px;">
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group" style="padding: 5px 15px;"> 
+                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
+                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
+                                                <?php echo form_error('billing_period'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group" style="padding: 5px 15px;"> 
+                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
+                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
+                                                <?php echo form_error('billing_period'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group" style="padding: 5px 15px;"> 
+                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
+                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
+                                                <?php echo form_error('billing_period'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
 										<div class="row">
-                                            <label class="label col col-2">Billing Period</label>
+                                            <label class="label col col-2">Current Reading :</label>
 											<div class="col col-10">
 												<label class="input">
 													<input type="text" class="form-control" name="billing_period" placeholder="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" style="background-color:yellow;" readonly>
