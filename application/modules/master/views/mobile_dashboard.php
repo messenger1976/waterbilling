@@ -200,10 +200,10 @@
 									</fieldset>
 
 									<footer>
-										<button type="submit" class="btn btn-primary" id="preview" name="preview">
-											Preview
+										<button type="submit" class="btn btn-primary" id="save" name="save">
+											Save
 										</button>
-										<a href="<?php echo ADMIN_URL;?>mobile_dashboard/logout" class="btn btn-danger" id="btn_logout" name="btn_logout" value="logout">Logout</a>
+										<a class="btn btn-warning" id="btn_cancel" name="btn_cancel">Cancel</a>
 									</footer>
 								</form>
 
@@ -287,6 +287,16 @@
 							if (response.length > 0) {
 								$.each(response, function(index, item) {
 									$('#previous_reading').val(item.previous_reading);
+									$('#arrears').val(item.arrears);
+									
+									
+									$('#current_reading').val('');
+									$('#consumed').val('');
+									$('#current_bill').val('');
+									$('#sc_discount').val('');
+									$('#arrears').val('');
+									$('#total_amount').val('');
+									$('#penalty').val('');
 									setTimeout(function() {
         								$('#current_reading').focus();
       								}, 50);
@@ -299,7 +309,19 @@
 						}
 					});
 				}else{
-					// If no parent is selected, clear the child dropdown
+					$('#fullname').val('');
+					$('#meter_number').val('');
+					$('#address').val('');
+					$('#previous_reading').val('');
+					$('#current_reading').val('');
+					$('#consumed').val('');
+					$('#current_bill').val('');
+					$('#sc_discount').val('');
+					$('#arrears').val('');
+					$('#total_amount').val('');
+					$('#penalty').val('');
+					// If no parent is selected
+					// , clear the child dropdown
 					//$('#billing_period').empty().append('<option value="">--Select--</option>');
 					//$('#leaking_option').hide();
 				}
@@ -322,7 +344,7 @@
 				}
 			});
 
-			$('#preview').on('click', function(evt) {
+			$('#save').on('click', function(evt) {
 				
 				var current_reading = $('#current_reading').val();
 				var previous_reading = $('#previous_reading').val();

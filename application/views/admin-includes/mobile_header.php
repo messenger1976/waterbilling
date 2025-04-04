@@ -92,7 +92,7 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 
 				<!-- logout button -->
 				<div id="logout" class="btn-header transparent pull-right">
-					<span> <a href="login.html" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
+					<span> <a href="<?php echo ADMIN_URL;?>mobile_dashboard/logout" title="Sign Out" data-action="userLogout" data-logout-msg="You can improve your security further after logging out by closing this opened browser"><i class="fa fa-sign-out"></i></a> </span>
 				</div>
 				<!-- end logout button -->
 
@@ -116,4 +116,4 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 		</header>
 		<!-- END HEADER -->
 		<?php //include("js.php"); ?>
-		<?php include("navigation.php"); ?>
+		<?php include("mobile_navigation.php"); ?>
