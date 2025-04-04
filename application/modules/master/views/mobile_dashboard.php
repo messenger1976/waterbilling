@@ -133,7 +133,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Current Reading :</strong></span>
-													<input class="form-control text-input" type="text" id="current_reading" name="current_reading" style="background-color:white;font-size: larger; font-weight: bold; text-align: right;">
+													<input class="form-control text-input" type="number" id="current_reading" name="current_reading" style="background-color:white;font-size: larger; font-weight: bold; text-align: right;">
 													
 												</div>
 											</div>
