@@ -100,8 +100,8 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 				
 
 				<!-- fullscreen button -->
-				<div id="fullscreen" class="btn-header transparent pull-right">
-					<span> <a href="javascript:void(0);" data-action="launchFullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
+				<div id="fullscreen1" class="btn-header transparent pull-right">
+					<span> <a href="javascript:void(0);" data-action="launchFullscreen" id="clickfullscreen" title="Full Screen"><i class="fa fa-arrows-alt"></i></a> </span>
 				</div>
 				<!-- end fullscreen button -->
 				
@@ -116,4 +116,4 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 		</header>
 		<!-- END HEADER -->
 		<?php //include("js.php"); ?>
-		<?php //include("navigation.php"); ?>
+		<?php include("navigation.php"); ?>

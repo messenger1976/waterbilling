@@ -254,6 +254,7 @@
 			
 			
 			$(document).on('change',"#search_box_id",function(evt){
+				
 				evt.preventDefault();
 				var id = $(this).val();
 				var cust_fullname = $(this).find(':selected').data('fullname');
@@ -339,8 +340,16 @@
 				}
 			});
 
-			$('#fullscreen').trigger()('click');
-    
+			//$('#fullscreen').trigger()('click');
+			var fullscreenButton = document.querySelector('[data-action="launchFullscreen"]'); // Adjust selector if needed
+			var clickcheck =0;
+			$(document).on('click', function() {
+				if (clickcheck==0) {
+					// This might be blocked by the browser
+					fullscreenButton.click();
+					clickcheck = 1;
+				}
+			});
 		});
 
 		function amount_formatted(amount){
@@ -431,22 +440,21 @@
 			$(this).select();
 		});
 
-		document.addEventListener('DOMContentLoaded', function() {
-			const element = document.documentElement; // Get the root element (<html>)
-
-			function requestFullscreen(el) {
-				if (el.requestFullscreen) {
-					el.requestFullscreen();
-				} else if (el.mozRequestFullScreen) { /* Firefox */
-					el.mozRequestFullScreen();
-				} else if (el.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-					el.webkitRequestFullscreen();
-				} else if (el.msRequestFullscreen) { /* IE/Edge */
-					el.msRequestFullscreen();
-				}
+		/*document.addEventListener('DOMContentLoaded', function() {
+			
+			var fullscreenButton = document.querySelector('[data-action="launchFullscreen"]'); // Adjust selector if needed
+			//var fullscreenButton = document.querySelector('#clickfullscreen'); // Adjust selector if needed
+			if (fullscreenButton) {
+				// This might be blocked by the browser
+				
+				setTimeout(() => {
+    				fullscreenButton.click();
+				}, 2000);
 			}
+			
+			
+		});*/
 
-			requestFullscreen(element);
-		});
+		
 
 		</script>
