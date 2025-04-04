@@ -111,106 +111,90 @@
 
 									
 									<fieldset style="padding-top:5px;">
-									<div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group" style="padding: 5px 15px;"> 
-                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('billing_period'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-									<div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group" style="padding: 5px 15px;"> 
-                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('billing_period'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-									<div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group" style="padding: 5px 15px;"> 
-                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <input class="form-control" type="text" id="billing_period" name="billing_period" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('billing_period'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
 										<div class="row">
-                                            <label class="label col col-2">Current Reading :</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" name="billing_period" placeholder="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" style="background-color:yellow;" readonly>
-												</label>
-											</div>
-                                        </div>
-										<div class="row">
-                                            <label class="label col col-2">Previous Reading</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" id="previous_reading" name="previous_reading" style="background-color:yellow;"  readonly>
-												</label>
-											</div>
-                                        </div>
-										<div class="row">
-                                        	<label class="label col col-2">Current Reading</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="number" class="form-control" id="current_reading" name="current_reading" value="0" required>
-												</label>
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Billing Period :</strong></span>
+													<input class="form-control" type="text" id="billing_period" name="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<?php echo form_error('billing_period'); ?>
+												</div>
 											</div>
 										</div>
 										<div class="row">
-                                        	<label class="label col col-2">Difference</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" id="consumed" name="consumed" style="background-color:yellow;" readonly>
-												</label>
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Previous Reading :</strong></span>
+													<input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													
+												</div>
 											</div>
 										</div>
 										<div class="row">
-                                        	<label class="label col col-2">Current Bill</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" id="current_bill" name="current_bill" style="background-color:yellow;" readonly>
-												</label>
-											</div>
-										</div>
-                                        <div class="row">
-                                        	<label class="label col col-2">SC Discount</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" id="sc_discount" name="sc_discount" style="background-color:yellow;" readonly>
-												</label>
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Current Reading :</strong></span>
+													<input class="form-control text-input" type="text" id="current_reading" name="current_reading" style="background-color:white;font-size: larger; font-weight: bold; text-align: right;">
+													
+												</div>
 											</div>
 										</div>
 										<div class="row">
-                                        	<label class="label col col-2">Arrears</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" id="arrears" name="arrears" style="background-color:yellow;" readonly>
-												</label>
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Consumed :</strong></span>
+													<input class="form-control text-input" type="text" id="consumed" name="consumed" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													
+												</div>
 											</div>
 										</div>
 										<div class="row">
-                                        	<label class="label col col-2">Amt before due date</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" id="total_amount" name="total_amount" style="background-color:yellow;" readonly>
-												</label>
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Current Billing :</strong></span>
+													<input class="form-control text-input" type="text" id="current_bill" name="current_bill" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>SC Discount :</strong></span>
+													<input class="form-control text-input" type="text" id="sc_discount" name="sc_discount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Arrears :</strong></span>
+													<input class="form-control text-input" type="text" id="arrears" name="arrears" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Amt before due date :</strong></span>
+													<input class="form-control text-input" type="text" id="total_amount" name="total_amount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													
+												</div>
 											</div>
 										</div>
                                         <div class="row">
-                                        	<label class="label col col-2">Amt after due date</label>
-											<div class="col col-10">
-												<label class="input">
-													<input type="text" class="form-control" id="penalty" name="penalty" style="background-color:yellow;" readonly>
-												</label>
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Amt after due date :</strong></span>
+													<input class="form-control text-input" type="text" id="penalty" name="penalty" style="background-color:yellow; font-size: larger; font-weight: bold; text-align: right;" readonly>
+													
+												</div>
 											</div>
 										</div>
+										
+										
+                                        
 
 										
 									</fieldset>
@@ -302,7 +286,9 @@
 							if (response.length > 0) {
 								$.each(response, function(index, item) {
 									$('#previous_reading').val(item.previous_reading);
-									
+									setTimeout(function() {
+        								$('#current_reading').focus();
+      								}, 50);
 									
 								});
 							}
@@ -318,84 +304,23 @@
 				}
 			});
 			
+
 		
-			$('#current_reading').on('blur', function() {
-				var current_meter = $(this).val();
-				var previous_reading = $('#previous_reading').val();
-				var differences = parseFloat(current_meter) - parseFloat(previous_reading);
-				$("#consumed").val(differences);
-				var difer = $("#consumed").val();
-				var customer_id = $('#search_box_id').find(':selected').data('customer_id');
-				var cust_type_id = $(this).find(':selected').data('cust_type_id');
-				$('#cust_type_id').val(cust_type_id);
-				const formData = new FormData();
-				formData.append("cubic_meter_reading", difer);
-				formData.append("customer_id", customer_id);
-
-				
-
-				$.ajax({
-					url: '<?php echo ADMIN_URL;?>addmetercustomerreading/get_cubic_meter_price/',
-					type: 'POST',
-					data: formData,
-					contentType: false,
-					processData: false,
-					success: function (response) {
-						const result = JSON.parse(response);
-						if (result.per_unit) {
-							
-							$('#current_bill').val(amount_formatted(result.per_unit));
-							var unit_price = $('#current_bill').val();
-							//var multiprice = parseInt(difer) * parseInt(unit_price);
-							var multiprice = parseFloat(unit_price);
-							var discount =0;
-							if($('#cust_type_id').val()==3){
-								discount = (multiprice * 5)/100;
-							}
-							total_amount = multiprice - discount;
-							amount_total_penalty = 0;
-							//console.log('SP:'+$('#special_priviledge').val());
-							if($('#special_priviledge').val()==='0'){
-								amount_total_penalty = (total_amount * 10)/100;
-								amount_total_penalty = amount_total_penalty + total_amount;
-							}else{
-								amount_total_penalty = total_amount;
-							}
-							$('#sc_discount').val(amount_formatted(discount));
-							$("#amount_pay").val(amount_formatted(multiprice));
-							$("#total_amount").val(amount_formatted(total_amount));
-							$("#penalty").val(amount_formatted(amount_total_penalty));
-							
-
-						} else {
-							$('#current_bill').val(amount_formatted(0));
-							var unit_price = $('#current_bill').val();
-							
-							$("#amount_pay").val(amount_formatted(0));
-							//alert("No Amount per cubic meter.");
-							$.smallBox({
-								title : "Current Bill field required",
-								content : "No Amount per cubic meter.",
-								color : "#D30000",
-								timeout: 8000,
-								icon : "fa fa-exclamation-circle swing animated"
-							});
-						}
-					},
-					error: function () {
-						//alert("An error occurred while processing data.");
-						$.smallBox({
-							title : "Error Query Data",
-							content : "An error occurred while processing data.",
-							color : "#D30000",
-							timeout: 8000,
-							icon : "fa fa-exclamation-circle swing animated"
-						});
-					}
-				});
-
-				
+			$('#current_reading').on('change', function(evt) {
+				event.preventDefault();
+				compute_all();
 			});
+
+			$('#current_reading').keypress(function(event) {
+				if (event.which == 13) { // Check if the pressed key is Enter (keyCode 13)
+					event.preventDefault(); // Prevent the default action (like submitting a form)
+					// Your code to execute when Enter is pressed
+					compute_all();
+					// For example, trigger a button click:
+					// $('#yourButton').click();
+				}
+			});
+
 			$('#preview').on('click', function(evt) {
 				
 				var current_reading = $('#current_reading').val();
@@ -424,4 +349,83 @@
 			}).format(amount);
 			return formatted;
 		}
+
+		function compute_all(){
+			var current_meter = $('#current_reading').val();
+			var previous_reading = $('#previous_reading').val();
+			var differences = parseFloat(current_meter) - parseFloat(previous_reading);
+			differences = isNaN(differences) ? 0 : differences;
+			$("#consumed").val(differences);
+			var difer = $("#consumed").val();
+			var customer_id = $('#search_box_id').find(':selected').data('customer_id');
+			var cust_type_id = $('#search_box_id').find(':selected').data('cust_type_id');
+			$('#cust_type_id').val(cust_type_id);
+			const formData = new FormData();
+			formData.append("cubic_meter_reading", difer);
+			formData.append("customer_id", customer_id);
+
+			$.ajax({
+				url: '<?php echo ADMIN_URL;?>addmetercustomerreading/get_cubic_meter_price/',
+				type: 'POST',
+				data: formData,
+				contentType: false,
+				processData: false,
+				success: function (response) {
+					const result = JSON.parse(response);
+					if (result.per_unit) {
+						
+						$('#current_bill').val(amount_formatted(result.per_unit));
+						var unit_price = $('#current_bill').val();
+						//var multiprice = parseInt(difer) * parseInt(unit_price);
+						var multiprice = parseFloat(unit_price);
+						var discount =0;
+						if($('#cust_type_id').val()==3){
+							discount = (multiprice * 5)/100;
+						}
+						total_amount = multiprice - discount;
+						total_amount = total_amount??0;
+						amount_total_penalty = 0;
+						//console.log('SP:'+$('#special_priviledge').val());
+						if($('#special_priviledge').val()==='0'){
+							amount_total_penalty = (total_amount * 10)/100;
+							amount_total_penalty = amount_total_penalty + total_amount;
+						}else{
+							amount_total_penalty = total_amount;
+						}
+						$('#sc_discount').val(amount_formatted(discount));
+						$("#amount_pay").val(amount_formatted(multiprice));
+						$("#total_amount").val(amount_formatted(total_amount));
+						$("#penalty").val(amount_formatted(amount_total_penalty));
+						
+
+					} else {
+						$('#current_bill').val(amount_formatted(0));
+						var unit_price = $('#current_bill').val();
+						
+						$("#amount_pay").val(amount_formatted(0));
+						//alert("No Amount per cubic meter.");
+						$.smallBox({
+							title : "Current Bill field required",
+							content : "No Amount per cubic meter.",
+							color : "#D30000",
+							timeout: 8000,
+							icon : "fa fa-exclamation-circle swing animated"
+						});
+					}
+				},
+				error: function () {
+					//alert("An error occurred while processing data.");
+					$.smallBox({
+						title : "Error Query Data",
+						content : "An error occurred while processing data.",
+						color : "#D30000",
+						timeout: 8000,
+						icon : "fa fa-exclamation-circle swing animated"
+					});
+				}
+			});
+		}
+		$('.text-input').on('focus', function() {
+			$(this).select();
+		});
 		</script>
