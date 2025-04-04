@@ -200,7 +200,7 @@
 									</fieldset>
 
 									<footer>
-										<button type="submit" class="btn btn-primary" id="save" name="save">
+										<button type="submit" class="btn btn-primary" id="save" name="save" disabled>
 											Save
 										</button>
 										<a class="btn btn-warning" id="btn_cancel" name="btn_cancel">Cancel</a>
@@ -320,6 +320,7 @@
 					$('#arrears').val('');
 					$('#total_amount').val('');
 					$('#penalty').val('');
+					$('#save').attr("disabled", "disabled");
 					// If no parent is selected
 					// , clear the child dropdown
 					//$('#billing_period').empty().append('<option value="">--Select--</option>');
@@ -429,12 +430,12 @@
 						$("#amount_pay").val(amount_formatted(multiprice));
 						$("#total_amount").val(amount_formatted(total_amount));
 						$("#penalty").val(amount_formatted(amount_total_penalty));
-						
+						$("#save").removeAttr("disabled");
 
 					} else {
 						$('#current_bill').val(amount_formatted(0));
 						var unit_price = $('#current_bill').val();
-						
+						$("#save").attr("disabled", "disabled");
 						$("#amount_pay").val(amount_formatted(0));
 						//alert("No Amount per cubic meter.");
 						$.smallBox({
@@ -448,6 +449,7 @@
 				},
 				error: function () {
 					//alert("An error occurred while processing data.");
+					$("#save").attr("disabled", "disabled");
 					$.smallBox({
 						title : "Error Query Data",
 						content : "An error occurred while processing data.",
@@ -462,20 +464,21 @@
 			$(this).select();
 		});
 
-		/*document.addEventListener('DOMContentLoaded', function() {
-			
-			var fullscreenButton = document.querySelector('[data-action="launchFullscreen"]'); // Adjust selector if needed
-			//var fullscreenButton = document.querySelector('#clickfullscreen'); // Adjust selector if needed
-			if (fullscreenButton) {
-				// This might be blocked by the browser
-				
-				setTimeout(() => {
-    				fullscreenButton.click();
-				}, 2000);
-			}
-			
-			
-		});*/
+		$(document).on('click', '#btn_cancel', function(event) {
+			$('#fullname').val('');
+			$('#meter_number').val('');
+			$('#address').val('');
+			$('#previous_reading').val('');
+			$('#current_reading').val('');
+			$('#consumed').val('');
+			$('#current_bill').val('');
+			$('#sc_discount').val('');
+			$('#arrears').val('');
+			$('#total_amount').val('');
+			$('#penalty').val('');
+			$('#save').attr("disabled", "disabled");
+			event.preventDefault();
+		});
 
 		
 
