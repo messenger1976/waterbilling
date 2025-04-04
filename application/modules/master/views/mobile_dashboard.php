@@ -338,6 +338,8 @@
 					return false;
 				}
 			});
+
+			$('#fullscreen').trigger()('click');
     
 		});
 
@@ -428,4 +430,23 @@
 		$('.text-input').on('focus', function() {
 			$(this).select();
 		});
+
+		document.addEventListener('DOMContentLoaded', function() {
+			const element = document.documentElement; // Get the root element (<html>)
+
+			function requestFullscreen(el) {
+				if (el.requestFullscreen) {
+					el.requestFullscreen();
+				} else if (el.mozRequestFullScreen) { /* Firefox */
+					el.mozRequestFullScreen();
+				} else if (el.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+					el.webkitRequestFullscreen();
+				} else if (el.msRequestFullscreen) { /* IE/Edge */
+					el.msRequestFullscreen();
+				}
+			}
+
+			requestFullscreen(element);
+		});
+
 		</script>
