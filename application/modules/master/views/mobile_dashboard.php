@@ -431,6 +431,7 @@
 						$("#total_amount").val(amount_formatted(total_amount));
 						$("#penalty").val(amount_formatted(amount_total_penalty));
 						$("#save").removeAttr("disabled");
+						$("#save").focus();
 
 					} else {
 						$('#current_bill').val(amount_formatted(0));
