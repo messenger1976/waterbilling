@@ -278,6 +278,10 @@
 							bp_month: bp_month,
 							bp_year: bp_year
 						},
+						beforeSend: function() {
+							// Show a loading spinner or message if needed
+							showSpinner();
+						},
 						dataType: 'json',
 						success: function(response) {
 							// Clear the child dropdown
@@ -306,6 +310,10 @@
 						},
 						error: function(xhr, status, error) {
 							console.error('AJAX Error: ' + status + error);
+						},
+						complete: function() {
+							// Hide the loading spinner or message
+							hideSpinner();
 						}
 					});
 				}else{
@@ -340,8 +348,8 @@
 					event.preventDefault(); // Prevent the default action (like submitting a form)
 					// Your code to execute when Enter is pressed
 					compute_all();
-					// For example, trigger a button click:
-					// $('#yourButton').click();
+					$("#save").focus();
+					
 				}
 			});
 
@@ -404,6 +412,10 @@
 				data: formData,
 				contentType: false,
 				processData: false,
+				beforeSend: function() {
+					// Show a loading spinner or message if needed
+					showSpinner();
+				},
 				success: function (response) {
 					const result = JSON.parse(response);
 					if (result.per_unit) {
@@ -431,7 +443,7 @@
 						$("#total_amount").val(amount_formatted(total_amount));
 						$("#penalty").val(amount_formatted(amount_total_penalty));
 						$("#save").removeAttr("disabled");
-						$("#save").focus();
+						
 
 					} else {
 						$('#current_bill').val(amount_formatted(0));
@@ -458,6 +470,10 @@
 						timeout: 8000,
 						icon : "fa fa-exclamation-circle swing animated"
 					});
+				},
+				complete: function() {
+					// Hide the loading spinner or message
+					hideSpinner();
 				}
 			});
 		}

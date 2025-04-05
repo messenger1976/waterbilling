@@ -61,11 +61,60 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 		<link rel="apple-touch-startup-image" href="<?php echo base_url();?>img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
 		<link rel="apple-touch-startup-image" href="<?php echo base_url();?>img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
 		<link rel="apple-touch-startup-image" href="<?php echo base_url();?>img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+		<style>
+			/* Fullscreen overlay */
+			.spinner-overlay {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(255, 255, 255, 0.8); /* Light overlay background */
+				display: none;
+				align-items: center;
+				justify-content: center;
+				z-index: 9999; /* Ensure it's above other content */
+			}
 
+			/* Spinner styles */
+			.spinner {
+				width: 50px;
+				height: 50px;
+				border: 5px solid #f3f3f3; /* Light border */
+				border-top: 5px solid #3498db; /* Blue border */
+				border-radius: 50%;
+				animation: spin 1s linear infinite;
+			}
+
+			/* Keyframes for spin animation */
+			@keyframes spin {
+				0% {
+					transform: rotate(0deg);
+				}
+				100% {
+					transform: rotate(360deg);
+				}
+			}
+		</style>
+		<script>
+			// Function to show the spinner
+			function showSpinner() {
+				document.getElementById("spinner-overlay").style.display = "flex";
+			}
+
+			// Function to hide the spinner
+			function hideSpinner() {
+				document.getElementById("spinner-overlay").style.display = "none";
+			}
+			//showSpinner(); // Call this to show the spinner
+			//setTimeout(hideSpinner, 3000); // Simulate loading for 3 seconds
+		</script>
 	</head>
 	
 	<body class="desktop-detected smart-style-1">
-
+		<div id="spinner-overlay" class="spinner-overlay">
+			<div class="spinner"></div>
+		</div>
 		<!-- HEADER -->
 		<header id="header">
 			<div id="logo-group">
