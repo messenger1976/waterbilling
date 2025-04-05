@@ -115,7 +115,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Billing Period :</strong></span>
-													<input class="form-control" type="text" id="billing_period" name="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control" type="text" id="billing_period" name="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													<?php echo form_error('billing_period'); ?>
 												</div>
 											</div>
@@ -124,7 +124,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Previous Reading :</strong></span>
-													<input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
 												</div>
 											</div>
@@ -133,7 +133,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Current Reading :</strong></span>
-													<input class="form-control text-input" type="number" id="current_reading" name="current_reading" style="background-color:white;font-size: larger; font-weight: bold; text-align: right;">
+													<input class="form-control text-input" type="number" id="current_reading" name="current_reading" style="background-color:white;font-size: larger; font-weight: bold; text-align: center;">
 													
 												</div>
 											</div>
@@ -142,7 +142,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Consumed :</strong></span>
-													<input class="form-control text-input" type="text" id="consumed" name="consumed" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control text-input" type="text" id="consumed" name="consumed" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
 												</div>
 											</div>
@@ -151,7 +151,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Current Billing :</strong></span>
-													<input class="form-control text-input" type="text" id="current_bill" name="current_bill" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control text-input" type="text" id="current_bill" name="current_bill" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
 												</div>
 											</div>
@@ -160,7 +160,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>SC Discount :</strong></span>
-													<input class="form-control text-input" type="text" id="sc_discount" name="sc_discount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control text-input" type="text" id="sc_discount" name="sc_discount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
 												</div>
 											</div>
@@ -169,7 +169,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Arrears :</strong></span>
-													<input class="form-control text-input" type="text" id="arrears" name="arrears" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control text-input" type="text" id="arrears" name="arrears" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
 												</div>
 											</div>
@@ -178,7 +178,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Amt before due date :</strong></span>
-													<input class="form-control text-input" type="text" id="total_amount" name="total_amount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control text-input" type="text" id="total_amount" name="total_amount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
 												</div>
 											</div>
@@ -187,7 +187,7 @@
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Amt after due date :</strong></span>
-													<input class="form-control text-input" type="text" id="penalty" name="penalty" style="background-color:yellow; font-size: larger; font-weight: bold; text-align: right;" readonly>
+													<input class="form-control text-input" type="text" id="penalty" name="penalty" style="background-color:yellow; font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
 												</div>
 											</div>

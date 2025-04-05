@@ -86,6 +86,18 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 				animation: spin 1s linear infinite;
 			}
 
+			.input-group-addon:first-child {
+				border-top-left-radius: 10px;
+				border-bottom-left-radius: 10px;
+			}
+			.input-group-addon {
+				border:1px solid black;
+			}
+			.form-control{
+				border-top-right-radius: 10px !important;
+				border-bottom-right-radius: 10px !important;
+				border: 1px solid black;
+			}
 			/* Keyframes for spin animation */
 			@keyframes spin {
 				0% {
