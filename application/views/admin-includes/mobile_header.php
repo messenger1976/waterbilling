@@ -87,15 +87,15 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 			}
 
 			.input-group-addon:first-child {
-				border-top-left-radius: 10px;
-				border-bottom-left-radius: 10px;
+				border-top-left-radius: 15px;
+				border-bottom-left-radius: 15px;
 			}
 			.input-group-addon {
 				border:1px solid black;
 			}
 			.form-control{
-				border-top-right-radius: 10px !important;
-				border-bottom-right-radius: 10px !important;
+				border-top-right-radius: 15px !important;
+				border-bottom-right-radius: 15px !important;
 				border: 1px solid black;
 			}
 			/* Keyframes for spin animation */

@@ -84,7 +84,7 @@
 										<div class="row">
 											<section class="col col-10">
 												<label class="input"> <i class="icon-prepend fa fa-user"></i>
-													<input type="text" name="fullname" id="fullname" placeholder="Full name" readonly>
+													<input type="text" name="fullname" id="fullname" style="border:1px solid black; border-radius: 15px; font-size: larger; font-weight: bold;background-color: yellow;" readonly>
                                                     <input type="hidden" name="customer_id" id="customer_id">
 													<input type="hidden" name="cust_type_id" id="cust_type_id">
 													<input type="hidden" name="special_priviledge" id="special_priviledge" value="0">
@@ -98,12 +98,12 @@
 										<div class="row">
 											<section class="col col-6">
 												<label class="input"> <i class="icon-prepend fa fa-tachometer"></i>
-													<input type="text" name="meter_number" id="meter_number" placeholder="Meter Number" readonly>
+													<input type="text" name="meter_number" id="meter_number" style="border:1px solid black; border-radius: 15px; font-size: larger; font-weight: bold;background-color: yellow;" readonly>
 												</label>
 											</section>
 											<section class="col col-6">
 												<label class="input"> <i class="icon-prepend fa fa-home"></i>
-													<input type="text" name="address" id="address" placeholder="Address" readonly>
+													<input type="text" name="address" id="address" style="border:1px solid black; border-radius: 15px; font-size: larger; font-weight: bold;background-color: yellow;" readonly>
 												</label>
 											</section>
 										</div>
@@ -200,10 +200,10 @@
 									</fieldset>
 
 									<footer>
-										<button type="submit" class="btn btn-primary" id="save" name="save" disabled>
+										<button type="submit" class="btn btn-primary" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" id="save" name="save" disabled>
 											Save
 										</button>
-										<a class="btn btn-warning" id="btn_cancel" name="btn_cancel">Cancel</a>
+										<a class="btn btn-warning" id="btn_cancel" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" name="btn_cancel">Cancel</a>
 									</footer>
 								</form>
 
