@@ -98,6 +98,19 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 				border-bottom-right-radius: 15px !important;
 				border: 1px solid black;
 			}
+			.select2-selection{
+				border-radius: 15px !important;
+				border: 1px solid black;
+				font-size:larger; font-weight: bold; background-color: darkslateblue; color: white; text-align: center;
+			}
+			.select2-container--open .select2-selection--single {
+				border-radius: 15px !important;
+				border: 1px solid black;
+				font-size:larger; font-weight: bold; background-color: darkslateblue; color: white; text-align: center;
+			}
+			.select2-selection__arrow{
+				background-color: darkslateblue;
+			}
 			/* Keyframes for spin animation */
 			@keyframes spin {
 				0% {

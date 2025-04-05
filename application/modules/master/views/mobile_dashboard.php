@@ -59,7 +59,7 @@
 												<div class="col col-8">
 													<label class="input"> <i class="icon-prepend fa fa-search"></i>
 														
-														<select class="form-control" id="search_box_id">
+														<select class="form-control" id="search_box_id" style="text-align: center; border-radius: 15px; border:1px solid black; " name="search_box_id">
 															<option value="">--Select--</option>
 															<?php
 													
