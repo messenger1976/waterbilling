@@ -136,7 +136,7 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 		</script>
 	</head>
 	
-	<body class="desktop-detected smart-style-1">
+	<body class="desktop-detected smart-style-1" style="background: url() blue;">
 		<div id="spinner-overlay" class="spinner-overlay">
 			<div class="spinner"></div>
 		</div>
