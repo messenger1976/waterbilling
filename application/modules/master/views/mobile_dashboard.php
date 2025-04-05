@@ -39,7 +39,7 @@
 						</header>-->
 
 						<!-- widget div-->
-						<div>
+						<div style="border-radius: 30px;">
 							
 							<!-- widget edit box -->
 							<div class="jarviswidget-editbox">
@@ -55,7 +55,7 @@
                                     <section style="margin: 5px 15px;">
                                         <div class="row">
 											<div class="form-group" style="width:100%;">
-												<label class="label col col-2">Search Customer</label>
+												<label class="label col col-2" style="text-align: center; font-size:larger; font-weight:bold; ">Search Customer</label>
 												<div class="col col-8">
 													<label class="input"> <i class="icon-prepend fa fa-search"></i>
 														
@@ -199,7 +199,7 @@
 										
 									</fieldset>
 
-									<footer>
+									<footer style="border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
 										<button type="submit" class="btn btn-primary" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" id="save" name="save" disabled>
 											Save
 										</button>
