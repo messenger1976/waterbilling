@@ -244,7 +244,7 @@
 		<script type="text/javascript">
 		
 		// DO NOT REMOVE : GLOBAL FUNCTIONS!
-		
+		var btn_save_flag = 0;
 		$(document).ready(function() {
 			
 			pageSetUp();
@@ -293,17 +293,35 @@
 									$('#previous_reading').val(item.previous_reading);
 									$('#arrears').val(item.arrears);
 									
+									//$("#save").attr("disabled", "disabled");
 									
-									$('#current_reading').val('');
-									$('#consumed').val('');
-									$('#current_bill').val('');
-									$('#sc_discount').val('');
-									$('#arrears').val('');
-									$('#total_amount').val('');
-									$('#penalty').val('');
-									setTimeout(function() {
-        								$('#current_reading').focus();
-      								}, 50);
+									
+									if(item.reading>0){
+										$('#current_reading').val(item.reading);
+										$('#current_reading').attr('readonly', true);
+										btn_save_flag = 1;
+										compute_all();
+										//$("#save").attr("disabled", "disabled");
+										//$('#consumed').val(item.consumed);
+
+									}else{
+										btn_save_flag = 0;
+										//$("#save").attr("disabled", "disabled");
+										$('#current_reading').val('');
+										$('#current_reading').attr('readonly', false);
+										$("#current_reading").css("background-color", "white");
+										$('#consumed').val('');
+										$('#current_bill').val('');
+										$('#sc_discount').val('');
+										$('#arrears').val('');
+										$('#total_amount').val('');
+										$('#penalty').val('');
+										setTimeout(function() {
+											$('#current_reading').focus();
+										}, 50);
+									}
+									
+									
 									
 								});
 							}
@@ -442,7 +460,17 @@
 						$("#amount_pay").val(amount_formatted(multiprice));
 						$("#total_amount").val(amount_formatted(total_amount));
 						$("#penalty").val(amount_formatted(amount_total_penalty));
-						$("#save").removeAttr("disabled");
+						if(btn_save_flag==1){
+								
+							$("#save").attr("disabled", "disabled");
+							$("#current_reading").css("background-color", "yellow");
+							//$("#current_reading").css("color", "#fff");
+						}else{
+							$("#save").removeAttr("disabled");
+							$("#current_reading").css("background-color", "white");
+							//$("#save").css("color", "#fff");
+						}
+						//$("#save").removeAttr("disabled");
 						
 
 					} else {
