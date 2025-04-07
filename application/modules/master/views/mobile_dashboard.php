@@ -521,7 +521,7 @@
 				var reading_date = '<?php echo date('Y-m-d'); ?>';
 				
 				//window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/'+customer_id+'/'+refno+'/'+previous_reading+'/'+current_reading+'/'+billing_month+'/'+billing_year+'/'+reading_date, '_blank');
-				window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/', '_self');
+				window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/', '_blank');
 			});
 		});
 
