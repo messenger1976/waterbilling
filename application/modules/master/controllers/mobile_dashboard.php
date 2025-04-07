@@ -97,6 +97,24 @@ class mobile_dashboard extends CI_Controller {
         
     
 	}
+
+	public function print_receipt(){
+		$customer_id = $this->input->post('customer_id');
+		$bp_month = $this->input->post('bp_month');
+		$bp_year = $this->input->post('bp_year');
+		$data['record']= '';
+		//if($customer_id != ''){
+		//	$result = $this->meterreading_model->get_addcustomer_meterreading_records($customer_id,$bp_month,$bp_year);
+		//	$data['record'] = $result;
+		//	$data['customer_info'] = $this->customer_model->get_customer_info($customer_id);
+		//	$data['last_reading'] = $this->meterreading_model->get_last_reading($customer_id); 
+		//	$data['get_unit_price'] = $this->meterreading_model->get_unit_price($data['last_reading']->consumed,$data['customer_info']['classification']);
+			$this->load->view('print_receipt',$data);
+		//}else{	
+		//	echo '{}';
+		//}
+		
+	}
 	
 
 	

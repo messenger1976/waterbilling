@@ -201,6 +201,9 @@
 									</fieldset>
 
 									<footer style="border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
+										<a href="javascript:void(0);" class="btn btn-primary" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" id="btn_print" name="btn_print">
+											Print & Save
+										</a>
 										<button type="submit" class="btn btn-primary" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" id="save" name="save" disabled>
 											Save
 										</button>
@@ -505,6 +508,20 @@
 					fullscreenButton.click();
 					clickcheck = 1;
 				}
+			});
+
+			$(document).on('click', '#btn_print', function(event) {
+				event.preventDefault();
+				var customer_id = $('#search_box_id').find(':selected').data('customer_id');
+				var refno = $('#refno').val();
+				var previous_reading = $('#previous_reading').val();
+				var current_reading = $('#current_reading').val();
+				var billing_month = <?php echo $_SESSION['bp_month']; ?>;
+				var billing_year = <?php echo $_SESSION['bp_year']; ?>;
+				var reading_date = '<?php echo date('Y-m-d'); ?>';
+				
+				//window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/'+customer_id+'/'+refno+'/'+previous_reading+'/'+current_reading+'/'+billing_month+'/'+billing_year+'/'+reading_date, '_blank');
+				window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/', '_self');
 			});
 		});
 
