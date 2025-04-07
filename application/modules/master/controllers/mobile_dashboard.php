@@ -72,6 +72,31 @@ class mobile_dashboard extends CI_Controller {
 		}
 	}
 
+	public function add_record(){
+		$refno = $this->input->post('refno');
+		$customer_id = $this->input->post('customer_id');
+		$previous_reading = $this->input->post('previous_reading');
+		$current_reading = $this->input->post('current_reading');
+		$billing_month = $this->input->post('billing_month');
+		$billing_year = $this->input->post('billing_year');
+		$reading_date = $this->input->post('reading_date');
+		$reading_date = date('Y-m-d', strtotime($reading_date));
+		
+		$readingData = array(
+			'refno' => (int)$refno,
+			'customer_id' => $customer_id,
+			'previous_reading' => (int) $previous_reading,
+			'current_reading' => (int) $current_reading,
+			'billing_month' => (int) $billing_month,
+			'billing_year' => (int) $billing_year,
+			'reading_date' => $reading_date
+		);
+		$this->meterreading_model->update_meterreading($readingData);
+        echo '[{"msg":"success"}]';        
+		exit;	
+        
+    
+	}
 	
 
 	

@@ -87,6 +87,7 @@
 													<input type="text" name="fullname" id="fullname" style="border:1px solid black; border-radius: 15px; font-size: larger; font-weight: bold;background-color: yellow;" readonly>
                                                     <input type="hidden" name="customer_id" id="customer_id">
 													<input type="hidden" name="cust_type_id" id="cust_type_id">
+													<input type="hidden" name="refno" id="refno">
 													<input type="hidden" name="special_priviledge" id="special_priviledge" value="0">
 													
 													
@@ -292,6 +293,7 @@
 								$.each(response, function(index, item) {
 									$('#previous_reading').val(item.previous_reading);
 									$('#arrears').val(item.arrears);
+									$('#refno').val(item.refno);
 									
 									//$("#save").attr("disabled", "disabled");
 									
@@ -386,7 +388,112 @@
 						icon : "fa fa-exclamation-circle swing animated"
 					});
 					return false;
+				}else{
+					evt.preventDefault();
+					$.SmartMessageBox({
+						title : "Saving Action",
+						content : "Are you sure you want to save this record?",
+						buttons : '[No][Yes]'
+					}, function(ButtonPressed) {
+						if (ButtonPressed === "No") {
+							// Do nothing, just close the message box
+						} else if (ButtonPressed === "Yes") {
+							// Perform the save action here
+							//alert('Record saved successfully.');
+							//$("#checkout-form").submit();
+							var customer_id = $('#search_box_id').find(':selected').data('customer_id');
+							var refno = $('#refno').val();
+							var previous_reading = $('#previous_reading').val();
+							var current_reading = $('#current_reading').val();
+							var billing_month = <?php echo $_SESSION['bp_month']; ?>;
+							var billing_year = <?php echo $_SESSION['bp_year']; ?>;
+							var reading_date = '<?php echo date('Y-m-d'); ?>';
+							
+							const formData = new FormData();
+							formData.append("refno", refno);
+							formData.append("customer_id", customer_id);
+							formData.append("previous_reading", previous_reading);
+							formData.append("current_reading", current_reading);
+							formData.append("billing_month", billing_month);
+							formData.append("billing_year", billing_year);
+							formData.append("reading_date", reading_date);
+
+							$.ajax({
+								url: '<?php echo ADMIN_URL;?>mobile_dashboard/add_record/',
+								type: 'POST',
+								data: formData,
+								contentType: false,
+								processData: false,
+								beforeSend: function() {
+									// Show a loading spinner or message if needed
+									showSpinner();
+								},
+								success: function (response) {
+									const result = JSON.parse(response);
+									//console.log(result);
+									//console.log(response);
+									if (result[0].msg=="success") {
+										//alert("Record saved successfully.");
+										$.smallBox({
+											title : "Record saved successfully",
+											content : "Record saved successfully.",
+											color : "#739E73",
+											timeout: 8000,
+											icon : "fa fa-check swing animated"
+										});
+										$('#fullname').val('');
+										$('#meter_number').val('');
+										$('#address').val('');
+										$('#previous_reading').val('');
+										$('#current_reading').val('');
+										$('#consumed').val('');
+										$('#current_bill').val('');
+										$('#sc_discount').val('');
+										$('#arrears').val('');
+										$('#total_amount').val('');
+										$('#penalty').val('');
+										$("#save").attr("disabled", "disabled");
+									} else {
+										//alert("Error saving record.");
+										$.smallBox({
+											title : "Error saving record",
+											content : "Error saving record.",
+											color : "#D30000",
+											timeout: 8000,
+											icon : "fa fa-exclamation-circle swing animated"
+										});
+									}
+								},
+								error: function () {
+									//alert("An error occurred while processing data.");
+									$("#save").attr("disabled", "disabled");
+									$.smallBox({
+										title : "Error Query Data",
+										content : "An error occurred while processing data.",
+										color : "#D30000",
+										timeout: 8000,
+										icon : "fa fa-exclamation-circle swing animated"
+									});
+								},
+								complete: function() {
+									// Hide the loading spinner or message
+									hideSpinner();
+								}
+							});
+
+						} else {
+							// Handle other button presses if needed
+							
+						}
+						
+						
+						
+			
+					});
+
 				}
+
+				
 			});
 
 			//$('#fullscreen').trigger()('click');
