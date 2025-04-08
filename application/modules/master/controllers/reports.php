@@ -118,8 +118,12 @@ class reports extends CI_Controller {
             $billingperiod = $this->input->post('billingperiod');
             
             $status = $this->input->post('status');
+            if($status==3){
+				$data['record'] = $this->reports_model->get_monthly_billing_report_records_status3($zone,$billingperiod,$status);
+			}else{
+				$data['record'] = $this->reports_model->get_monthly_billing_report_records($zone,$billingperiod,$status);
+			}
             
-            $data['record'] = $this->reports_model->get_monthly_billing_report_records($zone,$billingperiod,$status);
             
             $this->load->view($this->monthlybillingreport_ajaxPage,$data);
 				
