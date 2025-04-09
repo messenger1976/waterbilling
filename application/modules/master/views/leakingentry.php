@@ -207,7 +207,9 @@
                                                                 <a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>employee_logins/delete/<?php echo $row['id'];?>';}" title="Delete">                                                                
 																	<i class="fa fa-remove"></i>
 																</a>														</div>-->
-																
+																<?php
+															if($row['leaking_status']!='4' && $row['leaking_status']!='5'){
+														?>		
 																
 																<a href="<?php echo ADMIN_URL;?>leakingentry/edit/<?php echo $row['leaking_id'];?>" class="tooltip-success btn_edit" data-rel="tooltip" title="Edit" 
 																data-leaking_id="<?php echo $row['leaking_id'];?>"
@@ -233,18 +235,22 @@
 																	</span>
 																</a>
 
-
-														<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>leakingentry/delete/<?php echo $row['leaking_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
+														
+															<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>leakingentry/delete/<?php echo $row['leaking_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
 															<span class="red">
 																<img src="<?php echo base_url();?>images/favicon/delete.png">
 															</span>
 														</a>
+														
+														<?php
+															}
+														?>
+														
 														<a href="<?php echo ADMIN_URL;?>leakingentry/ledger/<?php echo $row['leaking_id'];?>" class="tooltip-success" data-rel="tooltip" title="Ledger">
 																	<span class="blue">
 																		<img src="<?php echo base_url();?>images/favicon/ledger.png">
 																	</span>
 																</a>
-													
 													</td>
 
 														
