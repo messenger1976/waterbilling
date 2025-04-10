@@ -42,7 +42,7 @@
 
 
 
-					<li class="<?php if($this->uri->segment(2)=='reports'){echo 'active open';}?>">
+					<!--<li class="<?php if($this->uri->segment(2)=='reports'){echo 'active open';}?>">
 						<a href="#"><i class="fa fa-lg fa-fw fa-pencil-square-o"></i> <span class="menu-item-parent">Reports</span></a>
 						<ul>
 							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
@@ -66,7 +66,7 @@
 							
 						   
 						</ul>
-					</li>
+					</li>-->
 
 
 

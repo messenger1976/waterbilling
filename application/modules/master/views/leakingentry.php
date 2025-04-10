@@ -186,16 +186,16 @@
 														</td>
 														<td><?php 
 															if($row['leaking_status']==1){
-																echo '<label class="label label-primary setStatus" data-id="'.$row['leaking_id'].'" data-status="'.$row['leaking_status'].'">Pending</label>'; 
+																echo '<label class="label label-danger setStatus" data-id="'.$row['leaking_id'].'" data-status="'.$row['leaking_status'].'">Pending</label>'; 
 															}else if($row['leaking_status']==2){
-																echo '<label class="label label-success">Approved</label>'; 
+																echo '<label class="label label-info">Approved</label>'; 
 
 															}elseif($row['leaking_status']==4){
-																echo '<label class="label label-success">Posted</label>';
+																echo '<label class="label label-primary">Posted</label>';
 															}elseif($row['leaking_status']==5){
 																echo '<label class="label label-success">Full Paid</label>';
 															}else{
-																echo '<label class="label label-danger">Denied</label>'; 
+																echo '<label class="label label-default">Denied</label>'; 
 															}
 														
 														?></td>

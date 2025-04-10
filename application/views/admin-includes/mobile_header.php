@@ -120,6 +120,13 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 					transform: rotate(360deg);
 				}
 			}
+
+			.smart-style-1 aside{
+				background: unset;
+			}
+			.smart-style-1 nav ul ul{
+				background: unset;
+			}
 		</style>
 		<script>
 			// Function to show the spinner
@@ -145,7 +152,7 @@ if(($this->session->userdata('logged_in')!='ECOM')||($this->session->userdata('u
 			<div id="logo-group">
 
 				<!-- PLACE YOUR LOGO HERE -->
-				<span id="logo" style="width:500px;"><h4 style="color:#fff">Mobile - Utilities Billing System</h4></span>
+				<span id="logo" style="width:500px;"><h4 style="color:#fff">Mobile - Billing System</h4></span>
 				<!-- END LOGO PLACEHOLDER -->
 
 			
