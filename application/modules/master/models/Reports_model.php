@@ -132,7 +132,7 @@ class reports_model extends CI_Model {
 		AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year
         LEFT JOIN tbl_classification ON tbl_addcustomer.classification = tbl_classification.class_id
         LEFT JOIN tbl_classification_category ON tbl_classification.class_cat_id = tbl_classification_category.class_cat_id
-	WHERE  tbl_addmetercustomer.invoice_id IS NULL and tbl_addcustomer_reading.reading<>'' AND tbl_billing_period.bp_due_date<? $sql_query_zone
+	WHERE  tbl_addcustomer.status=1 and tbl_addmetercustomer.invoice_id IS NULL and tbl_addcustomer_reading.reading<>'' AND tbl_billing_period.bp_due_date<? $sql_query_zone
         GROUP BY tbl_addcustomer.`customer_id`
 		
 	ORDER BY tbl_addcustomer.last_name ASC, tbl_addcustomer.first_name ASC";
