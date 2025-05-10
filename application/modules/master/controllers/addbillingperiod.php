@@ -357,6 +357,15 @@ class addbillingperiod extends CI_Controller {
 
 	public function sync_export($billingmonth,$billingyear)
 	{
+		// Specify the allowed origin(s). Use '*' to allow all origins (not recommended for production).
+		header("Access-Control-Allow-Origin: *");
+
+		// Specify the allowed HTTP methods (e.g., GET, POST, PUT, DELETE).
+		header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+
+		// Specify the allowed headers that the client can send.
+		header("Access-Control-Allow-Headers: Content-Type, Authorization");
+		header('Content-Type: application/json');
 		
 		$this->load->database();
 
