@@ -285,6 +285,7 @@
 																		<option value="">--Select--</option>
 																		<option value="1"<?php if($record['status']=='1'){ ?> selected <?php } ?>>active</option>
 																		<option value="0"<?php if($record['status']=='0'){ ?> selected <?php } ?>>deactive</option>
+																		<option value="2"<?php if($record['status']=='2'){ ?> selected <?php } ?>>disconnected</option>
 																	</select>
 																</div>
 															</div>
