@@ -12,24 +12,25 @@ function getPrint(){
 <style>
 @media print {
   @page {
-    size: 2.2in 5in;
+    size: 2.6in 12in;
     margin: 0;
   }
 
   body {
-    width: 2.2in;
-    height: 5in;
+    width: 2.6in;
+    height: 12in;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 8pt; /* Reduced font size to fit */
-    font-family: sans-serif;
+    font-size: 11pt; /* Reduced font size to fit */
+    font-family: monospace;
     line-height: 1.2; /* Reduced line height */
+    letter-spacing: -0.1em; /* Decreases space between characters */
   }
 
   .header, .notice-title, .bill-details, .customer-info, .water-usage, .payment-info, .important-notice, .footer {
     text-align: left; /* Adjusted for narrow width */
-    padding: 2px; /* Reduced padding */
+    padding: 0mm; /* Reduced padding */
   }
 
   .header {
@@ -40,20 +41,46 @@ function getPrint(){
   .notice-title {
     text-align: center;
     font-weight: bold;
-    font-size: 9pt; /* Slightly larger title */
+    font-size: 11pt; /* Slightly larger title */
     margin-top: 5px;
+    
+    
   }
-
-  .bill-details strong, .customer-info strong, .water-usage strong, .payment-info strong, .important-notice strong {
+.notice-subtitle{
+  text-align: center;
+  font-size: 8pt;
+  margin-bottom: 5px;
+}
+  .bill-details strong {
     display: inline-block;
-    width: 80px; /* Reduced label width */
+    width: 20mm; /* Reduced label width */
     text-align: left;
     font-weight: bold;
   }
+.water-usage strong{
+  width: 25mm;
 
+}
+.customer-info strong{
+  width: 18mm;
+
+}
+.customer-info{
+  margin-top: 5px;
+  border-bottom: 1px dashed #000;
+  border-top: 1px dashed #000;
+  margin-bottom: 5px;
+}
+
+.water-usage{
+  margin-top: 5px;
+  border-bottom: 1px dashed #000;
+  
+  margin-bottom: 5px;
+}
   .footer {
     text-align: center;
-    border-top: 1px dashed #000;
+    
     margin-top: 5px;
   }
 
@@ -63,83 +90,141 @@ function getPrint(){
     display: block;
     margin: 0 auto 3px;
   }
+  .col-figure{
+    float: right;
+    margin-right: 2px;
+  }
 }
 
 /* Optional screen styles (for preview) */
 body {
-  font-family: sans-serif;
-  font-size: 10pt;
+  font-family: monospace;
+  font-size: 11pt;
   line-height: 1.2;
+  width: 2.6in;
+  height: 12in;
+  letter-spacing: -0.1em; /* Decreases space between characters */
 }
 
-.header, .notice-title, .bill-details, .customer-info, .water-usage, .payment-info, .important-notice, .footer {
-  padding: 5px;
+.header {
+  text-align: center;
+  border-bottom: 1px dashed #000;
+}
+.notice-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 11pt; /* Slightly larger title */
+  margin-top: 5px;
+  
+}
+.notice-subtitle{
+  text-align: center;
+  font-size: 8pt;
+  margin-bottom: 5px;
+}
+.header, .notice-title, .bill-details, .customer-info, .water-usage, .important-notice, .footer {
+  padding: 0mm;
 }
 
-.bill-details strong, .customer-info strong, .water-usage strong, .payment-info strong, .important-notice strong {
+.bill-details strong {
   display: inline-block;
-  width: 100px;
+  width: 20mm;
+}
+.water-usage strong{
+  width: 25mm;
+
 }
 
+.customer-info strong{
+  width: 18mm;
+
+}
+.customer-info{
+  margin-top: 5px;
+  border-bottom: 1px dashed #000;
+  border-top: 1px dashed #000;
+  margin-bottom: 5px;
+}
+
+.water-usage{
+  margin-top: 5px;
+  border-bottom: 1px dashed #000;
+  
+  margin-bottom: 5px;
+}
+.footer {
+  text-align: center;
+  
+  margin-top: 5px;
+}
 .logo{
-    max-width: 80px;
+    max-width: 100%;
     height: auto;
 }
-
+.col-figure{
+  float: right;
+  margin-right: 2px;
+}
 </style>
 </head>
 <body onload="getPrint()">
 
 <div class="header">
-  <img src="<?php echo base_url();?>images/mroxas-logo-report.jpg" alt="Water District Logo" class="logo">
+  <img src="<?php echo base_url();?>images/mroxas-logo-report-new.jpg" alt="Water District Logo" class="logo">
   <!--<p style="font-size: 7pt;">PRES. M.A. ROXAS WATER DIST.</p>
   <p style="font-size: 7pt;">Langatian, Pres. M. A. Roxas</p>
   <p style="font-size: 7pt;">TIN 004-315-023-00000</p>-->
 </div>
 
 <div class="notice-title">
-  NOTICE OF COLLECTION<br>
-  Dec 2024
+  NOTICE OF COLLECTION</div>
+<div class="notice-subtitle">
+  For the month of <?php echo $record[0]['month_name'].' '.$record[0]['year'];?>
 </div>
 
 <div class="bill-details">
-  <strong>DATE:</strong> 12-01-2024<br>
-  <strong>TIME:</strong> 1:00 PM<br>
+  <strong>DATE:</strong> <?php echo date('m-d-Y');?><br>
+  <strong>TIME:</strong> <?php echo date('h:i:s A');?><br>
   <strong>Period:</strong> 11-01 to 12-01
 </div>
 
 <div class="customer-info">
-  <strong>NAME:</strong> <br>
-  <strong>ACCNT #:</strong> <br>
-  <strong>ADDR:</strong> <br>
-  <strong>METER #:</strong> <br>
-  <strong>BRAND:</strong> <br>
+  <strong>CUST NAME:</strong> <span class="col-figure"><?php echo strtoupper($record[0]['last_name']).', '.strtoupper($record[0]['first_name']).' '.strtoupper($record[0]['middle_name']);?></span> <br>
+  <strong>ACCOUNT&nbsp;#:</strong> <span class="col-figure"><?php echo strtoupper($record[0]['customer_id']);?></span><br>
+  <strong>ADDRESS:</strong> <span class="col-figure"><?php echo strtoupper($record[0]['address']);?></span><br>
+  <strong>METER #:</strong> <span class="col-figure">43543444</span><br>
+  <strong>BRAND:</strong> <span class="col-figure">EVER</span><br>
 </div>
 
 <div class="water-usage">
-  <strong>PRES:</strong> XXXX<br>
-  <strong>PREV:</strong> XXXX<br>
-  <strong>USAGE:</strong> XXXX<br>
-  <strong>BILL:</strong> XXXX<br>
-  <strong>ARR:</strong> XXXX<br>
-  <strong>DISC:</strong> XXXX<br>
-  <strong>DUE:</strong> XXXX<br>
-  <strong>LATE:</strong> XXXX<br>
+  <strong>PRESENT READING:</strong><span class="col-figure"> <?php echo $record[0]['reading'];?></span><br>
+  <strong>PREVIOUS READING:</strong> <span class="col-figure"><?php echo $record[0]['previous_reading'];?></span><br>
+  <strong>TOTAL USAGE:</strong> <span class="col-figure"><?php echo $record[0]['consumed'];?></span><br>
+</div>
+<div class="water-bill">
+  <strong>WATER BILL:</strong> <span class="col-figure"><?php echo $record[0]['unit_price'];?></span><br>
+  <strong>ARREARS:</strong> <span class="col-figure"><?php echo $record[0]['arrears'];?></span><br>
+  <strong>DISCOUNT:</strong> <span class="col-figure"><?php echo $record[0]['sc_discount'];?></span><br>
+  <strong>TOTAL DUE:</strong> <span class="col-figure"><?php echo $record[0]['amount'];?></span><br>
+  <strong>AMOUNT AFTER DUE DATE:</strong> <span class="col-figure"><?php echo $record[0]['penalty'];?></span><br>
+  
 </div>
 
 <div class="payment-info">
-  Pay @ Roxas Water Office
+  You may pay your bill @ Roxas Water District Office
 </div>
-
+ --------------------------------------<br/>
 <div class="important-notice">
-  Pay before due date for no disconnect.<br>
-  <strong>DUE:</strong> XXXX<br>
-  <strong>DISC:</strong> XXXX<br>
+  
+ <center> FAILURE TO SETTLE THIS BILL ON OR BEFORE THE DATE BELOW<br>
+  will lead to immediate disconnection of your water service without prior notice.</center><br/>
+  <strong>DUE DATE:</strong> <span class="col-figure">Apr-20-2025</span><br>
+  <strong>DISCONNECTION DATE:</strong> <span class="col-figure">Apr-26-2025</span><br>
 </div>
 
 <div class="footer">
-  ==========<br>
-  Loyalty
+  ======================================<br>
+  Recognize Your Continued Loyalty
 </div>
 
 </body>
