@@ -2,7 +2,7 @@
  <script type="text/javascript">
 function getPrint(){
 	window.print();
-  //window.close(); // Attempts to close the window
+  window.close(); // Attempts to close the window
 }
 </script>	
 
