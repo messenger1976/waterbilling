@@ -22,7 +22,7 @@ function getPrint(){
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-size: 11pt; /* Reduced font size to fit */
+    font-size: 10pt; /* Reduced font size to fit */
     font-family: monospace;
     line-height: 1.2; /* Reduced line height */
     letter-spacing: -0.1em; /* Decreases space between characters */
@@ -99,7 +99,7 @@ function getPrint(){
 /* Optional screen styles (for preview) */
 body {
   font-family: monospace;
-  font-size: 11pt;
+  font-size: 10pt;
   line-height: 1.2;
   width: 2.3in;
   height: 12in;
