@@ -224,7 +224,7 @@ body {
 
 <div class="footer">
   ======================================<br>
-  Recognize Your Continued Loyalty
+  Recognize Your Continued Loyalty<br/>
 </div>
 
 </body>
