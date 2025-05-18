@@ -1,11 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 session_start();
-class mobile_dashboard extends CI_Controller {
+class mobile_tickets extends CI_Controller {
 	// Declare globle variable here
 	
 	public $headerPage = '../../views/admin-includes/mobile_header'; 
 	public $login_redirect = '/master/app_login';
-	public $listPage = 'mobile_dashboard'; 
+	public $listPage = 'mobile_tickets'; 
 	public function __construct() {
         parent::__construct();
 		$this->load->helper('common');
@@ -20,7 +20,7 @@ class mobile_dashboard extends CI_Controller {
 		$this->load->model('adminheader_model','top_model');
 		$this->load->model('addcustomer_model','customer_model');
 		$this->load->model('addmetercustomerreading_model','meterreading_model');
-		$this->load->model('addbillingperiod_model','billingperiod_model');
+		
 		
     }
 	public function index($mode =''){
@@ -98,27 +98,21 @@ class mobile_dashboard extends CI_Controller {
     
 	}
 
-	public function print_receipt($customer_id, $bp_month, $bp_year){
-		//$customer_id = $this->input->post('customer_id');
-		//$bp_month = $this->input->post('bp_month');
-		//$bp_year = $this->input->post('bp_year');
-		//$data['record']= '';
-		
-		if($customer_id != ''){
-			$result = $this->meterreading_model->get_addcustomer_meterreading_records($customer_id,$bp_month,$bp_year);
-			//echo json_encode($result);
-			
-			$data['record'] = $result;
-			$data['billing_period'] = $this->billingperiod_model->get_single_record($result[0]['bp_id']);
-			//echo json_encode($data['billing_period']);
-			//$data['customer_info'] = $this->customer_model->get_customer_info($customer_id);
+	public function print_receipt(){
+		$customer_id = $this->input->post('customer_id');
+		$bp_month = $this->input->post('bp_month');
+		$bp_year = $this->input->post('bp_year');
+		$data['record']= '';
+		//if($customer_id != ''){
+		//	$result = $this->meterreading_model->get_addcustomer_meterreading_records($customer_id,$bp_month,$bp_year);
+		//	$data['record'] = $result;
+		//	$data['customer_info'] = $this->customer_model->get_customer_info($customer_id);
 		//	$data['last_reading'] = $this->meterreading_model->get_last_reading($customer_id); 
 		//	$data['get_unit_price'] = $this->meterreading_model->get_unit_price($data['last_reading']->consumed,$data['customer_info']['classification']);
 			$this->load->view('print_receipt',$data);
-			
-		}else{	
-			echo '{}';
-		}
+		//}else{	
+		//	echo '{}';
+		//}
 		
 	}
 	

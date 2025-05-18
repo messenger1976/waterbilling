@@ -51,165 +51,7 @@
 							<!-- widget content -->
 							<div class="widget-body no-padding">
 								
-								<form id="checkout-form" class="smart-form" novalidate="novalidate">
-                                    <section style="margin: 5px 15px;">
-                                        <div class="row">
-											<div class="form-group" style="width:100%;">
-												<label class="label col col-2" style="text-align: center; font-size:larger; font-weight:bold; ">Search Customer</label>
-												<div class="col col-8">
-													<label class="input"> <i class="icon-prepend fa fa-search"></i>
-														
-														<select class="form-control" id="search_box_id" style="text-align: center; border-radius: 15px; border:1px solid black; " name="search_box_id">
-															<option value="">--Select--</option>
-															<?php
-													
-															foreach ($customer_listing as $key => $value) {
-																?>
-																<option value="<?php echo $value['id']; ?>" data-customer_id="<?php echo $value['customer_id']; ?>" data-fullname="<?php echo $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?>" data-meter_number="<?php echo $value['meter_number']; ?>" data-address="<?php echo $value['address']; ?>"
-																data-cust_type_id="<?php echo $value['account_type']; ?>" data-special_priviledge="<?php echo $value['special_priviledge']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
-															<?php }
-															?>
-														</select>
-														
-													</label>
-													
-												</div>
-												<!--<input type="submit" class="form-control"  id="btn_search_box" name="btn_search_box" value = "Search" style="width: auto; float: left;  background: #3276b1; color:#fff;" />-->
-											</div>
-                                            
-                                        </div>
-										
-                                    </section>
-									<fieldset style="padding-top:5px;">
-										<div class="row">
-											<section class="col col-10">
-												<label class="input"> <i class="icon-prepend fa fa-user"></i>
-													<input type="text" name="fullname" id="fullname" style="border:1px solid black; border-radius: 15px; font-size: larger; font-weight: bold;background-color: yellow;" readonly>
-                                                    <input type="hidden" name="customer_id" id="customer_id">
-													<input type="hidden" name="cust_type_id" id="cust_type_id">
-													<input type="hidden" name="refno" id="refno">
-													<input type="hidden" name="special_priviledge" id="special_priviledge" value="0">
-													
-													
-												</label>
-											</section>
-											
-										</div>
-
-										<div class="row">
-											<section class="col col-6">
-												<label class="input"> <i class="icon-prepend fa fa-tachometer"></i>
-													<input type="text" name="meter_number" id="meter_number" style="border:1px solid black; border-radius: 15px; font-size: larger; font-weight: bold;background-color: yellow;" readonly>
-												</label>
-											</section>
-											<section class="col col-6">
-												<label class="input"> <i class="icon-prepend fa fa-home"></i>
-													<input type="text" name="address" id="address" style="border:1px solid black; border-radius: 15px; font-size: larger; font-weight: bold;background-color: yellow;" readonly>
-												</label>
-											</section>
-										</div>
-									</fieldset>
-
-									
-									<fieldset style="padding-top:5px;">
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Billing Period :</strong></span>
-													<input class="form-control" type="text" id="billing_period" name="billing_period" value="<?php echo $_SESSION['current_billingperiod']; ?>" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
-													<?php echo form_error('billing_period'); ?>
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Previous Reading :</strong></span>
-													<input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
-													
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Current Reading :</strong></span>
-													<input class="form-control text-input" type="number" id="current_reading" name="current_reading" style="background-color:white;font-size: larger; font-weight: bold; text-align: center;">
-													
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Consumed :</strong></span>
-													<input class="form-control text-input" type="text" id="consumed" name="consumed" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
-													
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Current Billing :</strong></span>
-													<input class="form-control text-input" type="text" id="current_bill" name="current_bill" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
-													
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>SC Discount :</strong></span>
-													<input class="form-control text-input" type="text" id="sc_discount" name="sc_discount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
-													
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Arrears :</strong></span>
-													<input class="form-control text-input" type="text" id="arrears" name="arrears" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
-													
-												</div>
-											</div>
-										</div>
-										<div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Amt before due date :</strong></span>
-													<input class="form-control text-input" type="text" id="total_amount" name="total_amount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
-													
-												</div>
-											</div>
-										</div>
-                                        <div class="row">
-											<div class="col-lg-12 controls">
-												<div class="form-group" style="padding: 5px 15px;"> 
-													<span class="input-group-addon"><strong>Amt after due date :</strong></span>
-													<input class="form-control text-input" type="text" id="penalty" name="penalty" style="background-color:yellow; font-size: larger; font-weight: bold; text-align: center;" readonly>
-													
-												</div>
-											</div>
-										</div>
-										
-										
-                                        
-
-										
-									</fieldset>
-
-									<footer style="border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;">
-										<button class="btn btn-primary" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" id="btn_print" name="btn_print" disabled>
-											Print
-										</button>
-										<button type="submit" class="btn btn-primary" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" id="save" name="save" disabled>
-											Save
-										</button>
-										<a class="btn btn-warning" id="btn_cancel" style="border-radius: 15px; border:1px solid black; font-size:small; font-weight: bold;" name="btn_cancel">Cancel</a>
-									</footer>
-								</form>
+								<center><h1>Under construction</h1></center>
 
 							</div>
 							<!-- end widget content -->
@@ -237,7 +79,9 @@
 
 		<?php include('mobile_footer.php');?>
 
-	
+        </body>
+
+</html>	
 
 <!-- PAGE RELATED PLUGIN(S) -->
 		<script src="<?php echo base_url();?>js/plugin/datatables/jquery.dataTables.min.js"></script>
@@ -305,7 +149,6 @@
 										$('#current_reading').val(item.reading);
 										$('#current_reading').attr('readonly', true);
 										btn_save_flag = 1;
-										$("#btn_print").removeAttr("disabled");
 										compute_all();
 										//$("#save").attr("disabled", "disabled");
 										//$('#consumed').val(item.consumed);
@@ -313,7 +156,6 @@
 									}else{
 										btn_save_flag = 0;
 										//$("#save").attr("disabled", "disabled");
-										$("#btn_print").attr("disabled", "disabled");
 										$('#current_reading').val('');
 										$('#current_reading').attr('readonly', false);
 										$("#current_reading").css("background-color", "white");
@@ -523,8 +365,7 @@
 				var reading_date = '<?php echo date('Y-m-d'); ?>';
 				
 				//window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/'+customer_id+'/'+refno+'/'+previous_reading+'/'+current_reading+'/'+billing_month+'/'+billing_year+'/'+reading_date, '_blank');
-				window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/'+customer_id+'/'+billing_month+'/'+billing_year, '_blank');
-				//window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/', '_blank');
+				window.open('<?php echo ADMIN_URL;?>mobile_dashboard/print_receipt/', '_blank');
 			});
 		});
 

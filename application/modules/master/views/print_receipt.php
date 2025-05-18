@@ -2,6 +2,7 @@
  <script type="text/javascript">
 function getPrint(){
 	window.print();
+  //window.close(); // Attempts to close the window
 }
 </script>	
 
@@ -41,19 +42,19 @@ function getPrint(){
   .notice-title {
     text-align: center;
     font-weight: bold;
-    font-size: 11pt; /* Slightly larger title */
+    font-size: 13pt; /* Slightly larger title */
     margin-top: 5px;
     
     
   }
 .notice-subtitle{
   text-align: center;
-  font-size: 8pt;
+  font-size: 10pt;
   margin-bottom: 5px;
 }
   .bill-details strong {
     display: inline-block;
-    width: 20mm; /* Reduced label width */
+    width: 15mm; /* Reduced label width */
     text-align: left;
     font-weight: bold;
   }
@@ -82,6 +83,8 @@ function getPrint(){
     text-align: center;
     
     margin-top: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px dashed #000;
   }
 
   .logo {
@@ -113,13 +116,13 @@ body {
 .notice-title {
   text-align: center;
   font-weight: bold;
-  font-size: 11pt; /* Slightly larger title */
+  font-size: 13pt; /* Slightly larger title */
   margin-top: 5px;
   
 }
 .notice-subtitle{
   text-align: center;
-  font-size: 8pt;
+  font-size: 10pt;
   margin-bottom: 5px;
 }
 .header, .notice-title, .bill-details, .customer-info, .water-usage, .important-notice, .footer {
@@ -128,7 +131,7 @@ body {
 
 .bill-details strong {
   display: inline-block;
-  width: 20mm;
+  width: 15mm;
 }
 .water-usage strong{
   width: 25mm;
@@ -156,6 +159,8 @@ body {
   text-align: center;
   
   margin-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #000;
 }
 .logo{
     max-width: 100%;
@@ -185,7 +190,7 @@ body {
 <div class="bill-details">
   <strong>DATE:</strong> <?php echo date('m-d-Y');?><br>
   <strong>TIME:</strong> <?php echo date('h:i:s A');?><br>
-  <strong>Period:</strong> 11-01 to 12-01
+  <strong>PERIOD:</strong> <?php echo date('m/d/Y',strtotime($billing_period['bp_start_date']));?> to <?php echo date('m/d/Y',strtotime($billing_period['bp_end_date']));?>
 </div>
 
 <div class="customer-info">
@@ -218,13 +223,13 @@ body {
   
  <center> FAILURE TO SETTLE THIS BILL ON OR BEFORE THE DATE BELOW<br>
   will lead to immediate disconnection of your water service without prior notice.</center><br/>
-  <strong>DUE DATE:</strong> <span class="col-figure">Apr-20-2025</span><br>
-  <strong>DISCONNECTION DATE:</strong> <span class="col-figure">Apr-26-2025</span><br>
+  <strong>DUE DATE:</strong> <span class="col-figure"><?php echo date('M d, Y',strtotime($billing_period['bp_due_date']));?></span><br>
+  <strong>DISCONNECTION DATE:</strong> <span class="col-figure"><?php echo date('M d, Y',strtotime($billing_period['bp_disconnection_date']));?></span><br>
 </div>
 
 <div class="footer">
   ======================================<br>
-  Recognize Your Continued Loyalty<br/>
+  Recognize Your Continued Loyalty<br/><br/>
 </div>
 
 </body>

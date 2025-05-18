@@ -11,7 +11,7 @@
 						<span>
 							<?php echo $this->session->userdata('name');?>
 						</span>
-						<i class="fa fa-angle-down"></i>
+						<i class="fa fa-angle-right"></i>
 					</a> 
 					
 				</span>
@@ -78,14 +78,18 @@
 					
 					<?php if((array_key_exists('technicalproblems',$roleResponsible) && ($roleResponsible['technicalproblems'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 						<li class="<?php if($this->uri->segment(2)=='technicalproblems'){echo 'active';}?>">
-							<a href="<?php echo ADMIN_URL;?>technicalproblems"><i class="fa fa-lg fa-fw fa-gavel"></i> <span class="menu-item-parent">Technical Problems </span></a>
+							<a href="#"><i class="fa fa-lg fa-fw fa-gavel"></i> <span class="menu-item-parent">Tickets </span></a>
+							<ul>
+								<li><a href="<?php echo ADMIN_URL;?>mobile_dashboard">Add</a></li>
+								<li><a href="<?php echo ADMIN_URL;?>mobile_tickets">Listing</a></li>
+							</ul>
 						</li>
 					<?php } ?>
-					<?php if((array_key_exists('technicalsearch',$roleResponsible) && ($roleResponsible['technicalsearch'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+					<!--<?php if((array_key_exists('technicalsearch',$roleResponsible) && ($roleResponsible['technicalsearch'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 						<li class="<?php if($this->uri->segment(3)=='technicalsearch' && $this->uri->segment(2)=='addcustomer') echo 'active';?>">
 							<a href="<?php echo ADMIN_URL;?>addcustomer/technicalsearch/"><i class="glyphicon glyphicon-zoom-in"></i><span class="menu-item-parent">Technical Problems View</span></a>
 						</li>	
-					<?php } ?>
+					<?php } ?>-->
 					
 					<li class="<?php if($this->uri->segment(2)=='change_username'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='change_password'){echo 'active open';}?>">
