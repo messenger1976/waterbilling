@@ -17,7 +17,7 @@ function getPrint(){
   }
 
   body {
-    width: 2.3in;
+    width: 2.4in;
     height: 12in;
     margin: 0;
     padding: 0;
@@ -101,7 +101,7 @@ body {
   font-family: monospace;
   font-size: 11pt;
   line-height: 1.2;
-  width: 2.3in;
+  width: 2.4in;
   height: 12in;
   letter-spacing: -0.1em; /* Decreases space between characters */
 }
