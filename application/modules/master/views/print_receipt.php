@@ -12,7 +12,7 @@ function getPrint(){
 <style>
 @media print {
   @page {
-    size: 2.6in 12in;
+    size: 2.3in 12in;
     margin: 0;
   }
 
