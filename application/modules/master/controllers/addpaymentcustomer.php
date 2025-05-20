@@ -122,14 +122,14 @@ class addpaymentcustomer extends CI_Controller {
 	{		//*****  Add Search records  *****//
 			
 			$id = $this->input->post('id');
-			$this->load->model('addpaymentcustomer_model','my_model');
+			//$this->load->model('addpaymentcustomer_model','my_model');
 			$data['reading'] = $this->my_model->get_addcustomer_add_all_records($id);
 			$data['record'] = $this->my_model->get_meter_reading_all_records($id);
-			$data['collectinfo'] =  $this->my_model->collectinfo($id);
-			$data['month_collectinfo'] = $this->my_model->month_collectinfo($id);
-			$data['second_higest_radi'] = $this->my_model->get_second_meter($id);
+			//$data['collectinfo'] =  $this->my_model->collectinfo($id);
+			//$data['month_collectinfo'] = $this->my_model->month_collectinfo($id);
+			//$data['second_higest_radi'] = $this->my_model->get_second_meter($id);
 				
-			$data['amountrate'] = $this->my_model->get_unitvalue();
+			//$data['amountrate'] = $this->my_model->get_unitvalue();
 			$this->load->view($this->addpages_ajax,$data);
 			
 	}
@@ -432,6 +432,22 @@ class addpaymentcustomer extends CI_Controller {
 		echo sprintf('%07d',$new_or_number); 
 		 
    	}
+	   public function get_leaking_balance(){ 
+	
+		
+		$this->db->select("*");
+		$this->db->from('tbl_leaking_ledger');
+		//$this->db->where("leaking_balance>0");
+		$this->db->where("leaking_customer_id",$this->input->post('customer_id'));
+		$this->db->where("leaking_status",4);
+		$query = $this->db->get();
+		$result = $query->result_array();
+			
+		//echo $result[0]['leaking_balance'];
+		echo json_encode($result);
+		exit;
+		 
+   	}
 
 	   public function chk_leakingentry($bill_no){ 
 	
@@ -443,6 +459,12 @@ class addpaymentcustomer extends CI_Controller {
 		$this->db->group_by("leaking_customer_id");
 		$query = $this->db->get();
 		$result = $query->result_array();
+		
+		/*if($query->num_rows() > 0){
+			$result = $query->result_array();
+		}else{
+			$result = array('leaking_id'=>'null');	
+		}	*/
 		echo json_encode($result);
 		exit;
 		

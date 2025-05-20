@@ -214,6 +214,7 @@
 																<a href="<?php echo ADMIN_URL;?>leakingentry/edit/<?php echo $row['leaking_id'];?>" class="tooltip-success btn_edit" data-rel="tooltip" title="Edit" 
 																data-leaking_id="<?php echo $row['leaking_id'];?>"
 																data-fullname="<?php echo $row['customer_id'].'==>'.$row['last_name'].', '.$row['first_name'];?>"
+																data-special_priviledge = "<?php echo $row['special_priviledge'];?>"
 																data-billing_period="<?php echo getMonthName($row['month'])[0]->month_name.' '.$row['year'];?>"
 																data-previous_reading="<?php echo $row['previous_reading'];?>"
 																data-current_reading="<?php echo $row['reading'];?>"
@@ -323,11 +324,11 @@
 													
 													foreach ($customer_listing as $key => $value) {
 														?>
-														<option value="<?php echo $value['customer_id']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
+														<option value="<?php echo $value['customer_id'].'==>'.$value['special_priviledge']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
 													<?php }
 													?>
 												</select>
-												
+												<input type="hidden" name="special_priviledge" id="special_priviledge" value="0"/>
 												<?php echo form_error('customer_id'); ?>
                                             </div>
                                         </div>
@@ -735,7 +736,12 @@
 			$('#customer_id').select2();
 			$('#customer_id').on('change', function(evt){
 				evt.preventDefault();
-				var cust_id = $(this).val();
+				var customer_id = $(this).val().split('==>')[0];
+
+				var $special_priviledge = $(this).val().split('==>')[1];
+				$('#special_priviledge').val($special_priviledge);
+
+				var cust_id = customer_id;
 				$('#leaking_option').hide();
 				if(cust_id){
 					// Send an AJAX request to the backend
@@ -836,6 +842,7 @@
 				$fullname = $(this).data('fullname');
 				$billing_period = $(this).data('billing_period');
 				$leaking_id = $(this).data('leaking_id');
+				$special_priviledge = $(this).data('special_priviledge');
 				$customer_id = $fullname.split('==>')[0];
 				//$customer_name = $fullname.split('==>')[1];	
 				$previous_reading = $(this).data('previous_reading');
@@ -866,6 +873,7 @@
 				$('#billing_period_div_text').show();
 
 				$('#customer_id_text').val($fullname);
+				$('#special_priviledge').val($special_priviledge);
 				$('#billing_period_text').val($billing_period);
 				$('#leaking_id').val($leaking_id);
 				$('#previous_reading').val($previous_reading);
@@ -900,7 +908,8 @@
 			$('#btn_save').on('click', function(evt){
 				evt.preventDefault();
 				var refno = $('#refno').val();
-				var customer_id = $('#customer_id').val();
+				//var $customer_id = $(this).val().split('==>')[0];
+				var customer_id = $('#customer_id').val().split('==>')[0];
 				var leaking_percent = $('#leaking_percent').val();
 				var payment_date = $('#payment_date').val();
 				var leaking_amount = $('#leaking_amount').val();
@@ -1014,10 +1023,11 @@
 				$('#btn_save').prop('disabled', false);
 				var duedate = $('#due_date').val();
 				var paymentdate = $('#payment_date').val();
+				var special_priviledge = $('#special_priviledge').val();
 				var date1 = parseDmyString(duedate);
 				var date2 = parseDmyString(paymentdate);
-				 
-				if(date1 < date2){
+				 console.log('special Previous:'+special_priviledge);
+				if(date1 < date2 && special_priviledge==0){
 					$('#gross_amount').val($('#penalty').val());
 					var leakingdisc =($('#penalty').val() * leakval)/100;
 					var billamount = $('#penalty').val() - leakingdisc;
