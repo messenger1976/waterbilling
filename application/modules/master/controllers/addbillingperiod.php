@@ -404,6 +404,7 @@ class addbillingperiod extends CI_Controller {
 			$this->db->where("tbl_addcustomer_reading.month",$billingmonth);
 			$this->db->where("tbl_addcustomer_reading.year",$billingyear);
 		}
+		$this->db->where("tbl_addmetercustomer.status",1);
 		
 		
 			
