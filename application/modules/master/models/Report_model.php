@@ -1,5 +1,5 @@
 <?php 
-class Report_model extends CI_Model {
+class report_model extends CI_Model {
 	public $table_name = 'tbl_addcustomer';
 	public $table_billing = 'tbl_feesplaning';
 	public $table_meter = 'tbl_addmetercustomer';
