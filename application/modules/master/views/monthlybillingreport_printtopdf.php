@@ -115,9 +115,9 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                 //$mysql_transdate = date('Y-m-d',strtotime($trans_date));
                  //$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
 				 if($status=='3'){
-					$get_dailytrans = $this->reports_model->get_monthly_billing_report_records_status3($row['id'],$billingperiod,$status);
+					$get_dailytrans = $this->report_model->get_monthly_billing_report_records_status3($row['id'],$billingperiod,$status);
 				 }else{
-					$get_dailytrans = $this->reports_model->get_monthly_billing_report_records($row['id'],$billingperiod,$status);
+					$get_dailytrans = $this->report_model->get_monthly_billing_report_records($row['id'],$billingperiod,$status);
 				 }
                  
                  

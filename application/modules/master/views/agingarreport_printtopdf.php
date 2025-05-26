@@ -41,7 +41,17 @@
 <h3 style="text-align: center;">AGING OF ACCOUNT RECEIVABLE REPORT</h3>
 <h6 style="text-align: center;"><?php
 
-echo 'As of '.$asofdate;?></h6>
+echo 'As of '.$asofdate;?><br/>
+<?php 
+if($status==1){
+	echo 'Active Members';
+}elseif($status== 2){
+	echo 'Disconnected Members';
+}elseif($status== 0){
+	echo 'Inactive Members';
+}
+?>
+</h6>
 <div class="row">
 	<div class="col-lg-12 col-sm-12 col-xs-12 col-md-12">
 		<?php
@@ -97,7 +107,7 @@ echo 'As of '.$asofdate;?></h6>
                 <?php
                 //$mysql_transdate = date('Y-m-d',strtotime($trans_date));
                  //$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
-                 $get_dailytrans = $this->reports_model->get_aging_ar_report_records($asofdate,$row['id']);
+                 $get_dailytrans = $this->report_model->get_aging_ar_report_records($asofdate,$row['id'],$status);
                  
 				 $grand_total_30days_zone = 0;
 				 $grand_total_60days_zone = 0;
