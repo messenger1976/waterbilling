@@ -403,7 +403,7 @@
 																		<select class="form-control" name="status" id="status"  required>
 																		<option value="">--Select--</option>
 																		<option value="1">Active</option>
-																		<option value="0">Deactive</option>
+																		<option value="0">Inactive</option>
 																		</select>
 																		</select>
 																	</div>
