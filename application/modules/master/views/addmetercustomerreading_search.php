@@ -275,6 +275,15 @@
                                             </div>
                                         </div>
                                     </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Customer Status : </strong></span>
+                                                <input class="form-control" type="text" id="customer_status" name="customer_status" style="background-color:white;">
+                                                <?php echo form_error('customer_status'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
 								</form>
 				
 							</div>
@@ -544,6 +553,7 @@ $('#btn_save').on('click', function(evt){
 	formData.append("total_amount", $('#total_amount').val());
 	formData.append("penalty", $('#penalty').val());
 	formData.append("reading_date", $('#reading_date').val());
+	formData.append("customer_status", $('#customer_status').val());
 	formData.append("edit", 'edit');
 
 	$.ajax({
