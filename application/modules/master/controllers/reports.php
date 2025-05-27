@@ -17,7 +17,7 @@ class reports extends CI_Controller {
         parent::__construct();
         $this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//	
   		$this->load->model('adddailyreport_model','my_model');   //*****    Model Loading     *****//	
-        $this->load->model('reports_model');   //*****    Model Loading     *****//	
+        $this->load->model('Report_model','report_model');   //*****    Model Loading     *****//	
         $this->load->model('common_model','comm_model');
 		$this->load->model('addcustomer_model','customer_model');	
 		$this->load->model('addmetercustomerreading_model','meterreading_model'); 
@@ -85,14 +85,14 @@ class reports extends CI_Controller {
 		$this->load->view($this->printtopdfPage,$data);
 	}
 
-	public function agingprinttopdf($asofdate,$zone,$preparedby='',$verifiedby='',$approvedby=''){
+	public function agingprinttopdf($asofdate,$zone,$status,$preparedby='',$verifiedby='',$approvedby=''){
 		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
 		//$data['zone'] = $this->my_model->get_zone($zone);
 		$data['zone'] = $this->my_model->get_zone($zone);
 		//$billing_period = explode(' ',urldecode($billingperiod));
 		
         $data['asofdate'] = $asofdate;
-        //$data['status'] = ($status=='99')?'':$status;
+        $data['status'] = ($status=='99')?'':$status;
 		$data['preparedby'] = $this->my_model->get_employee($preparedby);
 		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
 		$data['approvedby'] = $this->my_model->get_employee($approvedby);
@@ -119,9 +119,9 @@ class reports extends CI_Controller {
             
             $status = $this->input->post('status');
             if($status==3){
-				$data['record'] = $this->reports_model->get_monthly_billing_report_records_status3($zone,$billingperiod,$status);
+				$data['record'] = $this->report_model->get_monthly_billing_report_records_status3($zone,$billingperiod,$status);
 			}else{
-				$data['record'] = $this->reports_model->get_monthly_billing_report_records($zone,$billingperiod,$status);
+				$data['record'] = $this->report_model->get_monthly_billing_report_records($zone,$billingperiod,$status);
 			}
             
             
@@ -138,7 +138,7 @@ class reports extends CI_Controller {
             
             //$status = $this->input->post('status');
             
-            $data['record'] = $this->reports_model->get_aging_ar_report_records($asofdate,$zone);
+            $data['record'] = $this->report_model->get_aging_ar_report_records($asofdate,$zone);
             
             $this->load->view($this->agingARreport_ajaxPage,$data);
 				

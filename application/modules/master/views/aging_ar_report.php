@@ -139,6 +139,21 @@
 															</div>
 														</div>
 														<div class="form-group col-lg-6">
+                                                            <div class="col-lg-12 controls">
+                                                                <div class="form-group">
+                                                                <span class="input-group-addon"><i class="icon-user"></i><strong>Status : </strong></span>
+                                                                    <select  class="form-control" name="status" id="status" required>
+                                                                        <option value="">--All--</option>
+                                                                        <option value="1">Active</option>
+                                                                        <option value="0">Inactive</option>
+																		<option value="2">Disconnected</option>
+                                                                        
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        
+                                                        </div>
+														<div class="form-group col-lg-6">
 															<div class="col-lg-12 controls">
 																<div class="form-group">
 																	<span class="input-group-addon"><i class="icon-user"></i><strong> Prepared by:</strong></span>
@@ -433,12 +448,13 @@ $(document).ready(function(){
 	$('#printtopdf').on('click',function(evt){
 		evt.preventDefault();
 		var zone = $("#zone").val();
+		var status = $("#status").val();
 		var preparedby = $("#preparedby").val();
 		var verifiedby = $("#verifiedby").val();
 		var approvedby = $("#approvedby").val();
 		var asofdate = $("#asofdate").val();
 		const popup = window.open(
-			"agingprinttopdf/"+asofdate+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby, // URL to display 
+			"agingprinttopdf/"+asofdate+'/'+zone+'/'+status+'/'+preparedby+'/'+verifiedby+'/'+approvedby, // URL to display 
 			"PopupWindowPrint", // Name of the window
 			"width=1200,height=600,resizable=yes,scrollbars=yes" // Window settings
 		);

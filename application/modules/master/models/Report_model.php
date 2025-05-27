@@ -1,5 +1,5 @@
 <?php 
-class reports_model extends CI_Model {
+class report_model extends CI_Model {
 	public $table_name = 'tbl_addcustomer';
 	public $table_billing = 'tbl_feesplaning';
 	public $table_meter = 'tbl_addmetercustomer';
@@ -105,11 +105,15 @@ class reports_model extends CI_Model {
 		$result = $query->result_array();
 		return $result;
 	}
-	public function get_aging_ar_report_records($asofdate,$zone){
+	public function get_aging_ar_report_records($asofdate,$zone,$status){
 		$asofdate = date('Y-m-d',strtotime($asofdate));
 		$sql_query_zone ='';
+        $sql_query_status ='';
 		if($zone!=0){
 			$sql_query_zone =' AND tbl_addcustomer.zone=?';
+		}
+        if($status!=''){
+			$sql_query_status =' AND tbl_addcustomer.status=?';
 		}
 		$sql_query = "SELECT  tbl_addcustomer.customer_id,
 		tbl_addcustomer.last_name,
@@ -134,14 +138,14 @@ class reports_model extends CI_Model {
 		AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year
         LEFT JOIN tbl_classification ON tbl_addcustomer.classification = tbl_classification.class_id
         LEFT JOIN tbl_classification_category ON tbl_classification.class_cat_id = tbl_classification_category.class_cat_id
-	WHERE  tbl_addcustomer.status=1 and tbl_addmetercustomer.invoice_id IS NULL and tbl_addcustomer_reading.reading<>'' AND tbl_billing_period.bp_due_date<? $sql_query_zone
+	WHERE  tbl_addmetercustomer.invoice_id IS NULL and tbl_addcustomer_reading.reading<>'' AND tbl_billing_period.bp_due_date<? $sql_query_zone $sql_query_status
         GROUP BY tbl_addcustomer.`customer_id`
 		
 	ORDER BY tbl_addcustomer.last_name ASC, tbl_addcustomer.first_name ASC";
 	
 	$query = $this->db->query($sql_query, [
 		$asofdate, $asofdate, $asofdate, $asofdate,
-		$asofdate, $asofdate, $asofdate,$zone
+		$asofdate, $asofdate, $asofdate,$zone,$status
 	]);
 
 		
