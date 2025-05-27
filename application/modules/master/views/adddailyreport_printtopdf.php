@@ -61,7 +61,7 @@
 					<th data-hide="phone">Concessionaires</th>																												
 					<th  style="text-align:right;" data-hide="phone">Total Amount Collected</th>
 					<th  style="text-align:right;" data-hide="phone">Current</th>
-					<th  style="text-align:right;" data-hide="phone">Current Arrears</th>
+					<th  style="text-align:right;" data-hide="phone">Arrears</th>
                     <th  style="text-align:right;" data-hide="phone">Previous Year</th>
 					<th style="text-align:right;">Penalty</th>
                     <th style="text-align:right;">SC Disc</th>

@@ -42,7 +42,7 @@ class report_model extends CI_Model {
 
 		$this->db->where($this->table_meter_reading.'.month',$billingperiod[0]);
         $this->db->where($this->table_meter_reading.'.year',$billingperiod[1]);
-		$this->db->where($this->table_name.'.status',1);
+		$this->db->where($this->table_meter_reading.'.customer_status',1);
 		//$this->db->where('tbl_addmetercustomer.date <=',$to);
 		if($zone!=0){
 			$this->db->where('tbl_addcustomer.zone',$zone);
@@ -84,7 +84,7 @@ class report_model extends CI_Model {
 
 		$this->db->where($this->table_meter_reading.'.month',$billingperiod[0]);
         $this->db->where($this->table_meter_reading.'.year',$billingperiod[1]);
-		$this->db->where($this->table_name.'.status',1);
+		$this->db->where($this->table_meter_reading.'.customer_status',1);
 		//$this->db->where('tbl_addmetercustomer.date <=',$to);
 		if($zone!=0){
 			$this->db->where('tbl_addcustomer.zone',$zone);

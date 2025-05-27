@@ -117,7 +117,10 @@ if(!function_exists('getCustomerInfo'))
     function getCustomerInfo()
     {
         $CI = &get_instance();
+        
         $CI->db->where('status', '1');
+        
+        
         $customerinfo = $CI->db->get('tbl_addcustomer')->result();
         return $customerinfo;
 
@@ -167,7 +170,8 @@ if(!function_exists('customerbillingperiod'))
                 $billing_number = $CI3->db->get('tbl_doc_series_number')->row();
                 $doc_num = $billing_number->doc_series_num+1;
                 $customerinfodataInsertDetails1 = array( 
-                    'refno' => $doc_num
+                    'refno' => $doc_num,
+                    'customer_status' => $customerinfodata->status
                 );
                 $customerinfodataInsertDetails = array_merge($customerinfodataInsertDetails,$customerinfodataInsertDetails1);
                 $CI2 = &get_instance();
@@ -193,7 +197,8 @@ if(!function_exists('customerbillingperiod'))
                 }
                 $update_counter_array1 = array( 
                     'previous_reading' => $customer_current_billing_data->reading,
-                    'arrears' => $arrears
+                    'arrears' => $arrears,
+                    'customer_status' => $customerinfodata->status
                 );
                 $C5 = &get_instance();
                 $C5->db->where('id', $checkresult_id);
