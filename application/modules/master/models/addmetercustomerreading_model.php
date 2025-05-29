@@ -339,6 +339,7 @@ class addmetercustomerreading_model extends CI_Model {
             SET reading = ?, consumed = ?, sc_discount = ?, amount = ?, unit_price = ?, penalty = ?, date = ? , bp_id = ?, update_date_time = ?
             WHERE refno = ? AND (reading ='' OR reading = 0)";
     		$this->db->query($sql, [$data['current_reading'],  $consumed, $discount, number_format($total_amount,2,".",""), $cubicmeter_rate->per_unit,number_format($amount_total_penalty,2,".",""), $reading_date, $bp->bp_id,$updated_date,$data['refno']]);
+			return '[{"msg":"success"}]';
 		}
     	
 	}
