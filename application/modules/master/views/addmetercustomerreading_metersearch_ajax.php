@@ -33,6 +33,7 @@
                                                         <th data-hide="expand">Arrears</th>
                                                         <th data-hide="expand">Reading Date</th>
 														<th data-hide="expand">Status</th>
+														<th data-hide="expand">Action</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -58,6 +59,7 @@
                                                         <td class="arrears" align="right"><?php echo stripslashes(number_format($row['arrears'],2)); ?></td>
                                                         <td class="reading_date" align="center"><?php echo date('d-m-Y',strtotime($row['date'])); ?></td>
 														<!--<?php echo ADMIN_URL;?>addmetercustomerreading/edit/<?php echo $row['id'];?>-->
+														<td><?php echo stripslashes($row['customer_status']==1?'Active':'<span style="color:red;">Disconnected</span>'); ?></td>
 														<td align="center">
                                                             <a class="label label-info btn_edit" 
                                                         data-id="<?php echo stripslashes($row['id']); ?>" 
@@ -76,6 +78,7 @@
 														data-reading_date="<?php echo date('d-m-Y',strtotime($row['date'])); ?>"
 														data-account_type="<?php echo stripslashes($row['account_type']); ?>"
 														data-special_priviledge="<?php echo stripslashes($row['special_priviledge']); ?>"
+														data-customer_status="<?php echo stripslashes($row['customer_status']); ?>"
                                                         data-toggle="modal" data-target="#myModal"><i class="fa fa-edit"></i> Edit</a></td>
 														<div class="visible-xs visible-sm hidden-md hidden-lg">
 																<div class="inline position-relative">
@@ -295,6 +298,7 @@
 				let reading_date = $(this).data("reading_date");
 				let account_type = $(this).data("account_type");
 				let special_priviledge = $(this).data("special_priviledge");
+				let customer_status = $(this).data("customer_status");
 				
                 // Set modal fields
 				$("#record_id").val(id);
@@ -310,6 +314,7 @@
 				$("#reading_date").val(reading_date);
 				$("#cust_type_id").val(account_type);
 				$("#special_priviledge").val(special_priviledge);
+				$("#customer_status").val(customer_status);
                 console.log($("#reading_date").val());
                 // Show the modal
                 //$("#editModal").modal("show");

@@ -471,6 +471,7 @@ $(document).ready(function(){
        
         var asofdate = $("#asofdate").val();
         var zone = $("#zone").val();
+		var status = $("#status").val();
         showSpinner();
         
         $.ajax({
@@ -478,7 +479,7 @@ $(document).ready(function(){
             type : "POST",
             url	: '<?php echo ADMIN_URL;?>reports/getagingARreportsearch',
             
-            data	: "asofdate="+asofdate+"&zone="+zone,
+            data	: "asofdate="+asofdate+"&zone="+zone+"&status="+status,
             complete: function(data){
                 var op = data.responseText.trim();
                 //alert(op);

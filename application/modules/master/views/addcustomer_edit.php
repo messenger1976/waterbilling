@@ -283,9 +283,9 @@
 																	<span class="input-group-addon"><i class="icon-chevron-down"></i><strong> Status: </strong></span>
 																	<select class="form-control" name="status" id="status"  required>
 																		<option value="">--Select--</option>
-																		<option value="1"<?php if($record['status']=='1'){ ?> selected <?php } ?>>active</option>
-																		<option value="0"<?php if($record['status']=='0'){ ?> selected <?php } ?>>deactive</option>
-																		<option value="2"<?php if($record['status']=='2'){ ?> selected <?php } ?>>disconnected</option>
+																		<option value="1"<?php if($record['status']=='1'){ ?> selected <?php } ?>>Active</option>
+																		<option value="0"<?php if($record['status']=='0'){ ?> selected <?php } ?>>Inactive</option>
+																		<option value="2"<?php if($record['status']=='2'){ ?> selected <?php } ?>>Disconnected</option>
 																	</select>
 																</div>
 															</div>

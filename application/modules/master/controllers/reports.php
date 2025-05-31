@@ -135,10 +135,11 @@ class reports extends CI_Controller {
 			
             $zone = $this->input->post('zone');
             $asofdate = $this->input->post('asofdate');
-            
+            $status = $this->input->post('status');
+
             //$status = $this->input->post('status');
             
-            $data['record'] = $this->report_model->get_aging_ar_report_records($asofdate,$zone);
+            $data['record'] = $this->report_model->get_aging_ar_report_records($asofdate,$zone,$status);
             
             $this->load->view($this->agingARreport_ajaxPage,$data);
 				
