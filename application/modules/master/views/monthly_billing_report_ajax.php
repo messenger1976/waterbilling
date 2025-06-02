@@ -129,6 +129,8 @@
 									  	echo "Paid"; 
 									  }elseif($row['customer_status']== '2'){
 										echo "Disconnected"; 
+									  }elseif($row['invoice_id']== '' && $row['consumed']=='0'){
+										echo "No Reading"; 
 									  }else{ 
 									  	echo "Un-Paid"; 
 									  } ?>
