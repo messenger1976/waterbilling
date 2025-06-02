@@ -154,7 +154,11 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
 
                     if($gdailytrans['invoice_id']!= ''){ 
                         $status_msg= "Paid"; 
-                    } else{ 
+                    }elseif($gdailytrans['customer_status']=='2'){
+						$status_msg=  "Disconnected"; 
+					}elseif($gdailytrans['customer_status']!='2' && $gdailytrans['invoice_id']== ''){
+						$status_msg=  "No Reading"; 
+					}else{ 
                         $status_msg=  "Unpaid"; 
                     }
                     $index++;

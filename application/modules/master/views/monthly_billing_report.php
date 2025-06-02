@@ -132,7 +132,7 @@
                                                                         <option value="1">Paid</option>
                                                                         <option value="0">Un-paid</option>
 																		<option value="3">No Reading</option>
-                                                                        
+                                                                        <option value="2">Disconnected</option>
                                                                     </select>
                                                                 </div>
                                                             </div>

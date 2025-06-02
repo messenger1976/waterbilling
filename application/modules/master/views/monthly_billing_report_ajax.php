@@ -126,9 +126,11 @@
 								  ?>>
 								  <a href="#" style="color:#FFF; text-decoration:none;">
 									  <?php if($row['invoice_id']!= ''){ 
-									  echo "Paid"; 
-									  } else{ 
-									  echo "Un-Paid"; 
+									  	echo "Paid"; 
+									  }elseif($row['customer_status']== '2'){
+										echo "Disconnected"; 
+									  }else{ 
+									  	echo "Un-Paid"; 
 									  } ?>
 								</a>
 							</span>
