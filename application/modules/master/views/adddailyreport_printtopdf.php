@@ -90,40 +90,50 @@
                  $get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
                  $total_grand_zone = 0;
                  $total_current_zone = 0;
+				 $total_arrears_zone = 0;
                  $total_penalty_zone = 0;
                  $total_vat_zone = 0;
                  $total_leaking_zone = 0;
                  $total_sc_zone = 0;
 
                  foreach($get_dailytrans as $key => $gdailytrans){ 
-                    $gross_total = $gdailytrans['grand_total'] + $gdailytrans['vat_amount'];
-                    $penalty = $gross_total - $gdailytrans['reading_amount'];
+                    //$gross_total = $gdailytrans['grand_total'] + $gdailytrans['vat_amount'];
+                    //$penalty = $gross_total - $gdailytrans['reading_amount'];
+					$penalty = $gdailytrans['amount']-$gdailytrans['per_unit'];
+					$current = 0;
+					$arrears = 0;
                     if($penalty<=0){
                         $penalty = 0;
-                    }
+						$current = $gdailytrans['per_unit'];
+                    }else{
+						$arrears = $gdailytrans['per_unit'];
+					}
+
+
                     
                     echo '<tr>';
                     echo '<td>'.sprintf('%07d',$gdailytrans['or_number']).'</td><td>'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
                     <td align="right">'.number_format($gdailytrans['grand_total'],2).'</td>
-                    <td align="right">'.number_format($gdailytrans['reading_amount'],2).'</td>
-                    <td align="right">0.00</td>
-                    <td align="right">0.00</td>
-                    <td align="right">'. number_format($penalty,2).'</td>
+                    <td align="right">'.number_format( $gdailytrans['current_amount'],2).'</td>
+                    <td align="right">'.number_format( $gdailytrans['arrears_amount'],2).'</td>
+					<td align="right">0.00</td>
+                    <td align="right">'. number_format($gdailytrans['total_penalty'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['sc_discount'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['vat_amount'],2).'</td>
                     ';
                     echo '</tr>';
                     $total_grand_zone += $gdailytrans['grand_total'];
-                    $total_current_zone += $gdailytrans['reading_amount'];
-                    $total_penalty_zone += $penalty;
+                    $total_current_zone += $gdailytrans['current_amount'];
+					$total_arrears_zone += $gdailytrans['arrears_amount'];
+                    $total_penalty_zone += $gdailytrans['total_penalty'];
                     $total_vat_zone += $gdailytrans['vat_amount'];
                     $total_leaking_zone +=$gdailytrans['leaking_amount'];
                     $total_sc_zone +=$gdailytrans['sc_discount'];
                  }
                  echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_current_zone,2).'</th>
-                 <th style="text-align:right">0.00</th>
+                 <th style="text-align:right">'.number_format($total_arrears_zone,2).'</th>
                  <th style="text-align:right">0.00</th>
                  <th style="text-align:right">'.number_format($total_penalty_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_sc_zone,2).'</th>
@@ -135,6 +145,7 @@
                 
                     $cr += $total_grand_zone; 
                     $grand_total_current += $total_current_zone; 
+                    $grand_total_arrears += $total_arrears_zone; 
                     $grand_total_penalty += $total_penalty_zone;
                     $grand_total_vat += $total_vat_zone;
                     $grand_total_leaking += $total_leaking_zone;
@@ -153,7 +164,7 @@
 					<th>Grand Total</th>
                     <th style="text-align:right"><?php echo number_format($cr,2);?></th>
                     <th style="text-align:right"><?php echo number_format($grand_total_current,2);?></th>
-					<th style="text-align:right">0.00</th>																												
+					<th style="text-align:right"><?php echo number_format($grand_total_arrears,2);?></th>
 					<th style="text-align:right">0.00</th>
 					
 					
