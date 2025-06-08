@@ -87,6 +87,7 @@
 					</tr>
                 <?php
                 $mysql_transdate = date('Y-m-d',strtotime($trans_date));
+				$current_billing_period_year = date('Y',strtotime($trans_date));
                  $get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
                  $total_grand_zone = 0;
                  $total_current_zone = 0;
@@ -109,14 +110,15 @@
 						$arrears = $gdailytrans['per_unit'];
 					}
 
-
+					$prev_year = get_customer_unpaid_records($gdailytrans['customer_id'],'12',$current_billing_period_year-1);
+                    //$prev_year = 600;
                     
                     echo '<tr>';
                     echo '<td>'.sprintf('%07d',$gdailytrans['or_number']).'</td><td>'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
                     <td align="right">'.number_format($gdailytrans['grand_total'],2).'</td>
                     <td align="right">'.number_format( $gdailytrans['current_amount'],2).'</td>
                     <td align="right">'.number_format( $gdailytrans['arrears_amount'],2).'</td>
-					<td align="right">0.00</td>
+					<td align="right">'.number_format( $prev_year,2).'</td>
                     <td align="right">'. number_format($gdailytrans['total_penalty'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['sc_discount'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>

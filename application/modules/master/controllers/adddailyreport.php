@@ -17,6 +17,7 @@ class adddailyreport extends CI_Controller {
 		$this->load->model('addmetercustomerreading_model','meterreading_model'); 
 		$this->load->library('form_validation');
 		$this->load->library('Pdf');
+		$this->load->helper('common');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 		error_reporting(0);
