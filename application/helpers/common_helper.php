@@ -352,3 +352,34 @@ if(!function_exists("detailsbillingpayment")){
     }
 }
 
+if(!function_exists("get_customer_unpaid_records")){
+    function get_customer_unpaid_records($customer_id='',$billingmonth='',$billingyear=''){ 
+        $CI = &get_instance();
+        $CI->db->select("tbl_addcustomer.address, tbl_addcustomer.customer_id, tbl_addcustomer.first_name, tbl_addcustomer.last_name, tbl_addcustomer_reading.*, tbl_zone.zone as zonename");
+        $CI->db->from("tbl_addcustomer_reading");
+            
+        
+        $CI->db->join('tbl_addmetercustomer', 'tbl_addcustomer_reading.customer_id=tbl_addmetercustomer.customer_id AND tbl_addcustomer_reading.month=tbl_addmetercustomer.month AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year','left');
+
+        $CI->db->join('tbl_addcustomer', 'tbl_addcustomer_reading.customer_id=tbl_addcustomer.customer_id','left');
+        $CI->db->join('tbl_zone', 'tbl_addcustomer.zone='.'tbl_zone.id','left');
+
+        
+        if($billingmonth !='' && $billingyear !=''){
+            $CI->db->where("tbl_addcustomer_reading.month",$billingmonth);
+            $CI->db->where("tbl_addcustomer_reading.year",$billingyear);
+        }
+        
+        
+        if($customer_id !=''){
+            $CI->db->where('tbl_addcustomer.customer_id',$customer_id);
+        }	
+        $CI->db->where('tbl_addmetercustomer.invoice_id IS NULL');
+        $query = $CI->db->get();
+        $result = $query->row()->penalty;
+        
+        return $result;		
+    }
+}
+
+

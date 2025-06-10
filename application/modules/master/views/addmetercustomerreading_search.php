@@ -216,7 +216,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Consumed : </strong></span>
-                                                <input class="form-control" type="text" id="consumed" name="consumed" style="background-color:yellow;" readonly>
+                                                <input class="form-control" type="text" id="consumed" name="consumed" style="background-color:white;">
                                                 <?php echo form_error('consumed'); ?>
                                             </div>
                                         </div>
@@ -225,7 +225,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Current Bill : </strong></span>
-                                                <input class="form-control" type="text" id="current_bill" name="current_bill" style="background-color:yellow;" readonly>
+                                                <input class="form-control" type="text" id="current_bill" name="current_bill" style="background-color:white;">
                                                 <?php echo form_error('current_bill'); ?>
                                             </div>
                                         </div>
@@ -252,7 +252,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Amt before due date : </strong></span>
-                                                <input class="form-control" type="text" id="total_amount" name="total_amount" style="background-color:yellow;" readonly>
+                                                <input class="form-control" type="text" id="total_amount" name="total_amount" style="background-color:white;">
                                                 <?php echo form_error('arrears'); ?>
                                             </div>
                                         </div>
@@ -261,7 +261,7 @@
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
                                                 <span class="input-group-addon"><strong>Amt after due date : </strong></span>
-                                                <input class="form-control" type="text" id="penalty" name="penalty" style="background-color:yellow;" readonly>
+                                                <input class="form-control" type="text" id="penalty" name="penalty" style="background-color:white;">
                                                 <?php echo form_error('arrears'); ?>
                                             </div>
                                         </div>
