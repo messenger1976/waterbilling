@@ -114,11 +114,11 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                 <?php
                 //$mysql_transdate = date('Y-m-d',strtotime($trans_date));
                  //$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
-				 if($status=='3'){
-					$get_dailytrans = $this->report_model->get_monthly_billing_report_records_status3($row['id'],$billingperiod,$status);
-				 }else{
+				 //if($status=='3'){
+				//	$get_dailytrans = $this->report_model->get_monthly_billing_report_records_status3($row['id'],$billingperiod,$status);
+				// }else{
 					$get_dailytrans = $this->report_model->get_monthly_billing_report_records($row['id'],$billingperiod,$status);
-				 }
+				// }
                  
                  
                  $total_amount_zone = 0;
@@ -156,7 +156,7 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                         $status_msg= "Paid"; 
                     }elseif($gdailytrans['customer_status']=='2'){
 						$status_msg=  "Disconnected"; 
-					}elseif($gdailytrans['customer_status']!='2' && $gdailytrans['invoice_id']== ''){
+					}elseif($gdailytrans['customer_status']!='2' && ($gdailytrans['reading']== '' || $gdailytrans['reading']== '0' || $gdailytrans['consumed']== '0')){
 						$status_msg=  "No Reading"; 
 					}else{ 
                         $status_msg=  "Unpaid"; 
