@@ -156,7 +156,7 @@ echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
                         $status_msg= "Paid"; 
                     }elseif($gdailytrans['customer_status']=='2'){
 						$status_msg=  "Disconnected"; 
-					}elseif($gdailytrans['customer_status']!='2' && ($gdailytrans['reading']== '' || $gdailytrans['reading']== '0' || $gdailytrans['consumed']== '0')){
+					}elseif($gdailytrans['customer_status']=='1' && ($gdailytrans['reading']== '' || is_null($gdailytrans['reading']))){
 						$status_msg=  "No Reading"; 
 					}else{ 
                         $status_msg=  "Unpaid"; 

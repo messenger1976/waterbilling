@@ -53,19 +53,25 @@ class report_model extends CI_Model {
         }elseif($status==='0'){
             $this->db->where($this->table_meter.'.invoice_id IS NULL');
 			$this->db->where($this->table_meter_reading.'.customer_status',1);
-			$this->db->where($this->table_meter_reading.'.consumed > ',0);
+			$this->db->where($this->table_meter_reading.'.consumed >= ',0);
+			$this->db->where($this->table_meter_reading.'.amount > ',0);
         }elseif($status==='2'){
 			$this->db->where($this->table_meter_reading.'.customer_status',$status);
         }elseif($status==='3'){
 			$this->db->where($this->table_meter_reading.'.customer_status',1);
 			$this->db->where($this->table_meter.'.invoice_id IS NULL');
-			$this->db->where($this->table_meter_reading.'.consumed',0);
-            $this->db->or_where($this->table_meter_reading.'.reading IS NULL');
+			//$this->db->where($this->table_meter_reading.'.consumed',0);
+            //$this->db->where($this->table_meter_reading.'.amount IS NULL');
+			//$this->db->or_where($this->table_meter_reading.'.amount',0);
+			//$this->db->where($this->table_meter_reading.'.reading IS NULL');
+			$this->db->where($this->table_meter_reading.'.reading','');
 		}elseif($status==='4'){
 			//$this->db->where($this->table_meter.'.invoice_id IS NOT NULL');
 			//$this->db->where($this->table_meter.'.invoice_id IS NULL');
 			$this->db->where($this->table_meter_reading.'.customer_status',1);
-			$this->db->where($this->table_meter_reading.'.consumed > ',0);
+			//$this->db->where($this->table_meter_reading.'.consumed > ',0);
+			$this->db->where($this->table_meter_reading.'.reading IS NOT NULL');
+			$this->db->where($this->table_meter_reading.'.reading <>','');
 		}
 		
 		$this->db->order_by($this->table_name.'.last_name','asc');
