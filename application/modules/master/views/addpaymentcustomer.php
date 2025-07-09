@@ -244,6 +244,9 @@
 															<a href="#" title="Print New">
 																<i class="print_button_new fa fa-table" id="print_button_new<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
 																 </a>
+																 <a href="#" title="Print New">
+																<i class="print_button_new1 fa fa-table" id="print_button_new1<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
+																 </a>
 																<!--<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addpaymentcustomer/delete/<?php echo $row['id'];?>';}" title="Delete">
 																			<i class="fa fa-remove"></i>
 																</a>-->
