@@ -130,6 +130,7 @@
                                                                     <select  class="form-control" name="status" id="status" class="col-lg-12" required>
                                                                         <option value="">--All--</option>
                                                                         <option value="1">Paid</option>
+																		<option value="4">Paid & Un-paid</option>
                                                                         <option value="0">Un-paid</option>
 																		<option value="3">No Reading</option>
                                                                         <option value="2">Disconnected</option>
