@@ -211,7 +211,7 @@
 															if($row['leaking_status']!='4' && $row['leaking_status']!='5'){
 														?>		
 																
-																<a href="<?php echo ADMIN_URL;?>leakingentry/edit/<?php echo $row['leaking_id'];?>" class="tooltip-success btn_edit" data-rel="tooltip" title="Edit" 
+																<a href="<?php echo ADMIN_URL;?>Leakingentry/edit/<?php echo $row['leaking_id'];?>" class="tooltip-success btn_edit" data-rel="tooltip" title="Edit" 
 																data-leaking_id="<?php echo $row['leaking_id'];?>"
 																data-fullname="<?php echo $row['customer_id'].'==>'.$row['last_name'].', '.$row['first_name'];?>"
 																data-special_priviledge = "<?php echo $row['special_priviledge'];?>"
@@ -237,7 +237,7 @@
 																</a>
 
 														
-															<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>leakingentry/delete/<?php echo $row['leaking_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
+															<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>Leakingentry/delete/<?php echo $row['leaking_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
 															<span class="red">
 																<img src="<?php echo base_url();?>images/favicon/delete.png">
 															</span>
@@ -247,7 +247,7 @@
 															}
 														?>
 														
-														<a href="<?php echo ADMIN_URL;?>leakingentry/ledger/<?php echo $row['leaking_id'];?>" class="tooltip-success" data-rel="tooltip" title="Ledger">
+														<a href="<?php echo ADMIN_URL;?>Leakingentry/ledger/<?php echo $row['leaking_id'];?>" class="tooltip-success" data-rel="tooltip" title="Ledger">
 																	<span class="blue">
 																		<img src="<?php echo base_url();?>images/favicon/ledger.png">
 																	</span>
@@ -746,7 +746,7 @@
 				if(cust_id){
 					// Send an AJAX request to the backend
 					$.ajax({
-						url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
+						url: 'Leakingentry/get_customer_meter_reading', // Backend PHP script
 						type: 'POST',
 						data: { customer_id: cust_id },
 						dataType: 'json',
@@ -781,7 +781,7 @@
 				if(meterreading_id){
 					// Send an AJAX request to the backend
 					$.ajax({
-						url: 'leakingentry/get_customer_meter_reading_detail', // Backend PHP script
+						url: 'Leakingentry/get_customer_meter_reading_detail', // Backend PHP script
 						type: 'POST',
 						data: { meterreading_id: meterreading_id },
 						dataType: 'json',
@@ -935,7 +935,7 @@
 				}
 
 				$.ajax({
-					url: '<?php echo ADMIN_URL;?>leakingentry/add/',
+					url: '<?php echo ADMIN_URL;?>Leakingentry/add/',
 					type: 'POST',
 					data: formData,
 					contentType: false,
@@ -946,7 +946,7 @@
 					success: function (response) {
 						//const result = JSON.parse(response);
 						if (response=='success') {
-							window.location='<?php echo ADMIN_URL;?>leakingentry';
+							window.location='<?php echo ADMIN_URL;?>Leakingentry';
 							/*$.smallBox({
 								title : "Saving Data",
 								content : "Saving Data Successfully!",
@@ -995,10 +995,10 @@
 						}
 						if (ButtonPressed === "Approved") {
 			
-							window.location='<?php echo ADMIN_URL;?>leakingentry/status/'+id+'/2';
+							window.location='<?php echo ADMIN_URL;?>Leakingentry/status/'+id+'/2';
 						}
 						if (ButtonPressed === "Denied") {
-							window.location='<?php echo ADMIN_URL;?>leakingentry/status/'+id+'/3';
+							window.location='<?php echo ADMIN_URL;?>Leakingentry/status/'+id+'/3';
 						}
 						
 			
