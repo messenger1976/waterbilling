@@ -25,7 +25,7 @@
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
 					<li><a href="<?php echo ADMIN_URL;?>dashboard">Home</a></li>
-					<li><a href="<?php echo ADMIN_URL;?>leakingentry"> Leaking Ledger Listing </a></li>
+					<li><a href="<?php echo ADMIN_URL;?>Leakingentry"> Leaking Ledger Listing </a></li>
 					<li><a href=""> Leaking Ledger Details Listing </a></li>
 				</ol>
 				
@@ -137,7 +137,7 @@
                                             }
                                         }
                                         </script>
-				                    <form method="post" action="<?php echo ADMIN_URL;?>leakingentry/multi_delete">
+				                    <form method="post" action="<?php echo ADMIN_URL;?>Leakingentry/multi_delete">
 										<!-- widget content -->
 										<div class="widget-body no-padding">
 										   <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
@@ -661,7 +661,7 @@
 				if(cust_id){
 					// Send an AJAX request to the backend
 					$.ajax({
-						url: 'leakingentry/get_customer_meter_reading', // Backend PHP script
+						url: 'Leakingentry/get_customer_meter_reading', // Backend PHP script
 						type: 'POST',
 						data: { customer_id: cust_id },
 						dataType: 'json',
@@ -696,7 +696,7 @@
 				if(meterreading_id){
 					// Send an AJAX request to the backend
 					$.ajax({
-						url: 'leakingentry/get_customer_meter_reading_detail', // Backend PHP script
+						url: 'Leakingentry/get_customer_meter_reading_detail', // Backend PHP script
 						type: 'POST',
 						data: { meterreading_id: meterreading_id },
 						dataType: 'json',
@@ -847,7 +847,7 @@
 				}
 
 				$.ajax({
-					url: '<?php echo ADMIN_URL;?>leakingentry/add/',
+					url: '<?php echo ADMIN_URL;?>Leakingentry/add/',
 					type: 'POST',
 					data: formData,
 					contentType: false,
@@ -858,7 +858,7 @@
 					success: function (response) {
 						//const result = JSON.parse(response);
 						if (response=='success') {
-							window.location='<?php echo ADMIN_URL;?>leakingentry';
+							window.location='<?php echo ADMIN_URL;?>Leakingentry';
 							/*$.smallBox({
 								title : "Saving Data",
 								content : "Saving Data Successfully!",
@@ -907,10 +907,10 @@
 						}
 						if (ButtonPressed === "Approved") {
 			
-							window.location='<?php echo ADMIN_URL;?>leakingentry/status/'+id+'/2';
+							window.location='<?php echo ADMIN_URL;?>Leakingentry/status/'+id+'/2';
 						}
 						if (ButtonPressed === "Denied") {
-							window.location='<?php echo ADMIN_URL;?>leakingentry/status/'+id+'/3';
+							window.location='<?php echo ADMIN_URL;?>Leakingentry/status/'+id+'/3';
 						}
 						
 			
