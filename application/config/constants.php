@@ -43,25 +43,25 @@ define('DIR_WRITE_MODE', 0777);
 //define('HOME_ADS_NO_IMG5', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
 //define('HOME_ADS_NO_IMG6', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
 
-define('ADMIN_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/master/');
-define('ADMIN_CSS_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/styles/admin/styles/');
-define('ADMIN_PCSS_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/styles/admin/styles/');
-define('INCHARGE_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/incharge/');
-define('ADMIN_JS_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/js/admin/js/');
-define('ADMIN_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/');
-define('SMALL_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/products/70x70/');
-define('MEDIUM_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/products/190x190/');
-define('LARGE_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/products/280x280/');
-define('INNER_BANNER_NO_IMG', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-banner.jpg');
-define('INNER_ADS_NO_IMG1', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-1.jpg');
-define('INNER_ADS_NO_IMG2', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-2.jpg');
-define('HOME_BANNER_NO_IMG', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-banner.jpg');
-define('HOME_ADS_NO_IMG1', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-2.jpg');
-define('HOME_ADS_NO_IMG2', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-2.jpg');
-define('HOME_ADS_NO_IMG3', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-2.jpg');
-define('HOME_ADS_NO_IMG4', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-2.jpg');
-define('HOME_ADS_NO_IMG5', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-2.jpg');
-define('HOME_ADS_NO_IMG6', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling/images/no-images/inner-ads-2.jpg');
+define('ADMIN_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/master/');
+define('ADMIN_CSS_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/styles/admin/styles/');
+define('ADMIN_PCSS_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/styles/admin/styles/');
+define('INCHARGE_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/incharge/');
+define('ADMIN_JS_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/js/admin/js/');
+define('ADMIN_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/');
+define('SMALL_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/products/70x70/');
+define('MEDIUM_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/products/190x190/');
+define('LARGE_IMG_URL', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/products/280x280/');
+define('INNER_BANNER_NO_IMG', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-banner.jpg');
+define('INNER_ADS_NO_IMG1', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-1.jpg');
+define('INNER_ADS_NO_IMG2', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-2.jpg');
+define('HOME_BANNER_NO_IMG', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-banner.jpg');
+define('HOME_ADS_NO_IMG1', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-2.jpg');
+define('HOME_ADS_NO_IMG2', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-2.jpg');
+define('HOME_ADS_NO_IMG3', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-2.jpg');
+define('HOME_ADS_NO_IMG4', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-2.jpg');
+define('HOME_ADS_NO_IMG5', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-2.jpg');
+define('HOME_ADS_NO_IMG6', 'http://'.$_SERVER['SERVER_NAME'].'/waterbilling1/images/no-images/inner-ads-2.jpg');
 
 
 

@@ -19,5 +19,4 @@ application/cache
 .htaccess
 error_log
 .ftp-deploy-sync-state.json
-*.git*
 application/config/database.php
