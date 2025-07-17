@@ -237,16 +237,18 @@
 															<input type="hidden" name="year_<?php echo $i;?>" id="year_<?php echo $i;?>" value = "<?php echo $row['year'];?>">
 															<input type="hidden" name="invoiceid_<?php echo $i;?>" id="invoiceid_<?php echo $i;?>" value = "<?php echo $row['invoice_id'];?>">
 														    <!--<input class="print_button" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i; ?>" type="button" name="print" value="Print">-->
-															<a href="#" title="Print">
+															<!--<a href="#" title="Print">
 																 <i class="print_button fa fa-print" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
+																 </a>&nbsp;&nbsp;&nbsp;-->
+<a href="#" title="Print">
+																 <i class="print_button_new1 fa fa-print" id="print_button_new1<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
 																 </a>&nbsp;&nbsp;&nbsp;
-
-															<a href="#" title="Print New">
+															<!--<a href="#" title="Print New">
 																<i class="print_button_new fa fa-table" id="print_button_new<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
 																 </a>
 																 <a href="#" title="Print New">
 																<i class="print_button_new1 fa fa-table" id="print_button_new1<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
-																 </a>
+																 </a>-->
 																<!--<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addpaymentcustomer/delete/<?php echo $row['id'];?>';}" title="Delete">
 																			<i class="fa fa-remove"></i>
 																</a>-->
