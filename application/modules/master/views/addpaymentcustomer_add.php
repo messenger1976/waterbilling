@@ -284,7 +284,21 @@
 																			<?php echo form_error('currency'); ?>
 																		</div>
 																	</div>
-																	<div class="row">
+
+																	<div class="row" id="leaking_balance_div" style="display: none;">
+																		<div class="col-md-12 controls">
+																			<div class="form-group" style=" width: 100%;">
+																				<label class="col-md-5 control-label" style="text-align:right;"> Add: Balance :</label>
+																				<div class="col-md-7">
+																					<input  type="text"  class="form-control"  id="leaking_balance" name="leaking_balance"  value="0.00"/>
+																					<input type="hidden" id="leaking_balance_total" name="leaking_balance_total" value="0"/>
+																					<?php echo form_error('leaking_balance_total'); ?>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+
+																	<div class="row" id="leaking_discount_div">
 																		<div class="col-md-12 controls">
 																			<div class="form-group" style=" width: 100%;">
 																				<label class="col-md-5 control-label" style="text-align:right;">Less: Leaking Disc :</label>
@@ -769,21 +783,54 @@ $(document).on('click','.pay_button',function(e){
 			$('#or_num').val(data);
 		}
 	});
+
+	$.ajax({
+		type: 'POST',
+		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/get_leaking_balance/',
+		data: {customer_id: customer_id},
+		success: function(data) {
+			const resultdata = JSON.parse(data);
+			var leaking_balance = resultdata[0]['leaking_balance'];
+			$('#leaking_id').val(resultdata[0]['leaking_id']);
+			console.log('leaking_id:'+resultdata[0]['leaking_id']);
+			if(leaking_balance>0){
+				$("#leaking_balance_div").show();
+				$("#leaking_discount_div").hide();
+				
+				$('#leaking_balance').val(leaking_balance);
+				$('#leaking_balance_total').val(leaking_balance);
+				amount = parseFloat(amount)+parseFloat(leaking_balance);
+				$("#grand_total").val(amount.toFixed(2));
+			}else{
+				$("#leaking_balance_div").hide();
+				$("#leaking_discount_div").show();
+				
+				$('#leaking_balance').val('0');
+				$('#leaking_balance_total').val('0');
+			}
+			
+		}
+	});
+
+
 	if(refno!=''){
 		$('#refno').val(refno);
 		$.ajax({
-		type: 'POST',
-		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/chk_leakingentry/'+refno,
-		data: {id: customer_id, month: month, year: year},
-		success: function(data) {
-			const resultdata = JSON.parse(data);
-			$('#leaking_id').val(resultdata[0]['leaking_id']);
-			$('#leaking_percent').val(resultdata[0]['discount_percent']);
-			$('#leaking_amount').val(resultdata[0]['discount_amount']);
-			$("#grand_total").val(resultdata[0]['total_amount']);
-			//console.log(resultdata);
-		}
-	});
+			type: 'POST',
+			url: '<?php echo ADMIN_URL;?>addpaymentcustomer/chk_leakingentry/'+refno,
+			data: {id: customer_id, month: month, year: year},
+			success: function(data) {
+				const resultdata = JSON.parse(data);
+				if(resultdata[0]['leaking_id']!==undefined){
+					$('#leaking_id').val(resultdata[0]['leaking_id']);
+					$('#leaking_percent').val(resultdata[0]['discount_percent']);
+					$('#leaking_amount').val(resultdata[0]['discount_amount']);
+					$("#grand_total").val(resultdata[0]['total_amount']);
+				}
+				
+				//console.log(resultdata);
+			}
+		});
 	}
 	
 
@@ -851,20 +898,21 @@ $('#aftermeter').on('blur', function() {
 });	
 
 $('#vat_percent').on('blur', function() {
-	var taxpercent = $(this).val();
+	var leaking_balance = $('#leaking_balance').val()==''?0:$('#leaking_balance').val();
+	var taxpercent = $('#vat_percent').val()==''?0:$('#vat_percent').val();
 	var total_total_amount = $('#total_total_amount').val();
 	var paid_total_amount = $("#paid_total_amount").val();
 	var leaking_amount = $("#leaking_amount").val();
 	var taxdeduct = 0;
-	
-	
+
+
 	if(total_total_amount!=0){
 		if(leaking_amount>0){
 			total_total_amount-=leaking_amount;
 		}
 		taxdeduct = (total_total_amount * taxpercent)/100;
 		$('#vat_amount').val(taxdeduct.toFixed(2));
-		var grand_total =  total_total_amount - taxdeduct;
+		var grand_total =  total_total_amount - taxdeduct + parseFloat(leaking_balance);
 		$("#grand_total").val(grand_total.toFixed(2));
 
 	}else{
@@ -873,14 +921,14 @@ $('#vat_percent').on('blur', function() {
 		}
 		taxdeduct = (paid_total_amount * taxpercent)/100;
 		$('#vat_amount').val(taxdeduct.toFixed(2));
-		var grand_total =  paid_total_amount - taxdeduct;
+		var grand_total =  paid_total_amount - taxdeduct + parseFloat(leaking_balance);
 		$("#grand_total").val(grand_total.toFixed(2));
 	}
 	
 });	
 
 $('#leaking_percent').on('blur', function() {
-	var leakingpercent = $(this).val();
+	var leakingpercent = $('#leaking_percent').val();
 	var total_total_amount = $('#total_total_amount').val();
 	var paid_total_amount = $("#paid_total_amount").val();
 	
@@ -899,6 +947,24 @@ $('#leaking_percent').on('blur', function() {
 	}
 	
 });	
+
+$('#leaking_balance').on('blur', function() {
+	var leaking_balance = $('#leaking_balance').val()==''?0:$('#leaking_balance').val();
+	var total_total_amount = $('#total_total_amount').val();
+	var paid_total_amount = $("#paid_total_amount").val();
+	var vat_amount = $('#vat_amount').val()==''?0:$('#vat_amount').val();
+
+	if(total_total_amount!=0){
+		total_total_amount = parseFloat(total_total_amount) + parseFloat(leaking_balance)-parseFloat(vat_amount);
+		$("#grand_total").val(Number.isNaN(total_total_amount.toFixed(2))? 0 : total_total_amount.toFixed(2));
+	}else{
+		paid_total_amount = parseFloat(paid_total_amount) + parseFloat(leaking_balance)-parseFloat(vat_amount);
+		$("#grand_total").val(Number.isNaN(paid_total_amount.toFixed(2))? 0 : paid_total_amount.toFixed(2));
+	}	
+
+});
+
+
 
 $('#pay_amount').on('blur', function() {
 	var change_amount = $("#grand_total").val() - $(this).val();
@@ -1101,6 +1167,9 @@ $("#transdate").datepicker({
 		return returnorval;
 	}
 
+	function compute_all(){
+
+	}
 </script>
 
 <style>

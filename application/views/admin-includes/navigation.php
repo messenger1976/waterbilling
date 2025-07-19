@@ -69,8 +69,8 @@
 							</li>
 							
 							<?php if((array_key_exists('leakingentry',$roleResponsible) && ($roleResponsible['leakingentry'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>	
-							<li class="<?php if($this->uri->segment(2)=='leakingentry'){echo 'active';}?>">
-								<a href="<?php echo ADMIN_URL;?>leakingentry">Leaking Entry</a>
+							<li class="<?php if($this->uri->segment(2)=='Leakingentry'){echo 'active';}?>">
+								<a href="<?php echo ADMIN_URL;?>Leakingentry">Leaking Entry</a>
 							</li>
 							<?php } ?>
 

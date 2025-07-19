@@ -237,13 +237,18 @@
 															<input type="hidden" name="year_<?php echo $i;?>" id="year_<?php echo $i;?>" value = "<?php echo $row['year'];?>">
 															<input type="hidden" name="invoiceid_<?php echo $i;?>" id="invoiceid_<?php echo $i;?>" value = "<?php echo $row['invoice_id'];?>">
 														    <!--<input class="print_button" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i; ?>" type="button" name="print" value="Print">-->
-															<a href="#" title="Print">
+															<!--<a href="#" title="Print">
 																 <i class="print_button fa fa-print" id="print_button<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
+																 </a>&nbsp;&nbsp;&nbsp;-->
+<a href="#" title="Print">
+																 <i class="print_button_new1 fa fa-print" id="print_button_new1<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
 																 </a>&nbsp;&nbsp;&nbsp;
-
-															<a href="#" title="Print New">
+															<!--<a href="#" title="Print New">
 																<i class="print_button_new fa fa-table" id="print_button_new<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
 																 </a>
+																 <a href="#" title="Print New">
+																<i class="print_button_new1 fa fa-table" id="print_button_new1<?php echo $i;?>" data-print-val-id="<?php echo $i ?>"></i>
+																 </a>-->
 																<!--<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addpaymentcustomer/delete/<?php echo $row['id'];?>';}" title="Delete">
 																			<i class="fa fa-remove"></i>
 																</a>-->
@@ -542,6 +547,22 @@ $(document).on('click','.print_button_new',function(e){
 	var invoice_id = $('#invoiceid_'+paybtnid).val();
 	if(customer != '' && month != '' && year != ''){
 				var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthly_receipt/'+customer+'/'+month+'/'+year+'/'+invoice_id;
+				//var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer;
+				window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
+	}
+	
+});
+
+$(document).on('click','.print_button_new1',function(e){
+	var buttonid = $(this).attr('id');
+	var paybtnid = $(this).data('print-val-id');
+	
+    var customer = $('#customerid_'+paybtnid).val();
+	var month = $('#month_'+paybtnid).val();
+	var year = $('#year_'+paybtnid).val();
+	var invoice_id = $('#invoiceid_'+paybtnid).val();
+	if(customer != '' && month != '' && year != ''){
+				var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthly_receipt_ver1/'+customer+'/'+month+'/'+year+'/'+invoice_id;
 				//var url = '<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer;
 				window.open( url , "popupWindow", "width=1024,height=600,scrollbars=yes");	
 	}

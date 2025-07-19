@@ -352,6 +352,45 @@ if(!function_exists("detailsbillingpayment")){
     }
 }
 
+if(!function_exists("detailsbillingpayment_ver1")){
+    function detailsbillingpayment_ver1($invoice_id) {
+        $str_invoicepayment ='';
+        $CI = &get_instance();
+        $CI->db->select('tbl_addmetercustomer.*,tbl_months.month_name as monthname');
+        $CI->db->from('tbl_addmetercustomer');
+        $CI->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
+        $CI->db->where('invoice_id', $invoice_id);
+        $paymentdetailsinfo = $CI->db->get()->result();
+        
+        foreach($paymentdetailsinfo as $paymentdetailsinfodata){
+            $CI1 = &get_instance();
+            $CI1->db->select('tbl_months.month_id as monthid, 
+            (SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$paymentdetailsinfodata->customer_id.'" and tbl_addcustomer_reading.month="'.$paymentdetailsinfodata->month.'" and tbl_addcustomer_reading.year="'.$paymentdetailsinfodata->year.'") as reading_amount,
+            tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');				   
+            $CI1->db->from('tbl_addmetercustomer');
+            $CI1->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
+            $CI1->db->where('customer_id',$paymentdetailsinfodata->customer_id);
+            $CI1->db->where('month',$paymentdetailsinfodata->month);
+            $CI1->db->where('year',$paymentdetailsinfodata->year);
+            $query = $CI1->db->get()->row_array();
+            extract($query);
+            $panalty_msg ='';
+            if($amount !== $reading_amount){
+                $penalty = $amount - $reading_amount;
+                //$amount = $penalty;
+                $panalty_msg = '<span style="font-size:9px;line-height:8px;">/(Penalty 10% = '. number_format($reading_amount,2).' + '.number_format($penalty,2).')</span>';
+            }
+            $str_invoicepayment .="<tr>
+									<td  style='width: 75%;'>$paymentdetailsinfodata->monthname $paymentdetailsinfodata->year $panalty_msg</td>
+									<td style='width: 5%;'>$paymentdetailsinfodata->consumedunits</td>
+									<td  style='text-align: right;'>$paymentdetailsinfodata->amount</td>
+								</tr>";
+        }
+        
+        return $str_invoicepayment;
+    }
+}
+
 if(!function_exists("get_customer_unpaid_records")){
     function get_customer_unpaid_records($customer_id='',$billingmonth='',$billingyear=''){ 
         $CI = &get_instance();

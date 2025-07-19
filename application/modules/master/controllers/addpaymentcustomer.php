@@ -122,14 +122,14 @@ class addpaymentcustomer extends CI_Controller {
 	{		//*****  Add Search records  *****//
 			
 			$id = $this->input->post('id');
-			$this->load->model('addpaymentcustomer_model','my_model');
+			//$this->load->model('addpaymentcustomer_model','my_model');
 			$data['reading'] = $this->my_model->get_addcustomer_add_all_records($id);
 			$data['record'] = $this->my_model->get_meter_reading_all_records($id);
-			$data['collectinfo'] =  $this->my_model->collectinfo($id);
-			$data['month_collectinfo'] = $this->my_model->month_collectinfo($id);
-			$data['second_higest_radi'] = $this->my_model->get_second_meter($id);
+			//$data['collectinfo'] =  $this->my_model->collectinfo($id);
+			//$data['month_collectinfo'] = $this->my_model->month_collectinfo($id);
+			//$data['second_higest_radi'] = $this->my_model->get_second_meter($id);
 				
-			$data['amountrate'] = $this->my_model->get_unitvalue();
+			//$data['amountrate'] = $this->my_model->get_unitvalue();
 			$this->load->view($this->addpages_ajax,$data);
 			
 	}
@@ -432,6 +432,22 @@ class addpaymentcustomer extends CI_Controller {
 		echo sprintf('%07d',$new_or_number); 
 		 
    	}
+	   public function get_leaking_balance(){ 
+	
+		
+		$this->db->select("*");
+		$this->db->from('tbl_leaking_ledger');
+		//$this->db->where("leaking_balance>0");
+		$this->db->where("leaking_customer_id",$this->input->post('customer_id'));
+		$this->db->where("leaking_status",4);
+		$query = $this->db->get();
+		$result = $query->result_array();
+			
+		//echo $result[0]['leaking_balance'];
+		echo json_encode($result);
+		exit;
+		 
+   	}
 
 	   public function chk_leakingentry($bill_no){ 
 	
@@ -443,6 +459,12 @@ class addpaymentcustomer extends CI_Controller {
 		$this->db->group_by("leaking_customer_id");
 		$query = $this->db->get();
 		$result = $query->result_array();
+		
+		/*if($query->num_rows() > 0){
+			$result = $query->result_array();
+		}else{
+			$result = array('leaking_id'=>'null');	
+		}	*/
 		echo json_encode($result);
 		exit;
 		
@@ -983,6 +1005,378 @@ public function monthly_receipt($customer,$month,$year,$invoice_id) {
 	<script>
 	window.print();
 	</script>
+EOD;
+	echo $html;
+//output the HTML content
+   //$pdf->writeHTML($html, true, false, true, false, '');
+
+    // ---------------------------------------------------------    
+    // Close and output PDF document
+    // This method has several options, check the source code documentation for more information.
+   //$pdf->Output($customer . '.pdf', 'I');
+
+    //============================================================+
+    // END OF FILE
+    //============================================================+
+}
+
+public function monthly_receipt_ver1($customer,$month,$year,$invoice_id) {
+		
+	//print_r($customer);	print_r($month);	print_r($year);	
+    $receiptdata = $this->my_model->getReceipt_Data(trim($customer), $month, $year);
+	
+
+	$getaddress = $this->my_model->get_address();
+	$customerdetials = $this->my_model->customer_deatils(trim($customer));
+	$this->load->model('addcustomer_model','my_model123');
+	$record = $this->my_model123->get_adminrecord();
+	extract($record);
+	 
+	//print_r($customerdetials);
+    extract($receiptdata);
+    extract($getaddress);
+	extract($customerdetials);
+	$first_name = strtoupper(trim($first_name));
+	$last_name = strtoupper(trim($last_name));
+	$middle_name = strtoupper(trim($middle_name));
+	$address = strtoupper(trim($address));
+	$city = strtoupper(trim($city));
+	$state = strtoupper(trim($state));
+	$curdate = date('Y-m-d');
+	$datefor = date('d-m-Y', strtotime($tdate));
+	$panalty_msg ='';
+	if($amount !== $reading_amount){
+		$penalty = $amount - $reading_amount;
+		//$amount = $penalty;
+		$panalty_msg = '<span style="font-size:9px;line-height:8px;"><br/>Penalty = 10% = '. number_format($reading_amount,2).' + '.number_format($penalty,2).'</span>';
+	}
+
+	$amountinwords = convertNumberToWordsPH($grand_total);	
+	
+
+    /// create some HTML content
+	$base_url = site_url();
+	$amount = number_format($amount,2);
+	$grand_total = number_format($grand_total,2);
+
+	$detailspayment = detailsbillingpayment_ver1($invoice_id);
+	$html = <<<EOD
+	<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Invoice with Two Receipts</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0px; /* Adjust as needed for overall page margins */
+            display: flex;
+            justify-content: space-around;
+            gap: 0px;
+            width: 8.7in;
+		    height: 263.5mm; 
+        }
+
+        /* Individual Receipt Column Styles */
+        .receipt-column {
+            width: 50%; /* Each column takes roughly half the page width */
+            border: 1px solid #ccc;
+            padding: 15px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+
+        /* Header Styling */
+        .receipt-header {
+            text-align: left;
+            margin-bottom: 15px;
+            line-height: .4em;
+        }
+        .receipt-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        /* Info Section Styling */
+        .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .receipt-info div {
+            flex: 1;
+        }
+        .receipt-info .align-right {
+            text-align: right;
+        }
+
+        /* Item Table Styling */
+        .item-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        .item-table th, .item-table td {
+            border: 0px solid #eee;
+            /*padding: 8px;*/
+            text-align: left;
+            font-size: 0.9em;
+        }
+        .item-table th {
+            /*background-color: #e2e2e2;*/
+        }
+
+        /* Total Section Styling */
+        .total-section {
+            text-align: right;
+            margin-top: 10px;
+            font-size: 1em;
+        }
+        .total-section p {
+            margin: 5px 0;
+        }
+        .total-section .grand-total {
+            /*font-weight: bold;
+            font-size: 1.1em;*/
+            color: #000;
+        }
+
+        /* Notes Section Styling */
+        .notes-section {
+            margin-top: 20px;
+            font-size: 0.8em;
+            color: #555;
+            border-top: 1px dashed #ccc;
+            padding-top: 10px;
+        }
+        .amount-words{
+                line-height: 1em;
+                padding-left: .2in;
+                height: 2em;
+                margin-bottom: .8em;
+            }
+
+        /* Print-Specific Styles for Letter Paper */
+        @media print {
+            /* Set the page size to Letter */
+            @page {
+                size: Letter;  /*Specifies standard Letter paper (8.5in x 11in) */
+                margin: 0in; /* Default margins for the printed page */
+                width: 8.5in;
+		        height: 263.5mm; 
+                /* Define the bleed area */
+                
+            }
+
+            body {
+                margin: .7in -0.5in 0in 0in; /* Remove body margin for print to let @page margin control */
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 0;
+                width: 8.5in;
+		        height: 263.5mm; 
+            }
+            .receipt-column {
+                border: none;
+                padding: 0.2in;
+                width: 50%; /* Slightly adjust width for print to fill space better */
+                page-break-inside: avoid;
+                font-size: 0.75em; /* Slightly smaller font for more content if space is tight */
+            }
+            .receipt-header {
+                text-align: left;
+                line-height: .4em;
+                padding-left: .85in;
+                
+            }
+
+            .amount-words{
+                font-family: 'Courier New', Courier, monospace;
+                line-height: 1em;
+                padding-left: .2in;
+                height: 3em;
+                margin-bottom: .8em;
+                letter-spacing: -0.5px;
+            }
+            .item-table {
+                width: 100%;
+                border: 0px solid black;
+                margin-bottom: 15px;
+            }
+            /* Optional: Adjust font sizes slightly for print if needed */
+            .item-table th, .item-table td, .notes-section, .receipt-info {
+                font-family: 'Courier New', Courier, monospace;
+                letter-spacing: -0.5px;
+                /*font-size: 0.79em;  Slightly smaller font for more content if space is tight */
+            }
+            .total-section {
+                position: absolute;
+                top: 2.4in;
+                font-weight: normal;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1em;
+                color: #000;
+                line-height:.5em;
+                letter-spacing: -0.5px;
+				width: .65in;
+            }
+            .remark-section {
+                position: absolute;
+                top: 2.4in;
+                font-weight: normal;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1em;
+                color: #000;
+                line-height:1em;
+                letter-spacing: -0.5px;
+            }
+            .date-section {
+                position: absolute;
+                top: 3.3in;
+                font-weight: normal;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1em;
+                color: #000;
+                line-height:1em;
+                letter-spacing: -0.5px;
+            }
+            .cashier-section {
+                position: absolute;
+                top: 3.3in;
+                font-weight: normal;
+                font-family: 'Courier New', Courier, monospace;
+                font-size: 1em;
+                color: #000;
+                line-height:1em;
+                letter-spacing: -0.5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="receipt-column">
+        <div class="receipt-header">
+            <p>$first_name $middle_name $last_name</p>
+            <p>$address</p>
+            <p>$customer_id</p>
+        </div>
+        <div class="amount-words">
+            <p>$amountinwords</p>
+        </div>
+        
+
+        <table class="item-table">
+            $detailspayment
+
+            <!--<tr>
+                    <td style="width: 75%;">March 2025</td>
+                    <td style="width: 5%;">15</td>
+                    
+                    <td style="text-align: right;">100.00</td>
+                </tr>
+                <tr>
+                    <td>April 2025</td>
+                    <td>1</td>
+                    
+                    <td style="text-align: right;">150.00</td>
+                </tr>
+                <tr>
+                    <td>May 2025</td>
+                    <td>1</td>
+                    
+                    <td style="text-align: right;">150.00</td>
+                </tr>-->
+        </table>
+
+        <div class="total-section" style="left:3.4in;">
+            <p>0.00</p>
+            <p>$leaking_amount</p>
+            <p>$vat_amount</p>
+            <p class="grand-total">$grand_total</p>
+        </div>
+
+        <div class="remark-section">
+            <!--<p>Note:<br/>
+                Penalty=50/SC=57/Leaking=567 - May 2025
+
+            </p>-->
+            
+        </div>
+        <div class="date-section" style="left:.55in;">
+            $datefor            
+        </div>
+        <div class="cashier-section" style="left:1.5in;">
+            <!--Herald Felisilda-->            
+        </div>
+    </div>
+
+    <div class="receipt-column">
+        <div class="receipt-header">
+            <p>$first_name $middle_name $last_name</p>
+            <p>$address</p>
+            <p>$customer_id</p>
+        </div>
+        <div class="amount-words" style="padding-right: .2in;">
+            <p>$amountinwords</p>
+        </div>
+        
+
+        <table class="item-table" style="width: 95%;">
+            
+            <tbody>
+			$detailspayment
+                <!--<tr>
+                    <td style="width: 75%;">March 2025</td>
+                    <td style="width: 5%;">15</td>
+                    
+                    <td style="text-align: right;">100.00</td>
+                </tr>
+                <tr>
+                    <td>April 2025</td>
+                    <td>1</td>
+                    
+                    <td style="text-align: right;">150.00</td>
+                </tr>
+                <tr>
+                    <td>May 2025</td>
+                    <td>1</td>
+                    
+                    <td style="text-align: right;">150.00</td>
+                </tr>-->
+            </tbody>
+        </table>
+
+        
+        <div class="total-section" style="left:7.45in;">
+            <p>0.00</p>
+            <p>$leaking_amount</p>
+            <p>$vat_amount</p>
+            <p class="grand-total">$grand_total</p>
+        </div>
+        <div class="remark-section">
+           <!--<p>Note:<br/>
+                Penalty=50/SC=57/Leaking=567 - May 2025
+
+            </p>-->
+            
+        </div>
+        <div class="date-section">
+            $datefor            
+        </div>
+        <div class="cashier-section" style="left:5.5in;">
+            <!--Herald Felisilda   -->         
+        </div>
+        
+    </div>
+<script type="text/javascript">
+		window.print();
+	</script>
+</body>
+</html>
 EOD;
 	echo $html;
 //output the HTML content

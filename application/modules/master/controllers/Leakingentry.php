@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class leakingentry extends CI_Controller{
+class Leakingentry extends CI_Controller{
     public $headerPage = '../../views/admin-includes/header';  //Header template
 
     public $listPage = 'leakingentry';
