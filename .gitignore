@@ -4,6 +4,7 @@
 .vs/co-operative/v16/.suo
 .vs/VSWorkspaceState.json
 .vs
+*.git*
 *.sql
 *.pdf
 .buildpath
