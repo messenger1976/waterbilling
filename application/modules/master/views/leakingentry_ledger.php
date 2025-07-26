@@ -95,7 +95,7 @@
 								<header style="height: 42px;">
 									<span class="widget-icon"> <i class="fa fa-tasks"></i> </span>
 									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Manage Leaking Ledger Details</strong>
-                                    <button class="btn btn-sm btn-primary" style="float:right;" id="add_record"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Record</button>
+                                    <button class="btn btn-sm btn-primary" style="float:right;" id="add_payment"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Payment</button>
 									</p>
 								</header>
 				
@@ -146,10 +146,10 @@
 													<tr>
 														<th data-hide="phone"><input type="checkbox"/></th>
 														<th data-hide="phone">S No</th>
-														<th data-hide="expand">OR Number</th>
+														<th data-hide="expand">Reference #</th>
 														<!--<th data-hide="expand">Billing Period</th>-->
                                                         <th data-hide="expand">Payment Date</th>
-                                                        <th data-hide="expand">Total Amount</th>
+                                                        <th data-hide="expand" align="right">Total Amount</th>
                                                         <!--<th data-hide="expand">Action</th>-->
 													</tr>
 												</thead>
@@ -184,12 +184,12 @@
 
 										</div>
 										<!-- end widget content -->
-									<div>&nbsp;</div>
+									<!--<div>&nbsp;</div>
 									  <div class="row">
 									   <div class="col-lg-12">
                                         	<input type="submit" class="btn btn-sm btn-primary" name="add" id="add" value="Delete All" onClick="return deleteAllData();" />
                                          </div>
-									</div>	
+									</div>	-->
 				                    </form>  
 									 
 									 <div>&nbsp;</div>
@@ -735,7 +735,7 @@
 				}
 			});
 			
-            $('#add_record').on('click', function(evt){
+            $('#add_payment').on('click', function(evt){
                 evt.preventDefault();
 				
                 //$('#myModal').modal('show');

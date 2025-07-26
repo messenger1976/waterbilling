@@ -4,7 +4,7 @@ class Leakingentry extends CI_Controller{
 
     public $listPage = 'leakingentry';
 	public $leakingledgerPage = 'leakingentry_ledger';
-	public $listPage_redirect ='master/leakingentry';
+	public $listPage_redirect ='master/Leakingentry';
     public function __construct(){
         parent::__construct();
 		$this->load->helper('date');
