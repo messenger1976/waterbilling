@@ -186,7 +186,7 @@
 														</td>
 														<td align="right"><?php echo stripslashes(number_format($row['leakingledgerdetails_amount'],2)); ?></td>
 														<td align="left"><?php echo stripslashes($row['leakingledgerdetails_remarks']); ?></td>
-														<td align="center"><a href="#" class="btn btn-outline btn-xs"><i class="fa fa-print"></i> Print</a></td>
+														<td align="center"><a href="#" class="btn btn-outline btn-xs"><i class="fa fa-check-square-o"></i> Posted</a></td>
 														
 													
 
