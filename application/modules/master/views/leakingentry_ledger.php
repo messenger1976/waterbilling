@@ -159,10 +159,10 @@
 													<tr>
 														<!--<th data-hide="phone"><input type="checkbox"/></th>-->
 														<th data-hide="phone" style="width:50px;">S No</th>
-														<th data-hide="expand">Reference #</th>
+														<th data-hide="expand" style="width:100px;">Reference #</th>
 														<!--<th data-hide="expand">Billing Period</th>-->
-                                                        <th data-hide="expand">Payment Date</th>
-                                                        <th data-hide="expand" style="float:right;">Total Amount</th>
+                                                        <th data-hide="expand" style="width:100px;">Payment Date</th>
+                                                        <th data-hide="expand" style="width:150px;">Total Amount</th>
                                                         <th data-hide="expand">Remarks</th>
                                                         <th data-hide="expand" style="text-align:center;width: 100px;">Action</th>
 													</tr>
