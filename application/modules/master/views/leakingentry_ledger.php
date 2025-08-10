@@ -96,7 +96,7 @@
 									<span class="widget-icon"> <i class="fa fa-tasks"></i> </span>
 									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Manage Leaking Ledger Details</strong>
 									<?php
-									if(!$record_ledger['leaking_balance']){
+									if(($record_ledger['leaking_total_amount']-$total_payment)!=0){
 									?>
                                     <button class="btn btn-sm btn-primary" style="float:right;" id="add_payment"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Payment</button>
 									<?php
