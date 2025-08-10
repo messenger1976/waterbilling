@@ -157,12 +157,13 @@
 											
 												<thead>			                
 													<tr>
-														<!--<th data-hide="phone"><input type="checkbox"/></th>
-														<th data-hide="phone">S No</th>-->
+														<!--<th data-hide="phone"><input type="checkbox"/></th>-->
+														<th data-hide="phone" style="width:50px;">S No</th>
 														<th data-hide="expand">Reference #</th>
 														<!--<th data-hide="expand">Billing Period</th>-->
                                                         <th data-hide="expand">Payment Date</th>
                                                         <th data-hide="expand" style="float:right;">Total Amount</th>
+                                                        <th data-hide="expand">Remarks</th>
                                                         <th data-hide="expand" style="text-align:center;width: 100px;">Action</th>
 													</tr>
 												</thead>
@@ -173,8 +174,8 @@
                                                         foreach($record as $key => $row){ 
 													?>   
 													<tr>
-														<!--<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leakingledgerdetails_id'];?>" /></td>
-														<td><?php echo $i; ?></td>-->
+														<!--<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leakingledgerdetails_id'];?>" /></td>-->
+														<td><?php echo $i; ?></td>
 														<td><?php echo stripslashes($row['leakingledgerdetails_source_type'].'#'.$row['leakingledgerdetails_or_number']); ?></td>
 														<!--<td><?php echo stripslashes(getMonthName($row['month'])[0]->month_name.' '.$row['year']); ?></td>-->
 														<td>
@@ -184,6 +185,7 @@
 															?>
 														</td>
 														<td align="right"><?php echo stripslashes(number_format($row['leakingledgerdetails_amount'],2)); ?></td>
+														<td align="left"><?php echo stripslashes($row['leakingledgerdetails_remarks']); ?></td>
 														<td align="center"><a href="#" class="btn btn-outline btn-xs"><i class="fa fa-print"></i> Print</a></td>
 														
 													
