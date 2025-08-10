@@ -32,12 +32,15 @@ class Leakingentry extends CI_Controller{
         
     }
 
-	public function ledger($leader_id){
+	public function ledger($leaking_id){
         //*****  View Loading  *****//
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
         $header['record_info'] = $this->top_model->get_last_login_details(1);
-        $data['record'] = $this->my_model->get_ledger_details_records($leader_id);
-		$data['customer_listing'] = $this->customer_model->get_all_records();
+        $data['record_ledger'] = $this->my_model->get_single_record($leaking_id);
+		$data['record'] = $this->my_model->get_ledger_details_records($leaking_id);
+		$data['total_payment'] = $this->my_model->get_total_payment($leaking_id)['totalpayment'];
+		//$data['customer_listing'] = $this->customer_model->get_all_records();
+		$data['leaking_id'] = $leaking_id;
 		$this->load->view($this->headerPage,$header);
 		$this->load->view($this->leakingledgerPage,$data);
         
@@ -74,7 +77,37 @@ class Leakingentry extends CI_Controller{
 			echo 'error';
 		}
 	}
+	public function add_payment(){
+		if($this->input->post('btn_save') == 'add'){ 
+			
+		
+			$result = $this->my_model->add_payment_record();
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Created Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Created...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
 
+		}elseif($this->input->post('btn_save') == 'edit'){
+			$id = $this->input->post('leaking_id');
+			$result = $this->my_model->update_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Updated Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Updated...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+		}else{
+			echo 'error update DB';
+		}
+	}
 	public function delete($id){ 
 		$data['msg'] ='';
 		if($id){

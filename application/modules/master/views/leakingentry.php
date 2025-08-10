@@ -165,6 +165,8 @@
 														if(count($record) > 0){
                                                         $i=1;
                                                         foreach($record as $key => $row){ 
+															$total_payment = $this->my_model->get_total_payment($row['leaking_id'])['totalpayment'];
+															$leaking_balance = $row['leaking_total_amount'] - $total_payment;
 													?>   
 													<tr>
 														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leaking_id'];?>" /></td>
@@ -177,7 +179,7 @@
 														<td align="right"><?php echo stripslashes($row['leaking_discount_percent']); ?></td>
 														<td align="right"><?php echo stripslashes(number_format($row['leaking_discount_amount'],2)); ?></td>
 														<td align="right"><?php echo stripslashes(number_format($row['leaking_total_amount'],2)); ?></td>
-														<td align="right"><?php echo stripslashes(number_format($row['leaking_balance'],2)); ?></td>
+														<td align="right"><?php echo stripslashes(number_format($leaking_balance,2)); ?></td>
 														<td>
 															<?php
 																$paydate = date('M j, Y',strtotime($row['leaking_date']));
