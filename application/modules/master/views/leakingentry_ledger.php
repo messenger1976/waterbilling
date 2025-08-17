@@ -100,8 +100,13 @@
 									?>
                                     <button class="btn btn-sm btn-primary" style="float:right;" id="add_payment"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Payment</button>
 									<?php
+									}else{
+									?>
+									<a class="btn btn-sm btn-success" style="float:right;" id="print_statement"  data-toggle="modal" data-target="#myModal"><i class="fa fa-print"></i> Print Statement</a>
+									<?php
 									}
 									?>
+									<a href="<?php echo ADMIN_URL;?>Leakingentry" class="btn btn-sm btn-danger" style="float:right;"><i class="fa fa-chevron-left"></i> Back Listing</a>&nbsp;
 									</p>
 								</header>
 				
@@ -374,9 +379,7 @@
 				};
 	
 				$('#dt_basic').dataTable({
-					"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
-						"t"+
-						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+					"sDom": "tip",
 					"autoWidth" : true,
 			        "oLanguage": {
 					    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
