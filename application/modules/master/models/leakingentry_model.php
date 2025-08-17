@@ -249,6 +249,23 @@ class leakingentry_model extends CI_Model {
 		$result = $query->row_array();
 		return $result;
 	}
+
+	public function get_soa_statement($leaking_id){
+		$this->db->select($this->table_name.'.*',
+			$this->table_leaking_ledger_details.'.leakingledgerdetails_id',
+			$this->table_leaking_ledger_details.'.leakingledgerdetails_source_type',
+			$this->table_leaking_ledger_details.'.leakingledgerdetails_or_number',
+			$this->table_leaking_ledger_details.'.leakingledgerdetails_amount',
+			$this->table_leaking_ledger_details.'.leakingledgerdetails_transdate',
+			$this->table_leaking_ledger_details.'.leakingledgerdetails_remarks'
+		);
+		$this->db->from($this->table_name);
+		$this->db->join($this->table_leaking_ledger_details, $this->table_name.".leaking_id = ".$this->table_leaking_ledger_details.".leaking_id", 'left');
+		$this->db->where($this->table_name.'.leaking_id',$leaking_id);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
 	
 }
 

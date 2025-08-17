@@ -4,6 +4,7 @@ class Leakingentry extends CI_Controller{
 
     public $listPage = 'leakingentry';
 	public $leakingledgerPage = 'leakingentry_ledger';
+	public $leaking_soa_statement = 'leaking_soa_statement';
 	public $listPage_redirect ='master/Leakingentry';
     public function __construct(){
         parent::__construct();
@@ -177,5 +178,11 @@ class Leakingentry extends CI_Controller{
 		}else{
 			echo '{}';
 		}
+	}
+
+	public function soa_statement($leaking_id){
+		$data['record'] = $this->my_model->get_soa_statement($leaking_id);
+		
+		$this->load->view($this->leaking_soa_statement,$data);
 	}
 }

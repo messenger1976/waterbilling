@@ -810,6 +810,18 @@
 			})
 			//$('#customer_id').select2();
 			
+			$(document).on('click','#print_statement',function(e){
+				
+				
+				var leaking_id = $('#leaking_id').val();
+				
+				var url = '<?php echo ADMIN_URL;?>Leakingentry/soa_statement/'+leaking_id;
+							
+				window.open( url , "popupWindowSOA", "width=1024,height=600,scrollbars=yes");	
+				
+				
+			});
+
 		
 		})
 
