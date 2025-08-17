@@ -100,12 +100,10 @@
 									?>
                                     <button class="btn btn-sm btn-primary" style="float:right;" id="add_payment"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Payment</button>
 									<?php
-									}else{
-									?>
-									<a class="btn btn-sm btn-success" style="float:right;" id="print_statement"  data-toggle="modal" data-target="#myModal"><i class="fa fa-print"></i> Print Statement</a>
-									<?php
 									}
 									?>
+									<a class="btn btn-sm btn-success" style="float:right;" id="print_statement"><i class="fa fa-print"></i> Print Statement</a>
+									
 									<a href="<?php echo ADMIN_URL;?>Leakingentry" class="btn btn-sm btn-danger" style="float:right;"><i class="fa fa-chevron-left"></i> Back Listing</a>&nbsp;
 									</p>
 								</header>
