@@ -250,20 +250,27 @@ class leakingentry_model extends CI_Model {
 		return $result;
 	}
 
-	public function get_soa_statement($leaking_id){
-		$this->db->select($this->table_name.'.*',
-			$this->table_leaking_ledger_details.'.leakingledgerdetails_id',
-			$this->table_leaking_ledger_details.'.leakingledgerdetails_source_type',
-			$this->table_leaking_ledger_details.'.leakingledgerdetails_or_number',
-			$this->table_leaking_ledger_details.'.leakingledgerdetails_amount',
-			$this->table_leaking_ledger_details.'.leakingledgerdetails_transdate',
-			$this->table_leaking_ledger_details.'.leakingledgerdetails_remarks'
-		);
+	public function get_soa_header_statement($leaking_id){
+		$this->db->select('*');
 		$this->db->from($this->table_name);
-		$this->db->join($this->table_leaking_ledger_details, $this->table_name.".leaking_id = ".$this->table_leaking_ledger_details.".leaking_id", 'left');
-		$this->db->where($this->table_name.'.leaking_id',$leaking_id);
+		$this->db->where('leaking_id',$leaking_id);
 		$query = $this->db->get();
 		$result = $query->row_array();
+		return $result;
+	}
+	public function get_soa_statement($leaking_id){
+		$this->db->select('*');
+		$this->db->from($this->table_leaking_ledger_details);
+		$this->db->where('leaking_id',$leaking_id);
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result;
+	}
+	public function get_meterreading_refno($refno){
+		$this->db->select('*');
+		$this->db->from($this->table_customer_meter_reading);
+		$this->db->where('refno',$refno);
+		$result = $this->db->get()->row_array();
 		return $result;
 	}
 	

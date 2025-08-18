@@ -181,8 +181,13 @@ class Leakingentry extends CI_Controller{
 	}
 
 	public function soa_statement($leaking_id){
-		$data['record'] = $this->my_model->get_soa_statement($leaking_id);
-		
+		$data['record'] = $this->my_model->get_soa_header_statement($leaking_id);
+		$data['record_details'] = $this->my_model->get_soa_statement($leaking_id);
+		$data['customer_info'] = $this->customer_model->get_single_record_by_customer_id($data['record']['leaking_customer_id']);
+		$data['customer_reading'] = $this->my_model->get_meterreading_refno($data['record']['leaking_refno']);
+		//echo $data['record']['leaking_customer_id'];
+		//print_r($data['record_details']);
+		//exit;
 		$this->load->view($this->leaking_soa_statement,$data);
 	}
 }

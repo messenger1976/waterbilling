@@ -40,370 +40,114 @@
     <div style="text-align: center;"><img src="<?php echo site_url();?>images/mroxas-logo-report.jpg" height="80px"/></div>
 <h3 style="text-align: center;">LEAKING - STATEMENT OF ACCOUNT</h3>
 <h6 style="text-align: center;"><?php
-$billingperiod1 = explode(' ',urldecode($billingperiod));
-$billingperiod = urldecode($billingperiod);
-echo $billingperiod_month_name.' '.$billingperiod1[1];?></h6>
+?></h6>
 <div class="row">
 	<div class="col-lg-12 col-sm-12 col-xs-12 col-md-12">
+        <div class="table-responsive" style="width: 100%; font-size:larger;">
+            <table class="table" style="float:center;">
+                <tbody>
+                    <tr>
+                        <td>CUSTOMER NAME: <u><?php echo strtoupper($customer_info['last_name'].', '.$customer_info['first_name']);?></u></td>
+                        <td>CUSTOMER ID: <u><?php echo $record['leaking_customer_id'];?></u></td>
+                    </tr>
+                    <tr>
+                        <td>ADDRESS: <u><?php echo strtoupper($customer_info['address']);?></u></td>
+                        <td>METER #: <u><?php echo  $customer_info['meter_number'];?></u></td>
+                    </tr>
+                     <tr>
+                        <td>BILLING PERIOD: <u><?php echo getMonthName($customer_reading['month'])[0]->month_name.' '.$customer_reading['year'];?></u></td>
+                        <td>BILLING AMOUNT: <u><?php echo  number_format($record['leaking_bill_amount'],2);?></u></td>
+                    </tr>
+                    <tr>
+                        <td>LEAKING DISCOUNT: <u><?php echo  number_format($record['leaking_discount_amount'],2);?></u></td>
+                        <td>LEAKING AMOUNT: <u><?php echo  number_format($record['leaking_total_amount'],2);?></u></td>
+                    </tr>
+                    <tr>
+                        <td>LEAKING BALANCE: <u><?php echo  number_format($record['leaking_balance'],2);?></u></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
 		<?php
             if(count($record) > 0){
                 foreach($record as $key => $row){ 
-					$id=$row['id'];
+					$id=$row['leaking_id'];
 				}
 			}
 
-            
+           
         ?>
 	</div>
 </div>     
 	 <div class="table-responsive" >
 	 
-        <table  class="table" style="font-size:smaller;" cellpadding="0">
+        <table  class="table" style="width: 100%;font-size:smaller;" cellpadding="0">
 			<thead>
 				<tr>
 					<th>SN #</th>
+					<th  style="text-align:left;">Date</th>
+					<th  style="text-align:center;">OR/SI #</th>
+					<th  style="text-align:left;">Remarks</th>
+                    <th  style="text-align:right;">Amount</th>
 					
-					<th>Concessionaires</th>
-                    <th>Cust Acct No.</th>																												
-					<th  style="text-align:left;">Meter No.</th>
-					<th  style="text-align:left;">Bill No.</th>
-					<th  style="text-align:right;">Consumed</th>
-                    <th  style="text-align:right;">Metered Sales</th>
-					<th style="text-align:right;">Penalty Charges</th>
-                    <th style="text-align:right;">Total Amount</th>
-                    <th style="text-align:center;">Status</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
-                    if(count($zone) > 0){
+                    
                         $index = 0;
-						$cr = 0;
-                        $grand_total_amount = 0;
-                        $grand_total_penalty =0;
-                        $grand_total_reading =0;
-                        $grand_total_billamount =0;
-
-                        $class_category = array();
-						$no_of_customer_1 =0;
-                        $no_of_customer_2 =0;
-                        $no_of_customer_3 =0;
-                        $no_of_customer_4 =0;
-
-						$no_of_consumption_1 =0;
-                        $no_of_consumption_2 =0;
-						$no_of_consumption_3 =0;
-						$no_of_consumption_4 =0;
-
-						$metered_sales_1 =0;
-						$metered_sales_2 =0;
-						$metered_sales_3 =0;
-						$metered_sales_4 =0;
-
-						$penalty_1 =0;
-						$penalty_2 =0;
-						$penalty_3 =0;
-						$penalty_4 =0;
-                        foreach($zone as $key => $row){ 
-				?>                                            
-					<tr>
-						<td></td>
-						<td><b><?php echo stripslashes($row['zone']); ?></b></td>
-						<td colspan="8"></td>
-					</tr>
-                <?php
-                //$mysql_transdate = date('Y-m-d',strtotime($trans_date));
-                 //$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
-				 //if($status=='3'){
-				//	$get_dailytrans = $this->report_model->get_monthly_billing_report_records_status3($row['id'],$billingperiod,$status);
-				// }else{
-					$get_dailytrans = $this->report_model->get_monthly_billing_report_records($row['id'],$billingperiod,$status);
-				// }
-                 
-                 
-                 $total_amount_zone = 0;
-                 $total_penalty_zone = 0;
-                 $total_reading_zone = 0;
-                 $total_billamount_zone = 0;
+						
+                        $total_amount = 0;
+				
+              
                 
                 
-                 foreach($get_dailytrans as $key => $gdailytrans){
-                    $gross_total = $gdailytrans['grand_total'] + $gdailytrans['vat_amount'];
-
-                    $current_date = date('Y-m-d');
-                    $pdate = stripslashes($gdailytrans['payment_date']);
-                    $date = stripslashes($gdailytrans['due_date']);
-                    $penalty = 0;
-                    if($pdate>$date){
-                        $penalty = $gdailytrans['penalty']-$gdailytrans['amount'];
-                    }
-                    if($gdailytrans['invoice_id']==''){
-                        $total_payment = $gdailytrans['amount'];
-                        $date1 = $gdailytrans['due_date'];
-                        if($current_date>$date1){
-                            $penalty = $gdailytrans['penalty']-$gdailytrans['amount'];
-                            $total_payment = $gdailytrans['penalty'];
-                            
-                        }else{
-                            $penalty = 0;
-                        }
-                        
-                    }else{
-                        $total_payment = $gdailytrans['payment_amount'];
-                    }
-
-                    if($gdailytrans['invoice_id']!= ''){ 
-                        $status_msg= "Paid"; 
-                    }elseif($gdailytrans['customer_status']=='2'){
-						$status_msg=  "Disconnected"; 
-					}elseif($gdailytrans['customer_status']=='1' && ($gdailytrans['reading']== '' || is_null($gdailytrans['reading']))){
-						$status_msg=  "No Reading"; 
-					}else{ 
-                        $status_msg=  "Unpaid"; 
-                    }
+                 foreach($record_details as $key => $gdailytrans){
+                   
                     $index++;
                     echo '<tr>';
                     echo '<td>'.$index.'</td>
-                    <td style="width:25%;">'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
-                    <td style="width:15%;">'.$gdailytrans['customer_id'].'</td>
-                    <td align="left">'.$gdailytrans['meter_number'].'</td>
-                    <td align="left">'.sprintf('%07d',$gdailytrans['refno']).'</td>
-                    <td align="right" style="width:5%;">'. number_format($gdailytrans['consumed'],0).'</td>
-                    <td align="right">'.stripslashes(number_format($gdailytrans['amount'],2)).'</td>
-                    <td align="right">'. number_format($penalty,2).'</td>
-                    <td align="right">'.number_format($total_payment,2).'</td>
-                    <td align="right">'.$status_msg.'</td>
+                    <td style="width:10%;">'.$gdailytrans['leakingledgerdetails_transdate'].'</td>
+                    <td align="center">'.stripslashes($gdailytrans['leakingledgerdetails_source_type'].'#'.$gdailytrans['leakingledgerdetails_or_number']).'</td>
+                    <td align="left">'.stripslashes($gdailytrans['leakingledgerdetails_remarks']).'</td>
+                    <td align="right">'.number_format($gdailytrans['leakingledgerdetails_amount'],2).'</td>
                     ';
                     echo '</tr>';
-                    $total_amount_zone += $gdailytrans['amount'];
                     
-                    $total_penalty_zone += $penalty;
-                    $total_reading_zone += $gdailytrans['consumed'];
-                    $total_billamount_zone +=$total_payment;
-
-
-                    // Step 1: Loop through each array and search for the key
-                    $found = false;
-
-                    // Step 3: Define the key, value to search for, and the field to update
-					$keyToSearch = "class_cat_id";
-					$valueToFind = $gdailytrans['class_cat_id'];
-
-					$fieldToUpdate = "no_of_customer";
-					$fieldToUpdate1 = "no_of_consumption";
-					$fieldToUpdate2 = "metered_sales";
-					$fieldToUpdate3 = "penalty";
-					$newArray = array(
-						"class_cat_id" => $gdailytrans['class_cat_id'],
-						"class_cat_name" => $gdailytrans['class_cat_name'],
-					);
-
-					if($gdailytrans['class_cat_id']=='1'){
-						$no_of_customer_1++; // New value to update
-						$no_of_consumption_1 +=$gdailytrans['consumed'];
-						$metered_sales_1 += $gdailytrans['amount'];
-						$penalty_1 += $penalty;
-						$newArray1 = array(
-							"no_of_customer" => $no_of_customer_1,
-							"no_of_consumption" => $no_of_consumption_1,
-							"metered_sales" => $metered_sales_1,
-							"penalty" => $penalty_1
-						);
-						
-					}elseif($gdailytrans['class_cat_id']=='2'){
-						$no_of_customer_2++; // New value to update
-						$no_of_consumption_2 +=$gdailytrans['consumed'];
-						$metered_sales_2 += $gdailytrans['amount'];
-						$penalty_2 += $penalty;
-						$newArray1 = array(
-							"no_of_customer" => $no_of_customer_2,
-							"no_of_consumption" => $no_of_consumption_2,
-							"metered_sales" => $metered_sales_2,
-							"penalty" => $penalty_2
-						);
-					}elseif($gdailytrans['class_cat_id']=='3'){
-						$no_of_customer_3++; // New value to update
-						$no_of_consumption_3 +=$gdailytrans['consumed'];
-						$metered_sales_3 += $gdailytrans['amount'];
-						$penalty_3 += $penalty;
-						$newArray1 = array(
-							"no_of_customer" => $no_of_customer_3,
-							"no_of_consumption" => $no_of_consumption_3,
-							"metered_sales" => $metered_sales_3,
-							"penalty" => $penalty_3
-						);
-					}elseif($gdailytrans['class_cat_id']=='4'){
-						$no_of_customer_4++; // New value to update
-						$no_of_consumption_4 +=$gdailytrans['consumed'];
-						$metered_sales_4 += $gdailytrans['amount'];
-						$penalty_4 += $penalty;
-						$newArray1 = array(
-							"no_of_customer" => $no_of_customer_4,
-							"no_of_consumption" => $no_of_consumption_4,
-							"metered_sales" => $metered_sales_4,
-							"penalty" => $penalty_4
-						);
-					}
-					$newArray = array_merge($newArray,$newArray1);
-                    foreach ($class_category as &$class_category_key) { // Use & to modify the original array
-                        if (array_key_exists($keyToSearch, $class_category_key) && $class_category_key[$keyToSearch] === $valueToFind) {
-							//echo "The value '$valueToFind' exists in the key '$keyToSearch' in one of the arrays.<br>";
-					
-							// Update the specified field
-							if (array_key_exists($fieldToUpdate, $class_category_key)) {
-								if($gdailytrans['class_cat_id']=='1'){
-									$class_category_key[$fieldToUpdate] = $no_of_customer_1;
-								}
-								if($gdailytrans['class_cat_id']=='2'){
-									$class_category_key[$fieldToUpdate] = $no_of_customer_2;
-								}
-								if($gdailytrans['class_cat_id']=='3'){
-									$class_category_key[$fieldToUpdate] = $no_of_customer_3;
-								}
-								if($gdailytrans['class_cat_id']=='4'){
-									$class_category_key[$fieldToUpdate] = $no_of_customer_4;
-								}
-								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
-							}
-							if (array_key_exists($fieldToUpdate1, $class_category_key)) {
-								if($gdailytrans['class_cat_id']=='1'){
-									$class_category_key[$fieldToUpdate1] = $no_of_consumption_1;
-								}
-								if($gdailytrans['class_cat_id']=='2'){
-									$class_category_key[$fieldToUpdate1] = $no_of_consumption_2;
-								}
-								if($gdailytrans['class_cat_id']=='3'){
-									$class_category_key[$fieldToUpdate1] = $no_of_consumption_3;
-								}
-								if($gdailytrans['class_cat_id']=='4'){
-									$class_category_key[$fieldToUpdate1] = $no_of_consumption_4;
-								}
-								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
-							}
-							if (array_key_exists($fieldToUpdate2, $class_category_key)) {
-								if($gdailytrans['class_cat_id']=='1'){
-									$class_category_key[$fieldToUpdate2] = $metered_sales_1;
-								}
-								if($gdailytrans['class_cat_id']=='2'){
-									$class_category_key[$fieldToUpdate2] = $metered_sales_2;
-								}
-								if($gdailytrans['class_cat_id']=='3'){
-									$class_category_key[$fieldToUpdate2] = $metered_sales_3;
-								}
-								if($gdailytrans['class_cat_id']=='4'){
-									$class_category_key[$fieldToUpdate2] = $metered_sales_4;
-								}
-								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
-							}
-							if (array_key_exists($fieldToUpdate3, $class_category_key)) {
-								if($gdailytrans['class_cat_id']=='1'){
-									$class_category_key[$fieldToUpdate3] = $penalty_1;
-								}
-								if($gdailytrans['class_cat_id']=='2'){
-									$class_category_key[$fieldToUpdate3] = $penalty_2;
-								}
-								if($gdailytrans['class_cat_id']=='3'){
-									$class_category_key[$fieldToUpdate3] = $penalty_3;
-								}
-								if($gdailytrans['class_cat_id']=='4'){
-									$class_category_key[$fieldToUpdate3] = $penalty_4;
-								}
-								//echo "Updated '$fieldToUpdate' to '$newValue' in the array.<br>";
-							}
-					
-							$found = true;
-						}
-                    }
-
-					
-
-                    // Step 2: If the key is not found, insert the new array
-                    if (!$found) {
-                        //echo "The key '$keyToSearch' does not exist in any of the arrays. Inserting a new array.<br>";
-                        $class_category[] = $newArray; // Add the new array to the collection
-                    }                   
+                    $total_amount+= $gdailytrans['leakingledgerdetails_amount'];       
 
 
                     
                 }
                  echo '<tr>
-                 <th colspan="5" style="text-align:right">TOTAL</th>
-                 <th style="text-align:right">'.number_format($total_reading_zone,0).'</th>
-                 <th style="text-align:right">'.number_format($total_amount_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_penalty_zone,2).'</th>
-                  <th style="text-align:right">'.number_format($total_billamount_zone,2).'</th>
+                 <th colspan="4" style="text-align:right">TOTAL</th>
+                 
+                  <th style="text-align:right">'.number_format($total_amount,2).'</th>
                   <th></th>
                  </tr>';
                 
                 
                     
-                    $grand_total_amount += $total_amount_zone; 
-                    $grand_total_penalty += $total_penalty_zone;
-                    $grand_total_reading += $total_reading_zone;
-                    $grand_total_billamount += $total_billamount_zone;
-                    
+                   
 
             
-                } 
+               //} 
                 ?>
-                 <?php } ?>
+                
 
 
                 
                 
                 
-                <tr>
-					
-                    <th colspan="5" style="text-align:right">GRAND TOTAL</th>
-                    <th style="text-align:right"><?php echo number_format($grand_total_reading,0);?></th>
-					<th style="text-align:right"><?php echo number_format($grand_total_amount,2);?></th>
-                    <th style="text-align:right"><?php echo number_format($grand_total_penalty,2);?></th>
-                    <th style="text-align:right"><?php echo number_format($grand_total_billamount,2);?></th>
-                    <th></th>
-				</tr>
-                
+            
                
 			</tbody>
        </table>
 
 
-       <center><h2>BREAKDOWN OF METERED SALES</h2></center>
-	   <table class="table" style="font-size:smaller;" cellpadding="0">
-			<thead>
-				<tr>
-					<th>CATEGORY</th>
-					<th>No. of Consumer</th>
-					<th>Consumption</th>
-					<th>Amount</th>
-					<th>Penalty</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$grand_no_of_customer = 0;
-				$grand_no_of_consumption = 0;
-				$grand_metered_sales = 0;
-				$grand_penalty = 0;
-foreach ($class_category as $person) {
-	if($person["class_cat_name"]!=''){
-		echo "<tr>";
-		echo "<td>" . $person["class_cat_name"] . "</td>"; // Name column
-		echo "<td align=center>" . $person["no_of_customer"] . "</td>";  // Age column
-		echo "<td align=center>" . $person["no_of_consumption"] . "</td>";  // Age column
-		echo "<td align=right>" . number_format($person["metered_sales"],2) . "</td>";  // Age column
-		echo "<td align=right>" . number_format($person["penalty"],2) . "</td>";  // Age column
-		echo "</tr>";
-		$grand_no_of_customer +=$person["no_of_customer"];
-		$grand_no_of_consumption +=$person["no_of_consumption"];
-		$grand_metered_sales +=$person["metered_sales"];
-		$grand_penalty +=$person["penalty"];
-	}
-}
-echo '<tr><th>GRAND TOTAL</th><th align=center style="text-align: center;"> '. $grand_no_of_customer .' </th><th align=center style="text-align: center;">'. $grand_no_of_consumption .'</th><th align=right style="text-align: right;">'. number_format($grand_metered_sales,2) .'</th><th align=right style="text-align: right;">'. number_format($grand_penalty,2) .'</th></tr>';
-				?>
-				
-			</tbody>
-	   </table>
+ 
 
        <table width="100%"  style="font-size:smaller;" cellspacing="5" cellpadding="5">
             <tr>
