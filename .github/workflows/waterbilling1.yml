@@ -31,4 +31,3 @@ jobs:
           .project
           .htaccess
           error_log
-          *.git*
