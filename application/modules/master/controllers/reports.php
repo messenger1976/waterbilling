@@ -58,6 +58,15 @@ class reports extends CI_Controller {
 		$this->load->view($this->agingARreportPage,$data);
 	}
 
+	public function leaking_ar_report(){ 		 //*****  View Loading  *****//
+		$header['roleResponsible'] = $this->top_model->get_responsibilities();
+		$data['zone'] = $this->customer_model->get_zone();
+		$data['employee'] = $this->my_model->get_employee();
+		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		$this->load->view($this->headerPage,$header);
+		$this->load->view($this->agingARreportPage,$data);
+	}
+
 	public function printtopdf($billingperiod,$status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
 		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
 		//$data['zone'] = $this->my_model->get_zone($zone);
