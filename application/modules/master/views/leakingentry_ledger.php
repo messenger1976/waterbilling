@@ -82,7 +82,7 @@
 				</div>
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
-
+					
 					<!-- row -->
 					<div class="row">
 				
@@ -95,14 +95,23 @@
 								<header style="height: 42px;">
 									<span class="widget-icon"> <i class="fa fa-tasks"></i> </span>
 									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Manage Leaking Ledger Details</strong>
-                                    <button class="btn btn-sm btn-primary" style="float:right;" id="add_record"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Record</button>
+									<?php
+									if(($record_ledger['leaking_total_amount']-$total_payment)!=0){
+									?>
+                                    <button class="btn btn-sm btn-primary" style="float:right;" id="add_payment"  data-toggle="modal" data-target="#myModal"><i class="fa fa-plus"></i> Add Payment</button>
+									<?php
+									}
+									?>
+									<a class="btn btn-sm btn-success" style="float:right;" id="print_statement"><i class="fa fa-print"></i> Print Statement</a>
+									
+									<a href="<?php echo ADMIN_URL;?>Leakingentry" class="btn btn-sm btn-danger" style="float:right;"><i class="fa fa-chevron-left"></i> Back Listing</a>&nbsp;
 									</p>
 								</header>
 				
 								<!-- widget div-->
-								<div>
+								<div class="row">
 								
-								<?php if($this->session->flashdata('msg_succ') != ''){?>
+									<?php if($this->session->flashdata('msg_succ') != ''){?>
 									
                                     <!--<div class="alert alert-block alert-success">
                                         <button type="button" class="close" data-dismiss="alert">
@@ -114,11 +123,17 @@
                                         </p>
                                     </div>-->
                                     <?php } ?>
+									
 
 									<!-- widget edit box -->
 									<div class="jarviswidget-editbox">
 										<!-- This area used as dropdown edit box -->
-				
+										
+									</div>
+									<div class="row" style="height: 100px; padding: 10px;font-size: 16px;">
+										<div><b>Bill Amount:</b> <u><?php echo number_format($record_ledger['leaking_total_amount'],2);?></u></div>
+										<div><b>Total Bill Payment:</b> <u><?php echo number_format($total_payment,2);?></u></div>
+										<div><b>Balance:</b> <u><?php echo number_format($record_ledger['leaking_total_amount']-$total_payment,2);?></u></div>
 									</div>
 									<!-- end widget edit box -->
 									<script type="text/javascript">
@@ -140,17 +155,19 @@
 				                    <form method="post" action="<?php echo ADMIN_URL;?>Leakingentry/multi_delete">
 										<!-- widget content -->
 										<div class="widget-body no-padding">
+										   	
 										   <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
 											
 												<thead>			                
 													<tr>
-														<th data-hide="phone"><input type="checkbox"/></th>
-														<th data-hide="phone">S No</th>
-														<th data-hide="expand">OR Number</th>
+														<!--<th data-hide="phone"><input type="checkbox"/></th>-->
+														<th data-hide="phone" style="width:50px;">S No</th>
+														<th data-hide="expand" style="width:100px;">Reference #</th>
 														<!--<th data-hide="expand">Billing Period</th>-->
-                                                        <th data-hide="expand">Payment Date</th>
-                                                        <th data-hide="expand">Total Amount</th>
-                                                        <!--<th data-hide="expand">Action</th>-->
+                                                        <th data-hide="expand" style="width:100px;">Payment Date</th>
+                                                        <th data-hide="expand" style="width:150px;">Total Amount</th>
+                                                        <th data-hide="expand">Remarks</th>
+                                                        <th data-hide="expand" style="text-align:center;width: 100px;">Action</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -160,9 +177,9 @@
                                                         foreach($record as $key => $row){ 
 													?>   
 													<tr>
-														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leakingledgerdetails_id'];?>" /></td>
+														<!--<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['leakingledgerdetails_id'];?>" /></td>-->
 														<td><?php echo $i; ?></td>
-														<td><?php echo stripslashes($row['leakingledgerdetails_or_number']); ?></td>
+														<td><?php echo stripslashes($row['leakingledgerdetails_source_type'].'#'.$row['leakingledgerdetails_or_number']); ?></td>
 														<!--<td><?php echo stripslashes(getMonthName($row['month'])[0]->month_name.' '.$row['year']); ?></td>-->
 														<td>
 															<?php
@@ -170,7 +187,9 @@
 																echo $paydate;
 															?>
 														</td>
-														<td><?php echo stripslashes($row['leakingledgerdetails_amount']); ?></td>
+														<td align="right"><?php echo stripslashes(number_format($row['leakingledgerdetails_amount'],2)); ?></td>
+														<td align="left"><?php echo stripslashes($row['leakingledgerdetails_remarks']); ?></td>
+														<td align="center"><a href="#" class="btn btn-outline btn-xs"><i class="fa fa-check-square-o"></i> Posted</a></td>
 														
 													
 
@@ -184,12 +203,12 @@
 
 										</div>
 										<!-- end widget content -->
-									<div>&nbsp;</div>
+									<!--<div>&nbsp;</div>
 									  <div class="row">
 									   <div class="col-lg-12">
                                         	<input type="submit" class="btn btn-sm btn-primary" name="add" id="add" value="Delete All" onClick="return deleteAllData();" />
                                          </div>
-									</div>	
+									</div>	-->
 				                    </form>  
 									 
 									 <div>&nbsp;</div>
@@ -234,193 +253,64 @@
 							<div class="modal-body">
 								
                                 <form name="frm_update" id="frm_update" action="" method="POST">
-									<div class="row" id="customer_id_div">
+									<div class="row" id="source_type_div">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Customer : </strong></span>
-                                                <select name="customer_id" id="customer_id" placeholder="Type text to search..." required>
-													<option value="">--Select--</option>	
-													<?php
-													
-													foreach ($customer_listing as $key => $value) {
-														?>
-														<option value="<?php echo $value['customer_id']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
-													<?php }
-													?>
+                                                <span class="input-group-addon"><strong>Source Type : </strong></span>
+                                                <select class="form-control" name="source_type" id="source_type" required>
+													<option value="OR">OR</option>	
+													<option value="SI">SI</option>	
 												</select>
 												
-												<?php echo form_error('customer_id'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row" id="billing_period_div">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <select class="form-control" type="text" id="billing_period" name="billing_period">
-													<option value="">--Select--</option>
-												</select>
-												
-                                                <?php echo form_error('billing_period'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-									<div class="row" id="customer_id_div_text">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Customer : </strong></span>
-                                                <input type="text" name="customer_id_text" id="customer_id_text"  style="background-color:yellow;" class="form-control" readonly>
-												
-												
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row" id="billing_period_div_text">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Billing Period : </strong></span>
-                                                <input type="text" name="billing_period_text" id="billing_period_text"  style="background-color:yellow;" class="form-control" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-									<input type="hidden" name="refno" id="refno"/>
-									<input type="hidden" name="leaking_id" id="leaking_id"/>
-									<input type="hidden" name="gross_amount" id="gross_amount" value="0.00"/>
-
-<section id="leaking_option">
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Previous Reading : </strong></span>
-                                                <input class="form-control" type="text" id="previous_reading" name="previous_reading" style="background-color:yellow;" value="0" readonly>
-                                                <?php echo form_error('previous_reading'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Current Reading : <i style="color:red;">*</i></strong></span>
-                                                <input class="form-control" type="text" id="current_reading" name="current_reading" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('current_reading'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Consumed : </strong></span>
-                                                <input class="form-control" type="text" id="consumed" name="consumed" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('consumed'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Current Bill : </strong></span>
-                                                <input class="form-control" type="text" id="current_bill" name="current_bill" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('current_bill'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>SC Discount : </strong></span>
-                                                <input class="form-control" type="text" id="sc_discount" name="sc_discount" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('sc_discount'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Arrears : </strong></span>
-                                                <input class="form-control" type="text" id="arrears" name="arrears" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('arrears'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Amt before due date : </strong></span>
-                                                <input class="form-control" type="text" id="total_amount" name="total_amount" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('arrears'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Amt after due date : </strong></span>
-                                                <input class="form-control" type="text" id="penalty" name="penalty" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('arrears'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Reading date : </strong></span>
-                                                <input class="form-control" type="text" id="reading_date" name="reading_date" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('reading_date'); ?>
+												<?php echo form_error('source_type'); ?>
                                             </div>
                                         </div>
                                     </div>
 									<div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Due date : </strong></span>
-                                                <input class="form-control" type="text" id="due_date" name="due_date" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('due_date'); ?>
+                                                <span class="input-group-addon"><strong>Reference # : (*)</strong></span>
+                                                <input class="form-control" type="text" id="refno" name="refno" style="background-color:white;" required>
+                                                <?php echo form_error('refno'); ?>
                                             </div>
                                         </div>
                                     </div>
 									<div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Payment Date : </strong></span>
-                                                <input class="form-control" type="text" id="payment_date" name="payment_date" style="background-color:white;" value="<?php echo date('d-m-Y');?>" required>
-                                                <?php echo form_error('payment_date'); ?>
+                                                <span class="input-group-addon"><strong>Amount : (*)</strong></span>
+                                                <input class="form-control text-input" type="text" id="amount_pay" name="amount_pay" value="0.00" style="background-color:white;" required>
+                                                <?php echo form_error('amount_pay'); ?>
                                             </div>
                                         </div>
                                     </div>
 									<div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Leaking Disc(%) : </strong></span>
-                                                <input class="form-control" type="text" id="leaking_percent" name="leaking_percent" style="background-color:white;" required>
-                                                <?php echo form_error('leaking_percent'); ?>
+                                                <span class="input-group-addon"><strong>Transaction Date : (*)</strong></span>
+                                                <input class="form-control text-input" type="text" id="transdate" name="transdate" value="<?php echo $this->input->post('transdate')!=''?$this->input->post('transdate'):Date('d-m-Y'); ?>" style="background-color:white;" required>
+                                                <?php echo form_error('transdate'); ?>
                                             </div>
                                         </div>
                                     </div>
-									<div class="row">
+                                    <div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Leaking Disc(Amt) : </strong></span>
-                                                <input class="form-control" type="text" id="leaking_amount" name="leaking_amount" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('leaking_percent'); ?>
-                                            </div>
-                                        </div>
-                                    </div>
-									<div class="row">
-                                        <div class="col-lg-12 controls">
-                                            <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Bill Amount : </strong></span>
-                                                <input class="form-control" type="text" id="bill_amount" name="bill_amount" style="background-color:yellow;" readonly>
-                                                <?php echo form_error('bill_amount'); ?>
+                                                <span class="input-group-addon"><strong>Remarks : </strong></span>
+												<textarea class="form-control text-input" type="text" id="remarks" name="remarks" rows="5"><?php echo $this->input->post('remarks')!=''?$this->input->post('remarks'):''; ?></textarea>
+                                                
+                                                <?php echo form_error('leakingledgerdetails_remarks'); ?>
                                             </div>
                                         </div>
                                     </div>
 
-</section>
+									
+
+									<input type="hidden" name="leaking_id" id="leaking_id" value="<?php echo $leaking_id;?>"/>
+									<input type="hidden" name="total_billing_amount" id="total_billing_amount" value="<?php echo $record_ledger['leaking_total_amount'];?>"/>
+									<input type="hidden" name="balance_amount" id="balance_amount" value="<?php echo $record_ledger['leaking_total_amount']-$total_payment;?>"/>
+									
+
 
 
 								</form>
@@ -487,9 +377,7 @@
 				};
 	
 				$('#dt_basic').dataTable({
-					"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
-						"t"+
-						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+					"sDom": "tip",
 					"autoWidth" : true,
 			        "oLanguage": {
 					    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
@@ -735,15 +623,18 @@
 				}
 			});
 			
-            $('#add_record').on('click', function(evt){
+            $('#add_payment').on('click', function(evt){
                 evt.preventDefault();
 				
                 //$('#myModal').modal('show');
 				$('#leaking_option').hide();
-                $('#myModalLabel').text('Add New Leaking Record');
+                $('#myModalLabel').text('Add New Payment');
+				$('#remarks').val('');
+                $('#refno').val('');
+                $('#amount_pay').val('');
                 $('#btn_save').text('Save');
 				$('#btn_save').val('add');
-                $('#btn_save').prop('disabled', true);
+                $('#btn_save').prop('disabled', false);
 
 				$('#customer_id_div').show();
 				$('#billing_period_div').show();
@@ -821,33 +712,31 @@
 			$('#btn_save').on('click', function(evt){
 				evt.preventDefault();
 				var refno = $('#refno').val();
-				var customer_id = $('#customer_id').val();
-				var leaking_percent = $('#leaking_percent').val();
-				var payment_date = $('#payment_date').val();
-				var leaking_amount = $('#leaking_amount').val();
-				var bill_amount = $('#bill_amount').val();
-				var gross_amount = $('#gross_amount').val();
+				var source_type = $('#source_type').val();
 				var leaking_id = $('#leaking_id').val();
-				var due_date = $('#due_date').val();
+				var transdate = $('#transdate').val();
+				var amount_pay = $('#amount_pay').val();
+				var balance_amount = $('#balance_amount').val();
+				var total_billing_amount = $('#total_billing_amount').val();
+				var remarks = $('#remarks').val();
 				var btn_save = $('#btn_save').val();
+				
 
 				const formData = new FormData();
 				formData.append("refno",refno);
-				formData.append("customer_id", customer_id);
-				formData.append("leaking_percent", leaking_percent);
-				formData.append("payment_date", payment_date);
-				formData.append("leaking_amount", leaking_amount);
-				formData.append("bill_amount", bill_amount);
-				formData.append("gross_amount", gross_amount);
-				formData.append("due_date", due_date);
+				formData.append("leaking_id", leaking_id);
+				formData.append("transdate", transdate);
+				formData.append("amount_pay", amount_pay);
+				formData.append("source_type", source_type);
+				formData.append("balance_amount", balance_amount);
+				formData.append("total_billing_amount", total_billing_amount);
+				formData.append("remarks", remarks);
 				formData.append("btn_save", btn_save);
-				formData.append("leaking_status", 1);
-				if(leaking_id){
-					formData.append("leaking_id", leaking_id);
-				}
+				
+				
 
 				$.ajax({
-					url: '<?php echo ADMIN_URL;?>Leakingentry/add/',
+					url: '<?php echo ADMIN_URL;?>Leakingentry/add_payment/',
 					type: 'POST',
 					data: formData,
 					contentType: false,
@@ -858,7 +747,7 @@
 					success: function (response) {
 						//const result = JSON.parse(response);
 						if (response=='success') {
-							window.location='<?php echo ADMIN_URL;?>Leakingentry';
+							window.location='<?php echo ADMIN_URL;?>Leakingentry/ledger/'+leaking_id;
 							/*$.smallBox({
 								title : "Saving Data",
 								content : "Saving Data Successfully!",
@@ -921,6 +810,18 @@
 			})
 			//$('#customer_id').select2();
 			
+			$(document).on('click','#print_statement',function(e){
+				
+				
+				var leaking_id = $('#leaking_id').val();
+				
+				var url = '<?php echo ADMIN_URL;?>Leakingentry/soa_statement/'+leaking_id;
+							
+				window.open( url , "popupWindowSOA", "width=1024,height=600,scrollbars=yes");	
+				
+				
+			});
+
 		
 		})
 
@@ -957,7 +858,25 @@
 			}
 		}
 
+		$('.text-input').on('focus', function() {
+			$(this).select();
+		});
 		
+		$("#transdate").datepicker({
+			showAnim: null,
+			dateFormat: 'dd-mm-yy',
+			// showOn: 'both',
+			buttonImage: '<?php echo site_url();?>images/calender.jpg',
+			buttonImageOnly: true,
+			firstDay: 1,
+			nextText: '',
+			prevText: '',
+			numberOfMonths: [1, 1],
+			//setDate: new Date(),
+			//minDate: curDate,
+			//maxDate: ''
+		});
+
 		</script>
 
 

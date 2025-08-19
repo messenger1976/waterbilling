@@ -37,9 +37,9 @@
 				   
 					<?php
 					    $qty= 0;
-					    foreach($amountrate as $amountrat => $amount){
+					    /*foreach($amountrate as $amountrat => $amount){
 							$per_unitvalue = $amount['per_unit'];
-						}
+						}*/
 						//print_r($record);
 						if(count($record) > 0){
 							$i=1;

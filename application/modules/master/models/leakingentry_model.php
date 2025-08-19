@@ -2,6 +2,7 @@
 class leakingentry_model extends CI_Model {
 	public $table_name = 'tbl_leaking_ledger';
 	public $table_leaking_ledger_details = 'tbl_leaking_ledger_details';
+	public $table_leaking_ledger = 'tbl_leaking_ledger';
 	public $table_meter = 'tbl_addmetercustomer';
 	public $table_monthly = 'tbl_monthlycustomer';
 	public $table_expenses = 'tbl_addexpenses';
@@ -36,13 +37,24 @@ class leakingentry_model extends CI_Model {
 		$result = $query->result_array();
 		return $result;
     }
+
+	public function get_ledger_records($leaking_id) {
+        $this->db->select('*');
+		$this->db->from($this->table_leaking_ledger);
+		$this->db->where($this->table_leaking_ledger.'.leaking_id',$leaking_id);
+		//$this->db->order_by($this->table_leaking_ledger.'.leakingledgerdetails_id','desc');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		$result = $query->result_array();
+		return $result;
+    }
 	
  	/** In Function Get single records for edit view purpose from select table **/
     public function get_single_record($id='') {
         $this->db->select("*");
 		$this->db->from($this->table_name);
 		if($id != ''){
-			$this->db->where("id",$id);
+			$this->db->where("leaking_id",$id);
 			$query = $this->db->get();
 			//echo $this->db->last_query();
 			$result = $query->row_array();
@@ -107,6 +119,49 @@ class leakingentry_model extends CI_Model {
 		$result = $this->db->insert($this->table_name, $set_data); 
 		return $result;
 	}
+
+	/** In Function Add Payment records for select table leaking ledger details**/
+	public function add_payment_record(){
+		
+		$paymentdate = date('Y-m-d',strtotime($this->input->post('transdate')));
+		
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		
+		$created_date = $dt_date->format("Y-m-d H:i:s");
+
+		$set_data = array(
+		    'leaking_id' => $this->input->post('leaking_id'),
+			'leakingledgerdetails_or_number' => $this->input->post('refno'),
+			'leakingledgerdetails_source_type' => $this->input->post('source_type'),
+			'leakingledgerdetails_amount' => $this->input->post('amount_pay'),
+			'leakingledgerdetails_remarks' => $this->input->post('remarks'),
+			'leakingledgerdetails_transdate' => $paymentdate,
+			//'leaking_total_amount' => $this->input->post('bill_amount'),
+			//'leaking_bill_amount' => $this->input->post('gross_amount'),
+			//'leaking_status' => $this->input->post('leaking_status'),
+			'leakingledgerdetails_created_datetime' => $created_date
+			
+		);
+		$result = $this->db->insert($this->table_leaking_ledger_details, $set_data); 
+
+		$total_pay = $this->input->post('balance_amount')-$this->input->post('amount_pay');
+
+		$set_data = array(
+		                  
+			'leaking_balance' => $total_pay,
+			'leaking_updated_datetime' => $created_date
+		);
+		if($total_pay==0){
+			$set_data1 = array(
+		    	'leaking_status' => 5,
+			);
+			$set_data = array_merge($set_data,$set_data1);
+		}
+		$this->db->where('leaking_id',$this->input->post('leaking_id'));
+		$result = $this->db->update($this->table_name, $set_data); 
+
+		return $result;
+	}
   	/** In Function Update records for select table **/
 	public function update_record($id){
 		$paymentdate = date('Y-m-d',strtotime($this->input->post('payment_date')));
@@ -151,7 +206,14 @@ class leakingentry_model extends CI_Model {
 		$result = $this->db->update($this->table_name, $set_data); 
 		return $result;
 	}
-	
+	public function get_total_payment($leaking_id){
+		$this->db->select('SUM(leakingledgerdetails_amount) as totalpayment');
+		$this->db->from($this->table_leaking_ledger_details);
+		$this->db->where($this->table_leaking_ledger_details.'.leaking_id',$leaking_id);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
 	public function get_income_metercustomer(){
 		$this->db->select('SUM(pay_amount) as total1');
 		$this->db->from($this->table_meter);
@@ -185,6 +247,41 @@ class leakingentry_model extends CI_Model {
 		$this->db->from($this->table_customer);
 		$query = $this->db->get();
 		$result = $query->row_array();
+		return $result;
+	}
+
+	public function get_soa_header_statement($leaking_id){
+		$this->db->select('*');
+		$this->db->from($this->table_name);
+		$this->db->where('leaking_id',$leaking_id);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
+	public function get_soa_statement($leaking_id){
+		$this->db->select('*');
+		$this->db->from($this->table_leaking_ledger_details);
+		$this->db->where('leaking_id',$leaking_id);
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result;
+	}
+
+	public function get_soa_statement_OR($orno){
+		$this->db->select('*');
+		$this->db->from($this->table_leaking_ledger_details);
+		$this->db->join($this->table_leaking_ledger,$this->table_leaking_ledger_details.'.leaking_id = '.$this->table_leaking_ledger.'.leaking_id','left');
+		$this->db->where('leakingledgerdetails_or_number',$orno);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
+
+	public function get_meterreading_refno($refno){
+		$this->db->select('*');
+		$this->db->from($this->table_customer_meter_reading);
+		$this->db->where('refno',$refno);
+		$result = $this->db->get()->row_array();
 		return $result;
 	}
 	

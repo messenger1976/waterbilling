@@ -4,7 +4,6 @@ class reports extends CI_Controller {
 	
 	public $headerPage = '../../views/admin-includes/header'; 
 	
-	
 	public $listPage = 'adddailyreport_add';
 	public $agingARreportPage = 'aging_ar_report';
     public $monthlyBillingReportPage = 'monthly_billing_report';		   //*****  View page   *****//

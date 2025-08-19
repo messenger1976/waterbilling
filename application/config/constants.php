@@ -42,6 +42,7 @@ define('DIR_WRITE_MODE', 0777);
 //define('HOME_ADS_NO_IMG4', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
 //define('HOME_ADS_NO_IMG5', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
 //define('HOME_ADS_NO_IMG6', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
+
 $webserveruri = 'http://'.$_SERVER['SERVER_NAME'];
 define('ADMIN_URL', $webserveruri.'/master/');
 define('ADMIN_CSS_URL', $webserveruri.'/styles/admin/styles/');

@@ -14,6 +14,7 @@ class adddailyreport extends CI_Controller {
   		$this->load->model('adddailyreport_model','my_model');   //*****    Model Loading     *****//	
 		$this->load->model('common_model','comm_model');
 		$this->load->model('addcustomer_model','customer_model');	
+		$this->load->model('leakingentry_model');	
 		$this->load->model('addmetercustomerreading_model','meterreading_model'); 
 		$this->load->library('form_validation');
 		$this->load->library('Pdf');

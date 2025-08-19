@@ -110,6 +110,20 @@ class addcustomer_model extends CI_Model {
 		}
 		return $result;
     }
+	public function get_single_record_by_customer_id($customer_id='') {
+        $this->db->select("*,(Select zone from ".$this->table_zone." where ".$this->table_zone.".id	= ".$this->table_name.".zone ) as zones,
+		(Select name from ".$this->table_billing." where ".$this->table_billing.".id	= ".$this->table_name.".billingplans ) as billingplans_name,(Select account_name  from ".$this->table_account." where ".$this->table_account.".id = ".$this->table_name.".account_id) as subName
+		"); 
+		$this->db->from($this->table_name);
+		if($customer_id != ''){
+			$this->db->where($this->table_name.".customer_id",$customer_id);
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			$result = $query->row_array();
+		}
+		return $result;
+    }
+	
 	public function get_customerphoto($id)
 	{
 		$this->db->select("*");
