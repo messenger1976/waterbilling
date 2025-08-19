@@ -13,7 +13,7 @@
 .settings/org.eclipse.wst.common.project.facet.core.xml
 application/config/config.php
 application/config/database.php
-application/config/constant.php
+application/config/constants.php
 application/logs
 application/cache
 .git-ftp.log
