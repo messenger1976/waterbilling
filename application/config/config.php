@@ -14,8 +14,9 @@
 | path to your installation.
 |
 */
-//$config['base_url'] = 'http://localhost/waterbilling1/';
-$config['base_url'] = 'http://roxas1.com/';
+
+//$config['base_url'] = 'http://localhost/waterbilling/';
+$config['base_url'] = 'http://roxas.com/';
 
 /*
 |--------------------------------------------------------------------------

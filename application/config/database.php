@@ -57,7 +57,7 @@ $db['default']['hostname'] = 'localhost';//localhost
 
 $db['default']['username'] = 'root';
 $db['default']['password'] = '';
-$db['default']['database'] = 'waterbilling1';		// **** Live Database ******//
+$db['default']['database'] = 'waterbilling';		// **** Live Database ******//
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['port']	   = "3306";
 $db['default']['dbprefix'] = '';
