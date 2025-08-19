@@ -66,6 +66,8 @@
 					<th style="text-align:right;">Penalty</th>
                     <th style="text-align:right;">SC Disc</th>
                     <th style="text-align:right;">Leaking Disc</th>
+                    <th style="text-align:right;">A/R-Leaking</th>
+                    <th style="text-align:right;">A/R-Leaking Balance</th>
                     <th style="text-align:right;">VAT</th>
 				</tr>
 			</thead>
@@ -77,6 +79,8 @@
                         $grand_total_penalty =0;
                         $grand_total_vat =0;
                         $grand_total_leaking =0;
+                        $grand_total_ar_leaking =0;
+                        $grand_total_ar_leaking_balance =0;
                         $grand_total_sc =0;
                         foreach($zone as $key => $row){ 
 				?>                                            
@@ -95,6 +99,8 @@
                  $total_penalty_zone = 0;
                  $total_vat_zone = 0;
                  $total_leaking_zone = 0;
+                 $total_ar_leaking_zone = 0;
+                 $total_ar_leaking_balance_zone = 0;
                  $total_sc_zone = 0;
 
                  foreach($get_dailytrans as $key => $gdailytrans){ 
@@ -112,7 +118,14 @@
 
 					$prev_year = get_customer_unpaid_records($gdailytrans['customer_id'],'12',$current_billing_period_year-1);
                     //$prev_year = 600;
-                    
+					$ar_leaking = 0;
+                    if($gdailytrans['leaking_amount']>0){
+						$ornumber_search = sprintf('%07d',$gdailytrans['or_number']);
+						$ar_leaking = $this->leakingentry_model->get_soa_statement_OR($ornumber_search);
+
+						$gdailytrans['grand_total'] = $gdailytrans['grand_total']-$ar_leaking['leaking_balance'];
+					}
+					//print_r($ar_leaking['leaking_total_amount']);
                     echo '<tr>';
                     echo '<td>'.sprintf('%07d',$gdailytrans['or_number']).'</td><td>'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
                     <td align="right">'.number_format($gdailytrans['grand_total'],2).'</td>
@@ -122,6 +135,8 @@
                     <td align="right">'. number_format($gdailytrans['total_penalty'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['sc_discount'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
+                    <td align="right">'.number_format($ar_leaking['leaking_total_amount'],2).'</td>
+                    <td align="right">'.number_format($ar_leaking['leaking_balance'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['vat_amount'],2).'</td>
                     ';
                     echo '</tr>';
@@ -132,6 +147,8 @@
                     $total_vat_zone += $gdailytrans['vat_amount'];
                     $total_leaking_zone +=$gdailytrans['leaking_amount'];
                     $total_sc_zone +=$gdailytrans['sc_discount'];
+					$total_ar_leaking_zone+=$ar_leaking['leaking_total_amount'];
+					$total_ar_leaking_balance_zone+=$ar_leaking['leaking_balance'];
                  }
                  echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_current_zone,2).'</th>
@@ -140,6 +157,8 @@
                  <th style="text-align:right">'.number_format($total_penalty_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_sc_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_leaking_zone,2).'</th>
+                 <th style="text-align:right">'.number_format($total_ar_leaking_zone,2).'</th>
+                 <th style="text-align:right">'.number_format($total_ar_leaking_balance_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_vat_zone,2).'</th>
                  </tr>';
                 ?>
@@ -152,7 +171,8 @@
                     $grand_total_vat += $total_vat_zone;
                     $grand_total_leaking += $total_leaking_zone;
                     $grand_total_sc += $total_sc_zone;
-            
+            		$grand_total_ar_leaking += $total_ar_leaking_zone;
+					$grand_total_ar_leaking_balance+=$total_ar_leaking_balance_zone;
                 } 
                 ?>
                  <?php } ?>
@@ -173,6 +193,8 @@
 					<th style="text-align:right"><?php echo number_format($grand_total_penalty,2);?></th>
 					<th style="text-align:right"><?php echo number_format($grand_total_sc,2);?></th>
                     <th style="text-align:right"><?php echo number_format($grand_total_leaking,2);?></th>
+                    <th style="text-align:right"><?php echo number_format($grand_total_ar_leaking,2);?></th>
+                    <th style="text-align:right"><?php echo number_format($grand_total_ar_leaking_balance,2);?></th>
                     <th style="text-align:right"><?php echo number_format($grand_total_vat,2);?></th>
 				</tr>
                 

@@ -64,7 +64,7 @@
                     </tr>
                     <tr>
                         <td>LEAKING BALANCE: <u><?php echo  number_format($record['leaking_balance'],2);?></u></td>
-                        <td></td>
+                        <td>REFNO: <u><?php echo $record['leaking_refno'];?></u></td>
                     </tr>
                 </tbody>
             </table>

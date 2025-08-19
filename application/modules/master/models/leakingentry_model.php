@@ -266,6 +266,17 @@ class leakingentry_model extends CI_Model {
 		$result = $query->result_array();
 		return $result;
 	}
+
+	public function get_soa_statement_OR($orno){
+		$this->db->select('*');
+		$this->db->from($this->table_leaking_ledger_details);
+		$this->db->join($this->table_leaking_ledger,$this->table_leaking_ledger_details.'.leaking_id = '.$this->table_leaking_ledger.'.leaking_id','left');
+		$this->db->where('leakingledgerdetails_or_number',$orno);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
+
 	public function get_meterreading_refno($refno){
 		$this->db->select('*');
 		$this->db->from($this->table_customer_meter_reading);
