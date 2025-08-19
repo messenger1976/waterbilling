@@ -236,7 +236,11 @@
 							</li>	
 							<?php } ?>
 
-							
+							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
+							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='leaking_ar_report') echo 'active';?>">
+								<a href="<?php echo ADMIN_URL;?>reports/leaking_ar_report"> <span class="menu-item-parent">Leaking A/R Report</span></a>
+							</li>	
+							<?php } ?>
 						   
 						</ul>
 					</li>
