@@ -38,8 +38,20 @@
 	</head>
 <body class="color" onLoad="window.print()">
     <div style="text-align: center;"><img src="<?php echo site_url();?>images/mroxas-logo-report.jpg" height="80px"/></div>
-<h3 style="text-align: center;">DAILY COLLECTION REPORT</h3>
-<h6 style="text-align: center;"><?php echo $trans_date;?></h6>
+<h3 style="text-align: center;">AGING OF ACCOUNT RECEIVABLE REPORT</h3>
+<h6 style="text-align: center;"><?php
+
+echo 'As of '.$asofdate;?><br/>
+<?php 
+if($status==1){
+	echo 'Active Members';
+}elseif($status== 2){
+	echo 'Disconnected Members';
+}elseif($status== 0){
+	echo 'Inactive Members';
+}
+?>
+</h6>
 <div class="row">
 	<div class="col-lg-12 col-sm-12 col-xs-12 col-md-12">
 		<?php
@@ -48,6 +60,8 @@
 					$id=$row['id'];
 				}
 			}
+
+            
         ?>
 	</div>
 </div>     
@@ -56,32 +70,33 @@
         <table  class="table" style="font-size:smaller;" cellpadding="0">
 			<thead>
 				<tr>
-					<th data-hide="phone">OR #</th>
+					<th>SN #</th>
 					
-					<th data-hide="phone">Concessionaires</th>																												
-					<th  style="text-align:right;" data-hide="phone">Total Amount Collected</th>
-					<th  style="text-align:right;" data-hide="phone">Current</th>
-					<th  style="text-align:right;" data-hide="phone">Arrears</th>
-                    <th  style="text-align:right;" data-hide="phone">Previous Year</th>
-					<th style="text-align:right;">Penalty</th>
-                    <th style="text-align:right;">SC Disc</th>
-                    <th style="text-align:right;">Leaking Disc</th>
-                    <th style="text-align:right;">A/R-Leaking</th>
-                    <th style="text-align:right;">A/R-Leaking Balance</th>
-                    <th style="text-align:right;">VAT</th>
+					<th>Concessionaires</th>
+                    <th>Cust Acct No.</th>		
+					<th style="width:10px;">Meter Number</th>																										
+					<th  style="text-align:right;">Current</th>
+					<th  style="text-align:right;">30 Days</th>
+					<th  style="text-align:right;">60 Days</th>
+                    <th  style="text-align:right;">90 Days</th>
+					<th style="text-align:right;">120 Days</th>
+                    <th style="text-align:right;">150 Days Up</th>
+                    <th style="text-align:right;">Amount</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
                     if(count($zone) > 0){
-						$cr = 0;
-                        $grand_total_current = 0;
-                        $grand_total_penalty =0;
-                        $grand_total_vat =0;
-                        $grand_total_leaking =0;
-                        $grand_total_ar_leaking =0;
-                        $grand_total_ar_leaking_balance =0;
-                        $grand_total_sc =0;
+                        $index = 0;
+						
+                        $grand_total_30days = 0;
+						$grand_total_60days = 0;
+						$grand_total_90days = 0;
+						$grand_total_120days = 0;
+						$grand_total_150daysup = 0;
+						$grand_total_amount =0;
+
+                        
                         foreach($zone as $key => $row){ 
 				?>                                            
 					<tr>
@@ -90,157 +105,106 @@
 						<td colspan="8"></td>
 					</tr>
                 <?php
-                $mysql_transdate = date('Y-m-d',strtotime($trans_date));
-				$current_billing_period_year = date('Y',strtotime($trans_date));
-                 $get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
-                 $total_grand_zone = 0;
-                 $total_current_zone = 0;
-				 $total_arrears_zone = 0;
-                 $total_penalty_zone = 0;
-                 $total_vat_zone = 0;
-                 $total_leaking_zone = 0;
-                 $total_ar_leaking_zone = 0;
-                 $total_ar_leaking_balance_zone = 0;
-                 $total_sc_zone = 0;
-
-                 foreach($get_dailytrans as $key => $gdailytrans){ 
-                    //$gross_total = $gdailytrans['grand_total'] + $gdailytrans['vat_amount'];
-                    //$penalty = $gross_total - $gdailytrans['reading_amount'];
-					$penalty = $gdailytrans['amount']-$gdailytrans['per_unit'];
-					$current = 0;
-					$arrears = 0;
-                    if($penalty<=0){
-                        $penalty = 0;
-						$current = $gdailytrans['per_unit'];
-                    }else{
-						$arrears = $gdailytrans['per_unit'];
-					}
-
-					$prev_year = get_customer_unpaid_records($gdailytrans['customer_id'],'12',$current_billing_period_year-1);
-                    //$prev_year = 600;
-					$ar_leaking = 0;
-                    if($gdailytrans['leaking_amount']>0){
-						$ornumber_search = sprintf('%07d',$gdailytrans['or_number']);
-						$ar_leaking = $this->leakingentry_model->get_soa_statement_OR($ornumber_search);
-
-						$gdailytrans['grand_total'] = $gdailytrans['grand_total']-$ar_leaking['leaking_balance'];
-					}
-					//print_r($ar_leaking['leaking_total_amount']);
+                //$mysql_transdate = date('Y-m-d',strtotime($trans_date));
+                 //$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
+                 $get_dailytrans = $this->report_model->get_aging_ar_report_records($asofdate,$row['id'],$status);
+                 
+				 $grand_total_30days_zone = 0;
+				 $grand_total_60days_zone = 0;
+				 $grand_total_90days_zone = 0;
+				 $grand_total_120days_zone = 0;
+				 $grand_total_150daysup_zone = 0;
+				 $grand_total_amount_zone =0;
+				
+                
+                
+                 foreach($get_dailytrans as $key => $gdailytrans){
+                    
+                    $index++;
                     echo '<tr>';
-                    echo '<td>'.sprintf('%07d',$gdailytrans['or_number']).'</td><td>'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
-                    <td align="right">'.number_format($gdailytrans['grand_total'],2).'</td>
-                    <td align="right">'.number_format( $gdailytrans['current_amount'],2).'</td>
-                    <td align="right">'.number_format( $gdailytrans['arrears_amount'],2).'</td>
-					<td align="right">'.number_format( $prev_year,2).'</td>
-                    <td align="right">'. number_format($gdailytrans['total_penalty'],2).'</td>
-                    <td align="right">'.number_format($gdailytrans['sc_discount'],2).'</td>
-                    <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
-                    <td align="right">'.number_format($ar_leaking['leaking_total_amount'],2).'</td>
-                    <td align="right">'.number_format($ar_leaking['leaking_balance'],2).'</td>
-                    <td align="right">'.number_format($gdailytrans['vat_amount'],2).'</td>
+                    echo '<td>'.$index.'</td>
+                    <td style="width:25%;">'.$gdailytrans['last_name'].', '.$gdailytrans['first_name'].' '.$gdailytrans['middle_name'].'</td>
+                    <td style="width:15%;">'.$gdailytrans['customer_id'].'</td>
+					<td style="width:15%;">'.$gdailytrans['meter_number'].'</td>
+                    <td align="right">'. number_format($gdailytrans['current'],2).'</td>
+					<td align="right">'. number_format($gdailytrans['30-days'],2).'</td>
+					<td align="right">'. number_format($gdailytrans['60-days'],2).'</td>
+					<td align="right">'. number_format($gdailytrans['90-days'],2).'</td>
+					<td align="right">'. number_format($gdailytrans['120-days'],2).'</td>
+					<td align="right">'. number_format($gdailytrans['150-DaysUp'],2).'</td>
+					<td align="right">'. number_format($gdailytrans['total_balance'],2).'</td>
+
+                    
                     ';
                     echo '</tr>';
-                    $total_grand_zone += $gdailytrans['grand_total'];
-                    $total_current_zone += $gdailytrans['current_amount'];
-					$total_arrears_zone += $gdailytrans['arrears_amount'];
-                    $total_penalty_zone += $gdailytrans['total_penalty'];
-                    $total_vat_zone += $gdailytrans['vat_amount'];
-                    $total_leaking_zone +=$gdailytrans['leaking_amount'];
-                    $total_sc_zone +=$gdailytrans['sc_discount'];
-					$total_ar_leaking_zone+=$ar_leaking['leaking_total_amount'];
-					$total_ar_leaking_balance_zone+=$ar_leaking['leaking_balance'];
-                 }
-                 echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_current_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_arrears_zone,2).'</th>
-                 <th style="text-align:right">0.00</th>
-                 <th style="text-align:right">'.number_format($total_penalty_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_sc_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_leaking_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_ar_leaking_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_ar_leaking_balance_zone,2).'</th>
-                 <th style="text-align:right">'.number_format($total_vat_zone,2).'</th>
+                    
+
+					$grand_total_current_zone +=$gdailytrans['current'];
+					$grand_total_30days_zone +=$gdailytrans['30-days'];
+					$grand_total_60days_zone +=$gdailytrans['60-days'];
+					$grand_total_90days_zone  +=$gdailytrans['90-days'];
+					$grand_total_120days_zone  +=$gdailytrans['120-days'];
+					$grand_total_150daysup_zone  +=$gdailytrans['150-DaysUp'];
+					$grand_total_amount_zone +=$gdailytrans['total_balance'];
+                                    
+
+					$grand_total_current +=$gdailytrans['current'];
+					$grand_total_30days +=$gdailytrans['30-days'];
+					$grand_total_60days +=$gdailytrans['60-days'];
+					$grand_total_90days  +=$gdailytrans['90-days'];
+					$grand_total_120days  +=$gdailytrans['120-days'];
+					$grand_total_150daysup  +=$gdailytrans['150-DaysUp'];
+					$grand_total_amount +=$gdailytrans['total_balance'];
+                    
+                }
+                 echo '<tr>
+                 <th colspan="4" style="text-align:right">TOTAL</th>
+                 <th style="text-align:right">'.number_format($grand_total_current_zone,2).'</th>
+                 <th style="text-align:right">'.number_format($grand_total_30days_zone,2).'</th>
+                 <th style="text-align:right">'.number_format($grand_total_60days_zone,2).'</th>
+                  <th style="text-align:right">'.number_format($grand_total_90days_zone,2).'</th>
+				  <th style="text-align:right">'.number_format($grand_total_120days_zone,2).'</th>
+				  <th style="text-align:right">'.number_format($grand_total_150daysup_zone,2).'</th>
+				  <th style="text-align:right">'.number_format($grand_total_amount_zone,2).'</th>
+                  <th></th>
                  </tr>';
-                ?>
-				<?php  
                 
-                    $cr += $total_grand_zone; 
-                    $grand_total_current += $total_current_zone; 
-                    $grand_total_arrears += $total_arrears_zone; 
+                
+                    
+                    $grand_total_amount += $total_amount_zone; 
                     $grand_total_penalty += $total_penalty_zone;
-                    $grand_total_vat += $total_vat_zone;
-                    $grand_total_leaking += $total_leaking_zone;
-                    $grand_total_sc += $total_sc_zone;
-            		$grand_total_ar_leaking += $total_ar_leaking_zone;
-					$grand_total_ar_leaking_balance+=$total_ar_leaking_balance_zone;
+                    $grand_total_reading += $total_reading_zone;
+                    $grand_total_billamount += $total_billamount_zone;
+                    
+
+            
                 } 
                 ?>
                  <?php } ?>
 
 
                 
+                
+                
                 <tr>
-					<td></td>
-					<td><b>LEAKING A/R PAYMENT REPORT</b></td>
-					<td colspan="10"></td>
-				</tr>
-				
-
-				
-                <?php
-				$mysql_transdate1 = date('Y-m-d',strtotime($trans_date));
-				$get_dailytrans1 = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate1);
-				$total_leaking_ar = 0;
-				//print_r($get_dailytrans1);
-				foreach($get_dailytrans1 as $key => $gdailytrans1){
 					
-					echo '<tr>
-					<td>'.$gdailytrans1['leakingledgerdetails_source_type'].'#'.$gdailytrans1['leakingledgerdetails_or_number'].'</td>
-					<td>'.$gdailytrans1['last_name'].', '.$gdailytrans1['first_name'].'</td>
-					<td  style="text-align:right">'.number_format($gdailytrans1['leakingledgerdetails_amount'],2).'</td>
-					<td colspan=6></td>
-					<td style="text-align:right">'.number_format($gdailytrans1['leaking_total_amount'],2).'</td>
-					<td style="text-align:right">'.number_format($gdailytrans1['leakingledgerdetails_balance'],2).'</td>
-					<td></td>
-					</tr>';
-					$total_leaking_ar+=$gdailytrans1['leakingledgerdetails_amount'];
-				}
-
-				echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_leaking_ar,2).'</th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 <th style="text-align:right"></th>
-                 
-                 </tr>';
-				 $cr+=$total_leaking_ar;
-				?>
-				
-                <tr>
-					<th></th>
-					<th>Grand Total</th>
-                    <th style="text-align:right"><?php echo number_format($cr,2);?></th>
+                    <th colspan="4" style="text-align:right">GRAND TOTAL</th>
                     <th style="text-align:right"><?php echo number_format($grand_total_current,2);?></th>
-					<th style="text-align:right"><?php echo number_format($grand_total_arrears,2);?></th>
-					<th style="text-align:right">0.00</th>
-					
-					
-					<th style="text-align:right"><?php echo number_format($grand_total_penalty,2);?></th>
-					<th style="text-align:right"><?php echo number_format($grand_total_sc,2);?></th>
-                    <th style="text-align:right"><?php echo number_format($grand_total_leaking,2);?></th>
-                    <th style="text-align:right"><?php echo number_format($grand_total_ar_leaking,2);?></th>
-                    <th style="text-align:right"><?php echo number_format($grand_total_ar_leaking_balance,2);?></th>
-                    <th style="text-align:right"><?php echo number_format($grand_total_vat,2);?></th>
+					<th style="text-align:right"><?php echo number_format($grand_total_30days,2);?></th>
+                    <th style="text-align:right"><?php echo number_format($grand_total_60days,2);?></th>
+                    <th style="text-align:right"><?php echo number_format($grand_total_90days,2);?></th>
+					<th style="text-align:right"><?php echo number_format($grand_total_120days,2);?></th>
+					<th style="text-align:right"><?php echo number_format($grand_total_150daysup,2);?></th>
+					<th style="text-align:right"><?php echo number_format($grand_total_amount,2);?></th>
+                    <th></th>
 				</tr>
                 
                
 			</tbody>
        </table>
+
+
+
 
        <table width="100%"  style="font-size:smaller;" cellspacing="5" cellpadding="5">
             <tr>
