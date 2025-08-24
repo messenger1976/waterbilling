@@ -2,7 +2,7 @@
 class dashboard extends CI_Controller {
 	// Declare globle variable here
 	
-	public $headerPage = '../../views/admin-includes/header'; 
+	public $headerPage = '../../views/admin-includes/dashboard_header'; 
 	
 	public $listPage = 'dashboard'; 
 	public function __construct() {
@@ -46,9 +46,9 @@ class dashboard extends CI_Controller {
 		$data['solved_prbm'] = $this->my_model->get_total_solved_problems();
 		$data['customer'] = $this->my_model->get_customers_list();
 		$data['expenses'] = $this->my_model->get_expenses_list();
-		$data['this_expenses'] = $this->my_model->get_month_expenses_list();
-		$data['monthly_income'] = $this->my_model->get_list_monthly_income();
-		$data['meter_income'] = $this->my_model->get_list_meter_income();
+		//$data['this_expenses'] = $this->my_model->get_month_expenses_list();
+		//$data['monthly_income'] = $this->my_model->get_list_monthly_income();
+		//$data['meter_income'] = $this->my_model->get_list_meter_income();
 		//echo '<pre>';print_r($data);exit;
 		$config = array();
 		$config["base_url"] = base_url() . "index.php/master/dashboard/index";		
@@ -104,9 +104,9 @@ class dashboard extends CI_Controller {
 		
 		
 		$data['total_rows'] = $config["total_rows"];
-		$data['this_expenses'] = $this->my_model->get_month_expenses_list();
-		$data['monthly_income'] = $this->my_model->get_list_monthly_income();
-		 $data['meter_income'] = $this->my_model->get_list_meter_income();
+		//$data['this_expenses'] = $this->my_model->get_month_expenses_list();
+		//$data['monthly_income'] = $this->my_model->get_list_monthly_income();
+		 //$data['meter_income'] = $this->my_model->get_list_meter_income();
 		//echo '<pre>';print_r($data);exit;
 		$this->load->view($this->listPage,$data);
 	}

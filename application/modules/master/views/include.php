@@ -59,5 +59,8 @@
 			
 		<![endif]-->
 		
+		<!-- Demo purpose only -->
+		<script src="<?php echo base_url();?>js/demo.min.js"></script>
+
 		<!-- MAIN APP JS FILE -->
 		<script src="<?php echo base_url();?>js/app.min.js"></script>
