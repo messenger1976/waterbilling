@@ -278,7 +278,16 @@
 									<div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
-                                                <span class="input-group-addon"><strong>Amount : (*)</strong></span>
+                                                <span class="input-group-addon"><strong>Balance Amount : </strong></span>
+                                                <input class="form-control text-input" type="text" id="prev_balance" name="prev_balance" value="<?php echo $record_ledger['leaking_balance'];?>" style="background-color:yellow;" readonly>
+                                                <?php echo form_error('leaking_balance'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>Amount Tender: (*)</strong></span>
                                                 <input class="form-control text-input" type="text" id="amount_pay" name="amount_pay" value="0.00" style="background-color:white;" required>
                                                 <?php echo form_error('amount_pay'); ?>
                                             </div>
@@ -715,6 +724,7 @@
 				var source_type = $('#source_type').val();
 				var leaking_id = $('#leaking_id').val();
 				var transdate = $('#transdate').val();
+				var prev_balance = $('#prev_balance').val();
 				var amount_pay = $('#amount_pay').val();
 				var balance_amount = $('#balance_amount').val();
 				var total_billing_amount = $('#total_billing_amount').val();
@@ -726,6 +736,7 @@
 				formData.append("refno",refno);
 				formData.append("leaking_id", leaking_id);
 				formData.append("transdate", transdate);
+				formData.append("prev_balance", prev_balance);
 				formData.append("amount_pay", amount_pay);
 				formData.append("source_type", source_type);
 				formData.append("balance_amount", balance_amount);

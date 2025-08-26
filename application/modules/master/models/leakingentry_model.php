@@ -134,8 +134,11 @@ class leakingentry_model extends CI_Model {
 			'leakingledgerdetails_or_number' => $this->input->post('refno'),
 			'leakingledgerdetails_source_type' => $this->input->post('source_type'),
 			'leakingledgerdetails_amount' => $this->input->post('amount_pay'),
+			'leakingledgerdetails_prev_balance' => $this->input->post('prev_balance'),
+			'leakingledgerdetails_balance' => $this->input->post('balance_amount')-$this->input->post('amount_pay'),
 			'leakingledgerdetails_remarks' => $this->input->post('remarks'),
 			'leakingledgerdetails_transdate' => $paymentdate,
+			'leakingledgerdetails_source_module' => 'leaking',
 			//'leaking_total_amount' => $this->input->post('bill_amount'),
 			//'leaking_bill_amount' => $this->input->post('gross_amount'),
 			//'leaking_status' => $this->input->post('leaking_status'),
@@ -274,6 +277,18 @@ class leakingentry_model extends CI_Model {
 		$this->db->where('leakingledgerdetails_or_number',$orno);
 		$query = $this->db->get();
 		$result = $query->row_array();
+		return $result;
+	}
+
+	public function get_soa_statement_transdate($transdate){
+		$this->db->select('*');
+		$this->db->from($this->table_leaking_ledger_details);
+		$this->db->join($this->table_leaking_ledger,$this->table_leaking_ledger_details.'.leaking_id = '.$this->table_leaking_ledger.'.leaking_id','left');
+		$this->db->join($this->table_customer,$this->table_leaking_ledger.'.leaking_customer_id = '.$this->table_customer.'.customer_id','left');
+		$this->db->where('leakingledgerdetails_transdate',$transdate);
+		$this->db->where('leakingledgerdetails_source_module','leaking');
+		$query = $this->db->get();
+		$result = $query->result_array();
 		return $result;
 	}
 

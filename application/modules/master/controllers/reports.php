@@ -6,18 +6,21 @@ class reports extends CI_Controller {
 	
 	public $listPage = 'adddailyreport_add';
 	public $agingARreportPage = 'aging_ar_report';
+    public $leakingARreportPage = 'leaking_ar_report';
     public $monthlyBillingReportPage = 'monthly_billing_report';		   //*****  View page   *****//
 	public $searchPage ='adddaily_search _ajax';
     public $monthlybillingreport_ajaxPage ='monthly_billing_report_ajax';
 	public $agingARreport_ajaxPage ='aging_ar_report_ajax';
 	public $printtopdfPage ='monthlybillingreport_printtopdf';
 	public $agingprinttopdfPage ='agingarreport_printtopdf';
+	public $leakingarreport ='leakingarreport_printtopdf';
 	public function __construct() {
         parent::__construct();
         $this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//	
   		$this->load->model('adddailyreport_model','my_model');   //*****    Model Loading     *****//	
         $this->load->model('Report_model','report_model');   //*****    Model Loading     *****//	
         $this->load->model('common_model','comm_model');
+		$this->load->model('leakingentry_model');
 		$this->load->model('addcustomer_model','customer_model');	
 		$this->load->model('addmetercustomerreading_model','meterreading_model'); 
         $this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//	
@@ -64,7 +67,7 @@ class reports extends CI_Controller {
 		$data['employee'] = $this->my_model->get_employee();
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
 		$this->load->view($this->headerPage,$header);
-		$this->load->view($this->agingARreportPage,$data);
+		$this->load->view($this->leakingARreportPage,$data);
 	}
 
 	public function printtopdf($billingperiod,$status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){

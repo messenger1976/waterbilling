@@ -16,7 +16,7 @@
 */
 
 //$config['base_url'] = 'http://localhost/waterbilling/';
-$config['base_url'] = 'http://roxas.com/';
+$config['base_url'] = 'http://roxas1.com/';
 
 /*
 |--------------------------------------------------------------------------
