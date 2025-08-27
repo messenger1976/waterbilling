@@ -104,7 +104,7 @@
 						            <div class="panel panel-teal pricing-big">
 						            	
 						                <div class="panel-heading">
-						                    <h3 class="panel-title">
+						                    <h3 class="panel-title"><i class="fa fa-user fa-lg"></i>
 						                        Total Customers</h3>
 						                </div>
 						                <div class="panel-body no-padding text-align-center">
@@ -129,7 +129,7 @@
 						            <div class="panel panel-primary pricing-big">
 						            	<img src="img/ribbon.png" class="ribbon" alt="">
 						                <div class="panel-heading">
-						                    <h3 class="panel-title">
+						                    <h3 class="panel-title"><i class="fa fa-money fa-lg"></i>
 						                        Total Leaking Balances</h3>
 						                </div>
 						                <div class="panel-body no-padding text-align-center">
@@ -150,7 +150,7 @@
 						            <div class="panel panel-darken pricing-big">
 						            	
 						                <div class="panel-heading">
-						                    <h3 class="panel-title">
+						                    <h3 class="panel-title"><i class="fa fa-comments fa-lg"></i>
 						                        Open Tickets</h3>
 						                </div>
 						                <div class="panel-body no-padding text-align-center">
@@ -508,13 +508,8 @@
 
 								<header>
 									<span class="widget-icon"> <i class="fa fa-map-marker"></i> </span>
-									<h6>Birds Eye</h6>
-									<div class="widget-toolbar hidden-mobile">
-										<span class="onoffswitch-title"><i class="fa fa-location-arrow"></i> Realtime</span>
-										<span class="onoffswitch">
-											<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" checked="checked" id="myonoffswitch">
-											<label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner" data-swchon-text="YES" data-swchoff-text="NO"></span> <span class="onoffswitch-switch"></span> </label> </span>
-									</div>
+									<h6>Bill Chart</h6>
+									
 								</header>
 
 								<!-- widget div-->
@@ -530,235 +525,13 @@
 
 									<div class="widget-body no-padding">
 										<!-- content goes here -->
+										<div id="pie-chart" class="chart"></div>
 
-										<div id="vector-map" class="vector-map"></div>
-										<div id="heat-fill">
-											<span class="fill-a">0</span>
 
-											<span class="fill-b">5,000</span>
-										</div>
 
-										<table class="table table-striped table-hover table-condensed">
-											<thead>
-												<tr>
-													<th>Country</th>
-													<th>Visits</th>
-													<th class="text-align-center">User Activity</th>
-													<th class="text-align-center hidden-xs">Online</th>
-													<th class="text-align-center">Demographic</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td><a href="javascript:void(0);">USA</a></td>
-													<td>4,977</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														2700, 3631, 2471, 1300, 1877, 2500, 2577, 2700, 3631, 2471, 2000, 2100, 3000
-													</div></td>
-													<td class="text-align-center hidden-xs">143</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														17,83
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Australia</a></td>
-													<td>4,873</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														1000, 1100, 3030, 1300, -1877, -2500, -2577, -2700, 3631, 2471, 4700, 1631, 2471
-													</div></td>
-													<td class="text-align-center hidden-xs">247</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														22,88
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">India</a></td>
-													<td>3,671</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														3631, 1471, 2400, 3631, 471, 1300, 1177, 2500, 2577, 3000, 4100, 3000, 7700
-													</div></td>
-													<td class="text-align-center hidden-xs">373</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														10,90
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Brazil</a></td>
-													<td>2,476</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														2700, 1877, 2500, 2577, 2000, 3631, 2471, -2700, -3631, 2471, 1300, 2100, 3000,
-													</div></td>
-													<td class="text-align-center hidden-xs ">741</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														34,66
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Turkey</a></td>
-													<td>1,476</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														1300, 1877, 2500, 2577, 2000, 2100, 3000, -2471, -2700, -3631, -2471, 2700, 3631
-													</div></td>
-													<td class="text-align-center hidden-xs">123</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														75,25
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Canada</a></td>
-													<td>146</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-orange text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														5, 34, 10, 1, 4, 6, -9, -1, 0, 0, 5, 6, 7
-													</div></td>
-													<td class="text-align-center hidden-xs">23</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														50,50
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan=5>
-													<ul class="pagination pagination-xs no-margin">
-														<li class="prev disabled">
-															<a href="javascript:void(0);">Previous</a>
-														</li>
-														<li class="active">
-															<a href="javascript:void(0);">1</a>
-														</li>
-														<li>
-															<a href="javascript:void(0);">2</a>
-														</li>
-														<li>
-															<a href="javascript:void(0);">3</a>
-														</li>
-														<li class="next">
-															<a href="javascript:void(0);">Next</a>
-														</li>
-													</ul></td>
-												</tr>
-											</tfoot>
-										</table>
-
-										<!-- end content -->
+										
 
 									</div>
-
-								</div>
 								<!-- end widget div -->
 							</div>
 							<!-- end widget -->
@@ -782,7 +555,7 @@
 
 								<header>
 									<span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
-									<h6> ToDo's </h6>
+									<h6> My Tickets </h6>
 									<!-- <div class="widget-toolbar">
 									add: non-hidden - to disable auto hide
 
@@ -802,19 +575,19 @@
 
 									<div class="widget-body no-padding smart-form">
 										<!-- content goes here -->
-										<h5 class="todo-group-title"><i class="fa fa-warning"></i> Critical Tasks (<small class="num-of-tasks">1</small>)</h5>
+										<h5 class="todo-group-title"><i class="fa fa-warning"></i> Critical Issues (<small class="num-of-tasks">1</small>)</h5>
 										<ul id="sortable1" class="todo">
 											<li>
 												<span class="handle"> <label class="checkbox">
 														<input type="checkbox" name="checkbox-inline">
 														<i></i> </label> </span>
 												<p>
-													<strong>Ticket #17643</strong> - Hotfix for WebApp interface issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
+													<strong>Ticket #17643</strong> - Customer #23232 has a leaking issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
 													<span class="date">Jan 1, 2014</span>
 												</p>
 											</li>
 										</ul>
-										<h5 class="todo-group-title"><i class="fa fa-exclamation"></i> Important Tasks (<small class="num-of-tasks">3</small>)</h5>
+										<h5 class="todo-group-title"><i class="fa fa-exclamation"></i> Important Issues (<small class="num-of-tasks">3</small>)</h5>
 										<ul id="sortable2" class="todo">
 											<li>
 												<span class="handle"> <label class="checkbox">
@@ -838,20 +611,20 @@
 														<input type="checkbox" name="checkbox-inline">
 														<i></i> </label> </span>
 												<p>
-													<strong>Ticket #17643</strong> - Hotfix for WebApp interface issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
+													<strong>Ticket #17643</strong> - Customer #23232 has a leaking issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
 													<span class="date">Jan 1, 2014</span>
 												</p>
 											</li>
 										</ul>
 
-										<h5 class="todo-group-title"><i class="fa fa-check"></i> Completed Tasks (<small class="num-of-tasks">1</small>)</h5>
+										<h5 class="todo-group-title"><i class="fa fa-check"></i> Resolved Issues (<small class="num-of-tasks">1</small>)</h5>
 										<ul id="sortable3" class="todo">
 											<li class="complete">
 												<span class="handle" style="display:none"> <label class="checkbox state-disabled">
 														<input type="checkbox" name="checkbox-inline" checked="checked" disabled="disabled">
 														<i></i> </label> </span>
 												<p>
-													<strong>Ticket #17643</strong> - Hotfix for WebApp interface issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
+													<strong>Ticket #17643</strong> - Customer #23232 has a leaking issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
 													<span class="date">Jan 1, 2014</span>
 												</p>
 											</li>
@@ -926,7 +699,8 @@
 		<script src="<?php echo base_url();?>js/plugin/flot/jquery.flot.time.min.js"></script>
 		<script src="<?php echo base_url();?>js/plugin/flot/jquery.flot.tooltip.min.js"></script>
 
-		
+		<!-- EASY PIE CHARTS -->
+		<script src="js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
     
 
 		<script type="text/javascript">
@@ -1226,8 +1000,64 @@
 
 
 				}
+
+
+
+
+
+				/* pie chart */
+
+				if ($('#pie-chart').length) {
+
+					var data_pie = [];
+					var series = Math.floor(Math.random() * 10) + 1;
+					for (var i = 0; i < series; i++) {
+						data_pie[i] = {
+							label : "Series" + (i + 1),
+							data : Math.floor(Math.random() * 100) + 1
+						}
+					}
+
+					$.plot($("#pie-chart"), data_pie, {
+						series : {
+							pie : {
+								show : true,
+								innerRadius : 0.5,
+								radius : 1,
+								label : {
+									show : false,
+									radius : 2 / 3,
+									formatter : function(label, series) {
+										return '<div style="font-size:11px;text-align:center;padding:4px;color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+									},
+									threshold : 0.1
+								}
+							}
+						},
+						legend : {
+							show : true,
+							noColumns : 1, // number of colums in legend table
+							labelFormatter : null, // fn: string -> string
+							labelBoxBorderColor : "#000", // border color for the little label boxes
+							container : null, // container (as jQuery object) to put legend in, null means default on top of graph
+							position : "ne", // position of default legend container within plot
+							margin : [5, 10], // distance from grid edge to default legend container within plot
+							backgroundColor : "#efefef", // null means auto-detect
+							backgroundOpacity : 1 // set to 0 to avoid background
+						},
+						grid : {
+							hoverable : true,
+							clickable : true
+						},
+					});
+
+				}
+
+				/* end pie chart */
 		
 		})
+
+
 
 		</script>
 
