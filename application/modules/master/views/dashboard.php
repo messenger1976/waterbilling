@@ -76,7 +76,7 @@
 						            <div class="panel panel-success pricing-big">
 						            	
 						                <div class="panel-heading">
-						                    <h3 class="panel-title">
+						                    <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-lg"></i>
 						                        Total Sales</h3>
 						                </div>
 						                <div class="panel-body no-padding text-align-center">
@@ -94,7 +94,7 @@
 											
 						                </div>
 						                <div class="panel-footer text-align-center">
-						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Add Bills Payment <span> now!</span></a>
+						                    <a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-primary btn-block" role="button">Add Bills Payment <span> now!</span></a>
 						                	
 						                </div>
 						            </div>
@@ -119,7 +119,7 @@
 											
 						                </div>
 						                <div class="panel-footer text-align-center">
-						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Customers Listing<span> now!</span></a>
+						                    <a href="<?php echo ADMIN_URL;?>addcustomer" class="btn btn-primary btn-block" role="button">Customers Listing<span> now!</span></a>
 						                	
 						                </div>
 						            </div>
@@ -140,7 +140,7 @@
 											
 						                </div>
 						                <div class="panel-footer text-align-center">
-						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Leaking Listing<span> now!</span></a>
+						                    <a href="<?php echo ADMIN_URL;?>Leakingentry" class="btn btn-primary btn-block" role="button">Leaking Listing<span> now!</span></a>
 						                	
 						                </div>
 						            </div>
@@ -161,7 +161,7 @@
 											
 						                </div>
 						                <div class="panel-footer text-align-center">
-						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Tickets Listing<span> now!</span></a>
+						                    <a href="<?php echo ADMIN_URL;?>technicalproblems" class="btn btn-primary btn-block" role="button">Tickets Listing<span> now!</span></a>
 						                	
 						                </div>
 						            </div>
