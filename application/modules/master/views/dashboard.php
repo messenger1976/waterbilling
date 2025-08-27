@@ -493,11 +493,11 @@
 					/*for (var i = 1; i <= 12; i += 1)
 						data1.push([i, parseInt(data[i])]);*/
 					var data2 = [
-						[0,<?php echo $JanTotalPaid['total'];?>],
-						[1,<?php echo $FebTotalPaid['total'];?>],
-						[2,<?php echo $MarchTotalPaid['total'];?>],
-						[3,<?php echo $AprilTotalPaid['total'];?>],
-						[4,<?php echo $MayTotalPaid['total'];?>],
+						[0,<?php echo number_format($JanTotalPaid['total'],0,'.','');?>],
+						[1,<?php echo number_format($FebTotalPaid['total'],0,'.','');?>],
+						[2,<?php echo number_format($MarchTotalPaid['total'],0,'.','');?>],
+						[3,<?php echo number_format($AprilTotalPaid['total'],0,'.','');?>],
+						[4,<?php echo number_format($MayTotalPaid['total'],0,'.','');?>],
 						[5,<?php echo $JuneTotalPaid['total'];?>],
 						[6,<?php echo $JulyTotalPaid['total'];?>],
 						[7,<?php echo $AugTotalPaid['total'];?>],
@@ -507,7 +507,7 @@
 						[11,<?php echo $DecTotalPaid['total'];?>]];
 
 					var data1 = [
-						[0,<?php echo $JanTotalUnpaid['total'];?>],
+						[0,<?php echo number_format($JanTotalUnpaid['total'],0,'.','');?>],
 						[1,<?php echo $FebTotalUnpaid['total'];?>],
 						[2,<?php echo $MarchTotalUnpaid['total'];?>],
 						[3,<?php echo $AprilTotalUnpaid['total'];?>],
@@ -523,7 +523,7 @@
 						data2.push([i, parseInt(Math.random() * 60)]);*/
 
 					var data3 = [
-						[0,<?php echo $JanTotal['total'];?>],
+						[0,<?php echo number_format($JanTotal['total'],0,'.','');?>],
 						[1,<?php echo $FebTotal['total'];?>],
 						[2,<?php echo $MarchTotal['total'];?>],
 						[3,<?php echo $AprilTotal['total'];?>],
@@ -541,6 +541,7 @@
 					var ds = new Array();
 
 					ds.push({
+						label: 'Unpaid',
 						data : data1,
 						bars : {
 							show : true,
@@ -549,6 +550,7 @@
 						}
 					});
 					ds.push({
+						label: 'Total Sales Collection',
 						data : data2,
 						bars : {
 							show : true,
@@ -557,6 +559,7 @@
 						}
 					});
 					ds.push({
+						label: 'Total Billing Collection',
 						data : data3,
 						bars : {
 							show : true,
@@ -584,26 +587,21 @@
 						}
 
 					});*/
-
-
-
-					
-    // Sample data for the bar chart
-    const data = [
-        [1, 15],
-        [2, 25],
-        [3, 30],
-        [4, 18],
-        [5, 22],
-		[6, 22],
-		[7, 22],
-		[8, 22],
-		[9, 22],
-		[10, 22],
-		[11, 22],
-		[12, 22]
+    
+	const ticks = [
+        [0, "January"],
+		[1, "February"],
+		[2, "March"],
+		[3, "April"],
+		[4, "May"],
+		[5, "Jun"],
+		[6, "July"],
+		[7, "August"],
+		[8, "September"],
+		[9, "October"],
+		[10, "November"],
+		[11, "December"]
     ];
-
     // Options for the chart
     const options = {
         series: {
@@ -611,44 +609,28 @@
                 show: true,
                 barWidth: 0.6,
                 align: "center"
-            }
+            },
+			
         },
         xaxis: {
             mode: "categories",
-            ticks: [
-                [0, "January"],
-                [1, "February"],
-                [2, "March"],
-                [3, "April"],
-                [4, "May"],
-				[5, "Jun"],
-				[6, "July"],
-				[7, "August"],
-				[8, "September"],
-				[9, "October"],
-				[10, "November"],
-				[11, "December"]
-            ]
+            ticks: ticks
         },
-        /*yaxis: {
-            min: 0,
-            max: 40
-        },*/
-		colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
-						grid : {
-							show : true,
-							hoverable : true,
-							clickable : true,
-							tickColor : chrt_border_color,
-							borderWidth : 0,
-							borderColor : chrt_border_color,
-						},
-						legend : true,
-						tooltip : true,
-						tooltipOpts : {
-							content : "<b>%x</b> = <span>%y</span>",
-							defaultTheme : false
-						}
+        colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
+		grid : {
+			show : true,
+			hoverable : true,
+			clickable : true,
+			tickColor : chrt_border_color,
+			borderWidth : 0,
+			borderColor : chrt_border_color,
+		},
+		legend : true,
+		tooltip : true,
+		tooltipOpts: {
+            content: "<b>%s</b> = <span>%y</span>",
+            defaultTheme: false
+        }
     };
 
     // Plot the chart
