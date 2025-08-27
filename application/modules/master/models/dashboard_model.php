@@ -7,6 +7,7 @@ class dashboard_model extends CI_Model {
 	public $table_meter_customer = 'tbl_addmetercustomer';
 	public $table_monthly_customer = 'tbl_monthlycustomer';
 	public $table_payrol = 'tbl_payrols';
+	public $table_leaking_ledger = 'tbl_leaking_ledger';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -67,6 +68,15 @@ class dashboard_model extends CI_Model {
 		$result = $query->row_array();
 		return $result;
     }   
+	/** In Function Get count from select table **/
+    public function get_total_leaking_balance() {
+        $this->db->select("sum(leaking_balance) as total");
+		$this->db->from($this->table_leaking_ledger);
+		//$this->db->where('status','1');
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+    } 
 	/** In Function Get count from select table **/
     public function get_total_technical_problems() {
         $this->db->select("*");

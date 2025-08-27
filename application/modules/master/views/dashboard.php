@@ -135,7 +135,7 @@
 						                <div class="panel-body no-padding text-align-center">
 						                    <div class="the-price">
 						                        <h1>
-						                           <strong>₱ <?php print_r(number_format($intotal,2));?></strong></h1>
+						                           <strong>₱ <?php print_r(number_format($leaking['total'],2));?></strong></h1>
 						                    </div>
 											
 						                </div>
@@ -156,7 +156,7 @@
 						                <div class="panel-body no-padding text-align-center">
 						                    <div class="the-price">
 						                        <h1>
-						                            <strong><?php print_r($count_id);?></strong></h1>
+						                            <strong><?php print_r($total_prbm);?></strong></h1>
 						                    </div>
 											
 						                </div>

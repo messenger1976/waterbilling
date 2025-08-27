@@ -46,6 +46,8 @@ class dashboard extends CI_Controller {
 		$data['solved_prbm'] = $this->my_model->get_total_solved_problems();
 		$data['customer'] = $this->my_model->get_customers_list();
 		$data['expenses'] = $this->my_model->get_expenses_list();
+		$data['leaking'] = $this->my_model->get_total_leaking_balance();
+		//print_r($data['leaking']);
 		//$data['this_expenses'] = $this->my_model->get_month_expenses_list();
 		//$data['monthly_income'] = $this->my_model->get_list_monthly_income();
 		//$data['meter_income'] = $this->my_model->get_list_meter_income();
