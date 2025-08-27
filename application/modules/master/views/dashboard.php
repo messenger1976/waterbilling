@@ -22,21 +22,15 @@
 			<!-- MAIN CONTENT -->
 			<div id="content">
 
-				<div class="row">
+				<!--<div class="row">
 					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> Dashboard <span>> My Dashboard</span></h1>
 					</div>
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
-							<?php 
-							     $income1 = $this->comm_model->get_income_metercustomer();
-							     extract($income1);
-								 $income2 = $this->comm_model->get_income_monthlycustomer();
-								 extract($income2);
-								 $intotal = $total1 + $total2;
-							?>
-								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
+							
+								<h5> Income <span class="txt-color-blue">PHP </span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
@@ -66,7 +60,124 @@
 							</li>
 						</ul>
 					</div>
+				</div>-->
+
+
+				<div class="row">
+					
+					<div class="col-sm-12">
+						
+						<div class="well well-light">
+							
+							<!--<h1>Professional, <small>4 Plans</small></h1>-->
+							<div class="row">
+								
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-success pricing-big">
+						            	
+						                <div class="panel-heading">
+						                    <h3 class="panel-title">
+						                        Total Sales</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+													<?php 
+							     $income1 = $this->comm_model->get_income_metercustomer();
+							     extract($income1);
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
+								 extract($income2);
+								 $intotal = $total1 + $total2;
+							?>
+						                            <strong>₱ <?php print_r(number_format($intotal,2));?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Add Bills Payment <span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>
+						        
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-teal pricing-big">
+						            	
+						                <div class="panel-heading">
+						                    <h3 class="panel-title">
+						                        Total Customers</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+													<?php 
+							     $total_customer = $this->my_model->total_customer();
+							     extract($total_customer); 
+							?>
+						                            <strong><?php print_r($count_id);?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Customers Listing<span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>
+						        
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-primary pricing-big">
+						            	<img src="img/ribbon.png" class="ribbon" alt="">
+						                <div class="panel-heading">
+						                    <h3 class="panel-title">
+						                        Total Leaking Balances</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+						                           <strong>₱ <?php print_r(number_format($intotal,2));?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Leaking Listing<span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>
+						        
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-darken pricing-big">
+						            	
+						                <div class="panel-heading">
+						                    <h3 class="panel-title">
+						                        Open Tickets</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+						                            <strong><?php print_r($count_id);?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="javascript:void(0);" class="btn btn-primary btn-block" role="button">Tickets Listing<span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>		    	
+				    		</div>
+				
+							
+				
+		
+							
+						</div>
+						
+					</div>
+					
 				</div>
+
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
 
@@ -762,249 +873,15 @@
 
 					
 
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;List of Customers ( <?php echo count(array_filter($customer)) ?> )</h6>
+							
 				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				
-									</div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($customer)) > 0){?>
-										<table id="firstpagei" class="table table-striped table-bordered table-hover" width="100%">
-										
-											<thead>			                
-												<tr>
-													<th data-hide="phone" width="5%">S No</th>
-													<th data-class="expand" width="10%"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Customer id</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Customer Name </th>
-													<th data-hide="expand">Pay Time</th>
-													
-												</tr>
-											</thead>
-											<tbody>
-											  <?php foreach($customer as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['customer_id']));?></td>
-													<td><?php echo stripslashes($value['full_name']);?></td>
-													<td><?php 
-															   if($value['customer_type']=='metercustomer'){ echo 'Meter'; }
-															   if($value['customer_type']=='monthlycustomer'){ echo 'Monthly'; }
-								                        ?>
-													</td>
-												</tr>
-											  <?php } ?>	
-											</tbody>
-										</table>
-										 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
-
-									</div>
-									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
-				
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;Expenses Reports ( <?php echo count($expenses);?> )</h6>
-				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				                    </div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($customer)) > 0){?>
-										<table id="expensesmore" class="table table-striped table-bordered table-hover" width="100%">
-										    <thead>			                
-												<tr>
-													<th data-hide="phone">S No</th>
-													<th data-class="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> ID</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Type </th>
-													<th data-hide="expand">Total</th>
-												</tr>
-											</thead>
-											<tbody>
-											  <?php foreach($expenses as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['expenses_id']));?></td>
-													<td><?php echo stripslashes($value['expenses_type']);?></td>
-													<td><?php echo stripslashes($value['total']);?></td>
-												</tr>
-											  <?php } ?>	
-											</tbody>
-										</table>
-										 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
-
-									</div>
-									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
+							
 
 
 				
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-2" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;This Month Expenses ( <?php echo count($this_expenses);?> )</h6>
+							
 				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				                    </div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($this_expenses)) > 0){?>
-										<table id= "monthexp" class="table table-striped table-bordered table-hover" width="100%">
-										    <thead>			                
-												<tr>
-													<th data-hide="phone">S No</th>
-													<th data-class="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> ID</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Type </th>
-													<th data-hide="expand">Total</th>
-												</tr>
-											</thead>
-											<tbody>
-											   <?php foreach($this_expenses as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['expenses_id']));?></td>
-													<td><?php echo stripslashes($value['expenses_type']);?></td>
-													<td><?php echo stripslashes($value['total']);?></td>
-												</tr>
-											  <?php } ?>	
-											</tbody>
-										</table>
-										 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
-
-									</div>
-									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
-				
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-2" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;This Month Income ( <?php echo  count($meter_income)+count($monthly_income);?> )</h6>
-				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				                    </div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($meter_income)) > 0 || count(array_filter($monthly_income)) > 0){?>
-										<table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
-										    <thead>			                
-												<tr>
-													<th data-hide="phone">S No</th>
-													<th data-class="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i>Customer ID</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Name </th>
-													<th data-hide="expand">Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-											   <?php foreach($meter_income as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['customer_id']));?></td>
-													<td><?php echo stripslashes($value['name']);?></td>
-													<td><?php echo stripslashes($value['total']);?></td>
-												</tr>
-											   <?php } ?>
-											   
-											   <?php if(count(array_filter($meter_income)) > 0){ $i=count(($meter_income)); }else{ $i=1;} ?> 
-											   
-												   <?php foreach($monthly_income as $key => $value){?>
-													<tr>
-														<td><?php echo $key+$i;?></td>
-														<td><?php echo stripslashes(str_replace('\n','',$value['customer_id']));?></td>
-														<td><?php echo stripslashes($value['name']);?></td>
-														<td><?php echo stripslashes($value['amount']);?></td>
-													</tr>
-												   <?php } ?>
-											</tbody>
-										</table>
-											 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
-
-									</div>
-									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
+							
 				
 						</article>
 						<!-- WIDGET END -->
