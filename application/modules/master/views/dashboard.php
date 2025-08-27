@@ -235,414 +235,7 @@
 
 
 
-												<!-- row -->
-
-					<div class="row">
-
-						<article class="col-sm-12 col-md-12 col-lg-6">
-
-							<!-- new widget -->
-							<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-
-								<header>
-									<span class="widget-icon"> <i class="fa fa-comments txt-color-white"></i> </span>
-									<h6> SmartChat </h6>
-									<div class="widget-toolbar">
-										<!-- add: non-hidden - to disable auto hide -->
-
-										<div class="btn-group">
-											<button class="btn dropdown-toggle btn-xs btn-success" data-toggle="dropdown">
-												Status <i class="fa fa-caret-down"></i>
-											</button>
-											<ul class="dropdown-menu pull-right js-status-update">
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-circle txt-color-green"></i> Online</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-circle txt-color-red"></i> Busy</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-circle txt-color-orange"></i> Away</a>
-												</li>
-												<li class="divider"></li>
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-power-off"></i> Log Off</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<div>
-											<label>Title:</label>
-											<input type="text" />
-										</div>
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body widget-hide-overflow no-padding">
-										<!-- content goes here -->
-
-										<!-- CHAT CONTAINER -->
-										<div id="chat-container">
-											<span class="chat-list-open-close"><i class="fa fa-user"></i><b>!</b></span>
-
-											<div class="chat-list-body custom-scroll">
-												<ul id="chat-users">
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/5.png" alt="">Robin Berry <span class="badge badge-inverse">23</span><span class="state"><i class="fa fa-circle txt-color-green pull-right"></i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Mark Zeukartech <span class="state"><i class="last-online pull-right">2hrs</i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Belmain Dolson <span class="state"><i class="last-online pull-right">45m</i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Galvitch Drewbery <span class="state"><i class="fa fa-circle txt-color-green pull-right"></i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Sadi Orlaf <span class="state"><i class="fa fa-circle txt-color-green pull-right"></i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Markus <span class="state"><i class="last-online pull-right">2m</i></span> </a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/sunny.png" alt="">Sunny <span class="state"><i class="last-online pull-right">2m</i></span> </a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Denmark <span class="state"><i class="last-online pull-right">2m</i></span> </a>
-													</li>
-												</ul>
-											</div>
-											<div class="chat-list-footer">
-
-												<div class="control-group">
-
-													<form class="smart-form">
-
-														<section>
-															<label class="input">
-																<input type="text" id="filter-chat-list" placeholder="Filter">
-															</label>
-														</section>
-
-													</form>
-
-												</div>
-
-											</div>
-
-										</div>
-
-										<!-- CHAT BODY -->
-										<div id="chat-body" class="chat-body custom-scroll">
-											<ul>
-												<li class="message">
-													<img src="img/avatars/5.png" class="online" alt="">
-													<div class="message-text">
-														<time>
-															2014-01-13
-														</time> <a href="javascript:void(0);" class="username">Sadi Orlaf</a> Hey did you meet the new board of director? He's a bit of an arse if you ask me...anyway here is the report you requested. I am off to launch with Lisa and Andrew, you wanna join?
-														<p class="chat-file row">
-															<b class="pull-left col-sm-6"> <!--<i class="fa fa-spinner fa-spin"></i>--> <i class="fa fa-file"></i> report-2013-demographic-report-annual-earnings.xls </b>
-															<span class="col-sm-6 pull-right"> <a href="javascript:void(0);" class="btn btn-xs btn-default">cancel</a> <a href="javascript:void(0);" class="btn btn-xs btn-success">save</a> </span>
-														</p>
-														<p class="chat-file row">
-															<b class="pull-left col-sm-6"> <i class="fa fa-ok txt-color-green"></i> tobacco-report-2012.doc </b>
-															<span class="col-sm-6 pull-right"> <a href="javascript:void(0);" class="btn btn-xs btn-primary">open</a> </span>
-														</p> </div>
-												</li>
-												<li class="message">
-													<img src="img/avatars/sunny.png" class="online" alt="">
-													<div class="message-text">
-														<time>
-															2014-01-13
-														</time> <a href="javascript:void(0);" class="username">John Doe</a> Haha! Yeah I know what you mean. Thanks for the file Sadi! <i class="fa fa-smile-o txt-color-orange"></i> 
-													</div>
-												</li>
-											</ul>
-
-										</div>
-
-										<!-- CHAT FOOTER -->
-										<div class="chat-footer">
-
-											<!-- CHAT TEXTAREA -->
-											<div class="textarea-div">
-
-												<div class="typearea">
-													<textarea placeholder="Write a reply..." id="textarea-expand" class="custom-scroll"></textarea>
-												</div>
-
-											</div>
-
-											<!-- CHAT REPLY/SEND -->
-											<span class="textarea-controls">
-												<button class="btn btn-sm btn-primary pull-right">
-													Reply
-												</button> <span class="pull-right smart-form" style="margin-top: 3px; margin-right: 10px;"> <label class="checkbox pull-right">
-														<input type="checkbox" name="subscription" id="subscription">
-														<i></i>Press <strong> ENTER </strong> to send </label> </span> <a href="javascript:void(0);" class="pull-left"><i class="fa fa-camera fa-fw fa-lg"></i></a> </span>
-
-										</div>
-
-										<!-- end content -->
-									</div>
-
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-							<!-- new widget -->
-							<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-3" data-widget-colorbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-								<header>
-									<span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-									<h6> My Events </h6>
-									<div class="widget-toolbar">
-										<!-- add: non-hidden - to disable auto hide -->
-										<div class="btn-group">
-											<button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
-												Showing <i class="fa fa-caret-down"></i>
-											</button>
-											<ul class="dropdown-menu js-status-update pull-right">
-												<li>
-													<a href="javascript:void(0);" id="mt">Month</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);" id="ag">Agenda</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);" id="td">Today</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-
-										<input class="form-control" type="text">
-
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body no-padding">
-										<!-- content goes here -->
-										<div class="widget-body-toolbar">
-
-											<div id="calendar-buttons">
-
-												<div class="btn-group">
-													<a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
-													<a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
-												</div>
-											</div>
-										</div>
-										<div id="calendar"></div>
-
-										<!-- end content -->
-									</div>
-
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-						</article>
-
-						<article class="col-sm-12 col-md-12 col-lg-6">
-
-							<!-- new widget -->
-							<div class="jarviswidget" id="wid-id-2" data-widget-colorbutton="false" data-widget-editbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-
-								<header>
-									<span class="widget-icon"> <i class="fa fa-map-marker"></i> </span>
-									<h6>Bill Chart</h6>
-									
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<div>
-											<label>Title:</label>
-											<input type="text" />
-										</div>
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body no-padding">
-										<!-- content goes here -->
-										<div id="pie-chart" class="chart"></div>
-
-
-
-										
-
-									</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-							<!-- new widget -->
-							<div class="jarviswidget jarviswidget-color-blue" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-
-								<header>
-									<span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
-									<h6> My Tickets </h6>
-									<!-- <div class="widget-toolbar">
-									add: non-hidden - to disable auto hide
-
-									</div>-->
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<div>
-											<label>Title:</label>
-											<input type="text" />
-										</div>
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body no-padding smart-form">
-										<!-- content goes here -->
-										<h5 class="todo-group-title"><i class="fa fa-warning"></i> Critical Issues (<small class="num-of-tasks">1</small>)</h5>
-										<ul id="sortable1" class="todo">
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #17643</strong> - Customer #23232 has a leaking issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
-													<span class="date">Jan 1, 2014</span>
-												</p>
-											</li>
-										</ul>
-										<h5 class="todo-group-title"><i class="fa fa-exclamation"></i> Important Issues (<small class="num-of-tasks">3</small>)</h5>
-										<ul id="sortable2" class="todo">
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #1347</strong> - Inbox email is being sent twice <small>(bug fix)</small> [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="date">Nov 22, 2013</span>
-												</p>
-											</li>
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #1314</strong> - Call customer support re: Issue <a href="javascript:void(0);" class="font-xs">#6134</a><small>(code review)</small>
-													<span class="date">Nov 22, 2013</span>
-												</p>
-											</li>
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #17643</strong> - Customer #23232 has a leaking issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
-													<span class="date">Jan 1, 2014</span>
-												</p>
-											</li>
-										</ul>
-
-										<h5 class="todo-group-title"><i class="fa fa-check"></i> Resolved Issues (<small class="num-of-tasks">1</small>)</h5>
-										<ul id="sortable3" class="todo">
-											<li class="complete">
-												<span class="handle" style="display:none"> <label class="checkbox state-disabled">
-														<input type="checkbox" name="checkbox-inline" checked="checked" disabled="disabled">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #17643</strong> - Customer #23232 has a leaking issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
-													<span class="date">Jan 1, 2014</span>
-												</p>
-											</li>
-										</ul>
-
-										<!-- end content -->
-									</div>
-
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-						</article>
-
-					</div>
-
-					<!-- end row -->
+												
 
 					
 
@@ -896,17 +489,54 @@
 
 				if ($("#bar-chart").length) {
 
-					var data1 = [];
-					for (var i = 1; i <= 12; i += 1)
-						data1.push([i, parseInt(Math.random() * 50)]);
+					//var data1 = [[1,1000],[2,2000],[3,3000],[4,5000],[5,5045],[6,5000],[7,6000],[8,8000],[9,8900],[10,10000],[11,1000],[12,3400]];
+					/*for (var i = 1; i <= 12; i += 1)
+						data1.push([i, parseInt(data[i])]);*/
+					var data2 = [
+						[0,<?php echo $JanTotalPaid['total'];?>],
+						[1,<?php echo $FebTotalPaid['total'];?>],
+						[2,<?php echo $MarchTotalPaid['total'];?>],
+						[3,<?php echo $AprilTotalPaid['total'];?>],
+						[4,<?php echo $MayTotalPaid['total'];?>],
+						[5,<?php echo $JuneTotalPaid['total'];?>],
+						[6,<?php echo $JulyTotalPaid['total'];?>],
+						[7,<?php echo $AugTotalPaid['total'];?>],
+						[8,<?php echo $SepTotalPaid['total'];?>],
+						[9,<?php echo $OctTotalPaid['total'];?>],
+						[10,<?php echo $NovTotalPaid['total'];?>],
+						[11,<?php echo $DecTotalPaid['total'];?>]];
 
-					var data2 = [];
-					for (var i = 1; i <= 12; i += 1)
-						data2.push([i, parseInt(Math.random() * 60)]);
+					var data1 = [
+						[0,<?php echo $JanTotalUnpaid['total'];?>],
+						[1,<?php echo $FebTotalUnpaid['total'];?>],
+						[2,<?php echo $MarchTotalUnpaid['total'];?>],
+						[3,<?php echo $AprilTotalUnpaid['total'];?>],
+						[4,<?php echo $MayTotalUnpaid['total'];?>],
+						[5,<?php echo $JuneTotalUnpaid['total'];?>],
+						[6,<?php echo $JulyTotalUnpaid['total'];?>],
+						[7,<?php echo $AugTotalUnpaid['total'];?>],
+						[8,<?php echo $SepTotalUnpaid['total'];?>],
+						[9,<?php echo $OctTotalUnpaid['total'];?>],
+						[10,<?php echo $NovTotalUnpaid['total'];?>],
+						[11,<?php echo $DecTotalUnpaid['total'];?>]];
+					/*for (var i = 1; i <= 12; i += 1)
+						data2.push([i, parseInt(Math.random() * 60)]);*/
 
-					var data3 = [];
-					for (var i = 1; i <= 12; i += 1)
-						data3.push([i, parseInt(Math.random() * 70)]);
+					var data3 = [
+						[0,<?php echo $JanTotal['total'];?>],
+						[1,<?php echo $FebTotal['total'];?>],
+						[2,<?php echo $MarchTotal['total'];?>],
+						[3,<?php echo $AprilTotal['total'];?>],
+						[4,<?php echo $MayTotal['total'];?>],
+						[5,<?php echo $JuneTotal['total'];?>],
+						[6,<?php echo $JulyTotal['total'];?>],
+						[7,<?php echo $AugTotal['total'];?>],
+						[8,<?php echo $SepTotal['total'];?>],
+						[9,<?php echo $OctTotal['total'];?>],
+						[10,<?php echo $NovTotal['total'];?>],
+						[11,<?php echo $DecTotal['total'];?>]];
+					/*for (var i = 1; i <= 12; i += 1)
+						data3.push([i, parseInt(Math.random() * 70)]);*/
 
 					var ds = new Array();
 
@@ -936,7 +566,7 @@
 					});
 
 					//Display graph
-					$.plot($("#bar-chart"), ds, {
+					/*$.plot($("#bar-chart"), ds, {
 						colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
 						grid : {
 							show : true,
@@ -953,7 +583,7 @@
 							defaultTheme : false
 						}
 
-					});
+					});*/
 
 
 
@@ -964,7 +594,14 @@
         [2, 25],
         [3, 30],
         [4, 18],
-        [5, 22]
+        [5, 22],
+		[6, 22],
+		[7, 22],
+		[8, 22],
+		[9, 22],
+		[10, 22],
+		[11, 22],
+		[12, 22]
     ];
 
     // Options for the chart
@@ -979,23 +616,43 @@
         xaxis: {
             mode: "categories",
             ticks: [
-                [1, "Jan"],
-                [2, "Feb"],
-                [3, "Mar"],
-                [4, "Apr"],
-                [5, "May"]
+                [0, "January"],
+                [1, "February"],
+                [2, "March"],
+                [3, "April"],
+                [4, "May"],
+				[5, "Jun"],
+				[6, "July"],
+				[7, "August"],
+				[8, "September"],
+				[9, "October"],
+				[10, "November"],
+				[11, "December"]
             ]
         },
-        yaxis: {
+        /*yaxis: {
             min: 0,
             max: 40
-        }
+        },*/
+		colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
+						grid : {
+							show : true,
+							hoverable : true,
+							clickable : true,
+							tickColor : chrt_border_color,
+							borderWidth : 0,
+							borderColor : chrt_border_color,
+						},
+						legend : true,
+						tooltip : true,
+						tooltipOpts : {
+							content : "<b>%x</b> = <span>%y</span>",
+							defaultTheme : false
+						}
     };
 
     // Plot the chart
-    /*$.plot($("#bar-chart"), [{
-        data: data
-    }], options);*/
+    $.plot($("#bar-chart"),ds, options);
 
 
 

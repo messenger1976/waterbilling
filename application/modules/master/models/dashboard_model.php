@@ -2,6 +2,7 @@
 class dashboard_model extends CI_Model {
 	
 	public $table_customer = 'tbl_addcustomer';
+	public $table_customer_reading = 'tbl_addcustomer_reading';
 	public $table_expenses = 'tbl_addexpenses';
 	public $table_technical = 'tbl_technical';
 	public $table_meter_customer = 'tbl_addmetercustomer';
@@ -194,6 +195,21 @@ class dashboard_model extends CI_Model {
 		$result = $query->row_array();
 		return $result;
 	}	
+	public function get_total_sales($monthrep,$yearrep,$status='') {
+        $this->db->select('SUM(amount) as total');
+		$this->db->from($this->table_customer_reading);
+		$this->db->where('month',$monthrep);
+		$this->db->where('year',$yearrep);
+		if($status==1){
+			$this->db->where('status = 1');
+		}else if($status==0){
+			$this->db->where('status', 0);
+		}
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+    }
+	
 	
 }
 ?>
