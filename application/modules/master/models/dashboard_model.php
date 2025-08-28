@@ -71,9 +71,10 @@ class dashboard_model extends CI_Model {
     }   
 	/** In Function Get count from select table **/
     public function get_total_leaking_balance() {
-        $this->db->select("sum(leaking_balance) as total");
+        $this->db->select("sum(leaking_total_amount) as total");
 		$this->db->from($this->table_leaking_ledger);
-		//$this->db->where('status','1');
+		$this->db->where('leaking_status',5);
+		$this->db->or_where('leaking_status',2);
 		$query = $this->db->get();
 		$result = $query->row_array();
 		return $result;
