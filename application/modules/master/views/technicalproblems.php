@@ -1,23 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
 
-		<title> SmartAdmin </title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-			
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<!-- FAVICONS -->
-		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-
-		<!-- GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-	</head>
 	
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
@@ -52,32 +34,32 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
-								<h5> My Income <span class="txt-color-blue">$<?php print_r($intotal);?></span></h5>
+								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php
-							     $expense1 = $this->my_model->get_outcome_expenses();
+							     $expense1 = $this->comm_model->get_outcome_expenses();
 							     extract($expense1);
-								 $expense2 = $this->my_model->get_outcome_payroll();
+								 $expense2 = $this->comm_model->get_outcome_payroll();
 								 extract($expense2);
 								 $extotal = $extotal1 + $extotal2;
 							?>
 							<li class="sparks-info">
-								<h5> My Expense <span class="txt-color-purple">$<?php print_r($extotal);?></span></h5>
+								<h5> Expense <span class="txt-color-purple">PHP <?php print_r(number_format($extotal,2));?></span></h5>
 								<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php 
-							     $total_customer = $this->my_model->total_customer();
+							     $total_customer = $this->comm_model->total_customer();
 							     extract($total_customer); 
 							?>
 							<li class="sparks-info">
@@ -104,6 +86,7 @@
 								<header style="height: 42px;">
 									<span class="widget-icon"> <i class="fa fa-users"></i> </span>
 									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Technical Problems</strong>
+									<a href="<?php echo ADMIN_URL;?>technicalproblems/add" class="btn btn-sm btn-primary" style="float:right;" id="add_payment"><i class="fa fa-plus"></i> Add Report</a>
 									</p>
 								</header>
 				
@@ -139,15 +122,15 @@
 											
 												<thead>			                
 													<tr>
-														<th><input type="checkbox" class="ace" /></th>
-														<th data-hide="expand">S No</th>
-														<th data-hide="expand">Customer-Id</th>
+														<th style="width:10px;"><input type="checkbox" class="ace" /></th>
+														<th data-hide="expand" style="width:30px;">S No</th>
+														<th data-hide="expand" style="width:100px;">Customer-Id</th>
 														<th data-hide="expand">Name</th>
 														<th data-hide="expand">address</th>
-														<th data-hide="expand">mobile1</th>
-													    <th data-hide="expand">Problems</th>
-							                            <th data-hide="expand">Status</th>
-														<th data-hide="expand">Action</th>
+														<th data-hide="expand">Meter #</th>
+													    <th data-hide="expand">Problems Summary</th>
+							                            <th data-hide="expand"  style="width:50px;">Status</th>
+														<th data-hide="expand" style="width:30px;">Action</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -160,10 +143,10 @@
 														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></td>
 														<td><?php echo $i; ?></td>
 														<td><?php echo stripslashes($row['customer_id']); ?></td>
-													    <td><?php echo stripslashes($row['names']); ?></td>
+													    <td><?php echo stripslashes($row['lastname'].', '.$row['firstname'].' '.$row['middlename']); ?></td>
 													    <td><?php echo stripslashes($row['address']); ?></td>
-													    <td><?php echo stripslashes($row['mobile1']); ?></td>
-													    <td><?php echo stripslashes(str_replace('\n','',$row['problem'])); ?>	</td>
+													    <td><?php echo stripslashes($row['meter_number']); ?></td>
+													    <td><?php echo stripslashes(str_replace('\n','',$row['problem_summary'])); ?>	</td>
 														<!--<?php $consumed_units=$row['aftermeter']-$row['oldmeter'];?>
 														<td><?php echo stripslashes($consumed_units); ?></td>
 														<td><?php echo stripslashes($amountrate['amountrate']); ?></td>
@@ -171,7 +154,35 @@
 														<td><?php echo stripslashes($row['balance']); ?></td>
 														<?php $total=$row['amount']+$row['balance'];?>
 														<td><?php echo stripslashes($total); ?></td>-->
-														<td><span <?php if($row['status']== 1){ echo " class='label label-success arrowed-in arrowed-in-right'"; } elseif($row['status']== 0){ echo "class='label label-danger arrowed'"; } ?>><a href="JavaScript:if(confirm('Are you sure want to Chanage the Status?')==true){window.location='<?php echo ADMIN_URL;?>technicalproblems/status/<?php echo $row['id']?>/<?php echo $row['status'];?>';}" style="color:#FFF; text-decoration:none;"><?php if($row['status']== 1){ echo "Resolved"; } elseif($row['status']== 0){ echo "Un-Resolved"; } ?></a></span></td>
+														<td><span 
+														<?php 
+														if($row['status']== 1){ 
+															echo " class='label bg-color-orange arrowed-in arrowed-in-right'"; 
+														} elseif($row['status']== 0){ 
+															echo "class='label label-danger arrowed'"; 
+														} elseif($row['status']== 2){ 
+															echo "class='label bg-color-green arrowed'"; 
+														}elseif($row['status']== 3){ 
+															echo "class='label  label-success arrowed'"; 
+														}elseif($row['status']== 4){ 
+															echo "class='label bg-color-pink arrowed'"; 
+														} ?>>
+
+														<?php if($row['status']== 1){
+															echo 'Assigned';
+														}elseif($row['status']== 2){ 
+															echo "On Going"; 
+														}elseif($row['status']== 3){ 
+															echo "Resolved"; 
+														}elseif($row['status']== 4){ 
+															echo "Un-Resolved"; 
+														}elseif($row['status']== 0){ 
+															echo "Pending"; 
+														}
+														?>
+														
+													
+														</span></td>
                                                         <td>
 														    <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
 																<!--<a class="blue" href="<?php echo ADMIN_URL;?>addcustomer/view/<?php echo $row['id'];?>">

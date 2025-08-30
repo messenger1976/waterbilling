@@ -1,24 +1,15 @@
-<!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-
-		<title> SmartAdmin </title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-			
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<!-- FAVICONS -->
-		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-
-		<!-- GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-	</head>
+<style>
+	.select2-container{
+		width: 100% !important;
+		
+	}
+	.setStatus{
+		cursor: pointer;
+	}
 	
+	
+
+</style>
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -52,32 +43,32 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
-								<h5> My Income <span class="txt-color-blue">$<?php print_r($intotal);?></span></h5>
+								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php
-							     $expense1 = $this->my_model->get_outcome_expenses();
+							     $expense1 = $this->comm_model->get_outcome_expenses();
 							     extract($expense1);
-								 $expense2 = $this->my_model->get_outcome_payroll();
+								 $expense2 = $this->comm_model->get_outcome_payroll();
 								 extract($expense2);
 								 $extotal = $extotal1 + $extotal2;
 							?>
 							<li class="sparks-info">
-								<h5> My Expense <span class="txt-color-purple">$<?php print_r($extotal);?></span></h5>
+								<h5> Expense <span class="txt-color-purple">PHP <?php print_r(number_format($extotal,2));?></span></h5>
 								<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php 
-							     $total_customer = $this->my_model->total_customer();
+							     $total_customer = $this->comm_model->total_customer();
 							     extract($total_customer); 
 							?>
 							<li class="sparks-info">
@@ -121,19 +112,75 @@
 											
 											<fieldset>
 														<legend>Technical Problems-Add </legend>
-													<div class="form-group col-lg-6">
+													<div class="form-group col-lg-6">	
 														<div class="col-lg-12 controls">
-															<div class="form-group">
-																<span class="input-group-addon"><i class="icon-user"></i><strong>Customer-Id : </strong></span>
-																<input class="form-control"  type="text" id="name" name="name" value="<?php echo $this->input->post('name'); ?>" required/>
-                                                                <?php echo form_error('name'); ?>
+															<div class="form-group"> 
+																<span class="input-group-addon"><strong>Customer : </strong></span>
+																<input type="hidden" name="cust_id" id="cust_id" value="<?php echo $this->input->post('cust_id'); ?>"/>
+																<input type="hidden" name="lastname" id="lastname" value="<?php echo $this->input->post('lastname'); ?>"/>
+																<input type="hidden" name="firstname" id="firstname" value="<?php echo $this->input->post('firstname'); ?>"/>
+																<input type="hidden" name="middlename" id="middlename" value="<?php echo $this->input->post('middlename'); ?>"/>
+																<select name="customer_id" id="customer_id" placeholder="Type text to search..." required>
+																	<option value="">--Select--</option>	
+																	<?php
+																	
+																	foreach ($customer_listing as $key => $value) {
+																		?>
+																		<option value="<?php echo $value['customer_id'].'==>'.$value['special_priviledge']; ?>"> <?php echo $value['customer_id'] . ' ==> ' . $value['last_name'] . ', ' . $value['first_name'] . ' ' . $value['middle_name']; ?></option>
+																	<?php }
+																	?>
+																</select>
+																
+																<?php echo form_error('customer_id'); ?>
 															</div>
 														</div>
 													</div>
 													<div class="form-group col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
-																<span class="input-group-addon"><i class="icon-user"></i><strong> Problem :</strong></span>
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Meter Number : </strong></span>
+																<input class="form-control"  type="text" id="meter_number" name="meter_number" value="<?php echo $this->input->post('meter_number'); ?>" required/>
+                                                                <?php echo form_error('meter_number'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-12">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Address : </strong></span>
+																<input class="form-control"  type="text" id="address" name="address" value="<?php echo $this->input->post('address'); ?>" required/>
+                                                                <?php echo form_error('address'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Problem Summary : </strong></span>
+																<input class="form-control"  type="text" id="problem_summary" name="problem_summary" value="<?php echo $this->input->post('problem_summary'); ?>" required/>
+                                                                <?php echo form_error('problem_summary'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Status : </strong></span>
+																<select class="form-control" name="status" id="status" placeholder="Type text to search..." required>
+																	<option value="0" id="pending">Pending</option>	
+																	<option value="1" id="assigned">Assigned</option>	
+																	<option value="2" id="ongoing">On Going</option>	
+																	<option value="3" id="resolved">Resolved</option>
+																	<option value="4" id="unresolved">Un-Resolved</option>
+																</select>
+                                                                <?php echo form_error('meter_number'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-12">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Details :</strong></span>
 																<textarea class="form-control" rows="5" cols="25" id="problem" name="problem"><?php echo $this->input->post('problem'); ?></textarea>
                                                                 <?php echo form_error('problem'); ?>
 															</div>
@@ -148,7 +195,7 @@
 															<div class="col-md-12">
 																
 																 <a href="<?php echo ADMIN_URL;?>technicalproblems" class="btn btn-default">Cancel</a>
-																<input type="submit" class="btn btn-primary" name="add" id="add" value="Add">
+																<input class="btn btn-primary" name="add" id="btn_add" value="add"/>
 															</div>
 														</div>
 													
@@ -365,6 +412,75 @@
 			});
 			
 			/* END TABLETOOLS */
+
+
+
+			$('#customer_id').select2();
+			$('#customer_id').on('change', function(evt){
+				evt.preventDefault();
+				
+				
+				var customer_id = $(this).val().split('==>')[0];
+
+				//var $special_priviledge = $(this).val().split('==>')[1];
+				//$('#special_priviledge').val($special_priviledge);
+
+				var cust_id = customer_id;
+				$('#cust_id').val(cust_id);
+				if(cust_id){
+					// Send an AJAX request to the backend
+					$.ajax({
+						url: '<?php echo ADMIN_URL?>technicalproblems/get_customer_info', // Backend PHP script
+						type: 'POST',
+						data: { customer_id: cust_id },
+						dataType: 'json',
+						success: function(response) {
+							console.log(response.address);
+							$('#address').val(response.address);
+							$('#meter_number').val(response.meter_number);
+							$('#lastname').val(response.last_name);
+							$('#firstname').val(response.first_name);
+							$('#middlename').val(response.middle_name);
+							
+							// Clear the child dropdown
+							//$('#billing_period').empty().append('<option value="">--Select--</option>');
+
+							// Populate the child dropdown with the response data
+							/*if (response.length > 0) {
+								$.each(response, function(index, item) {
+									if(item.status==0){
+										$('#billing_period').append('<option value="' + item.id+' '+item.month+' '+item.year+ '">' + item.month_name+' '+item.year+ '</option>');
+									}
+									
+								});
+							}*/
+						},
+						error: function(xhr, status, error) {
+							console.error('AJAX Error: ' + status + error);
+						}
+					});
+				}else{
+					// If no parent is selected, clear the child dropdown
+					//$('#billing_period').empty().append('<option value="">--Select--</option>');
+					//$('#leaking_option').hide();
+				}
+			});
+
+			$('#btn_add').on('click', function(evt){
+				evt.preventDefault();
+				if($('#customer_id').val()===''){
+					$.smallBox({
+						title : "Select Customer",
+						content : "Please select customer.",
+						color : "#D30000",
+						timeout: 8000,
+						icon : "fa fa-exclamation-circle swing animated"
+					});
+				}else{
+					$('#myform').submit();
+				}
+				
+			});
 		
 		})
 

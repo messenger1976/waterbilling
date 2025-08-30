@@ -22,6 +22,7 @@ class technicalproblems extends CI_Controller {
         parent::__construct();
   		$this->load->model('technicalproblems_model','my_model');   //*****    Model Loading     *****//	
 		$this->load->model('common_model','comm_model');	
+		$this->load->model('addcustomer_model','customer_model');	
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
@@ -40,14 +41,18 @@ class technicalproblems extends CI_Controller {
 	
 	/** Add Function **/
 	public function add(){ 
+		
 		$data['msg'] ='';
 		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 		 $data['addcustomer'] = $this->my_model->get_addcustomer();
+		 $data['customer_listing'] = $this->customer_model->get_all_records();
 		 //$data['amountrate'] = $this->my_model->get_amountrate();
 		 //echo'<pre>';print_r( $data['addcustomer'] );exit;
 		  //$data['feesplaning'] = $this->my_model->get_feesplaning();
 		if($this->input->post('add') != ''){
             //echo'<pre>';print_r($_POST);
+			//print_r($_POST);
+			//exit;
 				$result = $this->my_model->add_record();
 				if($result){
 					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
@@ -163,6 +168,17 @@ class technicalproblems extends CI_Controller {
 		}else{
 			$this->session->set_flashdata('msg_succ', 'Select any Check Box...');
 			redirect($this->listPage_redirect);
+		}
+	}
+
+	public function get_customer_info(){
+		$customer_id = $this->input->post('customer_id');
+		if($customer_id != ''){
+			$result = $this->my_model->get_customer_info_details($customer_id);
+			echo json_encode($result);
+			
+		}else{
+			echo '{}';
 		}
 	}
 	

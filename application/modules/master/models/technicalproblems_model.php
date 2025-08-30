@@ -15,10 +15,9 @@ class technicalproblems_model extends CI_Model {
 	/** In Function Get all records from select table **/
     
 	 public function get_all_records() {
-        $this->db->select("*,(Select first_name from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as names,
-		(Select address from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as address,
-		(Select mobile1 from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as mobile1");
+        $this->db->select("*,(Select first_name from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as names");
 		$this->db->from($this->table_name);
+		$this->db->where('deleted_rec',0);
 		$this->db->order_by('id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -48,6 +47,16 @@ class technicalproblems_model extends CI_Model {
 		$result = $query->result_array();
 		return $result;
     }	
+	public function get_customer_info_details($customer_id){
+ 		$this->db->select("*");
+		$this->db->from($this->table_customername);
+		
+		$this->db->where('customer_id',$customer_id);
+		
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;			
+	}
 	/*public function get_addcustomer() {
         $this->db->select("*");
 		$this->db->from($this->table_customername);
@@ -142,13 +151,18 @@ class technicalproblems_model extends CI_Model {
 	public function add_record(){
 		//echo'<pre>';print_r($add_record);exit;
 	  $set_data = array(
-						'customer_id' => $this->input->post('name'),
-						//'name' => mysql_real_escape_string($this->input->post('name')),
-					    'problem' => mysql_real_escape_string($this->input->post('problem')),
-					   'status' => 0,
-						'create_date_time' => date('Y-m-d H:i:s'),
-						
-					);
+			'customer_id' => $this->input->post('cust_id'),
+			'lastname' => $this->input->post('lastname'),
+			'firstname' => $this->input->post('firstname'),
+			'middlename' => $this->input->post('middlename'),
+			'meter_number' => $this->input->post('meter_number'),
+			'address' => $this->input->post('address'),
+			'problem_summary' => $this->input->post('problem_summary'),
+			'problem_details' => $this->input->post('problem_details'),
+			'status' => $this->input->post('status'),
+			'create_date_time' => date('Y-m-d H:i:s'),
+			
+		);
 		$result = $this->db->insert($this->table_name, $set_data); 
 		return $result;
 	}
@@ -174,7 +188,10 @@ class technicalproblems_model extends CI_Model {
   	/** In Function Delete records for select table **/
 	public function delete_record($id){
 		$this->db->where('id',$id);
-		$result = $this->db->delete($this->table_name); 
+		$set_data = array(
+						'deleted_rec' => 1
+					);
+		$result = $this->db->update($this->table_name,$set_data); 
 		return $result;
 	}
 	
