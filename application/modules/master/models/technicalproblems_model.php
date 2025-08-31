@@ -171,11 +171,12 @@ class technicalproblems_model extends CI_Model {
 		
 		
 		$set_data = array(
-						'customer_id' => $this->input->post('customer_id'),
+						//'customer_id' => $this->input->post('customer_id'),
 						//'name' => mysql_real_escape_string($this->input->post('name')),
-						'problem' => mysql_real_escape_string($this->input->post('problem')),
-						'status' => mysql_real_escape_string($this->input->post('status')),
-						'create_date_time' => date('Y-m-d H:i:s'),
+						'problem_summary' => $this->input->post('problem_summary'),
+						'problem_details' => $this->input->post('problem_details'),
+						'status' => $this->input->post('status'),
+						'update_date_time' => date('Y-m-d H:i:s'),
 						
 					);
 				//echo'<pre>';print_r($set_data);exit;	

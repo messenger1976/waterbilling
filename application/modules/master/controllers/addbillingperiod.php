@@ -68,6 +68,7 @@ class addbillingperiod extends CI_Controller {
 		//print_r($this->session->userdata('current_billingperiod'));
 		//exit;
 		$data['billingperiod'] = $this->my_model->get_month_billingperiod_records();	
+		$data['zone_listing'] = $this->my_model->get_zone_listing_records();	
 		//$header['host'] = $this->comm_model->get_single_record();				
 		$header['record_info'] = $this->top_model->get_last_login_details(1);
 		$this->load->view($this->headerPage,$header);
@@ -253,13 +254,14 @@ class addbillingperiod extends CI_Controller {
 		
 		$billperiodforward = explode(' ',$this->input->post('billingperiodforward'));
 		$currentbillingperiod = explode(' ',$this->input->post('currentbillingperiod'));
+		$zone_listing = $this->input->post('zone_listing');
 		$billperiodforward_month = $billperiodforward[0];
 		$billperiodforward_year = $billperiodforward[1];
 		//$billperiodforward_id = $billperiodforward[2];
 
 		$currentbillingperiod_month = $currentbillingperiod[0];
 		$currentbillingperiod_year = $currentbillingperiod[1];
-		customerbillingperiod($billperiodforward_month,$billperiodforward_year,$currentbillingperiod_month,$currentbillingperiod_year);
+		customerbillingperiod($billperiodforward_month,$billperiodforward_year,$currentbillingperiod_month,$currentbillingperiod_year,$zone_listing);
 
 		/*if($this->input->post('delete_ids') != ''){
 			$delete_ids = $this->input->post('delete_ids');

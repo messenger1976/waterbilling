@@ -8,6 +8,7 @@ class addbillingperiod_model extends CI_Model {
 	public $table_expenses = 'tbl_addexpenses';
 	public $table_payrol = 'tbl_payrols';
 	public $table_customer = 'tbl_addcustomer';
+	public $table_zone = 'tbl_zone';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -49,6 +50,15 @@ class addbillingperiod_model extends CI_Model {
 		$this->db->from($this->table_billing_period);
         $this->db->group_by('bp_period_month','bo_period_year');
 		$this->db->order_by('bp_zone_id','asc');
+		$query = $this->db->get();
+		//echo $this->db->last_query();
+		$result = $query->result_array();
+		return $result;
+    }
+	public function get_zone_listing_records() {
+        $this->db->select("*");
+		$this->db->from($this->table_zone);
+        $this->db->order_by('order_series','asc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
 		$result = $query->result_array();

@@ -127,7 +127,7 @@ echo " Current time: " . date('Y-m-d H:i:s');
 		<!-- SmartChat UI : plugin -->
 		<script src="<?php echo base_url();?>js/smart-chat-ui/smart.chat.ui.min.js"></script>
 		<script src="<?php echo base_url();?>js/smart-chat-ui/smart.chat.manager.min.js"></script>
-		
+		<script src="<?php echo base_url();?>js/plugin/moment/moment.min.js"></script>
 		<!-- PAGE RELATED PLUGIN(S) -->
 		
 		

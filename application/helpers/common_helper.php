@@ -114,11 +114,12 @@ if(!function_exists('convertToWords'))
 
 if(!function_exists('getCustomerInfo'))
 {
-    function getCustomerInfo()
+    function getCustomerInfo($zone_id)
     {
         $CI = &get_instance();
         
         $CI->db->where('status', '1');
+        $CI->db->where('zone', $zone_id);
         
         
         $customerinfo = $CI->db->get('tbl_addcustomer')->result();
@@ -141,8 +142,8 @@ if(!function_exists('getMonthName'))
 
 if(!function_exists('customerbillingperiod'))
 {
-    function customerbillingperiod($bp_month,$bp_year,$bp_current_month,$bp_current_year) {
-        $customerinfoList = getCustomerInfo();
+    function customerbillingperiod($bp_month,$bp_year,$bp_current_month,$bp_current_year, $zone_id) {
+        $customerinfoList = getCustomerInfo($zone_id);
         
         foreach($customerinfoList as $customerinfodata){ 
             $CI20 = &get_instance();

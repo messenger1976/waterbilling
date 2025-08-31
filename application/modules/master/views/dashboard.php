@@ -256,7 +256,83 @@
 				
 					<!-- end row -->
 
+
 					
+
+					<!-- row -->
+					<div class="row">
+				
+						<!-- NEW WIDGET START -->
+						<article class="col-sm-12">
+
+							<!-- Widget ID (each widget will need unique ID)-->
+							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
+								<!-- widget options:
+								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+								data-widget-colorbutton="false"
+								data-widget-editbutton="false"
+								data-widget-togglebutton="false"
+								data-widget-deletebutton="false"
+								data-widget-fullscreenbutton="false"
+								data-widget-custombutton="false"
+								data-widget-collapsed="true"
+								data-widget-sortable="false"
+
+								-->
+								<header>
+									<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
+									<h6>&nbsp;Sales Chart</h6>
+
+								</header>
+
+								<!-- widget div-->
+								<div>
+
+									<!-- widget edit box -->
+									<div class="jarviswidget-editbox">
+										<!-- This area used as dropdown edit box -->
+
+									</div>
+									<!-- end widget edit box -->
+
+									<!-- widget content -->
+									<div class="widget-body no-padding">
+										<canvas id="barChart" height="60"></canvas>
+										
+
+									</div>
+									<!-- end widget content -->
+
+								</div>
+								<!-- end widget div -->
+
+							</div>
+							<!-- end widget -->
+
+
+
+
+												
+
+					
+
+							
+				
+							
+
+
+				
+							
+				
+							
+				
+						</article>
+						<!-- WIDGET END -->
+				
+					</div>
+				
+					<!-- end row -->
 
 				</section>
 				<!-- end widget grid -->
@@ -293,8 +369,8 @@
 		<script src="<?php echo base_url();?>js/plugin/flot/jquery.flot.tooltip.min.js"></script>
 
 		<!-- EASY PIE CHARTS -->
-		<script src="js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
-    
+		<script src="<?php echo base_url();?>js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+    	<script src="<?php echo base_url();?>js/plugin/chartjs/chart.min.js"></script>
 
 		<script type="text/javascript">
 		
@@ -303,11 +379,11 @@
 			var chrt_grid_color = "#DDD";
 			var chrt_main = "#E24913";
 			/* red       */
-			var chrt_second = "#6595b4";
+			var chrt_second = "#6595b4ff";
 			/* blue      */
 			var chrt_third = "#FF9F01";
 			/* orange    */
-			var chrt_fourth = "#7e9d3a";
+			var chrt_fourth = "rgba(126, 157, 58, 1)";
 			/* green     */
 			var chrt_fifth = "#BD362F";
 			/* dark red  */
@@ -486,6 +562,154 @@
 			/* END TABLETOOLS */
 
 
+			    // BAR CHART
+
+			    var barOptions = {
+				    //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+				    scaleBeginAtZero : true,
+				    //Boolean - Whether grid lines are shown across the chart
+				    scaleShowGridLines : true,
+				    //String - Colour of the grid lines
+				    scaleGridLineColor : "rgba(0,0,0,.05)",
+				    //Number - Width of the grid lines
+				    scaleGridLineWidth : 1,
+				    //Boolean - If there is a stroke on each bar
+				    barShowStroke : true,
+				    //Number - Pixel width of the bar stroke
+				    barStrokeWidth : 1,
+				    //Number - Spacing between each of the X value sets
+				    barValueSpacing : 5,
+				    //Number - Spacing between data sets within X values
+				    barDatasetSpacing : 1,
+				    //Boolean - Re-draw chart on page resize
+			        responsive: true,
+				    //String - A legend template
+				    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+			    }
+				var month_array=[];
+				var JanTotal = '<?php echo $JanTotal['total'];?>';
+				var FebTotal = '<?php echo $FebTotal['total'];?>';
+				var MarTotal = '<?php echo $MarchTotal['total'];?>';
+				var AprTotal = '<?php echo $AprilTotal['total'];?>';
+				var MayTotal = '<?php echo $MayTotal['total'];?>';
+				var JunTotal = '<?php echo $JuneTotal['total'];?>';
+				var JulTotal = '<?php echo $JulyTotal['total'];?>';
+				if(JanTotal>0){
+					month_array.push('January');
+				}
+				if(FebTotal>0){
+					month_array.push('February');
+				}
+				if(MarTotal>0){
+					month_array.push('March');
+				}
+				if(MarTotal>0){
+					month_array.push('April');
+				}
+				if(MayTotal>0){
+					month_array.push('May');
+				}
+				if(JunTotal>0){
+					month_array.push('June');
+				}
+				if(JulTotal>0){
+					month_array.push('July');
+				}
+
+			    var barData = {
+			        labels: month_array,
+			         datasets: [
+				        {
+				            label: "Unpaid",
+							
+				            fillColor: "rgba(101, 149, 180, 1)",
+				            strokeColor: "rgba(220,220,220,0.8)",
+				            highlightFill: "rgba(220,220,220,0.75)",
+				            highlightStroke: "rgba(220,220,220,1)",
+							backgroundColor:'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
+							borderColor: 'rgba(255, 99, 132, 1)',   // Solid Red
+				            data: [<?php echo number_format($JanTotalUnpaid['total'],0,'.','');?>,<?php echo $FebTotalUnpaid['total'];?>,<?php echo $MarchTotalUnpaid['total'];?>,<?php echo $AprilTotalUnpaid['total'];?>,<?php echo $MayTotalUnpaid['total'];?>,<?php echo $JuneTotalUnpaid['total'];?>,<?php echo $JulyTotalUnpaid['total'];?>,<?php echo $AugTotalUnpaid['total'];?>,<?php echo $SepTotalUnpaid['total'];?>,<?php echo $OctTotalUnpaid['total'];?>,<?php echo $NovTotalUnpaid['total'];?>,<?php echo $DecTotalUnpaid['total'];?>]
+				        },
+						{
+				            label: "Total Collection",
+				            fillColor: "rgba(102, 102, 102, 1)",
+				            strokeColor: "rgba(151,187,205,0.8)",
+				            highlightFill: "rgba(151,187,205,0.75)",
+				            highlightStroke: "rgba(151,187,205,1)",
+							backgroundColor:'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
+							borderColor: 'rgba(255, 99, 132, 1)',   // Solid Red
+				            data: [
+								<?php echo number_format($JanTotalPaid['total'],0,'.','');?>, 
+								<?php echo number_format($FebTotalPaid['total'],0,'.','');?>, 
+								<?php echo number_format($MarchTotalPaid['total'],0,'.','');?>, 
+								<?php echo number_format($AprilTotalPaid['total'],0,'.','');?>,
+								<?php echo number_format($MayTotalPaid['total'],0,'.','');?>, 
+								<?php echo $JuneTotalPaid['total'];?>, 
+								<?php echo $JulyTotalPaid['total'];?>,
+								<?php echo $AugTotalPaid['total'];?>,
+								<?php echo $SepTotalPaid['total'];?>,
+								<?php echo $OctTotalPaid['total'];?>,
+								<?php echo $NovTotalPaid['total'];?>,
+								<?php echo $DecTotalPaid['total'];?>
+							]
+				        },
+				        {
+				            label: "Total Sales",
+							// Change the background color of the bars
+    backgroundColor: [
+      'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
+      'rgba(54, 162, 235, 0.5)',   // Blue with 50% opacity
+      'rgba(255, 206, 86, 0.5)',   // Yellow with 50% opacity
+      'rgba(75, 192, 192, 0.5)',   // Green with 50% opacity
+      'rgba(153, 102, 255, 0.5)',  // Purple with 50% opacity
+      'rgba(255, 159, 64, 0.5)'    // Orange with 50% opacity
+    ],
+    // Change the border color of the bars
+    borderColor: [
+      'rgba(255, 99, 132, 1)',   // Solid Red
+      'rgba(54, 162, 235, 1)',    // Solid Blue
+      'rgba(255, 206, 86, 1)',    // Solid Yellow
+      'rgba(75, 192, 192, 1)',    // Solid Green
+      'rgba(153, 102, 255, 1)',   // Solid Purple
+      'rgba(255, 159, 64, 1)'     // Solid Orange
+    ],
+    borderWidth: 1, // You can also control the border width
+				            fillColor: "rgba(126, 157, 58, 1)",
+				            strokeColor: "rgba(151,187,205,0.8)",
+				            highlightFill: "rgba(151,187,205,0.75)",
+				            highlightStroke: "rgba(151,187,205,1)",
+				            data: [
+								<?php echo number_format($JanTotal['total'],0,'.','');?>,
+								<?php echo $FebTotal['total'];?>, 
+								<?php echo $MarchTotal['total'];?>, 
+								<?php echo $AprilTotal['total'];?>, 
+								<?php echo $MayTotal['total'];?>, 
+								<?php echo $JuneTotal['total'];?>, 
+								<?php echo $JulyTotal['total'];?>,
+								<?php echo $JulyTotal['total'];?>
+							]
+				        }
+				    ]
+			    };
+
+			    // render chart
+				// Configuration for the chart
+				const config = {
+					type: 'bar', // Type of chart (e.g., 'bar', 'line', 'pie', 'doughnut')
+					data: barData,
+					options: {
+						responsive: true,
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				};
+			    var ctx = document.getElementById("barChart").getContext("2d");
+			    //var myNewChart = new Chart(ctx).Bar(barData, barOptions);
+				const myChart = new Chart(ctx, config);
+			    // END BAR CHART
 
 				if ($("#bar-chart").length) {
 
@@ -570,7 +794,7 @@
 
 					//Display graph
 					/*$.plot($("#bar-chart"), ds, {
-						colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
+						colors : [chrt_second, chrt_fourth, "rgba(102, 102, 102, 1)", "#BBB"],
 						grid : {
 							show : true,
 							hoverable : true,
@@ -588,53 +812,53 @@
 
 					});*/
     
-	const ticks = [
-        [0, "January"],
-		[1, "February"],
-		[2, "March"],
-		[3, "April"],
-		[4, "May"],
-		[5, "Jun"],
-		[6, "July"],
-		[7, "August"],
-		[8, "September"],
-		[9, "October"],
-		[10, "November"],
-		[11, "December"]
-    ];
-    // Options for the chart
-    const options = {
-        series: {
-            bars: {
-                show: true,
-                barWidth: 0.6,
-                align: "center"
-            },
-			
-        },
-        xaxis: {
-            mode: "categories",
-            ticks: ticks
-        },
-        colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
-		grid : {
-			show : true,
-			hoverable : true,
-			clickable : true,
-			tickColor : chrt_border_color,
-			borderWidth : 0,
-			borderColor : chrt_border_color,
-		},
-		legend : true,
-		tooltip : true,
-		tooltipOpts: {
-            content: "<b>%s</b> = <span>%y</span>",
-            defaultTheme: false
-        }
-    };
+					const ticks = [
+						[0, "January"],
+						[1, "February"],
+						[2, "March"],
+						[3, "April"],
+						[4, "May"],
+						[5, "Jun"],
+						[6, "July"],
+						[7, "August"],
+						[8, "September"],
+						[9, "October"],
+						[10, "November"],
+						[11, "December"]
+					];
+					// Options for the chart
+					const options = {
+						series: {
+							bars: {
+								show: true,
+								barWidth: 0.6,
+								align: "center"
+							},
+							
+						},
+						xaxis: {
+							mode: "categories",
+							ticks: ticks
+						},
+						colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
+						grid : {
+							show : true,
+							hoverable : true,
+							clickable : true,
+							tickColor : chrt_border_color,
+							borderWidth : 0,
+							borderColor : chrt_border_color,
+						},
+						legend : true,
+						tooltip : true,
+						tooltipOpts: {
+							content: "<b>%s</b> = <span>%y</span>",
+							defaultTheme: false
+						}
+					};
 
-    // Plot the chart
-    $.plot($("#bar-chart"),ds, options);
+					// Plot the chart
+					$.plot($("#bar-chart"),ds, options);
 
 
 

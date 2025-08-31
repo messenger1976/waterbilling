@@ -1,23 +1,3 @@
-<!DOCTYPE html>
-<html lang="en-us">
-	<head>
-		<meta charset="utf-8">
-		<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
-
-		<title> SmartAdmin </title>
-		<meta name="description" content="">
-		<meta name="author" content="">
-			
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-		<!-- FAVICONS -->
-		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
-
-		<!-- GOOGLE FONT -->
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
-	</head>
 	
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
@@ -52,32 +32,32 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
-								<h5> My Income <span class="txt-color-blue">$<?php print_r($intotal);?></span></h5>
+								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php
-							     $expense1 = $this->my_model->get_outcome_expenses();
+							     $expense1 = $this->comm_model->get_outcome_expenses();
 							     extract($expense1);
-								 $expense2 = $this->my_model->get_outcome_payroll();
+								 $expense2 = $this->comm_model->get_outcome_payroll();
 								 extract($expense2);
 								 $extotal = $extotal1 + $extotal2;
 							?>
 							<li class="sparks-info">
-								<h5> My Expense <span class="txt-color-purple">$<?php print_r($extotal);?></span></h5>
+								<h5> Expense <span class="txt-color-purple">PHP <?php print_r(number_format($extotal,2));?></span></h5>
 								<div class="sparkline txt-color-purple hidden-mobile hidden-md hidden-sm">
 									
 								</div>
 							</li>
 							<?php 
-							     $total_customer = $this->my_model->total_customer();
+							     $total_customer = $this->comm_model->total_customer();
 							     extract($total_customer); 
 							?>
 							<li class="sparks-info">
@@ -125,7 +105,7 @@
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Customer-Id : </strong></span>
-																<input class="form-control" type="text" id="customer_id" name="customer_id" value="<?php echo $record['customer_id']; ?>" required/>
+																<input class="form-control" type="text" id="customer_id" name="customer_id" value="<?php echo $record['customer_id']; ?>" readonly/>
                                                                 <?php echo form_error('customer_id'); ?>
 															</div>
 														</div>
@@ -133,10 +113,61 @@
 													<div class="form-group col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
-																<span class="input-group-addon"><i class="icon-user"></i><strong>Problem :</strong></span>
-																<!--<input type="text" id="address" name="address" class="col-xs-10 col-sm-10" value="<?php echo $record['problem']; ?>" required/>-->
-																<textarea class="form-control" rows="5" cols="25" id="problem" name="problem"><?php echo $record['problem']; ?></textarea>
-																<?php echo form_error('problem'); ?>
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Customer Name : </strong></span>
+																<input class="form-control" type="text" id="customer_name" name="customer_name" value="<?php echo $record['lastname'].', '.$record['firstname'].' '.$record['middlename']; ?>" required/>
+                                                                <?php echo form_error('customer_name'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Meter Number : </strong></span>
+																<input class="form-control" type="text" id="meter_number" name="meter_number" value="<?php echo $record['meter_number']; ?>" required/>
+                                                                <?php echo form_error('meter_number'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Address : </strong></span>
+																<input class="form-control" type="text" id="address" name="address" value="<?php echo $record['address']; ?>" required/>
+                                                                <?php echo form_error('address'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Problem Summary : </strong></span>
+																<input class="form-control" type="text" id="problem_summary" name="problem_summary" value="<?php echo $record['problem_summary']; ?>" required/>
+                                                                <?php echo form_error('problem_summary'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Status : </strong></span>
+																<select class="form-control" name="status" id="status" placeholder="Type text to search..." required>
+																	<option value="0" id="pending" <?php echo $record['status']==0?'selected':''; ?>>Pending</option>	
+																	<option value="1" id="assigned" <?php echo $record['status']==1?'selected':''; ?>>Assigned</option>	
+																	<option value="2" id="ongoing" <?php echo $record['status']==2?'selected':''; ?>>On Going</option>	
+																	<option value="3" id="resolved" <?php echo $record['status']==3?'selected':''; ?>>Resolved</option>
+																	<option value="4" id="unresolved" <?php echo $record['status']==4?'selected':''; ?>>Un-Resolved</option>
+																</select>
+                                                                <?php echo form_error('status'); ?>
+															</div>
+														</div>
+													</div>
+													<div class="form-group col-lg-12">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Problem Details:</strong></span>
+																<!--<input type="text" id="address" name="address" class="col-xs-10 col-sm-10" value="<?php echo $record['problem_details']; ?>" required/>-->
+																<textarea class="form-control" rows="5" cols="25" id="problem_details" name="problem_details"><?php echo $record['problem_details']; ?></textarea>
+																<?php echo form_error('problem_details'); ?>
 															</div>
 														</div>
 													</div>

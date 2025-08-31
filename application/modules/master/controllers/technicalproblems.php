@@ -69,7 +69,7 @@ class technicalproblems extends CI_Controller {
 	public function edit($id){
 		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 		$data['record'] = $this->my_model->get_single_record($id);
-		$data['addcustomer'] = $this->my_model->get_addcustomer();
+		//$data['addcustomer'] = $this->my_model->get_addcustomer();
 		//$data['amountrate'] = $this->my_model->get_amountrate();
 		$data['msg'] ='';
 		//echo'<pre>';print_r($data['record']);exit;

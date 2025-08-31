@@ -181,8 +181,8 @@
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Details :</strong></span>
-																<textarea class="form-control" rows="5" cols="25" id="problem" name="problem"><?php echo $this->input->post('problem'); ?></textarea>
-                                                                <?php echo form_error('problem'); ?>
+																<textarea class="form-control" rows="5" cols="25" id="problem_details" name="problem_details"><?php echo $this->input->post('problem_details'); ?></textarea>
+                                                                <?php echo form_error('problem_details'); ?>
 															</div>
 														</div>
 													</div>
