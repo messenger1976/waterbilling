@@ -22,13 +22,18 @@ class addmetercustomerreading_model extends CI_Model {
     }
 	
 	/** In Function Get all records from select table **/
-    public function get_all_records() {
+    public function get_all_records($billing_period='') {
         $this->db->select($this->table_name.".*,".$this->table_months.".*,".$this->table_customer_type.".*,".$this->table_customername.".*,".$this->table_name.".customer_id as customer_id,".$this->table_name.".id as id, 
 		(Select id  from ".$this->table_generate_customer." where ".$this->table_generate_customer.".insert_month_id = ".$this->table_name.".id) as id_generate");
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_customername, $this->table_customername.".customer_id = ".$this->table_name.".customer_id", 'left');
 		$this->db->join($this->table_months, $this->table_name.".month = ".$this->table_months.".month_id", 'left');
 		$this->db->join($this->table_customer_type, $this->table_customername.".account_type = ".$this->table_customer_type.".cust_type_id", 'left');
+		if($billing_period!=''){
+			$billperiod = explode(' ',$billing_period);
+			$this->db->where($this->table_name.'.month',$billperiod[0]);
+			$this->db->where($this->table_name.'.year',$billperiod[1]);
+		}
 		$this->db->order_by($this->table_name.'.id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
