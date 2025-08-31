@@ -181,80 +181,7 @@
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
 
-					<!-- row -->
-					<div class="row">
-				
-						<!-- NEW WIDGET START -->
-						<article class="col-sm-12">
 
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-								<header>
-									<span class="widget-icon"> <i class="fa fa-bar-chart-o"></i> </span>
-									<h6>&nbsp;Sales Chart</h6>
-
-								</header>
-
-								<!-- widget div-->
-								<div>
-
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-
-									</div>
-									<!-- end widget edit box -->
-
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-
-										<div id="bar-chart" class="chart"></div>
-
-									</div>
-									<!-- end widget content -->
-
-								</div>
-								<!-- end widget div -->
-
-							</div>
-							<!-- end widget -->
-
-
-
-
-												
-
-					
-
-							
-				
-							
-
-
-				
-							
-				
-							
-				
-						</article>
-						<!-- WIDGET END -->
-				
-					</div>
-				
-					<!-- end row -->
 
 
 					
@@ -594,6 +521,7 @@
 				var MayTotal = '<?php echo $MayTotal['total'];?>';
 				var JunTotal = '<?php echo $JuneTotal['total'];?>';
 				var JulTotal = '<?php echo $JulyTotal['total'];?>';
+				var AugTotal = '<?php echo $AugTotal['total'];?>';
 				if(JanTotal>0){
 					month_array.push('January');
 				}
@@ -614,6 +542,9 @@
 				}
 				if(JulTotal>0){
 					month_array.push('July');
+				}
+				if(AugTotal>0){
+					month_array.push('August');
 				}
 
 			    var barData = {
@@ -636,8 +567,8 @@
 				            strokeColor: "rgba(151,187,205,0.8)",
 				            highlightFill: "rgba(151,187,205,0.75)",
 				            highlightStroke: "rgba(151,187,205,1)",
-							backgroundColor:'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
-							borderColor: 'rgba(255, 99, 132, 1)',   // Solid Red
+							backgroundColor:'rgba(255, 206, 86, 0.5)',  // Red with 50% opacity
+							borderColor: 'rgba(255, 206, 86, 1)',   // Solid Red
 				            data: [
 								<?php echo number_format($JanTotalPaid['total'],0,'.','');?>, 
 								<?php echo number_format($FebTotalPaid['total'],0,'.','');?>, 
@@ -654,9 +585,9 @@
 							]
 				        },
 				        {
-				            label: "Total Sales",
+				            label: "Total Collectables",
 							// Change the background color of the bars
-    backgroundColor: [
+   /* backgroundColor: [
       'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
       'rgba(54, 162, 235, 0.5)',   // Blue with 50% opacity
       'rgba(255, 206, 86, 0.5)',   // Yellow with 50% opacity
@@ -672,12 +603,14 @@
       'rgba(75, 192, 192, 1)',    // Solid Green
       'rgba(153, 102, 255, 1)',   // Solid Purple
       'rgba(255, 159, 64, 1)'     // Solid Orange
-    ],
+    ],*/
     borderWidth: 1, // You can also control the border width
 				            fillColor: "rgba(126, 157, 58, 1)",
 				            strokeColor: "rgba(151,187,205,0.8)",
 				            highlightFill: "rgba(151,187,205,0.75)",
 				            highlightStroke: "rgba(151,187,205,1)",
+							backgroundColor:'rgba(54, 162, 235, 0.5)',  // Red with 50% opacity
+							borderColor: 'rgba(54, 162, 235, 1)',   // Solid Red
 				            data: [
 								<?php echo number_format($JanTotal['total'],0,'.','');?>,
 								<?php echo $FebTotal['total'];?>, 
@@ -858,7 +791,7 @@
 					};
 
 					// Plot the chart
-					$.plot($("#bar-chart"),ds, options);
+					$.plot($("#bar-chart1"),ds, options);
 
 
 
