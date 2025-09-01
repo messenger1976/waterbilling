@@ -235,13 +235,13 @@
 								<a href="<?php echo ADMIN_URL;?>reports/aging_ar_report"> <span class="menu-item-parent">Aging A/R Report</span></a>
 							</li>	
 							<?php } ?>
-
+								<!--
 							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
 							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='leaking_ar_report') echo 'active';?>">
 								<a href="<?php echo ADMIN_URL;?>reports/leaking_ar_report"> <span class="menu-item-parent">Leaking Report</span></a>
 							</li>	
 							<?php } ?>
-						   
+							-->
 						</ul>
 					</li>
 
@@ -267,11 +267,14 @@
 							<a href="<?php echo ADMIN_URL;?>technicalproblems"><i class="fa fa-lg fa-fw fa-gavel"></i> <span class="menu-item-parent">Technical Problems </span></a>
 						</li>
 					<?php } ?>
+					<!--	
 					<?php if((array_key_exists('technicalsearch',$roleResponsible) && ($roleResponsible['technicalsearch'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 						<li class="<?php if($this->uri->segment(3)=='technicalsearch' && $this->uri->segment(2)=='addcustomer') echo 'active';?>">
 							<a href="<?php echo ADMIN_URL;?>addcustomer/technicalsearch/"><i class="glyphicon glyphicon-zoom-in"></i><span class="menu-item-parent">Technical Problems View</span></a>
 						</li>	
 					<?php } ?>
+					-->
+
 					<?php if((array_key_exists('web_settings',$roleResponsible) && ($roleResponsible['web_settings'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 						<li class="<?php if($this->uri->segment(2)=='web_settings') echo 'active';?>">
 							<a href="<?php echo ADMIN_URL;?>web_settings"><i class="fa fa-lg fa-fw fa-location-arrow"></i> <span class="menu-item-parent">Admin Address</span></a>
