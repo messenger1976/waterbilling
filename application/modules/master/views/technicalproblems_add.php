@@ -179,6 +179,20 @@
 															</div>
 														</div>
 													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Reported By : </strong></span>
+																<select class="form-control" name="reportedby" id="reportedby" required>
+																		
+																		<?php foreach($employee as $key => $emp){ ?>
+																		<option value="<?php echo $emp['id'];?>"><?php echo strtoupper($emp['first_name']).' '.strtoupper($emp['middle_name']).' '.strtoupper($emp['last_name']).' - '.$emp['jobtitle'];?></option>
+																		<?php } ?>
+																	</select>
+                                                                <?php echo form_error('reportedby'); ?>
+															</div>
+														</div>
+													</div>
 													<div class="form-group col-lg-12">
 														<div class="col-lg-12 controls">
 															<div class="form-group">

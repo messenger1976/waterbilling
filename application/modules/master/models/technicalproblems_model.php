@@ -148,8 +148,9 @@ class technicalproblems_model extends CI_Model {
     }*/
 	
   	/** In Function Add records for select table **/
-	public function add_record(){
+	public function add_record($employee_rec){
 		//echo'<pre>';print_r($add_record);exit;
+		$preparedby_name = $employee_rec[0]['first_name'].' '.$employee_rec[0]['middle_name'].' '.$employee_rec[0]['last_name'].' - '.$employee_rec[0]['jobtitle'];
 	  $set_data = array(
 			'customer_id' => $this->input->post('cust_id'),
 			'lastname' => $this->input->post('lastname'),
@@ -159,6 +160,8 @@ class technicalproblems_model extends CI_Model {
 			'address' => $this->input->post('address'),
 			'problem_summary' => $this->input->post('problem_summary'),
 			'problem_details' => $this->input->post('problem_details'),
+			'reported_by_id' => $this->input->post('reportedby'),
+			'reported_by_name' => $preparedby_name,
 			'status' => $this->input->post('status'),
 			'create_date_time' => date('Y-m-d H:i:s'),
 			

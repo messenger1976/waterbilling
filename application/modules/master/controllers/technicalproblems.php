@@ -20,6 +20,7 @@ class technicalproblems extends CI_Controller {
 	public $editPage_redirect = '/master/technicalproblems/edit/';  //*****  Redirect Edit  *****//
 	public function __construct() {
         parent::__construct();
+		$this->load->model('adddailyreport_model');   //*****    Model Loading     *****//	
   		$this->load->model('technicalproblems_model','my_model');   //*****    Model Loading     *****//	
 		$this->load->model('common_model','comm_model');	
 		$this->load->model('addcustomer_model','customer_model');	
@@ -53,16 +54,18 @@ class technicalproblems extends CI_Controller {
             //echo'<pre>';print_r($_POST);
 			//print_r($_POST);
 			//exit;
-				$result = $this->my_model->add_record();
-				if($result){
-					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
-					redirect($this->listPage_redirect);
-				}else{
-					$data['msg'] = "Not Inserted...";
-				}
+			$employee_rec = $this->adddailyreport_model->get_employee($this->input->post('reportedby'));
+			$result = $this->my_model->add_record($employee_rec);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
+				redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Inserted...";
 			}
+		}
 		//$header['host'] = $this->comm_model->get_single_record();				
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		$data['employee'] = $this->adddailyreport_model->get_employee();
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->addPage,$data);
 	}
@@ -88,6 +91,7 @@ class technicalproblems extends CI_Controller {
 		}
 		//$header['host'] = $this->comm_model->get_single_record();				
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		$data['employee'] = $this->adddailyreport_model->get_employee();
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->editPage,$data);
 
