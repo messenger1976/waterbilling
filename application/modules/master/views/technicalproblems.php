@@ -166,6 +166,10 @@
 															echo "class='label  label-success arrowed'"; 
 														}elseif($row['status']== 4){ 
 															echo "class='label bg-color-pink arrowed'"; 
+														}elseif($row['status']== 5){ 
+															echo "class='label bg-color-blue arrowed'"; 
+														}elseif($row['status']== 6){ 
+															echo "class='label bg-color-redLight arrowed'"; 
 														} ?>>
 
 														<?php if($row['status']== 1){
@@ -176,6 +180,10 @@
 															echo "Resolved"; 
 														}elseif($row['status']== 4){ 
 															echo "Un-Resolved"; 
+														}elseif($row['status']== 5){ 
+															echo "Resolved - Closed"; 
+														}elseif($row['status']== 6){ 
+															echo "Un-Resolved - Closed"; 
 														}elseif($row['status']== 0){ 
 															echo "Pending"; 
 														}
