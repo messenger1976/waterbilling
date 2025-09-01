@@ -171,7 +171,9 @@
 																	<option value="1" id="assigned">Assigned</option>	
 																	<option value="2" id="ongoing">On Going</option>	
 																	<option value="3" id="resolved">Resolved</option>
-																	<option value="4" id="unresolved">Un-Resolved</option>
+																	<option value="4" id="unresolved">UnResolved</option>
+																	<option value="5" id="unresolved">Resolved - Closed</option>
+																	<option value="6" id="unresolved">UnResolved - Closed</option>
 																</select>
                                                                 <?php echo form_error('meter_number'); ?>
 															</div>
