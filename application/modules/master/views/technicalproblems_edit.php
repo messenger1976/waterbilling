@@ -1,4 +1,15 @@
+	<style>
+	.select2-container{
+		width: 100% !important;
+		
+	}
+	.setStatus{
+		cursor: pointer;
+	}
 	
+	
+
+</style>
 <!-- MAIN PANEL -->
 		<div id="main" role="main">
 
@@ -101,7 +112,7 @@
 											
 											<fieldset>
 														<legend>Technical Problems-Edit </legend>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Customer-Id : </strong></span>
@@ -110,7 +121,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Customer Name : </strong></span>
@@ -119,7 +130,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Meter Number : </strong></span>
@@ -128,7 +139,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Address : </strong></span>
@@ -137,7 +148,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Problem Summary : </strong></span>
@@ -177,6 +188,14 @@
 															</div>
 														</div>
 													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Reported Date:</strong></span>
+																<input class="form-control"  type="text" id="reported_date" name="reported_date"  placeholder="DD-MM-YYYY" value="<?php echo $record['reported_date']!=''?date('d-m-Y',strtotime($record['reported_date'])):Date('d-m-Y'); ?>" required>
+															</div>
+														</div>
+													</div>
 													<div class="form-group col-lg-12">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
@@ -199,7 +218,7 @@
 																<input type="submit" class="btn btn-primary" name="add" id="add" value="Edit">
 															</div>
 														</div>
-													
+													</div>
 										</form>
 				
 									</div>
@@ -413,23 +432,24 @@
 			});
 			
 			/* END TABLETOOLS */
+
+			$("#reported_date").datepicker({
+				showAnim: null,
+				dateFormat: 'dd-mm-yy',
+				// showOn: 'both',
+				buttonImage: '/images/calender.jpg',
+				buttonImageOnly: true,
+				firstDay: 1,
+				nextText: '',
+				prevText: '',
+				numberOfMonths: [1, 1],
+				//defaultDate: new Date(curDate),
+				//minDate: curDate,
+				//maxDate: ''
+			});
 		
 		})
 
 		</script>
 
-		<!-- Your GOOGLE ANALYTICS CODE Below -->
-		<script type="text/javascript">
-			var _gaq = _gaq || [];
-			_gaq.push(['_setAccount', 'UA-XXXXXXXX-X']);
-			_gaq.push(['_trackPageview']);
-			
-			(function() {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-			})();
-		</script>
+		

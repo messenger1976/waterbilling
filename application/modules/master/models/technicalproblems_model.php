@@ -150,6 +150,9 @@ class technicalproblems_model extends CI_Model {
   	/** In Function Add records for select table **/
 	public function add_record($employee_rec){
 		//echo'<pre>';print_r($add_record);exit;
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$created_date = $dt_date->format("Y-m-d H:i:s");
+
 		$preparedby_name = $employee_rec[0]['first_name'].' '.$employee_rec[0]['middle_name'].' '.$employee_rec[0]['last_name'].' - '.$employee_rec[0]['jobtitle'];
 	  $set_data = array(
 			'customer_id' => $this->input->post('cust_id'),
@@ -162,8 +165,9 @@ class technicalproblems_model extends CI_Model {
 			'problem_details' => $this->input->post('problem_details'),
 			'reported_by_id' => $this->input->post('reportedby'),
 			'reported_by_name' => $preparedby_name,
+			'reported_date' => date('Y-m-d',strtotime($this->input->post('reported_date'))),
 			'status' => $this->input->post('status'),
-			'create_date_time' => date('Y-m-d H:i:s'),
+			'create_date_time' => $created_date,
 			
 		);
 		$result = $this->db->insert($this->table_name, $set_data); 
@@ -171,18 +175,21 @@ class technicalproblems_model extends CI_Model {
 	}
   	/** In Function Update records for select table **/
 	public function update_record($id){
-		
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$updated_date = $dt_date->format("Y-m-d H:i:s");
+
 		
 		$set_data = array(
-						//'customer_id' => $this->input->post('customer_id'),
-						//'name' => mysql_real_escape_string($this->input->post('name')),
-						'problem_summary' => $this->input->post('problem_summary'),
-						'problem_details' => $this->input->post('problem_details'),
-						'status' => $this->input->post('status'),
-						'update_date_time' => date('Y-m-d H:i:s'),
-						
-					);
-				//echo'<pre>';print_r($set_data);exit;	
+			//'customer_id' => $this->input->post('customer_id'),
+			//'name' => mysql_real_escape_string($this->input->post('name')),
+			'problem_summary' => $this->input->post('problem_summary'),
+			'problem_details' => $this->input->post('problem_details'),
+			'status' => $this->input->post('status'),
+			'reported_date' => date('Y-m-d',strtotime($this->input->post('reported_date'))),
+			'update_date_time' => $updated_date,
+			
+		);
+		//echo'<pre>';print_r($set_data);exit;	
 		$this->db->where('id',$id);
 		$result = $this->db->update($this->table_name, $set_data); 
 		return $result;

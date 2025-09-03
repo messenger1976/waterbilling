@@ -83,6 +83,9 @@ class dashboard_model extends CI_Model {
     public function get_total_technical_problems() {
         $this->db->select("*");
 		$this->db->from($this->table_technical);
+		$this->db->where('status !=',5);
+		$this->db->where('status !=',6);
+		$this->db->where('deleted_rec',0);
 		$query = $this->db->get();
 		$result = $query->num_rows();
 		return $result;

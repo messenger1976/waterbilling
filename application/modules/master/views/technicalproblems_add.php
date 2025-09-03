@@ -193,6 +193,14 @@
 															</div>
 														</div>
 													</div>
+													<div class="form-group col-lg-6">
+														<div class="col-lg-12 controls">
+															<div class="form-group">
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Reported Date:</strong></span>
+																<input class="form-control"  type="text" id="reported_date" name="reported_date"  placeholder="DD-MM-YYYY" value="<?php echo $this->input->post('reported_date')!=''?$this->input->post('reported_date'):Date('d-m-Y'); ?>" required>
+															</div>
+														</div>
+													</div>
 													<div class="form-group col-lg-12">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
@@ -258,7 +266,7 @@
 		<script type="text/javascript">
 		
 		// DO NOT REMOVE : GLOBAL FUNCTIONS!
-		
+		var curDate = '<?php echo date('d-m-Y') ?>';
 		$(document).ready(function() {
 			
 			pageSetUp();
@@ -498,6 +506,20 @@
 				
 			});
 		
+			$("#reported_date").datepicker({
+				showAnim: null,
+				dateFormat: 'dd-mm-yy',
+				// showOn: 'both',
+				buttonImage: '/images/calender.jpg',
+				buttonImageOnly: true,
+				firstDay: 1,
+				nextText: '',
+				prevText: '',
+				numberOfMonths: [1, 1],
+				defaultDate: new Date(curDate),
+				//minDate: curDate,
+				//maxDate: ''
+			});
 		})
 
 		</script>
