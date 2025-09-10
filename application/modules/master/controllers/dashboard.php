@@ -86,6 +86,11 @@ class dashboard extends CI_Controller {
 		$data['OctTotalUnpaid'] = $this->my_model->get_total_sales(10,$yearrep,0);
 		$data['NovTotalUnpaid'] = $this->my_model->get_total_sales(11,$yearrep,0);
 		$data['DecTotalUnpaid'] = $this->my_model->get_total_sales(12,$yearrep,0);
+
+		$data['zone1'] = $this->my_model->get_cust_by_zone(1);
+		$data['zone2'] = $this->my_model->get_cust_by_zone(2);
+		$data['zone3'] = $this->my_model->get_cust_by_zone(3);
+		$data['zone4'] = $this->my_model->get_cust_by_zone(4);
 		//print_r($data['JanTotal']);
 		//$data['this_expenses'] = $this->my_model->get_month_expenses_list();
 		//$data['monthly_income'] = $this->my_model->get_list_monthly_income();

@@ -238,25 +238,114 @@
 							<!-- end widget -->
 
 
-
-
-												
-
-					
-
-							
-				
-							
-
-
-				
-							
-				
 							
 				
 						</article>
 						<!-- WIDGET END -->
-				
+
+						
+						<!-- NEW WIDGET START -->
+						<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+							
+							
+
+							<!-- Widget ID (each widget will need unique ID)-->
+							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-3" data-widget-colorbutton="false" data-widget-fullscreenbutton="false" data-widget-editbutton="false" data-widget-sortable="false">
+								<!-- widget options:
+									usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+									
+									data-widget-colorbutton="false"	
+									data-widget-editbutton="false"
+									data-widget-togglebutton="false"
+									data-widget-deletebutton="false"
+									data-widget-fullscreenbutton="false"
+									data-widget-custombutton="false"
+									data-widget-collapsed="true" 
+									data-widget-sortable="false"
+									
+								-->
+								<header>
+
+									<h6> <i> </i>Customer by Zone Area - Chart </h6>				
+									
+								</header>
+
+								<!-- widget div-->
+								<div>
+									
+									<!-- widget edit box -->
+									<div class="jarviswidget-editbox">
+										<!-- This area used as dropdown edit box -->
+										<input class="form-control" type="text">	
+									</div>
+									<!-- end widget edit box -->
+									
+									<!-- widget content -->
+									<div class="widget-body">
+										
+										<!-- this is what the user will see -->
+										<canvas id="doughnutChart" height="120"></canvas>
+
+									</div>
+									<!-- end widget content -->
+									
+								</div>
+								<!-- end widget div -->
+								
+							</div>
+							<!-- end widget -->
+						</article>
+						<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+							<!-- Widget ID (each widget will need unique ID)-->
+							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-4" data-widget-colorbutton="false" data-widget-fullscreenbutton="false" data-widget-editbutton="false" data-widget-sortable="false">
+								<!-- widget options:
+									usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+									
+									data-widget-colorbutton="false"	
+									data-widget-editbutton="false"
+									data-widget-togglebutton="false"
+									data-widget-deletebutton="false"
+									data-widget-fullscreenbutton="false"
+									data-widget-custombutton="false"
+									data-widget-collapsed="true" 
+									data-widget-sortable="false"
+									
+								-->
+								<header>
+
+									<h6>My Tickets - Chart </h6>				
+									
+								</header>
+
+								<!-- widget div-->
+								<div>
+									
+									<!-- widget edit box -->
+									<div class="jarviswidget-editbox">
+										<!-- This area used as dropdown edit box -->
+										<input class="form-control" type="text">	
+									</div>
+									<!-- end widget edit box -->
+									
+									<!-- widget content -->
+									<div class="widget-body">
+										
+										<!-- this is what the user will see -->
+										<canvas id="pieChart" height="120"></canvas>
+
+									</div>
+									<!-- end widget content -->
+									
+								</div>
+								<!-- end widget div -->
+								
+							</div>
+							<!-- end widget -->
+
+						</article>
+						<!-- WIDGET END -->
+
+
 					</div>
 				
 					<!-- end row -->
@@ -552,14 +641,26 @@
 			         datasets: [
 				        {
 				            label: "Unpaid",
-							
-				            fillColor: "rgba(101, 149, 180, 1)",
+							fillColor: "rgba(101, 149, 180, 1)",
 				            strokeColor: "rgba(220,220,220,0.8)",
 				            highlightFill: "rgba(220,220,220,0.75)",
 				            highlightStroke: "rgba(220,220,220,1)",
 							backgroundColor:'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
 							borderColor: 'rgba(255, 99, 132, 1)',   // Solid Red
-				            data: [<?php echo number_format($JanTotalUnpaid['total'],0,'.','');?>,<?php echo $FebTotalUnpaid['total'];?>,<?php echo $MarchTotalUnpaid['total'];?>,<?php echo $AprilTotalUnpaid['total'];?>,<?php echo $MayTotalUnpaid['total'];?>,<?php echo $JuneTotalUnpaid['total'];?>,<?php echo $JulyTotalUnpaid['total'];?>,<?php echo $AugTotalUnpaid['total'];?>,<?php echo $SepTotalUnpaid['total'];?>,<?php echo $OctTotalUnpaid['total'];?>,<?php echo $NovTotalUnpaid['total'];?>,<?php echo $DecTotalUnpaid['total'];?>]
+				            data: [
+								<?php echo number_format($JanTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($FebTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($MarchTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($AprilTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($MayTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($JuneTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($JulyTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($AugTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($SepTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($OctTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($NovTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($DecTotalUnpaid['total'],0,'.','');?>
+							]
 				        },
 						{
 				            label: "Total Collection",
@@ -587,24 +688,24 @@
 				        {
 				            label: "Total Collectables",
 							// Change the background color of the bars
-   /* backgroundColor: [
-      'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
-      'rgba(54, 162, 235, 0.5)',   // Blue with 50% opacity
-      'rgba(255, 206, 86, 0.5)',   // Yellow with 50% opacity
-      'rgba(75, 192, 192, 0.5)',   // Green with 50% opacity
-      'rgba(153, 102, 255, 0.5)',  // Purple with 50% opacity
-      'rgba(255, 159, 64, 0.5)'    // Orange with 50% opacity
-    ],
-    // Change the border color of the bars
-    borderColor: [
-      'rgba(255, 99, 132, 1)',   // Solid Red
-      'rgba(54, 162, 235, 1)',    // Solid Blue
-      'rgba(255, 206, 86, 1)',    // Solid Yellow
-      'rgba(75, 192, 192, 1)',    // Solid Green
-      'rgba(153, 102, 255, 1)',   // Solid Purple
-      'rgba(255, 159, 64, 1)'     // Solid Orange
-    ],*/
-    borderWidth: 1, // You can also control the border width
+							/* backgroundColor: [
+								'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
+								'rgba(54, 162, 235, 0.5)',   // Blue with 50% opacity
+								'rgba(255, 206, 86, 0.5)',   // Yellow with 50% opacity
+								'rgba(75, 192, 192, 0.5)',   // Green with 50% opacity
+								'rgba(153, 102, 255, 0.5)',  // Purple with 50% opacity
+								'rgba(255, 159, 64, 0.5)'    // Orange with 50% opacity
+								],
+								// Change the border color of the bars
+								borderColor: [
+								'rgba(255, 99, 132, 1)',   // Solid Red
+								'rgba(54, 162, 235, 1)',    // Solid Blue
+								'rgba(255, 206, 86, 1)',    // Solid Yellow
+								'rgba(75, 192, 192, 1)',    // Solid Green
+								'rgba(153, 102, 255, 1)',   // Solid Purple
+								'rgba(255, 159, 64, 1)'     // Solid Orange
+								],*/
+    						borderWidth: 1, // You can also control the border width
 				            fillColor: "rgba(126, 157, 58, 1)",
 				            strokeColor: "rgba(151,187,205,0.8)",
 				            highlightFill: "rgba(151,187,205,0.75)",
@@ -644,212 +745,89 @@
 				const myChart = new Chart(ctx, config);
 			    // END BAR CHART
 
-				if ($("#bar-chart").length) {
+				
+				
 
-					//var data1 = [[1,1000],[2,2000],[3,3000],[4,5000],[5,5045],[6,5000],[7,6000],[8,8000],[9,8900],[10,10000],[11,1000],[12,3400]];
-					/*for (var i = 1; i <= 12; i += 1)
-						data1.push([i, parseInt(data[i])]);*/
-					var data2 = [
-						[0,<?php echo number_format($JanTotalPaid['total'],0,'.','');?>],
-						[1,<?php echo number_format($FebTotalPaid['total'],0,'.','');?>],
-						[2,<?php echo number_format($MarchTotalPaid['total'],0,'.','');?>],
-						[3,<?php echo number_format($AprilTotalPaid['total'],0,'.','');?>],
-						[4,<?php echo number_format($MayTotalPaid['total'],0,'.','');?>],
-						[5,<?php echo $JuneTotalPaid['total'];?>],
-						[6,<?php echo $JulyTotalPaid['total'];?>],
-						[7,<?php echo $AugTotalPaid['total'];?>],
-						[8,<?php echo $SepTotalPaid['total'];?>],
-						[9,<?php echo $OctTotalPaid['total'];?>],
-						[10,<?php echo $NovTotalPaid['total'];?>],
-						[11,<?php echo $DecTotalPaid['total'];?>]];
-
-					var data1 = [
-						[0,<?php echo number_format($JanTotalUnpaid['total'],0,'.','');?>],
-						[1,<?php echo $FebTotalUnpaid['total'];?>],
-						[2,<?php echo $MarchTotalUnpaid['total'];?>],
-						[3,<?php echo $AprilTotalUnpaid['total'];?>],
-						[4,<?php echo $MayTotalUnpaid['total'];?>],
-						[5,<?php echo $JuneTotalUnpaid['total'];?>],
-						[6,<?php echo $JulyTotalUnpaid['total'];?>],
-						[7,<?php echo $AugTotalUnpaid['total'];?>],
-						[8,<?php echo $SepTotalUnpaid['total'];?>],
-						[9,<?php echo $OctTotalUnpaid['total'];?>],
-						[10,<?php echo $NovTotalUnpaid['total'];?>],
-						[11,<?php echo $DecTotalUnpaid['total'];?>]];
-					/*for (var i = 1; i <= 12; i += 1)
-						data2.push([i, parseInt(Math.random() * 60)]);*/
-
-					var data3 = [
-						[0,<?php echo number_format($JanTotal['total'],0,'.','');?>],
-						[1,<?php echo $FebTotal['total'];?>],
-						[2,<?php echo $MarchTotal['total'];?>],
-						[3,<?php echo $AprilTotal['total'];?>],
-						[4,<?php echo $MayTotal['total'];?>],
-						[5,<?php echo $JuneTotal['total'];?>],
-						[6,<?php echo $JulyTotal['total'];?>],
-						[7,<?php echo $AugTotal['total'];?>],
-						[8,<?php echo $SepTotal['total'];?>],
-						[9,<?php echo $OctTotal['total'];?>],
-						[10,<?php echo $NovTotal['total'];?>],
-						[11,<?php echo $DecTotal['total'];?>]];
-					/*for (var i = 1; i <= 12; i += 1)
-						data3.push([i, parseInt(Math.random() * 70)]);*/
-
-					var ds = new Array();
-
-					ds.push({
-						label: 'Unpaid',
-						data : data1,
-						bars : {
-							show : true,
-							barWidth : 0.2,
-							order : 1,
-						}
-					});
-					ds.push({
-						label: 'Total Sales Collection',
-						data : data2,
-						bars : {
-							show : true,
-							barWidth : 0.2,
-							order : 2
-						}
-					});
-					ds.push({
-						label: 'Total Billing Collection',
-						data : data3,
-						bars : {
-							show : true,
-							barWidth : 0.2,
-							order : 3
-						}
-					});
-
-					//Display graph
-					/*$.plot($("#bar-chart"), ds, {
-						colors : [chrt_second, chrt_fourth, "rgba(102, 102, 102, 1)", "#BBB"],
-						grid : {
-							show : true,
-							hoverable : true,
-							clickable : true,
-							tickColor : chrt_border_color,
-							borderWidth : 0,
-							borderColor : chrt_border_color,
-						},
-						legend : true,
-						tooltip : true,
-						tooltipOpts : {
-							content : "<b>%x</b> = <span>%y</span>",
-							defaultTheme : false
-						}
-
-					});*/
-    
-					const ticks = [
-						[0, "January"],
-						[1, "February"],
-						[2, "March"],
-						[3, "April"],
-						[4, "May"],
-						[5, "Jun"],
-						[6, "July"],
-						[7, "August"],
-						[8, "September"],
-						[9, "October"],
-						[10, "November"],
-						[11, "December"]
-					];
-					// Options for the chart
-					const options = {
-						series: {
-							bars: {
-								show: true,
-								barWidth: 0.6,
-								align: "center"
-							},
-							
-						},
-						xaxis: {
-							mode: "categories",
-							ticks: ticks
-						},
-						colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
-						grid : {
-							show : true,
-							hoverable : true,
-							clickable : true,
-							tickColor : chrt_border_color,
-							borderWidth : 0,
-							borderColor : chrt_border_color,
-						},
-						legend : true,
-						tooltip : true,
-						tooltipOpts: {
-							content: "<b>%s</b> = <span>%y</span>",
-							defaultTheme: false
-						}
-					};
-
-					// Plot the chart
-					$.plot($("#bar-chart1"),ds, options);
-
-
-
-				}
-
-
-
-
-
-				/* pie chart */
-
-				if ($('#pie-chart').length) {
-
-					var data_pie = [];
-					var series = Math.floor(Math.random() * 10) + 1;
-					for (var i = 0; i < series; i++) {
-						data_pie[i] = {
-							label : "Series" + (i + 1),
-							data : Math.floor(Math.random() * 100) + 1
-						}
+				// Sample data for the pie chart
+				const data1 = {
+				labels: ['Pending', 'Assigned', 'On going', 'Resolved','Un-Resolved','Resolved - Closed','UnResolved - Closed'],
+				datasets: [{
+					label: 'My Tickets',
+					data: [300, 50, 100,300,5,10,20],
+					backgroundColor: [
+					'#ff6384ff',
+					'#36a2ebff',
+					'#5959ccff',
+					'#ffcd56ff',
+					'#236c35ff',
+					'#661e52ff',
+					'#3cc0e1ff'					
+					],
+					hoverOffset: 4
+				}]
+				};
+				// Configuration for the chart
+				const config1 = {
+				type: 'pie', // Type of chart (e.g., 'pie', 'doughnut')
+				data: data1,
+				options: {
+					responsive: true,
+					plugins: {
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'My Tickets Chart'
 					}
-
-					$.plot($("#pie-chart"), data_pie, {
-						series : {
-							pie : {
-								show : true,
-								innerRadius : 0.5,
-								radius : 1,
-								label : {
-									show : false,
-									radius : 2 / 3,
-									formatter : function(label, series) {
-										return '<div style="font-size:11px;text-align:center;padding:4px;color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
-									},
-									threshold : 0.1
-								}
-							}
-						},
-						legend : {
-							show : true,
-							noColumns : 1, // number of colums in legend table
-							labelFormatter : null, // fn: string -> string
-							labelBoxBorderColor : "#000", // border color for the little label boxes
-							container : null, // container (as jQuery object) to put legend in, null means default on top of graph
-							position : "ne", // position of default legend container within plot
-							margin : [5, 10], // distance from grid edge to default legend container within plot
-							backgroundColor : "#efefef", // null means auto-detect
-							backgroundOpacity : 1 // set to 0 to avoid background
-						},
-						grid : {
-							hoverable : true,
-							clickable : true
-						},
-					});
-
+					}
 				}
+				};
+			    var ctx1 = document.getElementById("pieChart").getContext("2d");
+			    //var myNewChart = new Chart(ctx).Bar(barData, barOptions);
+				const myChart1 = new Chart(ctx1, config1);
 
-				/* end pie chart */
+				// Sample data for the doughnut chart
+				const data2 = {
+				labels: ['ZONE 1', 'ZONE 2', 'ZONE 3', 'ZONE 4'],
+				datasets: [{
+					label: 'Customer Zonal Area',
+					data: [<?php echo $zone1['count_id'];?>, <?php echo $zone2['count_id'];?>, <?php echo $zone3['count_id'];?>, <?php echo $zone4['count_id'];?>],
+					backgroundColor: [
+					'rgb(255, 99, 132)',
+					'rgb(54, 162, 235)',
+					'rgb(255, 205, 86)',
+					'rgba(60, 28, 89, 1)'
+					],
+					hoverOffset: 8
+				}]
+				};
+
+				// Configuration for the chart
+				const config2 = {
+				type: 'doughnut', // Type of chart is set to 'doughnut'
+				data: data2,
+				options: {
+					responsive: true,
+					plugins: {
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Doughnut Chart'
+					}
+					}
+				}
+				};
+				var ctx2 = document.getElementById("doughnutChart").getContext("2d");
+			    //var myNewChart = new Chart(ctx).Bar(barData, barOptions);
+				const myChart2 = new Chart(ctx2, config2);
+
+
+
+
+
 		
 		})
 

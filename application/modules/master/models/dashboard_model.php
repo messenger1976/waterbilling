@@ -8,6 +8,7 @@ class dashboard_model extends CI_Model {
 	public $table_meter_customer = 'tbl_addmetercustomer';
 	public $table_monthly_customer = 'tbl_monthlycustomer';
 	public $table_payrol = 'tbl_payrols';
+	public $table_zone = 'tbl_zone';
 	public $table_leaking_ledger = 'tbl_leaking_ledger';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
@@ -213,7 +214,24 @@ class dashboard_model extends CI_Model {
 		$result = $query->row_array();
 		return $result;
     }
-	
+	public function get_cust_by_zone($zone){
+		$this->db->select('COUNT(id) as count_id');
+		$this->db->from($this->table_customer);
+		
+		if($zone==1){
+			$this->db->where('zone',12);
+		}else if($zone==2){
+			$this->db->where('zone',10);
+		}else if($zone==3){
+			$this->db->where('zone',9);
+		}
+		else if($zone==4){
+			$this->db->where('zone',7);
+		}
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
 	
 }
 ?>
