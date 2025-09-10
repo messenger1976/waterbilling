@@ -111,8 +111,8 @@
 											<?php } ?>	
 											
 											<fieldset>
-														<legend>Technical Problems-Add </legend>
-													<div class="form-group col-lg-6">	
+												<legend>Technical Problems-Add </legend>
+													<div class="col-lg-6">	
 														<div class="col-lg-12 controls">
 															<div class="form-group"> 
 																<span class="input-group-addon"><strong>Customer : </strong></span>
@@ -135,7 +135,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Meter Number : </strong></span>
@@ -144,7 +144,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-12">
+													<div class="col-lg-12">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Address : </strong></span>
@@ -153,7 +153,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Problem Summary : </strong></span>
@@ -162,7 +162,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Status : </strong></span>
@@ -179,7 +179,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Reported By : </strong></span>
@@ -193,7 +193,7 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-6">
+													<div class="col-lg-6">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
 																<span class="input-group-addon"><i class="icon-user"></i><strong>Reported Date:</strong></span>
@@ -201,27 +201,27 @@
 															</div>
 														</div>
 													</div>
-													<div class="form-group col-lg-12">
+													<div class="col-lg-12">
 														<div class="col-lg-12 controls">
 															<div class="form-group">
-																<span class="input-group-addon"><i class="icon-user"></i><strong>Details :</strong></span>
+																<span class="input-group-addon"><i class="icon-user"></i><strong>Problem Details :</strong></span>
 																<textarea class="form-control" rows="5" cols="25" id="problem_details" name="problem_details"><?php echo $this->input->post('problem_details'); ?></textarea>
                                                                 <?php echo form_error('problem_details'); ?>
 															</div>
 														</div>
 													</div>
 														
-							
-													</fieldset>
-
-													<div class="form-actions">
-														<div class="row">
-															<div class="col-md-12">
-																
-																 <a href="<?php echo ADMIN_URL;?>technicalproblems" class="btn btn-default">Cancel</a>
-																<input class="btn btn-primary" name="add" id="btn_add" value="add"/>
-															</div>
-														</div>
+													
+											</fieldset>
+											<div class="form-actions">
+												<div class="row">
+													<div class="col-md-12">
+														
+															<a href="<?php echo ADMIN_URL;?>technicalproblems" class="btn btn-default">Cancel</a>
+														<input class="btn btn-primary" name="add" id="btn_add" value="add"/>
+													</div>
+												</div>
+											</div>
 													
 										</form>
 				

@@ -69,9 +69,45 @@ class technicalproblems extends CI_Controller {
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->addPage,$data);
 	}
+
+	public function add_messages(){
+		if($this->input->post('btn_save') == 'add'){ 
+			
+			$reportedby = $this->input->post('msg_reportedby');
+		
+			$result = $this->my_model->add_messages_record($reportedby);
+			
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Created Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Created...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+
+		}elseif($this->input->post('btn_save') == 'edit'){
+			$id = $this->input->post('leaking_id');
+			$result = $this->my_model->update_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Updated Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Updated...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+		}else{
+			echo 'error update DB';
+		}
+	}
+
 	public function edit($id){
 		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 		$data['record'] = $this->my_model->get_single_record($id);
+		$data['record_messages'] = $this->my_model->get_message_records($id);
 		//$data['addcustomer'] = $this->my_model->get_addcustomer();
 		//$data['amountrate'] = $this->my_model->get_amountrate();
 		$data['msg'] ='';
@@ -186,6 +222,37 @@ class technicalproblems extends CI_Controller {
 		}
 	}
 	
+	public function add_message(){
+		if($this->input->post('btn_save') == 'add'){ 
+			
+		
+			$result = $this->my_model->add_payment_record();
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Created Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Created...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+
+		}elseif($this->input->post('btn_save') == 'edit'){
+			$id = $this->input->post('leaking_id');
+			$result = $this->my_model->update_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Updated Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Updated...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+		}else{
+			echo 'error update DB';
+		}
+	}
 	/*public function getoldmeter(){
 		$id = $this->input->post('id');
 		$getData=$this->my_model->select_getoldmeter($id);

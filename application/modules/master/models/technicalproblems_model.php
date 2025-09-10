@@ -1,6 +1,7 @@
 <?php 
 class technicalproblems_model extends CI_Model {
 	public $table_name = 'tbl_technical';
+    public $table_message = 'tbl_technical_messages';
     public $table_customername = 'tbl_addcustomer';
 	public $table_meter = 'tbl_addmetercustomer';
 	public $table_monthly = 'tbl_monthlycustomer';
@@ -94,6 +95,18 @@ class technicalproblems_model extends CI_Model {
 		}
 		return $result;
     }
+
+	public function get_message_records($id='') {
+        $this->db->select("*");
+		$this->db->from($this->table_message);
+		if($id != ''){
+			$this->db->where("technical_id",$id);
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			$result = $query->result_array();
+		}
+		return $result;
+    }
   	/** In Function Add Check Exits records for select table **/
 	public function exit_details($exit_data) {
         $this->db->select("*");
@@ -171,6 +184,34 @@ class technicalproblems_model extends CI_Model {
 			
 		);
 		$result = $this->db->insert($this->table_name, $set_data); 
+		return $result;
+	}
+
+	public function add_messages_record($employee_rec){
+		//echo'<pre>';print_r($add_record);exit;
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$created_date = $dt_date->format("Y-m-d H:i:s");
+
+		//$preparedby_name = $employee_rec[0]['first_name'].' '.$employee_rec[0]['middle_name'].' '.$employee_rec[0]['last_name'].' - '.$employee_rec[0]['jobtitle'];
+        
+		$set_data1 = array(
+			'status' => $this->input->post('msg_status'),
+			'update_date_time' => $created_date,
+		);
+		$this->db->where('id',$this->input->post('technical_id'));
+		$result1 = $this->db->update($this->table_name, $set_data1); 
+
+	  	$set_data = array(
+			'technical_id' => $this->input->post('technical_id'),
+			'technical_msg_text' => $this->input->post('msg_logs'),
+			'technical_msg_status' => $this->input->post('msg_status'),
+			'technical_msg_reported_by_id' => $this->input->post('msg_reportedby'),
+			'technical_msg_reported_name' => $this->input->post('reportedby_name'),
+			'technical_msg_reported_date' => date('Y-m-d',strtotime($this->input->post('posted_date'))),
+			'technical_msg_created_date' => $created_date,
+			
+		);
+		$result = $this->db->insert($this->table_message, $set_data); 
 		return $result;
 	}
   	/** In Function Update records for select table **/
