@@ -91,6 +91,15 @@ class dashboard extends CI_Controller {
 		$data['zone2'] = $this->my_model->get_cust_by_zone(2);
 		$data['zone3'] = $this->my_model->get_cust_by_zone(3);
 		$data['zone4'] = $this->my_model->get_cust_by_zone(4);
+		
+		$data['ticket0'] = $this->my_model->get_mytickets_chart(0);
+		$data['ticket1'] = $this->my_model->get_mytickets_chart(1);
+		$data['ticket2'] = $this->my_model->get_mytickets_chart(2);
+		$data['ticket3'] = $this->my_model->get_mytickets_chart(3);
+		$data['ticket4'] = $this->my_model->get_mytickets_chart(4);
+		$data['ticket5'] = $this->my_model->get_mytickets_chart(5);
+		$data['ticket6'] = $this->my_model->get_mytickets_chart(6);
+		
 		//print_r($data['JanTotal']);
 		//$data['this_expenses'] = $this->my_model->get_month_expenses_list();
 		//$data['monthly_income'] = $this->my_model->get_list_monthly_income();

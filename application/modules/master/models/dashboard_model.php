@@ -232,6 +232,30 @@ class dashboard_model extends CI_Model {
 		$result = $query->row_array();
 		return $result;
 	}
+	public function get_mytickets_chart($status){
+		$this->db->select('COUNT(id) as count_id');
+		$this->db->from($this->table_technical);
+		
+		if($status==0){
+			$this->db->where('status',0);
+		}else if($status==1){
+			$this->db->where('status',1);
+		}else if($status==2){
+			$this->db->where('status',2);
+		}else if($status==3){
+			$this->db->where('status',3);
+		}else if($status==4){
+			$this->db->where('status',4);
+		}else if($status==5){
+			$this->db->where('status',5);
+		}else if($status==6){
+			$this->db->where('status',6);
+		}
+		$this->db->where('deleted_rec',0);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
 	
 }
 ?>

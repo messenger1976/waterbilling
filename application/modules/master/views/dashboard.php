@@ -753,7 +753,7 @@
 				labels: ['Pending', 'Assigned', 'On going', 'Resolved','Un-Resolved','Resolved - Closed','UnResolved - Closed'],
 				datasets: [{
 					label: 'My Tickets',
-					data: [300, 50, 100,300,5,10,20],
+					data: [<?php echo $ticket0['count_id'];?>, <?php echo $ticket1['count_id'];?>, <?php echo $ticket2['count_id'];?>,<?php echo $ticket3['count_id'];?>,<?php echo $ticket4['count_id'];?>,<?php echo $ticket5['count_id'];?>,<?php echo $ticket6['count_id'];?>],
 					backgroundColor: [
 					'#ff6384ff',
 					'#36a2ebff',
@@ -791,7 +791,7 @@
 				const data2 = {
 				labels: ['ZONE 1', 'ZONE 2', 'ZONE 3', 'ZONE 4'],
 				datasets: [{
-					label: 'Customer Zonal Area',
+					label: 'Customer Zone Area',
 					data: [<?php echo $zone1['count_id'];?>, <?php echo $zone2['count_id'];?>, <?php echo $zone3['count_id'];?>, <?php echo $zone4['count_id'];?>],
 					backgroundColor: [
 					'rgb(255, 99, 132)',
@@ -815,7 +815,7 @@
 					},
 					title: {
 						display: true,
-						text: 'Doughnut Chart'
+						text: 'Zone Chart'
 					}
 					}
 				}
