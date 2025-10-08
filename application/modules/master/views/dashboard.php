@@ -611,6 +611,10 @@
 				var JunTotal = '<?php echo $JuneTotal['total'];?>';
 				var JulTotal = '<?php echo $JulyTotal['total'];?>';
 				var AugTotal = '<?php echo $AugTotal['total'];?>';
+				var SepTotal = '<?php echo $SepTotal['total'];?>';
+				var OctTotal = '<?php echo $OctTotal['total'];?>';
+				var NovTotal = '<?php echo $NovTotal['total'];?>';
+				var DecTotal = '<?php echo $DecTotal['total'];?>';
 				if(JanTotal>0){
 					month_array.push('January');
 				}
@@ -635,7 +639,18 @@
 				if(AugTotal>0){
 					month_array.push('August');
 				}
-
+				if(SepTotal>0){
+					month_array.push('September');
+				}
+				if(OctTotal>0){
+					month_array.push('October');
+				}
+				if(NovTotal>0){
+					month_array.push('November');
+				}
+				if(DecTotal>0){
+					month_array.push('December');
+				}
 			    var barData = {
 			        labels: month_array,
 			         datasets: [
@@ -720,7 +735,11 @@
 								<?php echo $MayTotal['total'];?>, 
 								<?php echo $JuneTotal['total'];?>, 
 								<?php echo $JulyTotal['total'];?>,
-								<?php echo $JulyTotal['total'];?>
+								<?php echo $AugTotal['total'];?>,
+								<?php echo $SepTotal['total'];?>,
+								<?php echo $OctTotal['total'];?>,
+								<?php echo $NovTotal['total'];?>,
+								<?php echo $DecTotal['total'];?>
 							]
 				        }
 				    ]
