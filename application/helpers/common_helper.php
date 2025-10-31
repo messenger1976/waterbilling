@@ -199,7 +199,8 @@ if(!function_exists('customerbillingperiod'))
                 $update_counter_array1 = array( 
                     'previous_reading' => $customer_current_billing_data->reading,
                     'arrears' => $arrears,
-                    'customer_status' => $customerinfodata->status
+                    'customer_status' => $customerinfodata->status,
+                    'maintenance_fee' => '25.00',
                 );
                 $C5 = &get_instance();
                 $C5->db->where('id', $checkresult_id);
