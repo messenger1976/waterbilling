@@ -391,7 +391,8 @@ class addbillingperiod extends CI_Controller {
 		tbl_addcustomer_reading.reading as current_reading,
 		tbl_addcustomer_reading.arrears,
 		tbl_addcustomer_reading.month as billing_month,
-		tbl_addcustomer_reading.year as billing_year
+		tbl_addcustomer_reading.year as billing_year,
+		tbl_addcustomer_reading.maintenance_fee
        
         ");
 		$this->db->from("tbl_addcustomer_reading");
