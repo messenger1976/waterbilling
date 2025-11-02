@@ -200,6 +200,7 @@ class addpaymentcustomer_model extends CI_Model {
 				ac.unit_price,
 				ac.bp_id as bp_id,
 				ac.penalty,
+				ac.maintenance_fee,
 				ac.refno,
 				bp.*
 				FROM  `tbl_addcustomer_reading` ac
