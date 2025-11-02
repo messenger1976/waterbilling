@@ -28,6 +28,7 @@ $config['base_url'] = $REQUEST_PROTOCOL.'://'.$_SERVER['HTTP_HOST'].'/';
 //$config['base_url'] = 'http://localhost/waterbilling/';
 //$config['base_url'] = 'http://roxas.com/';
 
+
 /*
 |--------------------------------------------------------------------------
 | Index File

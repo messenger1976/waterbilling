@@ -46,6 +46,7 @@ class dashboard extends CI_Controller {
 		$data['solved_prbm'] = $this->my_model->get_total_solved_problems();
 		$data['customer'] = $this->my_model->get_customers_list();
 		$data['expenses'] = $this->my_model->get_expenses_list();
+
 		$data['leaking'] = $this->my_model->get_total_leaking_balance();
 
 		$data['JanTotal'] = $this->my_model->get_total_sales(1,$yearrep,99);
@@ -100,7 +101,7 @@ class dashboard extends CI_Controller {
 		$data['ticket5'] = $this->my_model->get_mytickets_chart(5);
 		$data['ticket6'] = $this->my_model->get_mytickets_chart(6);
 		
-		//print_r($data['JanTotal']);
+
 		//$data['this_expenses'] = $this->my_model->get_month_expenses_list();
 		//$data['monthly_income'] = $this->my_model->get_list_monthly_income();
 		//$data['meter_income'] = $this->my_model->get_list_meter_income();

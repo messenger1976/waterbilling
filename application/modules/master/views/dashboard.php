@@ -192,6 +192,7 @@
 						<!-- NEW WIDGET START -->
 						<article class="col-sm-12">
 
+
 							<!-- Widget ID (each widget will need unique ID)-->
 							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
 								<!-- widget options:
@@ -238,7 +239,7 @@
 							<!-- end widget -->
 
 
-							
+
 				
 						</article>
 						<!-- WIDGET END -->
@@ -384,9 +385,11 @@
 		<script src="<?php echo base_url();?>js/plugin/flot/jquery.flot.time.min.js"></script>
 		<script src="<?php echo base_url();?>js/plugin/flot/jquery.flot.tooltip.min.js"></script>
 
+
 		<!-- EASY PIE CHARTS -->
 		<script src="<?php echo base_url();?>js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
     	<script src="<?php echo base_url();?>js/plugin/chartjs/chart.min.js"></script>
+
 
 		<script type="text/javascript">
 		
@@ -395,11 +398,13 @@
 			var chrt_grid_color = "#DDD";
 			var chrt_main = "#E24913";
 			/* red       */
+
 			var chrt_second = "#6595b4ff";
 			/* blue      */
 			var chrt_third = "#FF9F01";
 			/* orange    */
 			var chrt_fourth = "rgba(126, 157, 58, 1)";
+
 			/* green     */
 			var chrt_fifth = "#BD362F";
 			/* dark red  */
@@ -576,6 +581,7 @@
 			});
 			
 			/* END TABLETOOLS */
+
 
 
 			    // BAR CHART
@@ -842,6 +848,7 @@
 				var ctx2 = document.getElementById("doughnutChart").getContext("2d");
 			    //var myNewChart = new Chart(ctx).Bar(barData, barOptions);
 				const myChart2 = new Chart(ctx2, config2);
+
 
 
 
