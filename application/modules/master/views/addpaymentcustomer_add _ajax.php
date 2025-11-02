@@ -26,6 +26,7 @@
 						<th>Bill Amount</th>
 						<th>Discount</th>
 						<th>Penalty</th>
+						<th>WMMF</th>
 						<th>OR Number</th>
 						<th>Date Paid</th>
 						<th>Total Amount</th>
@@ -134,6 +135,8 @@
 								<td align="right"><?php echo stripslashes($row['sc_discount']); ?>
 								</td>
 								<td align="right"><?php echo stripslashes(number_format($penalty,2)); ?>
+								</td>
+								<td align="right"><?php echo stripslashes(number_format($row['maintenance_fee'],2)); ?>
 								</td>
 								<td align="center"><?php echo stripslashes($or_number_paid); ?></td>
 								<td align="center"><?php echo stripslashes($trans_date); ?></td>
