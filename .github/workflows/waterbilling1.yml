@@ -1,11 +1,11 @@
 on:
   push:
     branches:
-      - main
-name: 🚀 Deploy waterbilling system on push
+      - waterbilling1
+name: 🚀 Deploy waterbilling1 system on push
 jobs:
   web-deploy:
-    name: 🎉 Deploy water billing Server
+    name: 🎉 Deploy water billing1 Server
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -15,9 +15,9 @@ jobs:
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
-        server: waterbilling.uk.tempcloudsite.com
-        username: ${{ secrets.ftp_username }}
-        password: ${{ secrets.ftp_password }}
+        server: waterbilling1.uk.tempcloudsite.com
+        username: ${{ secrets.ftp_username1 }}
+        password: ${{ secrets.ftp_password1 }}
         server-dir: /
         exclude: |
           **/.git*

@@ -14,9 +14,20 @@
 | path to your installation.
 |
 */
+$isSecure = false;
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+    $isSecure = true;
+}
+elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+    $isSecure = true;
+}
+$REQUEST_PROTOCOL = $isSecure ? 'https' : 'http';
+/* end code */
 
+$config['base_url'] = $REQUEST_PROTOCOL.'://'.$_SERVER['HTTP_HOST'].'/';
 //$config['base_url'] = 'http://localhost/waterbilling/';
-$config['base_url'] = 'http://roxas1.com/';
+//$config['base_url'] = 'http://roxas.com/';
+
 
 /*
 |--------------------------------------------------------------------------

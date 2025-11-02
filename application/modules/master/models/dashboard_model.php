@@ -2,11 +2,14 @@
 class dashboard_model extends CI_Model {
 	
 	public $table_customer = 'tbl_addcustomer';
+	public $table_customer_reading = 'tbl_addcustomer_reading';
 	public $table_expenses = 'tbl_addexpenses';
 	public $table_technical = 'tbl_technical';
 	public $table_meter_customer = 'tbl_addmetercustomer';
 	public $table_monthly_customer = 'tbl_monthlycustomer';
 	public $table_payrol = 'tbl_payrols';
+	public $table_zone = 'tbl_zone';
+	public $table_leaking_ledger = 'tbl_leaking_ledger';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();
@@ -68,9 +71,22 @@ class dashboard_model extends CI_Model {
 		return $result;
     }   
 	/** In Function Get count from select table **/
+    public function get_total_leaking_balance() {
+        $this->db->select("sum(leaking_total_amount) as total");
+		$this->db->from($this->table_leaking_ledger);
+		$this->db->where('leaking_status',5);
+		$this->db->or_where('leaking_status',2);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+    } 
+	/** In Function Get count from select table **/
     public function get_total_technical_problems() {
         $this->db->select("*");
 		$this->db->from($this->table_technical);
+		$this->db->where('status !=',5);
+		$this->db->where('status !=',6);
+		$this->db->where('deleted_rec',0);
 		$query = $this->db->get();
 		$result = $query->num_rows();
 		return $result;
@@ -184,6 +200,62 @@ class dashboard_model extends CI_Model {
 		$result = $query->row_array();
 		return $result;
 	}	
+	public function get_total_sales($monthrep,$yearrep,$status='') {
+        $this->db->select('SUM(amount) as total');
+		$this->db->from($this->table_customer_reading);
+		$this->db->where('month',$monthrep);
+		$this->db->where('year',$yearrep);
+		if($status==1){
+			$this->db->where('status = 1');
+		}else if($status==0){
+			$this->db->where('status', 0);
+		}
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+    }
+	public function get_cust_by_zone($zone){
+		$this->db->select('COUNT(id) as count_id');
+		$this->db->from($this->table_customer);
+		
+		if($zone==1){
+			$this->db->where('zone',12);
+		}else if($zone==2){
+			$this->db->where('zone',10);
+		}else if($zone==3){
+			$this->db->where('zone',9);
+		}
+		else if($zone==4){
+			$this->db->where('zone',7);
+		}
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
+	public function get_mytickets_chart($status){
+		$this->db->select('COUNT(id) as count_id');
+		$this->db->from($this->table_technical);
+		
+		if($status==0){
+			$this->db->where('status',0);
+		}else if($status==1){
+			$this->db->where('status',1);
+		}else if($status==2){
+			$this->db->where('status',2);
+		}else if($status==3){
+			$this->db->where('status',3);
+		}else if($status==4){
+			$this->db->where('status',4);
+		}else if($status==5){
+			$this->db->where('status',5);
+		}else if($status==6){
+			$this->db->where('status',6);
+		}
+		$this->db->where('deleted_rec',0);
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;
+	}
 	
 }
 ?>

@@ -22,21 +22,15 @@
 			<!-- MAIN CONTENT -->
 			<div id="content">
 
-				<div class="row">
+				<!--<div class="row">
 					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
 						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> Dashboard <span>> My Dashboard</span></h1>
 					</div>
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
 							<li class="sparks-info">
-							<?php 
-							     $income1 = $this->comm_model->get_income_metercustomer();
-							     extract($income1);
-								 $income2 = $this->comm_model->get_income_monthlycustomer();
-								 extract($income2);
-								 $intotal = $total1 + $total2;
-							?>
-								<h5> Income <span class="txt-color-blue">PHP <?php print_r(number_format($intotal,2));?></span></h5>
+							
+								<h5> Income <span class="txt-color-blue">PHP </span></h5>
 								<div class="sparkline txt-color-blue hidden-mobile hidden-md hidden-sm">
 									
 								</div>
@@ -66,15 +60,138 @@
 							</li>
 						</ul>
 					</div>
+				</div>-->
+
+
+				<div class="row">
+					
+					<div class="col-sm-12">
+						
+						<div class="well well-light">
+							
+							<!--<h1>Professional, <small>4 Plans</small></h1>-->
+							<div class="row">
+								
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-success pricing-big">
+						            	
+						                <div class="panel-heading">
+						                    <h3 class="panel-title"><i class="fa fa-bar-chart-o fa-lg"></i>
+						                        Total Sales</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+													<?php 
+							     $income1 = $this->comm_model->get_income_metercustomer();
+							     extract($income1);
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
+								 extract($income2);
+								 $intotal = $total1 + $total2;
+							?>
+						                            <strong>₱ <?php print_r(number_format($intotal,2));?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="<?php echo ADMIN_URL;?>addpaymentcustomer/add" class="btn btn-primary btn-block" role="button">Add Bills Payment <span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>
+						        
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-teal pricing-big">
+						            	
+						                <div class="panel-heading">
+						                    <h3 class="panel-title"><i class="fa fa-user fa-lg"></i>
+						                        Total Customers</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+													<?php 
+							     $total_customer = $this->my_model->total_customer();
+							     extract($total_customer); 
+							?>
+						                            <strong><?php print_r($count_id);?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="<?php echo ADMIN_URL;?>addcustomer" class="btn btn-primary btn-block" role="button">Customers Listing<span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>
+						        
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-primary pricing-big">
+						            	<img src="img/ribbon.png" class="ribbon" alt="">
+						                <div class="panel-heading">
+						                    <h3 class="panel-title"><i class="fa fa-money fa-lg"></i>
+						                        Total Leaking Balances</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+						                           <strong>₱ <?php print_r(number_format($leaking['total'],2));?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="<?php echo ADMIN_URL;?>Leakingentry" class="btn btn-primary btn-block" role="button">Leaking Listing<span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>
+						        
+						        <div class="col-xs-12 col-sm-6 col-md-3">
+						            <div class="panel panel-darken pricing-big">
+						            	
+						                <div class="panel-heading">
+						                    <h3 class="panel-title"><i class="fa fa-comments fa-lg"></i>
+						                        Open Tickets</h3>
+						                </div>
+						                <div class="panel-body no-padding text-align-center">
+						                    <div class="the-price">
+						                        <h1>
+						                            <strong><?php print_r($total_prbm);?></strong></h1>
+						                    </div>
+											
+						                </div>
+						                <div class="panel-footer text-align-center">
+						                    <a href="<?php echo ADMIN_URL;?>technicalproblems" class="btn btn-primary btn-block" role="button">Tickets Listing<span> now!</span></a>
+						                	
+						                </div>
+						            </div>
+						        </div>		    	
+				    		</div>
+				
+							
+				
+		
+							
+						</div>
+						
+					</div>
+					
 				</div>
+
 				<!-- widget grid -->
 				<section id="widget-grid" class="">
+
+
+
+
+					
 
 					<!-- row -->
 					<div class="row">
 				
 						<!-- NEW WIDGET START -->
 						<article class="col-sm-12">
+
 
 							<!-- Widget ID (each widget will need unique ID)-->
 							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
@@ -109,911 +226,130 @@
 
 									<!-- widget content -->
 									<div class="widget-body no-padding">
-
-										<div id="bar-chart" class="chart"></div>
-
-									</div>
-									<!-- end widget content -->
-
-								</div>
-								<!-- end widget div -->
-
-							</div>
-							<!-- end widget -->
-
-
-
-
-												<!-- row -->
-
-					<div class="row">
-
-						<article class="col-sm-12 col-md-12 col-lg-6">
-
-							<!-- new widget -->
-							<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-1" data-widget-editbutton="false" data-widget-fullscreenbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-
-								<header>
-									<span class="widget-icon"> <i class="fa fa-comments txt-color-white"></i> </span>
-									<h6> SmartChat </h6>
-									<div class="widget-toolbar">
-										<!-- add: non-hidden - to disable auto hide -->
-
-										<div class="btn-group">
-											<button class="btn dropdown-toggle btn-xs btn-success" data-toggle="dropdown">
-												Status <i class="fa fa-caret-down"></i>
-											</button>
-											<ul class="dropdown-menu pull-right js-status-update">
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-circle txt-color-green"></i> Online</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-circle txt-color-red"></i> Busy</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-circle txt-color-orange"></i> Away</a>
-												</li>
-												<li class="divider"></li>
-												<li>
-													<a href="javascript:void(0);"><i class="fa fa-power-off"></i> Log Off</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<div>
-											<label>Title:</label>
-											<input type="text" />
-										</div>
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body widget-hide-overflow no-padding">
-										<!-- content goes here -->
-
-										<!-- CHAT CONTAINER -->
-										<div id="chat-container">
-											<span class="chat-list-open-close"><i class="fa fa-user"></i><b>!</b></span>
-
-											<div class="chat-list-body custom-scroll">
-												<ul id="chat-users">
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/5.png" alt="">Robin Berry <span class="badge badge-inverse">23</span><span class="state"><i class="fa fa-circle txt-color-green pull-right"></i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Mark Zeukartech <span class="state"><i class="last-online pull-right">2hrs</i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Belmain Dolson <span class="state"><i class="last-online pull-right">45m</i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Galvitch Drewbery <span class="state"><i class="fa fa-circle txt-color-green pull-right"></i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Sadi Orlaf <span class="state"><i class="fa fa-circle txt-color-green pull-right"></i></span></a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Markus <span class="state"><i class="last-online pull-right">2m</i></span> </a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/sunny.png" alt="">Sunny <span class="state"><i class="last-online pull-right">2m</i></span> </a>
-													</li>
-													<li>
-														<a href="javascript:void(0);"><img src="img/avatars/male.png" alt="">Denmark <span class="state"><i class="last-online pull-right">2m</i></span> </a>
-													</li>
-												</ul>
-											</div>
-											<div class="chat-list-footer">
-
-												<div class="control-group">
-
-													<form class="smart-form">
-
-														<section>
-															<label class="input">
-																<input type="text" id="filter-chat-list" placeholder="Filter">
-															</label>
-														</section>
-
-													</form>
-
-												</div>
-
-											</div>
-
-										</div>
-
-										<!-- CHAT BODY -->
-										<div id="chat-body" class="chat-body custom-scroll">
-											<ul>
-												<li class="message">
-													<img src="img/avatars/5.png" class="online" alt="">
-													<div class="message-text">
-														<time>
-															2014-01-13
-														</time> <a href="javascript:void(0);" class="username">Sadi Orlaf</a> Hey did you meet the new board of director? He's a bit of an arse if you ask me...anyway here is the report you requested. I am off to launch with Lisa and Andrew, you wanna join?
-														<p class="chat-file row">
-															<b class="pull-left col-sm-6"> <!--<i class="fa fa-spinner fa-spin"></i>--> <i class="fa fa-file"></i> report-2013-demographic-report-annual-earnings.xls </b>
-															<span class="col-sm-6 pull-right"> <a href="javascript:void(0);" class="btn btn-xs btn-default">cancel</a> <a href="javascript:void(0);" class="btn btn-xs btn-success">save</a> </span>
-														</p>
-														<p class="chat-file row">
-															<b class="pull-left col-sm-6"> <i class="fa fa-ok txt-color-green"></i> tobacco-report-2012.doc </b>
-															<span class="col-sm-6 pull-right"> <a href="javascript:void(0);" class="btn btn-xs btn-primary">open</a> </span>
-														</p> </div>
-												</li>
-												<li class="message">
-													<img src="img/avatars/sunny.png" class="online" alt="">
-													<div class="message-text">
-														<time>
-															2014-01-13
-														</time> <a href="javascript:void(0);" class="username">John Doe</a> Haha! Yeah I know what you mean. Thanks for the file Sadi! <i class="fa fa-smile-o txt-color-orange"></i> 
-													</div>
-												</li>
-											</ul>
-
-										</div>
-
-										<!-- CHAT FOOTER -->
-										<div class="chat-footer">
-
-											<!-- CHAT TEXTAREA -->
-											<div class="textarea-div">
-
-												<div class="typearea">
-													<textarea placeholder="Write a reply..." id="textarea-expand" class="custom-scroll"></textarea>
-												</div>
-
-											</div>
-
-											<!-- CHAT REPLY/SEND -->
-											<span class="textarea-controls">
-												<button class="btn btn-sm btn-primary pull-right">
-													Reply
-												</button> <span class="pull-right smart-form" style="margin-top: 3px; margin-right: 10px;"> <label class="checkbox pull-right">
-														<input type="checkbox" name="subscription" id="subscription">
-														<i></i>Press <strong> ENTER </strong> to send </label> </span> <a href="javascript:void(0);" class="pull-left"><i class="fa fa-camera fa-fw fa-lg"></i></a> </span>
-
-										</div>
-
-										<!-- end content -->
-									</div>
-
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-							<!-- new widget -->
-							<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-3" data-widget-colorbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-								<header>
-									<span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-									<h6> My Events </h6>
-									<div class="widget-toolbar">
-										<!-- add: non-hidden - to disable auto hide -->
-										<div class="btn-group">
-											<button class="btn dropdown-toggle btn-xs btn-default" data-toggle="dropdown">
-												Showing <i class="fa fa-caret-down"></i>
-											</button>
-											<ul class="dropdown-menu js-status-update pull-right">
-												<li>
-													<a href="javascript:void(0);" id="mt">Month</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);" id="ag">Agenda</a>
-												</li>
-												<li>
-													<a href="javascript:void(0);" id="td">Today</a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-
-										<input class="form-control" type="text">
-
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body no-padding">
-										<!-- content goes here -->
-										<div class="widget-body-toolbar">
-
-											<div id="calendar-buttons">
-
-												<div class="btn-group">
-													<a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-prev"><i class="fa fa-chevron-left"></i></a>
-													<a href="javascript:void(0)" class="btn btn-default btn-xs" id="btn-next"><i class="fa fa-chevron-right"></i></a>
-												</div>
-											</div>
-										</div>
-										<div id="calendar"></div>
-
-										<!-- end content -->
-									</div>
-
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-						</article>
-
-						<article class="col-sm-12 col-md-12 col-lg-6">
-
-							<!-- new widget -->
-							<div class="jarviswidget" id="wid-id-2" data-widget-colorbutton="false" data-widget-editbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-
-								<header>
-									<span class="widget-icon"> <i class="fa fa-map-marker"></i> </span>
-									<h6>Birds Eye</h6>
-									<div class="widget-toolbar hidden-mobile">
-										<span class="onoffswitch-title"><i class="fa fa-location-arrow"></i> Realtime</span>
-										<span class="onoffswitch">
-											<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" checked="checked" id="myonoffswitch">
-											<label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner" data-swchon-text="YES" data-swchoff-text="NO"></span> <span class="onoffswitch-switch"></span> </label> </span>
-									</div>
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<div>
-											<label>Title:</label>
-											<input type="text" />
-										</div>
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body no-padding">
-										<!-- content goes here -->
-
-										<div id="vector-map" class="vector-map"></div>
-										<div id="heat-fill">
-											<span class="fill-a">0</span>
-
-											<span class="fill-b">5,000</span>
-										</div>
-
-										<table class="table table-striped table-hover table-condensed">
-											<thead>
-												<tr>
-													<th>Country</th>
-													<th>Visits</th>
-													<th class="text-align-center">User Activity</th>
-													<th class="text-align-center hidden-xs">Online</th>
-													<th class="text-align-center">Demographic</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td><a href="javascript:void(0);">USA</a></td>
-													<td>4,977</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														2700, 3631, 2471, 1300, 1877, 2500, 2577, 2700, 3631, 2471, 2000, 2100, 3000
-													</div></td>
-													<td class="text-align-center hidden-xs">143</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														17,83
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Australia</a></td>
-													<td>4,873</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														1000, 1100, 3030, 1300, -1877, -2500, -2577, -2700, 3631, 2471, 4700, 1631, 2471
-													</div></td>
-													<td class="text-align-center hidden-xs">247</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														22,88
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">India</a></td>
-													<td>3,671</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														3631, 1471, 2400, 3631, 471, 1300, 1177, 2500, 2577, 3000, 4100, 3000, 7700
-													</div></td>
-													<td class="text-align-center hidden-xs">373</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														10,90
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Brazil</a></td>
-													<td>2,476</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														2700, 1877, 2500, 2577, 2000, 3631, 2471, -2700, -3631, 2471, 1300, 2100, 3000,
-													</div></td>
-													<td class="text-align-center hidden-xs ">741</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														34,66
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Turkey</a></td>
-													<td>1,476</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-blue text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														1300, 1877, 2500, 2577, 2000, 2100, 3000, -2471, -2700, -3631, -2471, 2700, 3631
-													</div></td>
-													<td class="text-align-center hidden-xs">123</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														75,25
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-												<tr>
-													<td><a href="javascript:void(0);">Canada</a></td>
-													<td>146</td>
-													<td class="text-align-center">
-													<div class="sparkline txt-color-orange text-align-center" data-sparkline-height="22px" data-sparkline-width="90px" data-sparkline-barwidth="2">
-														5, 34, 10, 1, 4, 6, -9, -1, 0, 0, 5, 6, 7
-													</div></td>
-													<td class="text-align-center hidden-xs">23</td>
-													<td class="text-align-center">
-													<div class="sparkline display-inline" data-sparkline-type='pie' data-sparkline-piecolor='["#E979BB", "#57889C"]' data-sparkline-offset="90" data-sparkline-piesize="23px">
-														50,50
-													</div>
-													<div class="btn-group display-inline pull-right text-align-left hidden-tablet">
-														<button class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown">
-															<i class="fa fa-cog fa-lg"></i>
-														</button>
-														<ul class="dropdown-menu dropdown-menu-xs pull-right">
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-file fa-lg fa-fw txt-color-greenLight"></i> <u>P</u>DF</a>
-															</li>
-															<li>
-																<a href="javascript:void(0);"><i class="fa fa-times fa-lg fa-fw txt-color-red"></i> <u>D</u>elete</a>
-															</li>
-															<li class="divider"></li>
-															<li class="text-align-center">
-																<a href="javascript:void(0);">Cancel</a>
-															</li>
-														</ul>
-													</div></td>
-												</tr>
-											</tbody>
-											<tfoot>
-												<tr>
-													<td colspan=5>
-													<ul class="pagination pagination-xs no-margin">
-														<li class="prev disabled">
-															<a href="javascript:void(0);">Previous</a>
-														</li>
-														<li class="active">
-															<a href="javascript:void(0);">1</a>
-														</li>
-														<li>
-															<a href="javascript:void(0);">2</a>
-														</li>
-														<li>
-															<a href="javascript:void(0);">3</a>
-														</li>
-														<li class="next">
-															<a href="javascript:void(0);">Next</a>
-														</li>
-													</ul></td>
-												</tr>
-											</tfoot>
-										</table>
-
-										<!-- end content -->
-
-									</div>
-
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-							<!-- new widget -->
-							<div class="jarviswidget jarviswidget-color-blue" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false">
-
-								<!-- widget options:
-								usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-								data-widget-colorbutton="false"
-								data-widget-editbutton="false"
-								data-widget-togglebutton="false"
-								data-widget-deletebutton="false"
-								data-widget-fullscreenbutton="false"
-								data-widget-custombutton="false"
-								data-widget-collapsed="true"
-								data-widget-sortable="false"
-
-								-->
-
-								<header>
-									<span class="widget-icon"> <i class="fa fa-check txt-color-white"></i> </span>
-									<h6> ToDo's </h6>
-									<!-- <div class="widget-toolbar">
-									add: non-hidden - to disable auto hide
-
-									</div>-->
-								</header>
-
-								<!-- widget div-->
-								<div>
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<div>
-											<label>Title:</label>
-											<input type="text" />
-										</div>
-									</div>
-									<!-- end widget edit box -->
-
-									<div class="widget-body no-padding smart-form">
-										<!-- content goes here -->
-										<h5 class="todo-group-title"><i class="fa fa-warning"></i> Critical Tasks (<small class="num-of-tasks">1</small>)</h5>
-										<ul id="sortable1" class="todo">
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #17643</strong> - Hotfix for WebApp interface issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
-													<span class="date">Jan 1, 2014</span>
-												</p>
-											</li>
-										</ul>
-										<h5 class="todo-group-title"><i class="fa fa-exclamation"></i> Important Tasks (<small class="num-of-tasks">3</small>)</h5>
-										<ul id="sortable2" class="todo">
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #1347</strong> - Inbox email is being sent twice <small>(bug fix)</small> [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="date">Nov 22, 2013</span>
-												</p>
-											</li>
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #1314</strong> - Call customer support re: Issue <a href="javascript:void(0);" class="font-xs">#6134</a><small>(code review)</small>
-													<span class="date">Nov 22, 2013</span>
-												</p>
-											</li>
-											<li>
-												<span class="handle"> <label class="checkbox">
-														<input type="checkbox" name="checkbox-inline">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #17643</strong> - Hotfix for WebApp interface issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
-													<span class="date">Jan 1, 2014</span>
-												</p>
-											</li>
-										</ul>
-
-										<h5 class="todo-group-title"><i class="fa fa-check"></i> Completed Tasks (<small class="num-of-tasks">1</small>)</h5>
-										<ul id="sortable3" class="todo">
-											<li class="complete">
-												<span class="handle" style="display:none"> <label class="checkbox state-disabled">
-														<input type="checkbox" name="checkbox-inline" checked="checked" disabled="disabled">
-														<i></i> </label> </span>
-												<p>
-													<strong>Ticket #17643</strong> - Hotfix for WebApp interface issue [<a href="javascript:void(0);" class="font-xs">More Details</a>] <span class="text-muted">Sea deep blessed bearing under darkness from God air living isn't. </span>
-													<span class="date">Jan 1, 2014</span>
-												</p>
-											</li>
-										</ul>
-
-										<!-- end content -->
-									</div>
-
-								</div>
-								<!-- end widget div -->
-							</div>
-							<!-- end widget -->
-
-						</article>
-
-					</div>
-
-					<!-- end row -->
-
-					
-
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-0" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;List of Customers ( <?php echo count(array_filter($customer)) ?> )</h6>
-				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				
-									</div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($customer)) > 0){?>
-										<table id="firstpagei" class="table table-striped table-bordered table-hover" width="100%">
+										<canvas id="barChart" height="60"></canvas>
 										
-											<thead>			                
-												<tr>
-													<th data-hide="phone" width="5%">S No</th>
-													<th data-class="expand" width="10%"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Customer id</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Customer Name </th>
-													<th data-hide="expand">Pay Time</th>
-													
-												</tr>
-											</thead>
-											<tbody>
-											  <?php foreach($customer as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['customer_id']));?></td>
-													<td><?php echo stripslashes($value['full_name']);?></td>
-													<td><?php 
-															   if($value['customer_type']=='metercustomer'){ echo 'Meter'; }
-															   if($value['customer_type']=='monthlycustomer'){ echo 'Monthly'; }
-								                        ?>
-													</td>
-												</tr>
-											  <?php } ?>	
-											</tbody>
-										</table>
-										 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
 
 									</div>
 									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
-				
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-1" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;Expenses Reports ( <?php echo count($expenses);?> )</h6>
-				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				                    </div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($customer)) > 0){?>
-										<table id="expensesmore" class="table table-striped table-bordered table-hover" width="100%">
-										    <thead>			                
-												<tr>
-													<th data-hide="phone">S No</th>
-													<th data-class="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> ID</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Type </th>
-													<th data-hide="expand">Total</th>
-												</tr>
-											</thead>
-											<tbody>
-											  <?php foreach($expenses as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['expenses_id']));?></td>
-													<td><?php echo stripslashes($value['expenses_type']);?></td>
-													<td><?php echo stripslashes($value['total']);?></td>
-												</tr>
-											  <?php } ?>	
-											</tbody>
-										</table>
-										 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
 
-									</div>
-									<!-- end widget content -->
-				
 								</div>
 								<!-- end widget div -->
-				
+
 							</div>
 							<!-- end widget -->
 
 
-				
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-2" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;This Month Expenses ( <?php echo count($this_expenses);?> )</h6>
-				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				                    </div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($this_expenses)) > 0){?>
-										<table id= "monthexp" class="table table-striped table-bordered table-hover" width="100%">
-										    <thead>			                
-												<tr>
-													<th data-hide="phone">S No</th>
-													<th data-class="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> ID</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Type </th>
-													<th data-hide="expand">Total</th>
-												</tr>
-											</thead>
-											<tbody>
-											   <?php foreach($this_expenses as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['expenses_id']));?></td>
-													<td><?php echo stripslashes($value['expenses_type']);?></td>
-													<td><?php echo stripslashes($value['total']);?></td>
-												</tr>
-											  <?php } ?>	
-											</tbody>
-										</table>
-										 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
 
-									</div>
-									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
-				
-							<!-- Widget ID (each widget will need unique ID)-->
-							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-2" data-widget-editbutton="false">
-								
-								<header>
-									<span class="widget-icon"> <i class="fa fa-table"></i> </span>
-									<h6>&nbsp;This Month Income ( <?php echo  count($meter_income)+count($monthly_income);?> )</h6>
-				
-								</header>
-				
-								<!-- widget div-->
-								<div>
-				
-									<!-- widget edit box -->
-									<div class="jarviswidget-editbox">
-										<!-- This area used as dropdown edit box -->
-				                    </div>
-									<!-- end widget edit box -->
-				
-									<!-- widget content -->
-									<div class="widget-body no-padding">
-				                       <?php if(count(array_filter($meter_income)) > 0 || count(array_filter($monthly_income)) > 0){?>
-										<table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
-										    <thead>			                
-												<tr>
-													<th data-hide="phone">S No</th>
-													<th data-class="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i>Customer ID</th>
-													<th data-hide="expand"><i class="fa fa-fw fa-user text-muted hidden-md hidden-sm hidden-xs"></i> Name </th>
-													<th data-hide="expand">Amount</th>
-												</tr>
-											</thead>
-											<tbody>
-											   <?php foreach($meter_income as $key => $value){?>
-												<tr>
-													<td><?php echo $key+1;?></td>
-													<td><?php echo stripslashes(str_replace('\n','',$value['customer_id']));?></td>
-													<td><?php echo stripslashes($value['name']);?></td>
-													<td><?php echo stripslashes($value['total']);?></td>
-												</tr>
-											   <?php } ?>
-											   
-											   <?php if(count(array_filter($meter_income)) > 0){ $i=count(($meter_income)); }else{ $i=1;} ?> 
-											   
-												   <?php foreach($monthly_income as $key => $value){?>
-													<tr>
-														<td><?php echo $key+$i;?></td>
-														<td><?php echo stripslashes(str_replace('\n','',$value['customer_id']));?></td>
-														<td><?php echo stripslashes($value['name']);?></td>
-														<td><?php echo stripslashes($value['amount']);?></td>
-													</tr>
-												   <?php } ?>
-											</tbody>
-										</table>
-											 <?php }else{?>
-											 <div class="clearfix" style="height:250px; text-align:center; font-size:16px; color:#F00; vertical-align:middle; font-weight:bold;margin-top:40px;">
-												No Results Found...
-											 </div>
-										<?php }?>
-
-									</div>
-									<!-- end widget content -->
-				
-								</div>
-								<!-- end widget div -->
-				
-							</div>
-							<!-- end widget -->
 				
 						</article>
 						<!-- WIDGET END -->
-				
+
+						
+						<!-- NEW WIDGET START -->
+						<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+							
+							
+
+							<!-- Widget ID (each widget will need unique ID)-->
+							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-3" data-widget-colorbutton="false" data-widget-fullscreenbutton="false" data-widget-editbutton="false" data-widget-sortable="false">
+								<!-- widget options:
+									usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+									
+									data-widget-colorbutton="false"	
+									data-widget-editbutton="false"
+									data-widget-togglebutton="false"
+									data-widget-deletebutton="false"
+									data-widget-fullscreenbutton="false"
+									data-widget-custombutton="false"
+									data-widget-collapsed="true" 
+									data-widget-sortable="false"
+									
+								-->
+								<header>
+
+									<h6> <i> </i>Customer by Zone Area - Chart </h6>				
+									
+								</header>
+
+								<!-- widget div-->
+								<div>
+									
+									<!-- widget edit box -->
+									<div class="jarviswidget-editbox">
+										<!-- This area used as dropdown edit box -->
+										<input class="form-control" type="text">	
+									</div>
+									<!-- end widget edit box -->
+									
+									<!-- widget content -->
+									<div class="widget-body">
+										
+										<!-- this is what the user will see -->
+										<canvas id="doughnutChart" height="120"></canvas>
+
+									</div>
+									<!-- end widget content -->
+									
+								</div>
+								<!-- end widget div -->
+								
+							</div>
+							<!-- end widget -->
+						</article>
+						<article class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+							<!-- Widget ID (each widget will need unique ID)-->
+							<div class="jarviswidget jarviswidget-color-darken" id="wid-id-4" data-widget-colorbutton="false" data-widget-fullscreenbutton="false" data-widget-editbutton="false" data-widget-sortable="false">
+								<!-- widget options:
+									usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+									
+									data-widget-colorbutton="false"	
+									data-widget-editbutton="false"
+									data-widget-togglebutton="false"
+									data-widget-deletebutton="false"
+									data-widget-fullscreenbutton="false"
+									data-widget-custombutton="false"
+									data-widget-collapsed="true" 
+									data-widget-sortable="false"
+									
+								-->
+								<header>
+
+									<h6>My Tickets - Chart </h6>				
+									
+								</header>
+
+								<!-- widget div-->
+								<div>
+									
+									<!-- widget edit box -->
+									<div class="jarviswidget-editbox">
+										<!-- This area used as dropdown edit box -->
+										<input class="form-control" type="text">	
+									</div>
+									<!-- end widget edit box -->
+									
+									<!-- widget content -->
+									<div class="widget-body">
+										
+										<!-- this is what the user will see -->
+										<canvas id="pieChart" height="120"></canvas>
+
+									</div>
+									<!-- end widget content -->
+									
+								</div>
+								<!-- end widget div -->
+								
+							</div>
+							<!-- end widget -->
+
+						</article>
+						<!-- WIDGET END -->
+
+
 					</div>
 				
 					<!-- end row -->
-
-					
 
 				</section>
 				<!-- end widget grid -->
@@ -1049,8 +385,11 @@
 		<script src="<?php echo base_url();?>js/plugin/flot/jquery.flot.time.min.js"></script>
 		<script src="<?php echo base_url();?>js/plugin/flot/jquery.flot.tooltip.min.js"></script>
 
-		
-    
+
+		<!-- EASY PIE CHARTS -->
+		<script src="<?php echo base_url();?>js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+    	<script src="<?php echo base_url();?>js/plugin/chartjs/chart.min.js"></script>
+
 
 		<script type="text/javascript">
 		
@@ -1059,11 +398,13 @@
 			var chrt_grid_color = "#DDD";
 			var chrt_main = "#E24913";
 			/* red       */
-			var chrt_second = "#6595b4";
+
+			var chrt_second = "#6595b4ff";
 			/* blue      */
 			var chrt_third = "#FF9F01";
 			/* orange    */
-			var chrt_fourth = "#7e9d3a";
+			var chrt_fourth = "rgba(126, 157, 58, 1)";
+
 			/* green     */
 			var chrt_fifth = "#BD362F";
 			/* dark red  */
@@ -1243,114 +584,280 @@
 
 
 
-				if ($("#bar-chart").length) {
+			    // BAR CHART
 
-					var data1 = [];
-					for (var i = 1; i <= 12; i += 1)
-						data1.push([i, parseInt(Math.random() * 50)]);
-
-					var data2 = [];
-					for (var i = 1; i <= 12; i += 1)
-						data2.push([i, parseInt(Math.random() * 60)]);
-
-					var data3 = [];
-					for (var i = 1; i <= 12; i += 1)
-						data3.push([i, parseInt(Math.random() * 70)]);
-
-					var ds = new Array();
-
-					ds.push({
-						data : data1,
-						bars : {
-							show : true,
-							barWidth : 0.2,
-							order : 1,
-						}
-					});
-					ds.push({
-						data : data2,
-						bars : {
-							show : true,
-							barWidth : 0.2,
-							order : 2
-						}
-					});
-					ds.push({
-						data : data3,
-						bars : {
-							show : true,
-							barWidth : 0.2,
-							order : 3
-						}
-					});
-
-					//Display graph
-					$.plot($("#bar-chart"), ds, {
-						colors : [chrt_second, chrt_fourth, "#666", "#BBB"],
-						grid : {
-							show : true,
-							hoverable : true,
-							clickable : true,
-							tickColor : chrt_border_color,
-							borderWidth : 0,
-							borderColor : chrt_border_color,
-						},
-						legend : true,
-						tooltip : true,
-						tooltipOpts : {
-							content : "<b>%x</b> = <span>%y</span>",
-							defaultTheme : false
-						}
-
-					});
-
-
-
-					
-    // Sample data for the bar chart
-    const data = [
-        [1, 15],
-        [2, 25],
-        [3, 30],
-        [4, 18],
-        [5, 22]
-    ];
-
-    // Options for the chart
-    const options = {
-        series: {
-            bars: {
-                show: true,
-                barWidth: 0.6,
-                align: "center"
-            }
-        },
-        xaxis: {
-            mode: "categories",
-            ticks: [
-                [1, "Jan"],
-                [2, "Feb"],
-                [3, "Mar"],
-                [4, "Apr"],
-                [5, "May"]
-            ]
-        },
-        yaxis: {
-            min: 0,
-            max: 40
-        }
-    };
-
-    // Plot the chart
-    /*$.plot($("#bar-chart"), [{
-        data: data
-    }], options);*/
-
-
-
+			    var barOptions = {
+				    //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
+				    scaleBeginAtZero : true,
+				    //Boolean - Whether grid lines are shown across the chart
+				    scaleShowGridLines : true,
+				    //String - Colour of the grid lines
+				    scaleGridLineColor : "rgba(0,0,0,.05)",
+				    //Number - Width of the grid lines
+				    scaleGridLineWidth : 1,
+				    //Boolean - If there is a stroke on each bar
+				    barShowStroke : true,
+				    //Number - Pixel width of the bar stroke
+				    barStrokeWidth : 1,
+				    //Number - Spacing between each of the X value sets
+				    barValueSpacing : 5,
+				    //Number - Spacing between data sets within X values
+				    barDatasetSpacing : 1,
+				    //Boolean - Re-draw chart on page resize
+			        responsive: true,
+				    //String - A legend template
+				    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+			    }
+				var month_array=[];
+				var JanTotal = '<?php echo $JanTotal['total'];?>';
+				var FebTotal = '<?php echo $FebTotal['total'];?>';
+				var MarTotal = '<?php echo $MarchTotal['total'];?>';
+				var AprTotal = '<?php echo $AprilTotal['total'];?>';
+				var MayTotal = '<?php echo $MayTotal['total'];?>';
+				var JunTotal = '<?php echo $JuneTotal['total'];?>';
+				var JulTotal = '<?php echo $JulyTotal['total'];?>';
+				var AugTotal = '<?php echo $AugTotal['total'];?>';
+				var SepTotal = '<?php echo $SepTotal['total'];?>';
+				var OctTotal = '<?php echo $OctTotal['total'];?>';
+				var NovTotal = '<?php echo $NovTotal['total'];?>';
+				var DecTotal = '<?php echo $DecTotal['total'];?>';
+				if(JanTotal>0){
+					month_array.push('January');
 				}
+				if(FebTotal>0){
+					month_array.push('February');
+				}
+				if(MarTotal>0){
+					month_array.push('March');
+				}
+				if(MarTotal>0){
+					month_array.push('April');
+				}
+				if(MayTotal>0){
+					month_array.push('May');
+				}
+				if(JunTotal>0){
+					month_array.push('June');
+				}
+				if(JulTotal>0){
+					month_array.push('July');
+				}
+				if(AugTotal>0){
+					month_array.push('August');
+				}
+				if(SepTotal>0){
+					month_array.push('September');
+				}
+				if(OctTotal>0){
+					month_array.push('October');
+				}
+				if(NovTotal>0){
+					month_array.push('November');
+				}
+				if(DecTotal>0){
+					month_array.push('December');
+				}
+			    var barData = {
+			        labels: month_array,
+			         datasets: [
+				        {
+				            label: "Unpaid",
+							fillColor: "rgba(101, 149, 180, 1)",
+				            strokeColor: "rgba(220,220,220,0.8)",
+				            highlightFill: "rgba(220,220,220,0.75)",
+				            highlightStroke: "rgba(220,220,220,1)",
+							backgroundColor:'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
+							borderColor: 'rgba(255, 99, 132, 1)',   // Solid Red
+				            data: [
+								<?php echo number_format($JanTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($FebTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($MarchTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($AprilTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($MayTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($JuneTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($JulyTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($AugTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($SepTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($OctTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($NovTotalUnpaid['total'],0,'.','');?>,
+								<?php echo number_format($DecTotalUnpaid['total'],0,'.','');?>
+							]
+				        },
+						{
+				            label: "Total Collection",
+				            fillColor: "rgba(102, 102, 102, 1)",
+				            strokeColor: "rgba(151,187,205,0.8)",
+				            highlightFill: "rgba(151,187,205,0.75)",
+				            highlightStroke: "rgba(151,187,205,1)",
+							backgroundColor:'rgba(255, 206, 86, 0.5)',  // Red with 50% opacity
+							borderColor: 'rgba(255, 206, 86, 1)',   // Solid Red
+				            data: [
+								<?php echo number_format($JanTotalPaid['total'],0,'.','');?>, 
+								<?php echo number_format($FebTotalPaid['total'],0,'.','');?>, 
+								<?php echo number_format($MarchTotalPaid['total'],0,'.','');?>, 
+								<?php echo number_format($AprilTotalPaid['total'],0,'.','');?>,
+								<?php echo number_format($MayTotalPaid['total'],0,'.','');?>, 
+								<?php echo $JuneTotalPaid['total'];?>, 
+								<?php echo $JulyTotalPaid['total'];?>,
+								<?php echo $AugTotalPaid['total'];?>,
+								<?php echo $SepTotalPaid['total'];?>,
+								<?php echo $OctTotalPaid['total'];?>,
+								<?php echo $NovTotalPaid['total'];?>,
+								<?php echo $DecTotalPaid['total'];?>
+							]
+				        },
+				        {
+				            label: "Total Collectables",
+							// Change the background color of the bars
+							/* backgroundColor: [
+								'rgba(255, 99, 132, 0.5)',  // Red with 50% opacity
+								'rgba(54, 162, 235, 0.5)',   // Blue with 50% opacity
+								'rgba(255, 206, 86, 0.5)',   // Yellow with 50% opacity
+								'rgba(75, 192, 192, 0.5)',   // Green with 50% opacity
+								'rgba(153, 102, 255, 0.5)',  // Purple with 50% opacity
+								'rgba(255, 159, 64, 0.5)'    // Orange with 50% opacity
+								],
+								// Change the border color of the bars
+								borderColor: [
+								'rgba(255, 99, 132, 1)',   // Solid Red
+								'rgba(54, 162, 235, 1)',    // Solid Blue
+								'rgba(255, 206, 86, 1)',    // Solid Yellow
+								'rgba(75, 192, 192, 1)',    // Solid Green
+								'rgba(153, 102, 255, 1)',   // Solid Purple
+								'rgba(255, 159, 64, 1)'     // Solid Orange
+								],*/
+    						borderWidth: 1, // You can also control the border width
+				            fillColor: "rgba(126, 157, 58, 1)",
+				            strokeColor: "rgba(151,187,205,0.8)",
+				            highlightFill: "rgba(151,187,205,0.75)",
+				            highlightStroke: "rgba(151,187,205,1)",
+							backgroundColor:'rgba(54, 162, 235, 0.5)',  // Red with 50% opacity
+							borderColor: 'rgba(54, 162, 235, 1)',   // Solid Red
+				            data: [
+								<?php echo number_format($JanTotal['total'],0,'.','');?>,
+								<?php echo $FebTotal['total'];?>, 
+								<?php echo $MarchTotal['total'];?>, 
+								<?php echo $AprilTotal['total'];?>, 
+								<?php echo $MayTotal['total'];?>, 
+								<?php echo $JuneTotal['total'];?>, 
+								<?php echo $JulyTotal['total'];?>,
+								<?php echo $AugTotal['total'];?>,
+								<?php echo $SepTotal['total'];?>,
+								<?php echo $OctTotal['total'];?>,
+								<?php echo $NovTotal['total'];?>,
+								<?php echo $DecTotal['total'];?>
+							]
+				        }
+				    ]
+			    };
+
+			    // render chart
+				// Configuration for the chart
+				const config = {
+					type: 'bar', // Type of chart (e.g., 'bar', 'line', 'pie', 'doughnut')
+					data: barData,
+					options: {
+						responsive: true,
+						scales: {
+							y: {
+								beginAtZero: true
+							}
+						}
+					}
+				};
+			    var ctx = document.getElementById("barChart").getContext("2d");
+			    //var myNewChart = new Chart(ctx).Bar(barData, barOptions);
+				const myChart = new Chart(ctx, config);
+			    // END BAR CHART
+
+				
+				
+
+				// Sample data for the pie chart
+				const data1 = {
+				labels: ['Pending', 'Assigned', 'On going', 'Resolved','Un-Resolved','Resolved - Closed','UnResolved - Closed'],
+				datasets: [{
+					label: 'My Tickets',
+					data: [<?php echo $ticket0['count_id'];?>, <?php echo $ticket1['count_id'];?>, <?php echo $ticket2['count_id'];?>,<?php echo $ticket3['count_id'];?>,<?php echo $ticket4['count_id'];?>,<?php echo $ticket5['count_id'];?>,<?php echo $ticket6['count_id'];?>],
+					backgroundColor: [
+					'#ff6384ff',
+					'#36a2ebff',
+					'#5959ccff',
+					'#ffcd56ff',
+					'#236c35ff',
+					'#661e52ff',
+					'#3cc0e1ff'					
+					],
+					hoverOffset: 4
+				}]
+				};
+				// Configuration for the chart
+				const config1 = {
+				type: 'pie', // Type of chart (e.g., 'pie', 'doughnut')
+				data: data1,
+				options: {
+					responsive: true,
+					plugins: {
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'My Tickets Chart'
+					}
+					}
+				}
+				};
+			    var ctx1 = document.getElementById("pieChart").getContext("2d");
+			    //var myNewChart = new Chart(ctx).Bar(barData, barOptions);
+				const myChart1 = new Chart(ctx1, config1);
+
+				// Sample data for the doughnut chart
+				const data2 = {
+				labels: ['ZONE 1', 'ZONE 2', 'ZONE 3', 'ZONE 4'],
+				datasets: [{
+					label: 'Customer Zone Area',
+					data: [<?php echo $zone1['count_id'];?>, <?php echo $zone2['count_id'];?>, <?php echo $zone3['count_id'];?>, <?php echo $zone4['count_id'];?>],
+					backgroundColor: [
+					'rgb(255, 99, 132)',
+					'rgb(54, 162, 235)',
+					'rgb(255, 205, 86)',
+					'rgba(60, 28, 89, 1)'
+					],
+					hoverOffset: 8
+				}]
+				};
+
+				// Configuration for the chart
+				const config2 = {
+				type: 'doughnut', // Type of chart is set to 'doughnut'
+				data: data2,
+				options: {
+					responsive: true,
+					plugins: {
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Zone Chart'
+					}
+					}
+				}
+				};
+				var ctx2 = document.getElementById("doughnutChart").getContext("2d");
+			    //var myNewChart = new Chart(ctx).Bar(barData, barOptions);
+				const myChart2 = new Chart(ctx2, config2);
+
+
+
+
+
+
 		
 		})
+
+
 
 		</script>
 
