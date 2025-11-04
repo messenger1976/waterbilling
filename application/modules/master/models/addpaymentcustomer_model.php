@@ -789,6 +789,7 @@ class addpaymentcustomer_model extends CI_Model {
 		
 		$this->db->select('tbl_months.month_id as monthid, 
 		(SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as reading_amount,
+		(SELECT maintenance_fee FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as maintenance_fee,
 		tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');				   
 		$this->db->from('tbl_addmetercustomer');
 		$this->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
@@ -802,6 +803,7 @@ class addpaymentcustomer_model extends CI_Model {
 		
 		$this->db->select('tbl_months.month_id as monthid, 
 		(SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as reading_amount,
+		(SELECT maintenance_fee FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as maintenance_fee,
 		tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');				   
 		$this->db->from('tbl_addmetercustomer');
 		$this->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
