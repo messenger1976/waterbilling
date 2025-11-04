@@ -123,7 +123,7 @@ class addpaymentcustomer extends CI_Controller {
 			
 			$id = $this->input->post('id');
 			//$this->load->model('addpaymentcustomer_model','my_model');
-			$data['reading'] = $this->my_model->get_addcustomer_add_all_records($id);
+			//$data['reading'] = $this->my_model->get_addcustomer_add_all_records($id);
 			$data['record'] = $this->my_model->get_meter_reading_all_records($id);
 			//$data['collectinfo'] =  $this->my_model->collectinfo($id);
 			//$data['month_collectinfo'] = $this->my_model->month_collectinfo($id);

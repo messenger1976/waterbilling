@@ -68,6 +68,7 @@
 								
 								
 								$record_reading = $this->my_model->get_metercustomer_add_all_records($id,$mon_id,$year);
+								//$record_reading = array();
 								$result = count($record_reading);
 								//echo 'count:'.$result.'<br/>';
 								//print_r($record_reading);

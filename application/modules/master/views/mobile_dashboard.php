@@ -178,6 +178,15 @@
 										<div class="row">
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>WM Maintenance Fee :</strong></span>
+													<input class="form-control text-input" type="text" id="maintenance_fee" name="maintenance_fee" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
+													
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Amt before due date :</strong></span>
 													<input class="form-control text-input" type="text" id="total_amount" name="total_amount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
@@ -297,7 +306,7 @@
 									$('#previous_reading').val(item.previous_reading);
 									$('#arrears').val(item.arrears);
 									$('#refno').val(item.refno);
-									
+									$('#maintenance_fee').val(item.maintenance_fee);
 									//$("#save").attr("disabled", "disabled");
 									
 									
@@ -323,6 +332,7 @@
 										$('#arrears').val('');
 										$('#total_amount').val('');
 										$('#penalty').val('');
+										//$('#maintenance_fee').val('');
 										setTimeout(function() {
 											$('#current_reading').focus();
 										}, 50);
@@ -353,6 +363,7 @@
 					$('#arrears').val('');
 					$('#total_amount').val('');
 					$('#penalty').val('');
+					$('#maintenance_fee').val('');
 					$('#save').attr("disabled", "disabled");
 					// If no parent is selected
 					// , clear the child dropdown
@@ -410,6 +421,7 @@
 							var refno = $('#refno').val();
 							var previous_reading = $('#previous_reading').val();
 							var current_reading = $('#current_reading').val();
+							var maintenance_fee = $('#maintenance_fee').val();
 							var billing_month = <?php echo $_SESSION['bp_month']; ?>;
 							var billing_year = <?php echo $_SESSION['bp_year']; ?>;
 							var reading_date = '<?php echo date('Y-m-d'); ?>';
@@ -422,6 +434,7 @@
 							formData.append("billing_month", billing_month);
 							formData.append("billing_year", billing_year);
 							formData.append("reading_date", reading_date);
+							formData.append("maintenance_fee", maintenance_fee);
 
 							$.ajax({
 								url: '<?php echo ADMIN_URL;?>mobile_dashboard/add_record/',
@@ -457,6 +470,7 @@
 										$('#arrears').val('');
 										$('#total_amount').val('');
 										$('#penalty').val('');
+										$('#maintenance_fee').val('');
 										$("#save").attr("disabled", "disabled");
 									} else {
 										//alert("Error saving record.");
@@ -540,7 +554,9 @@
 		function compute_all(){
 			var current_meter = $('#current_reading').val();
 			var previous_reading = $('#previous_reading').val();
+			var maintenance_fee = parseFloat($('#maintenance_fee').val());
 			var differences = parseFloat(current_meter) - parseFloat(previous_reading);
+
 			differences = isNaN(differences) ? 0 : differences;
 			$("#consumed").val(differences);
 			var difer = $("#consumed").val();
@@ -575,6 +591,7 @@
 						}
 						total_amount = multiprice - discount;
 						total_amount = total_amount??0;
+						total_amount+=maintenance_fee;
 						amount_total_penalty = 0;
 						//console.log('SP:'+$('#special_priviledge').val());
 						if($('#special_priviledge').val()==='0'){
@@ -646,6 +663,7 @@
 			$('#current_bill').val('');
 			$('#sc_discount').val('');
 			$('#arrears').val('');
+			$('#maintenance_fee').val('');
 			$('#total_amount').val('');
 			$('#penalty').val('');
 			$('#save').attr("disabled", "disabled");

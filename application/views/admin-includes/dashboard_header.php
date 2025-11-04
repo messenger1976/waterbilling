@@ -44,9 +44,7 @@ if(($this->session->userdata('username')=="")||($this->session->userdata('logged
 		<link rel="icon" href="<?php echo base_url();?>favicon.ico" type="image/x-icon">
 
 		<!-- GOOGLE FONT -->
-
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
-
 
 		<!-- Specifying a Webpage Icon for Web Clip 
 			 Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->

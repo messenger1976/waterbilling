@@ -185,7 +185,7 @@ class addpaymentcustomer_model extends CI_Model {
 				FROM  `tbl_addmetercustomer` am
 				LEFT JOIN  `tbl_addcustomer` ac ON ac.customer_id = am.customer_id
 				LEFT JOIN  `tbl_addcustomer_reading` tac ON am.customer_id = tac.customer_id
-				WHERE  am.month = '$mon_id' AND ac.customer_id = '$id' OR am.year = '$year'
+				WHERE  am.month = '$mon_id' AND ac.customer_id = '$id' AND am.year = '$year'
                 ORDER BY tac.month DESC LIMIT 0,1
 				";
 		$query = $this->db->query($sql);
