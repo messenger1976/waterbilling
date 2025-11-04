@@ -80,6 +80,7 @@ class mobile_dashboard extends CI_Controller {
 		$billing_month = $this->input->post('billing_month');
 		$billing_year = $this->input->post('billing_year');
 		$reading_date = $this->input->post('reading_date');
+		//$maintenance_fee = $this->input->post('maintenance_fee');
 		$reading_date = date('Y-m-d', strtotime($reading_date));
 		
 		$readingData = array(
