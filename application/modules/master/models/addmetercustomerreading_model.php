@@ -114,6 +114,7 @@ class addmetercustomerreading_model extends CI_Model {
 						'arrears' => $this->input->post('arrears'),
 						'amount' => $this->input->post('total_amount'),
 						'penalty' => $this->input->post('penalty'),
+						'maintenance_fee' => $this->input->post('maintenance_fee'),
 						'date' => $this->input->post('reading_date'),
 						'customer_status' => $this->input->post('customer_status'),
 					);
