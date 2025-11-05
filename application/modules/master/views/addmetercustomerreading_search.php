@@ -230,6 +230,15 @@
                                             </div>
                                         </div>
                                     </div>
+									<div class="row">
+                                        <div class="col-lg-12 controls">
+                                            <div class="form-group"> 
+                                                <span class="input-group-addon"><strong>WM Maintenance Fee : </strong></span>
+                                                <input class="form-control" type="text" id="maintenance_fee" name="maintenance_fee" style="background-color:white;">
+                                                <?php echo form_error('maintenance_fee'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
@@ -552,6 +561,7 @@ $('#btn_save').on('click', function(evt){
 	formData.append("arrears", $('#arrears').val());
 	formData.append("total_amount", $('#total_amount').val());
 	formData.append("penalty", $('#penalty').val());
+	formData.append("maintenance_fee", $('#maintenance_fee').val());
 	formData.append("reading_date", $('#reading_date').val());
 	formData.append("customer_status", $('#customer_status').val());
 	formData.append("edit", 'edit');
@@ -580,11 +590,36 @@ $('#btn_save').on('click', function(evt){
 $('#sc_discount').on('blur', function(evt){
 	evt.preventDefault();
 	var unit_price = $('#current_bill').val();
+	var maintenance_fee = $('#maintenance_fee').val();
 	//var multiprice = parseInt(difer) * parseInt(unit_price);
 	var multiprice = parseFloat(unit_price);
 	var discount =$(this).val();
 	
 	total_amount = multiprice - discount;
+	total_amount +=parseFloat(maintenance_fee);
+	amount_total_penalty = 0;
+	if($('#special_priviledge').val()==='0'){
+		amount_total_penalty = (total_amount * 10)/100;
+		amount_total_penalty = amount_total_penalty + total_amount;
+	}else{
+		amount_total_penalty = total_amount;
+	}
+	//$('#discount').val(amount_formatted(discount));
+	$("#amount_pay").val(amount_formatted(multiprice));
+	$("#total_amount").val(amount_formatted(total_amount));
+	$("#penalty").val(amount_formatted(amount_total_penalty));	
+});
+
+$('#maintenance_fee').on('blur', function(evt){
+	evt.preventDefault();
+	var unit_price = $('#current_bill').val();
+	var maintenance_fee = $(this).val();
+	//var multiprice = parseInt(difer) * parseInt(unit_price);
+	var multiprice = parseFloat(unit_price);
+	var discount =$('#sc_discount').val();
+	
+	total_amount = multiprice - discount;
+	total_amount +=parseFloat(maintenance_fee);
 	amount_total_penalty = 0;
 	if($('#special_priviledge').val()==='0'){
 		amount_total_penalty = (total_amount * 10)/100;
@@ -623,6 +658,7 @@ $('#current_reading').on('blur', function() {
 				
 				$('#current_bill').val(amount_formatted(result.per_unit));
 				var unit_price = $('#current_bill').val();
+				var maintenance_fee = $('#maintenance_fee').val();
 				//var multiprice = parseInt(difer) * parseInt(unit_price);
 				var multiprice = parseFloat(unit_price);
 				var discount =0;
@@ -630,6 +666,7 @@ $('#current_reading').on('blur', function() {
 					discount = (multiprice * 5)/100;
 				}
 				total_amount = multiprice - discount;
+				total_amount +=parseFloat(maintenance_fee);
 				amount_total_penalty = 0;
 				//console.log('SP:'+$('#special_priviledge').val());
 				if($('#special_priviledge').val()==='0'){
