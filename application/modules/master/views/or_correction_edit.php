@@ -114,8 +114,17 @@
 															<div class="col-lg-6 controls">
 																<div class="form-group">
 																	<span class="input-group-addon"><i class="icon-user"></i><strong>Transaction Date : </strong></span>
-																	<input  class="form-control"  id="date" name="date" value="<?php echo $record['date']; ?>" readonly/>
+																	<input  class="form-control"  id="date" name="date" value="<?php echo date('d-m-Y',strtotime($record['date'])); ?>" readonly/>
 																	<?php echo form_error('date'); ?>
+																</div>
+															</div>
+														</div>
+														<div class="form-group col-lg-12">
+															<div class="col-lg-6 controls">
+																<div class="form-group">
+																	<span class="input-group-addon"><i class="icon-user"></i><strong>New Transaction Date : </strong></span>
+																	<input  class="form-control"  id="newdate" name="newdate" value="<?php echo ($this->input->post('newdate') != '')?date('d-m-Y',strtotime($this->input->post('newdate'))):date('d-m-Y',strtotime($record['date']));?>" />
+																	<?php echo form_error('newdate'); ?>
 																</div>
 															</div>
 														</div>
@@ -390,5 +399,23 @@
 			/* END TABLETOOLS */
 		
 		})
+
+$(document).ready(function(){
+	$("#newdate").datepicker({
+		showAnim: null,
+		dateFormat: 'dd-mm-yy',
+		// showOn: 'both',
+		buttonImage: '/images/calender.jpg',
+		buttonImageOnly: true,
+		firstDay: 1,
+		nextText: '',
+		prevText: '',
+		numberOfMonths: [1, 1],
+		//defaultDate: new Date(curDate),
+		//minDate: curDate,
+		//maxDate: ''
+	});
+	
+});
 
 		</script>
