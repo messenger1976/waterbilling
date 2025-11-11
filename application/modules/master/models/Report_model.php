@@ -74,8 +74,8 @@ class Report_model extends CI_Model {
 			$this->db->where($this->table_meter_reading.'.reading <>','');
 		}
 		
-		$this->db->order_by($this->table_name.'.last_name','asc');
-		$this->db->order_by($this->table_name.'.first_name','asc');
+		$this->db->order_by($this->table_meter_reading.'.update_date_time','asc');
+		//$this->db->order_by($this->table_name.'.first_name','asc');
 		//$this->db->group_by('invoice_id');
 		$query = $this->db->get();
 		$result = $query->result_array();
