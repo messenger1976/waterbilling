@@ -74,8 +74,8 @@ define('HOME_ADS_NO_IMG4', $webserveruri.'/images/no-images/inner-ads-2.jpg');
 define('HOME_ADS_NO_IMG5', $webserveruri.'/images/no-images/inner-ads-2.jpg');
 define('HOME_ADS_NO_IMG6', $webserveruri.'/images/no-images/inner-ads-2.jpg');
 
-
-
+define('ABSOLUTE_PATH',FCPATH);
+define('QRCODE_PATH', ABSOLUTE_PATH.'uploads/qr_image/');
 
 
 /*
