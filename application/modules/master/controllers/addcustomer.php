@@ -1598,7 +1598,6 @@ EOD;
 	public function generateQRCode($qr_image,$webar_url){
 		$this->load->library('ciqrcode');
 		header("Content-Type: image/png");
-		//$webar_url="https://www.yahoo.com/index.php?file=".$qr_image;
 		$params['savename'] = QRCODE_PATH.$qr_image;
 		$params['data'] = $webar_url;
 		$params['level'] = 'L';
