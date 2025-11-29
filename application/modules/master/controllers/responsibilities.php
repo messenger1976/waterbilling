@@ -88,7 +88,8 @@ class responsibilities extends CI_Controller
 				'web_settings' => 'Admin Address',
 				'admin' => 'Admin',
 				'adddailyreport' => 'Daily Reports',
-				'leakingentry' => 'Leaking Entry'
+				'leakingentry' => 'Leaking Entry',
+				'database_backup' => 'Database Backup'
 				);
 	}
 

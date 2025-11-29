@@ -148,7 +148,8 @@ class responsibilities_model extends CI_Model {
 				'web_settings' => '0',
 				'admin' => '0',
 				'adddailyreport' => '0',
-				'leakingentry' => '0'
+				'leakingentry' => '0',
+				'database_backup' => '0'
 				);
 	}
 
