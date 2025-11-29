@@ -125,6 +125,9 @@ class database_backup extends CI_Controller {
 			}
 			
 			// Build mysqldump command
+			// Add --no-tablespaces to avoid PROCESS privilege requirement
+			// Add --single-transaction for consistent backup
+			// Add --routines and --triggers to include stored procedures and triggers
 			$command = escapeshellarg($mysqldump_path) . 
 					   ' -h' . escapeshellarg($db_host) .
 					   ' -u' . escapeshellarg($db_user);
@@ -133,7 +136,13 @@ class database_backup extends CI_Controller {
 				$command .= ' -p' . escapeshellarg($db_pass);
 			}
 			
-			$command .= ' ' . escapeshellarg($db_config) . 
+			$command .= ' --no-tablespaces' .  // Skip tablespaces to avoid PROCESS privilege error
+						' --single-transaction' .  // Consistent backup
+						' --routines' .  // Include stored procedures
+						' --triggers' .  // Include triggers
+						' --quick' .  // Faster for large tables
+						' --lock-tables=false' .  // Don't lock all tables
+						' ' . escapeshellarg($db_config) . 
 						' > ' . escapeshellarg($filepath) . ' 2>&1';
 			
 			exec($command, $output, $return_var);
