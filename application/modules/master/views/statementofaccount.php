@@ -88,13 +88,14 @@
 														$sn = 1;
 														foreach($ledger_entries as $entry) {
 															$entry_date = date('d-m-Y', strtotime($entry['date']));
+															$entry_date_sort = date('Y-m-d', strtotime($entry['date'])); // ISO format for sorting
 															$debit = $entry['debit'] > 0 ? number_format($entry['debit'], 2) : '';
 															$credit = $entry['credit'] > 0 ? number_format($entry['credit'], 2) : '';
 															$balance = number_format($entry['balance'], 2);
 															$balance_class = $entry['balance'] > 0 ? 'text-danger' : 'text-success';
 													?>
 													<tr>
-														<td style="text-align: center;"><?php echo $entry_date; ?></td>
+														<td style="text-align: center;" data-order="<?php echo $entry_date_sort; ?>"><?php echo $entry_date; ?></td>
 														<td style="text-align: center;"><?php echo $entry['refno']; ?></td>
 														<td style="text-align: left;">
 															<?php echo $entry['description']; ?>
@@ -182,13 +183,16 @@
 				"t"+
 				"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
 			"autoWidth" : true,
-			"order": [[ 0, "desc" ]], // Sort by date descending (newest first)
-			"orderFixed": [[ 0, "desc" ]], // Keep date descending order fixed
+			"ordering": false, // Disable sorting - data is already sorted by PHP
+			"order": [], // No initial sorting
 			"responsive": true,
 			"pageLength": 25,
 			"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
 			"columnDefs": [
-				{ "type": "date", "targets": 0 } // Define date column type for proper sorting
+				{ 
+					"orderable": false, // Disable sorting on all columns
+					"targets": "_all"
+				}
 			],
 			"oLanguage": {
 				"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
