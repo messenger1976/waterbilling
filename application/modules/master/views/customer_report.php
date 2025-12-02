@@ -494,13 +494,34 @@
             var zone = $("#zone").val();
             var status = $("#status").val();
 
+            // Show loading indicator
+            $("#paidcustomerDiv").html('<div class="alert alert-info">Loading...</div>');
+
             $.ajax({
                 type    : "POST",
                 url	    : '<?php echo ADMIN_URL;?>reports/getcustomerreportsearch',
                 data	: "zone="+zone+'&status='+status,
-                complete: function(data){
-                    var op = data.responseText.trim();
-                    $("#paidcustomerDiv").html(op);
+                success: function(response){
+                    if(response && typeof response === 'string' && response.trim().length > 0){
+                        $("#paidcustomerDiv").html(response.trim());
+                    } else {
+                        $("#paidcustomerDiv").html('<div class="alert alert-warning">No data found.</div>');
+                    }
+                },
+                error: function(xhr, status, error){
+                    console.error('AJAX Error:', status, error);
+                    var errorMsg = 'Error loading data. Please try again.';
+                    if(xhr && xhr.responseText){
+                        try {
+                            var errorResponse = JSON.parse(xhr.responseText);
+                            if(errorResponse.message){
+                                errorMsg = errorResponse.message;
+                            }
+                        } catch(e) {
+                            // Not JSON, use default message
+                        }
+                    }
+                    $("#paidcustomerDiv").html('<div class="alert alert-danger">' + errorMsg + '</div>');
                 }
             });
         });
