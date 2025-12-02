@@ -167,8 +167,7 @@ class reports extends CI_Controller {
 	}
 	public function getcustomerreportsearch()
 	{		//*****  Add Search records  *****//
-		echo "Test - Controller reached";
-exit;
+		
 			$data['msg'] ='';
 			
 			$zone = $this->input->post('zone');
