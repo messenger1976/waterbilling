@@ -128,22 +128,30 @@ class Report_model extends CI_Model {
 	}
 	public function get_customer_report_records($zone,$status=''){
 		$this->db->select($this->table_name.'.customer_id, '.$this->table_name.'.first_name, '.$this->table_name.'.last_name, '.$this->table_name.'.middle_name, '.$this->table_name.'.address, '.$this->table_name.'.status, 
-		(SELECT zone FROM tbl_zone WHERE tbl_zone.id='.$this->table_name.'.zone) as zone_name,
-		(SELECT class_name FROM tbl_classification WHERE tbl_classification.class_id='.$this->table_name.'.classification) as classification_name');
+		(SELECT zone FROM tbl_zone WHERE tbl_zone.id='.$this->table_name.'.zone LIMIT 1) as zone_name,
+		(SELECT class_name FROM tbl_classification WHERE tbl_classification.class_id='.$this->table_name.'.classification LIMIT 1) as classification_name');
 		$this->db->from($this->table_name);
 		
-		if($zone!=0){
+		// Convert zone to integer for comparison
+		$zone = (int)$zone;
+		if($zone != 0){
 			$this->db->where($this->table_name.'.zone',$zone);
 		}
-        if($status!=''){
+        if($status !== '' && $status !== null && $status !== false){
 			$this->db->where($this->table_name.'.status',$status);
 		}
 		
 		$this->db->order_by($this->table_name.'.last_name','asc');
 		$this->db->order_by($this->table_name.'.first_name','asc');
-		$query = $this->db->get();
-		$result = $query->result_array();
-		return $result;
+		
+		try {
+			$query = $this->db->get();
+			$result = $query->result_array();
+			return $result ? $result : array();
+		} catch(Exception $e) {
+			log_message('error', 'Database Error in get_customer_report_records: ' . $e->getMessage());
+			return array();
+		}
 	}
 
 	public function get_aging_ar_report_records($asofdate,$zone,$status){
