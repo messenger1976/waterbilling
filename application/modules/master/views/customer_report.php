@@ -476,8 +476,10 @@
                 alert("Please select Approved by");
                 return false;
             }
+            // Use current protocol to avoid mixed content issues
+            var printUrl = window.location.protocol + '//' + window.location.host + '/master/reports/customerprinttopdf/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
             const popup = window.open(
-                "<?php echo ADMIN_URL;?>reports/customerprinttopdf/"+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby, // URL to display 
+                printUrl, // URL to display 
                 "PopupWindowPrint", // Name of the window
                 "width=1200,height=600,resizable=yes,scrollbars=yes" // Window settings
             );
@@ -497,9 +499,11 @@
             // Show loading indicator
             $("#paidcustomerDiv").html('<div class="alert alert-info">Loading...</div>');
 
+            // Use relative URL to avoid mixed content issues
+            var ajaxUrl = window.location.protocol + '//' + window.location.host + '/master/reports/getcustomerreportsearch';
             $.ajax({
                 type    : "POST",
-                url	    : '<?php echo ADMIN_URL;?>reports/getcustomerreportsearch',
+                url	    : ajaxUrl,
                 data	: "zone="+zone+'&status='+status,
                 success: function(response){
                     if(response && typeof response === 'string' && response.trim().length > 0){
