@@ -139,7 +139,7 @@ class Report_model extends CI_Model {
 		if($zone != 0){
 			$this->db->where($this->table_name.'.zone',$zone);
 		}
-        if($status !== '' && $status !== null && $status !== false){
+        if($status !== '' && $status !== null && $status !== false && $status !== '99'){
 			$this->db->where($this->table_name.'.status',$status);
 		}
 		

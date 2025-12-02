@@ -167,6 +167,8 @@ class reports extends CI_Controller {
 	}
 	public function getcustomerreportsearch()
 	{		//*****  Add Search records  *****//
+		echo "Test - Controller reached";
+exit;
 			$data['msg'] ='';
 			
 			$zone = $this->input->post('zone');
@@ -175,8 +177,10 @@ class reports extends CI_Controller {
 			// Convert zone to integer, default to 0 if empty
 			$zone = ($zone === '' || $zone === null) ? 0 : (int)$zone;
 			
-			// Ensure status is empty string if not set
-			$status = ($status === '' || $status === null) ? '' : $status;
+			// Ensure status is empty string if not set, handle '99' as 'All'
+			if($status === '99' || $status === '' || $status === null){
+				$status = '';
+			}
 			
 			// Get records
 			$data['record'] = $this->report_model->get_customer_report_records($zone,$status);
