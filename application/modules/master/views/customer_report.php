@@ -514,18 +514,21 @@
                 },
                 error: function(xhr, status, error){
                     console.error('AJAX Error:', status, error);
+                    console.error('Response Status:', xhr.status);
+                    console.error('Response Text:', xhr.responseText);
                     var errorMsg = 'Error loading data. Please try again.';
                     if(xhr && xhr.responseText){
-                        try {
-                            var errorResponse = JSON.parse(xhr.responseText);
-                            if(errorResponse.message){
-                                errorMsg = errorResponse.message;
-                            }
-                        } catch(e) {
-                            // Not JSON, use default message
+                        // Try to extract error message from response
+                        var responseText = xhr.responseText;
+                        // If it's HTML with error, try to extract
+                        if(responseText.indexOf('Fatal error') !== -1 || responseText.indexOf('Parse error') !== -1 || responseText.indexOf('Warning') !== -1){
+                            errorMsg = 'Server error occurred. Please check server logs.';
+                        } else if(responseText.length > 0 && responseText.length < 500){
+                            // If response is short, might be an error message
+                            errorMsg = responseText.substring(0, 200);
                         }
                     }
-                    $("#paidcustomerDiv").html('<div class="alert alert-danger">' + errorMsg + '</div>');
+                    $("#paidcustomerDiv").html('<div class="alert alert-danger"><strong>Error:</strong> ' + errorMsg + '<br><small>Status: ' + xhr.status + '</small></div>');
                 }
             });
         });

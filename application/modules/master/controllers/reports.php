@@ -167,31 +167,27 @@ class reports extends CI_Controller {
 	}
 	public function getcustomerreportsearch()
 	{		//*****  Add Search records  *****//
-			try {
-				$data['msg'] ='';
-				
-				$zone = $this->input->post('zone');
-				$status = $this->input->post('status');
-				
-				// Convert zone to integer, default to 0 if empty
-				$zone = ($zone === '' || $zone === null) ? 0 : (int)$zone;
-				
-				// Ensure status is empty string if not set
-				$status = ($status === '' || $status === null) ? '' : $status;
-				
-				$data['record'] = $this->report_model->get_customer_report_records($zone,$status);
-				
-				// If no records, set empty array
-				if(!isset($data['record']) || !is_array($data['record'])){
-					$data['record'] = array();
-				}
-				
-				$this->load->view($this->customerreport_ajaxPage,$data);
-			} catch(Exception $e) {
-				// Log error and return error message
-				log_message('error', 'Customer Report Search Error: ' . $e->getMessage());
-				echo '<div class="alert alert-danger">Error loading customer data. Please try again.</div>';
+			$data['msg'] ='';
+			
+			$zone = $this->input->post('zone');
+			$status = $this->input->post('status');
+			
+			// Convert zone to integer, default to 0 if empty
+			$zone = ($zone === '' || $zone === null) ? 0 : (int)$zone;
+			
+			// Ensure status is empty string if not set
+			$status = ($status === '' || $status === null) ? '' : $status;
+			
+			// Get records
+			$data['record'] = $this->report_model->get_customer_report_records($zone,$status);
+			
+			// If no records, set empty array
+			if(!isset($data['record']) || !is_array($data['record'])){
+				$data['record'] = array();
 			}
+			
+			// Load the view
+			$this->load->view($this->customerreport_ajaxPage,$data);
 	}	
 	public function getagingARreportsearch()
 	{		//*****  Add Search records  *****//
