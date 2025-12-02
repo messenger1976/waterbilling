@@ -126,6 +126,26 @@ class Report_model extends CI_Model {
 		$result = $query->result_array();
 		return $result;
 	}
+	public function get_customer_report_records($zone,$status=''){
+		$this->db->select($this->table_name.'.customer_id, '.$this->table_name.'.first_name, '.$this->table_name.'.last_name, '.$this->table_name.'.middle_name, '.$this->table_name.'.address, '.$this->table_name.'.status, 
+		(SELECT zone FROM tbl_zone WHERE tbl_zone.id='.$this->table_name.'.zone) as zone_name,
+		(SELECT class_name FROM tbl_classification WHERE tbl_classification.class_id='.$this->table_name.'.classification) as classification_name');
+		$this->db->from($this->table_name);
+		
+		if($zone!=0){
+			$this->db->where($this->table_name.'.zone',$zone);
+		}
+        if($status!=''){
+			$this->db->where($this->table_name.'.status',$status);
+		}
+		
+		$this->db->order_by($this->table_name.'.last_name','asc');
+		$this->db->order_by($this->table_name.'.first_name','asc');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result;
+	}
+
 	public function get_aging_ar_report_records($asofdate,$zone,$status){
 		$asofdate = date('Y-m-d',strtotime($asofdate));
 		$sql_query_zone ='';

@@ -67,87 +67,150 @@
 									</div>
 								</div>
 								
-								<!-- Ledger Table -->
+								<!-- Billing Table -->
+								<div class="row" style="margin-bottom: 30px;">
+									<div class="col-md-12">
+										<div class="panel panel-primary">
+											<div class="panel-heading">
+												<strong><i class="fa fa-file-text"></i> Billing Records</strong>
+											</div>
+											<div class="panel-body" style="padding: 0;">
+												<div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+													<table class="table table-striped table-bordered table-hover" id="billing_table" style="width: 100%; min-width: 800px;">
+														<thead>
+															<tr>
+																<th style="text-align: center;">Date</th>
+																<th style="text-align: center;">Ref No</th>
+																<th style="text-align: left;">Description</th>
+																<th style="text-align: right;">Amount</th>
+															</tr>
+														</thead>
+														<tbody>
+															<?php 
+															if(!empty($billing_entries)) {
+																foreach($billing_entries as $entry) {
+																	$entry_date = date('d-m-Y', strtotime($entry['date']));
+																	$entry_date_sort = date('Y-m-d', strtotime($entry['date']));
+																	$debit = number_format($entry['debit'], 2);
+															?>
+															<tr>
+																<td style="text-align: center;" data-order="<?php echo $entry_date_sort; ?>"><?php echo $entry_date; ?></td>
+																<td style="text-align: center;"><?php echo $entry['refno']; ?></td>
+																<td style="text-align: left;">
+																	<?php echo $entry['description']; ?>
+																	<?php if(isset($entry['consumed'])) { ?>
+																		<br><small class="text-muted">
+																			Reading: <?php echo $entry['previous_reading']; ?> - <?php echo $entry['reading']; ?> 
+																			(Consumed: <?php echo $entry['consumed']; ?> cu.m)
+																		</small>
+																	<?php } ?>
+																</td>
+																<td style="text-align: right;">
+																	<strong class="text-danger">PHP <?php echo $debit; ?></strong>
+																</td>
+															</tr>
+															<?php 
+																}
+															} else {
+															?>
+															<tr>
+																<td colspan="4" style="text-align: center;">No billing records found.</td>
+															</tr>
+															<?php } ?>
+														</tbody>
+														<?php if(!empty($billing_entries)) { ?>
+														<tfoot>
+															<tr>
+																<th colspan="3" style="text-align: right;"><strong>Total Billing:</strong></th>
+																<th style="text-align: right;">
+																	<strong class="text-danger">PHP <?php echo number_format($total_billing, 2); ?></strong>
+																</th>
+															</tr>
+														</tfoot>
+														<?php } ?>
+													</table>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<!-- Payment Table -->
 								<div class="row">
 									<div class="col-md-12">
-										<div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-											<table class="table table-striped table-bordered table-hover" id="ledger_table" style="width: 100%; min-width: 800px;">
-												<thead>
-													<tr>
-														<th style="text-align: center;">Date</th>
-														<th style="text-align: center;">Ref No</th>
-														<th style="text-align: left;">Description</th>
-														<th style="text-align: right;">Debit (Billing)</th>
-														<th style="text-align: right;">Credit (Payment)</th>
-														<th style="text-align: right;">Balance</th>
-													</tr>
-												</thead>
-												<tbody>
-													<?php 
-													if(!empty($ledger_entries)) {
-														$sn = 1;
-														foreach($ledger_entries as $entry) {
-															$entry_date = date('d-m-Y', strtotime($entry['date']));
-															$entry_date_sort = date('Y-m-d', strtotime($entry['date'])); // ISO format for sorting
-															$debit = $entry['debit'] > 0 ? number_format($entry['debit'], 2) : '';
-															$credit = $entry['credit'] > 0 ? number_format($entry['credit'], 2) : '';
-															$balance = number_format($entry['balance'], 2);
-															$balance_class = $entry['balance'] > 0 ? 'text-danger' : 'text-success';
-													?>
-													<tr>
-														<td style="text-align: center;" data-order="<?php echo $entry_date_sort; ?>"><?php echo $entry_date; ?></td>
-														<td style="text-align: center;"><?php echo $entry['refno']; ?></td>
-														<td style="text-align: left;">
-															<?php echo $entry['description']; ?>
-															<?php if($entry['type'] == 'billing' && isset($entry['consumed'])) { ?>
-																<br><small class="text-muted">
-																	Reading: <?php echo $entry['previous_reading']; ?> - <?php echo $entry['reading']; ?> 
-																	(Consumed: <?php echo $entry['consumed']; ?> cu.m)
-																	<?php if(isset($entry['penalty']) && $entry['penalty'] > 0) { ?>
-																		| Penalty: PHP <?php echo number_format($entry['penalty'], 2); ?>
-																	<?php } ?>
-																</small>
+										<div class="panel panel-success">
+											<div class="panel-heading">
+												<strong><i class="fa fa-money"></i> Payment Records</strong>
+											</div>
+											<div class="panel-body" style="padding: 0;">
+												<div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+													<table class="table table-striped table-bordered table-hover" id="payment_table" style="width: 100%; min-width: 1300px;">
+														<thead>
+															<tr>
+																<th style="text-align: center;">Bill No.</th>
+																<th style="text-align: center;">Billing Period</th>
+																<th style="text-align: center;">Due Date</th>
+																<th style="text-align: center;">Previous Reading</th>
+																<th style="text-align: center;">Current Reading</th>
+																<th style="text-align: center;">Consumed</th>
+																<th style="text-align: right;">Bill Amount</th>
+																<th style="text-align: right;">Discount</th>
+																<th style="text-align: right;">Penalty</th>
+																<th style="text-align: right;">Maintenance Fee</th>
+																<th style="text-align: center;">OR Number</th>
+																<th style="text-align: right;">Pay Amount</th>
+																<th style="text-align: center;">Date Paid</th>
+															</tr>
+														</thead>
+														<tbody>
+															<?php 
+															if(!empty($payment_entries)) {
+																foreach($payment_entries as $entry) {
+																	$entry_date = date('d-m-Y', strtotime($entry['date']));
+																	$entry_date_sort = date('Y-m-d', strtotime($entry['date']));
+																	$due_date_display = !empty($entry['due_date']) ? date('d-m-Y', strtotime($entry['due_date'])) : '';
+																	$pay_amount = isset($entry['pay_amount']) ? floatval($entry['pay_amount']) : 0;
+															?>
+															<tr>
+																<td style="text-align: center;"><?php echo isset($entry['bill_refno']) ? $entry['bill_refno'] : '-'; ?></td>
+																<td style="text-align: center;"><?php echo isset($entry['billing_period']) ? $entry['billing_period'] : (isset($entry['billing_periods']) ? $entry['billing_periods'] : '-'); ?></td>
+																<td style="text-align: center;"><?php echo $due_date_display; ?></td>
+																<td style="text-align: center;"><?php echo isset($entry['previous_reading']) ? $entry['previous_reading'] : '-'; ?></td>
+																<td style="text-align: center;"><?php echo isset($entry['current_reading']) ? $entry['current_reading'] : '-'; ?></td>
+																<td style="text-align: center;"><?php echo isset($entry['consumed']) ? $entry['consumed'] : '-'; ?></td>
+																<td style="text-align: right;"><?php echo isset($entry['bill_amount']) && $entry['bill_amount'] > 0 ? 'PHP ' . number_format($entry['bill_amount'], 2) : '-'; ?></td>
+																<td style="text-align: right;"><?php echo isset($entry['discount']) && $entry['discount'] > 0 ? 'PHP ' . number_format($entry['discount'], 2) : '-'; ?></td>
+																<td style="text-align: right;"><?php echo isset($entry['penalty']) && $entry['penalty'] > 0 ? 'PHP ' . number_format($entry['penalty'], 2) : '-'; ?></td>
+																<td style="text-align: right;"><?php echo isset($entry['maintenance_fee']) && $entry['maintenance_fee'] > 0 ? 'PHP ' . number_format($entry['maintenance_fee'], 2) : '-'; ?></td>
+																<td style="text-align: center;"><?php echo $entry['refno']; ?></td>
+																<td style="text-align: right;">
+																	<strong class="text-success"><?php echo $pay_amount > 0 ? 'PHP ' . number_format($pay_amount, 2) : '-'; ?></strong>
+																</td>
+																<td style="text-align: center;" data-order="<?php echo $entry_date_sort; ?>"><?php echo $entry_date; ?></td>
+															</tr>
+															<?php 
+																}
+															} else {
+															?>
+															<tr>
+																<td colspan="13" style="text-align: center;">No payment records found.</td>
+															</tr>
 															<?php } ?>
-														</td>
-														<td style="text-align: right;"><?php echo $debit ? 'PHP '.$debit : '-'; ?></td>
-														<td style="text-align: right;"><?php echo $credit ? 'PHP '.$credit : '-'; ?></td>
-														<td style="text-align: right;" class="<?php echo $balance_class; ?>">
-															<strong>PHP <?php echo $balance; ?></strong>
-														</td>
-													</tr>
-													<?php 
-														$sn++;
-														}
-													} else {
-													?>
-													<tr>
-														<td colspan="6" style="text-align: center;">No transactions found for this customer.</td>
-													</tr>
-													<?php } ?>
-												</tbody>
-												<?php if(!empty($ledger_entries)) { ?>
-												<tfoot>
-													<tr>
-														<th colspan="3" style="text-align: right;"><strong>Total:</strong></th>
-														<th style="text-align: right;">
-															<strong>PHP <?php 
-																$total_debit = array_sum(array_column($ledger_entries, 'debit'));
-																echo number_format($total_debit, 2); 
-															?></strong>
-														</th>
-														<th style="text-align: right;">
-															<strong>PHP <?php 
-																$total_credit = array_sum(array_column($ledger_entries, 'credit'));
-																echo number_format($total_credit, 2); 
-															?></strong>
-														</th>
-														<th style="text-align: right;" class="<?php echo $current_balance > 0 ? 'text-danger' : 'text-success'; ?>">
-															<strong>PHP <?php echo number_format($current_balance, 2); ?></strong>
-														</th>
-													</tr>
-												</tfoot>
-												<?php } ?>
-											</table>
+														</tbody>
+														<?php if(!empty($payment_entries)) { ?>
+														<tfoot>
+															<tr>
+																<th colspan="6" style="text-align: right;"><strong>Total Payment:</strong></th>
+																<th colspan="6" style="text-align: right;">
+																	<strong class="text-success">PHP <?php echo number_format($total_payment, 2); ?></strong>
+																</th>
+																<th></th>
+															</tr>
+														</tfoot>
+														<?php } ?>
+													</table>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -178,19 +241,21 @@
 			phone : 480
 		};
 
-		$('#ledger_table').dataTable({
+		// Initialize Billing Table
+		var responsiveHelper_dt_billing = undefined;
+		$('#billing_table').dataTable({
 			"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
 				"t"+
 				"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
 			"autoWidth" : true,
-			"ordering": false, // Disable sorting - data is already sorted by PHP
-			"order": [], // No initial sorting
+			"ordering": false,
+			"order": [],
 			"responsive": true,
 			"pageLength": 25,
 			"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
 			"columnDefs": [
 				{ 
-					"orderable": false, // Disable sorting on all columns
+					"orderable": false,
 					"targets": "_all"
 				}
 			],
@@ -198,21 +263,60 @@
 				"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
 			},
 			"preDrawCallback" : function() {
-				// Responsive helper - only use if available
 				if (typeof ResponsiveDatatablesHelper !== 'undefined') {
-					if (!responsiveHelper_dt_basic) {
-						responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#ledger_table'), breakpointDefinition);
+					if (!responsiveHelper_dt_billing) {
+						responsiveHelper_dt_billing = new ResponsiveDatatablesHelper($('#billing_table'), breakpointDefinition);
 					}
 				}
 			},
 			"rowCallback" : function(nRow) {
-				if (typeof ResponsiveDatatablesHelper !== 'undefined' && responsiveHelper_dt_basic) {
-					responsiveHelper_dt_basic.createExpandIcon(nRow);
+				if (typeof ResponsiveDatatablesHelper !== 'undefined' && responsiveHelper_dt_billing) {
+					responsiveHelper_dt_billing.createExpandIcon(nRow);
 				}
 			},
 			"drawCallback" : function(oSettings) {
-				if (typeof ResponsiveDatatablesHelper !== 'undefined' && responsiveHelper_dt_basic) {
-					responsiveHelper_dt_basic.respond();
+				if (typeof ResponsiveDatatablesHelper !== 'undefined' && responsiveHelper_dt_billing) {
+					responsiveHelper_dt_billing.respond();
+				}
+			}
+		});
+		
+		// Initialize Payment Table
+		var responsiveHelper_dt_payment = undefined;
+		$('#payment_table').dataTable({
+			"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
+				"t"+
+				"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+			"autoWidth" : true,
+			"ordering": false,
+			"order": [],
+			"responsive": true,
+			"pageLength": 25,
+			"lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+			"columnDefs": [
+				{ 
+					"orderable": false,
+					"targets": "_all"
+				}
+			],
+			"oLanguage": {
+				"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
+			},
+			"preDrawCallback" : function() {
+				if (typeof ResponsiveDatatablesHelper !== 'undefined') {
+					if (!responsiveHelper_dt_payment) {
+						responsiveHelper_dt_payment = new ResponsiveDatatablesHelper($('#payment_table'), breakpointDefinition);
+					}
+				}
+			},
+			"rowCallback" : function(nRow) {
+				if (typeof ResponsiveDatatablesHelper !== 'undefined' && responsiveHelper_dt_payment) {
+					responsiveHelper_dt_payment.createExpandIcon(nRow);
+				}
+			},
+			"drawCallback" : function(oSettings) {
+				if (typeof ResponsiveDatatablesHelper !== 'undefined' && responsiveHelper_dt_payment) {
+					responsiveHelper_dt_payment.respond();
 				}
 			}
 		});

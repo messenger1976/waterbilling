@@ -8,10 +8,13 @@ class reports extends CI_Controller {
 	public $agingARreportPage = 'aging_ar_report';
     public $leakingARreportPage = 'leaking_ar_report';
     public $monthlyBillingReportPage = 'monthly_billing_report';		   //*****  View page   *****//
+    public $customerReportPage = 'customer_report';		   //*****  View page   *****//
 	public $searchPage ='adddaily_search _ajax';
     public $monthlybillingreport_ajaxPage ='monthly_billing_report_ajax';
+    public $customerreport_ajaxPage ='customer_report_ajax';
 	public $agingARreport_ajaxPage ='aging_ar_report_ajax';
 	public $printtopdfPage ='monthlybillingreport_printtopdf';
+	public $customerprinttopdfPage ='customerreport_printtopdf';
 	public $agingprinttopdfPage ='agingarreport_printtopdf';
 	public $leakingarreport ='leakingarreport_printtopdf';
 	public function __construct() {
@@ -50,6 +53,15 @@ class reports extends CI_Controller {
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
 		$this->load->view($this->headerPage,$header);
 		$this->load->view($this->monthlyBillingReportPage,$data);
+	}
+
+    public function customer_report(){ 		 //*****  View Loading  *****//
+		$header['roleResponsible'] = $this->top_model->get_responsibilities();
+		$data['zone'] = $this->customer_model->get_zone();
+		$data['employee'] = $this->my_model->get_employee();
+		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		$this->load->view($this->headerPage,$header);
+		$this->load->view($this->customerReportPage,$data);
 	}
 
     public function aging_ar_report(){ 		 //*****  View Loading  *****//
@@ -96,6 +108,20 @@ class reports extends CI_Controller {
 		$this->load->view($this->printtopdfPage,$data);
 	}
 
+	public function customerprinttopdf($status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
+		//$data['zone'] = $this->my_model->get_zone($zone);
+		$data['zone'] = $this->my_model->get_zone($zone);
+        $data['status'] = ($status=='99')?'':$status;
+		$data['record'] = $this->report_model->get_customer_report_records($zone,$data['status']);
+		$data['preparedby'] = $this->my_model->get_employee($preparedby);
+		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
+		$data['approvedby'] = $this->my_model->get_employee($approvedby);
+
+		//$this->load->view($this->headerPage,$header);
+		$this->load->view($this->customerprinttopdfPage,$data);
+	}
+
 	public function agingprinttopdf($asofdate,$zone,$status,$preparedby='',$verifiedby='',$approvedby=''){
 		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
 		//$data['zone'] = $this->my_model->get_zone($zone);
@@ -137,6 +163,18 @@ class reports extends CI_Controller {
             
             
             $this->load->view($this->monthlybillingreport_ajaxPage,$data);
+				
+	}
+	public function getcustomerreportsearch()
+	{		//*****  Add Search records  *****//
+			$data['msg'] ='';
+			
+            $zone = $this->input->post('zone');
+            $status = $this->input->post('status');
+            
+            $data['record'] = $this->report_model->get_customer_report_records($zone,$status);
+            
+            $this->load->view($this->customerreport_ajaxPage,$data);
 				
 	}	
 	public function getagingARreportsearch()

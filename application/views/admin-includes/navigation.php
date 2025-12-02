@@ -231,6 +231,12 @@
 							<?php } ?>
 
 							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
+							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='customer_report') echo 'active';?>">
+								<a href="<?php echo ADMIN_URL;?>reports/customer_report"> <span class="menu-item-parent">Customer Report</span></a>
+							</li>	
+							<?php } ?>
+
+							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
 							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='aging_ar_report') echo 'active';?>">
 								<a href="<?php echo ADMIN_URL;?>reports/aging_ar_report"> <span class="menu-item-parent">Aging A/R Report</span></a>
 							</li>	
