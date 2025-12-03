@@ -31,12 +31,12 @@
 				?>                                            
 					<tr>
 						<td><?php echo $index; ?></td>
-						<td><?php echo isset($row['customer_id']) ? stripslashes($row['customer_id']) : ''; ?></td>
-						<td><?php echo isset($row['first_name']) ? stripslashes($row['first_name']) : ''; ?></td>
-						<td><?php echo isset($row['last_name']) ? stripslashes($row['last_name']) : ''; ?></td>
-						<td><?php echo isset($row['address']) ? stripslashes($row['address']) : ''; ?></td>
-						<td><?php echo isset($row['zone_name']) ? stripslashes($row['zone_name']) : ''; ?></td>
-						<td><?php echo isset($row['classification_name']) ? stripslashes($row['classification_name']) : ''; ?></td>
+						<td><?php echo isset($row['customer_id']) ? htmlspecialchars($row['customer_id'], ENT_QUOTES, 'UTF-8') : ''; ?></td>
+						<td><?php echo isset($row['first_name']) ? htmlspecialchars($row['first_name'], ENT_QUOTES, 'UTF-8') : ''; ?></td>
+						<td><?php echo isset($row['last_name']) ? htmlspecialchars($row['last_name'], ENT_QUOTES, 'UTF-8') : ''; ?></td>
+						<td><?php echo isset($row['address']) ? htmlspecialchars($row['address'], ENT_QUOTES, 'UTF-8') : ''; ?></td>
+						<td><?php echo isset($row['zone_name']) ? htmlspecialchars($row['zone_name'], ENT_QUOTES, 'UTF-8') : ''; ?></td>
+						<td><?php echo isset($row['classification_name']) ? htmlspecialchars($row['classification_name'], ENT_QUOTES, 'UTF-8') : ''; ?></td>
 						<td>
 							<span <?php 
 								$status_val = isset($row['status']) ? $row['status'] : '';

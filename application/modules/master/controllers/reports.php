@@ -169,37 +169,27 @@ class reports extends CI_Controller {
 	{		//*****  Add Search records  *****//
 			$data['msg'] ='';
 			
-			try {
-				$zone = $this->input->post('zone');
-				$status = $this->input->post('status');
-				
-				// Convert zone to integer, default to 0 if empty
-				$zone = ($zone === '' || $zone === null) ? 0 : (int)$zone;
-				
-				// Ensure status is empty string if not set, handle '99' as 'All'
-				if($status === '99' || $status === '' || $status === null){
-					$status = '';
-				}
-				
-				// Get records
-				$data['record'] = $this->report_model->get_customer_report_records($zone,$status);
-				
-				// If no records, set empty array
-				if(!isset($data['record']) || !is_array($data['record'])){
-					$data['record'] = array();
-				}
-				
-				// Load the view
-				$this->load->view($this->customerreport_ajaxPage,$data);
-			} catch (Exception $e) {
-				// Log error for debugging
-				log_message('error', 'Customer Report Search Error: ' . $e->getMessage());
-				log_message('error', 'Stack trace: ' . $e->getTraceAsString());
-				
-				// Return error message in production-safe way
-				header('Content-Type: text/html; charset=utf-8');
-				echo '<div class="alert alert-danger">Error loading customer data. Please try again.</div>';
+			$zone = $this->input->post('zone');
+			$status = $this->input->post('status');
+			
+			// Convert zone to integer, default to 0 if empty
+			$zone = ($zone === '' || $zone === null) ? 0 : (int)$zone;
+			
+			// Ensure status is empty string if not set, handle '99' as 'All'
+			if($status === '99' || $status === '' || $status === null){
+				$status = '';
 			}
+			
+			// Get records
+			$data['record'] = $this->report_model->get_customer_report_records($zone,$status);
+			
+			// If no records, set empty array
+			if(!isset($data['record']) || !is_array($data['record'])){
+				$data['record'] = array();
+			}
+			
+			// Load the view
+			$this->load->view($this->customerreport_ajaxPage,$data);
 	}	
 	public function getagingARreportsearch()
 	{		//*****  Add Search records  *****//
