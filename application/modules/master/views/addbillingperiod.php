@@ -476,7 +476,7 @@
 						}*/
 
 						$.ajax({
-							url: "<?php echo ADMIN_URL;?>addbillingperiod/billingforwardposting", 
+							url: "<?php echo base_url();?>master/addbillingperiod/billingforwardposting", 
 							type: "POST",
 							data: {
 								//delete_ids: selectedItems,
@@ -523,7 +523,7 @@
 				//showSpinner();
 				$.ajax({
             		type : "POST",
-					url	: '<?php echo ADMIN_URL;?>addbillingperiod/updated_headerbillingperiod',
+					url	: '<?php echo base_url();?>master/addbillingperiod/updated_headerbillingperiod',
 					data	: "billing_period="+header_billing_period,
 					complete: function(data){
 						console.log(data);
@@ -577,7 +577,7 @@
         $.ajax({
             
             type : "POST",
-            url	: '<?php echo ADMIN_URL;?>addbillingperiod/addbillingperiod_search',
+            url	: '<?php echo base_url();?>master/addbillingperiod/addbillingperiod_search',
             //data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate+",
             data	: "zone="+zone+"&billingperiod="+billingperiod,
             complete: function(data){

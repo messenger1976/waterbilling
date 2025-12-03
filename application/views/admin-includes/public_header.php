@@ -40,6 +40,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
 		<!-- PWA Meta Tags -->
 		<meta name="theme-color" content="#5bc0de">
 		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 		<meta name="apple-mobile-web-app-title" content="Statement of Account">
 		<meta name="mobile-web-app-capable" content="yes">
