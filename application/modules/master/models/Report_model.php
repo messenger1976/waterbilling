@@ -126,6 +126,39 @@ class Report_model extends CI_Model {
 		$result = $query->result_array();
 		return $result;
 	}
+	public function get_customer_report_records($zone,$status=''){
+		// Use the same pattern as addcustomer_model for compatibility
+		$this->db->select($this->table_name.'.customer_id, '.$this->table_name.'.first_name, '.$this->table_name.'.last_name, '.$this->table_name.'.middle_name, '.$this->table_name.'.address, '.$this->table_name.'.status, 
+		(SELECT zone FROM '.$this->table_zone.' WHERE '.$this->table_zone.'.id = '.$this->table_name.'.zone) as zone_name,
+		(SELECT class_name FROM '.$this->table_classification.' WHERE '.$this->table_classification.'.class_id = '.$this->table_name.'.classification) as classification_name');
+		$this->db->from($this->table_name);
+		
+		// Convert zone to integer for comparison
+		$zone = (int)$zone;
+		if($zone != 0){
+			$this->db->where($this->table_name.'.zone',$zone);
+		}
+        if($status !== '' && $status !== null && $status !== false && $status !== '99'){
+			$this->db->where($this->table_name.'.status',$status);
+		}
+		
+		$this->db->order_by($this->table_name.'.last_name','asc');
+		$this->db->order_by($this->table_name.'.first_name','asc');
+		
+		$query = $this->db->get();
+		
+		// Check for database errors
+		if($this->db->_error_number() != 0){
+			log_message('error', 'Database Error Number: ' . $this->db->_error_number());
+			log_message('error', 'Database Error Message: ' . $this->db->_error_message());
+			log_message('error', 'Last Query: ' . $this->db->last_query());
+			return array();
+		}
+		
+		$result = $query->result_array();
+		return $result ? $result : array();
+	}
+
 	public function get_aging_ar_report_records($asofdate,$zone,$status){
 		$asofdate = date('Y-m-d',strtotime($asofdate));
 		$sql_query_zone ='';
