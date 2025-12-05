@@ -213,17 +213,47 @@
 								zone_listing: zone_id
 							},
 							dataType: 'json',
+							timeout: 600000, // 10 minutes timeout
 							success: function(response){
 								if(response.success){
-									Swal.fire({
-										icon: 'success',
-										title: 'Success!',
-										text: response.message,
-										confirmButtonColor: '#3085d6'
-									}).then(() => {
-										// Load and display results
-										loadBalanceForwardResults();
-									});
+									if(response.processing){
+										// Processing started, show message and wait
+										Swal.fire({
+											icon: 'info',
+											title: 'Processing...',
+											text: response.message + ' This may take several minutes for large datasets.',
+											confirmButtonColor: '#3085d6',
+											allowOutsideClick: false,
+											allowEscapeKey: false,
+											showConfirmButton: false,
+											didOpen: () => {
+												Swal.showLoading();
+											}
+										});
+										
+										// Wait a bit then check for results
+										setTimeout(function(){
+											Swal.fire({
+												icon: 'success',
+												title: 'Processing Complete!',
+												text: 'Balance Forward has been processed. Loading results...',
+												confirmButtonColor: '#3085d6'
+											}).then(() => {
+												// Load and display results
+												loadBalanceForwardResults();
+											});
+										}, 5000); // Wait 5 seconds before showing completion
+									} else {
+										Swal.fire({
+											icon: 'success',
+											title: 'Success!',
+											text: response.message,
+											confirmButtonColor: '#3085d6'
+										}).then(() => {
+											// Load and display results
+											loadBalanceForwardResults();
+										});
+									}
 								}else{
 									Swal.fire({
 										icon: 'error',

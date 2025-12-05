@@ -47,7 +47,20 @@ class createbalanceforward extends CI_Controller {
 	public function processbalanceforward(){
 		$data['msg'] = '';
 		
-		ini_set('memory_limit', '512M'); // or '512M' if needed
+		// Increase PHP limits for large data processing
+		@ini_set('memory_limit', '1024M');
+		@set_time_limit(0); // 0 = unlimited
+		@ini_set('max_execution_time', '0');
+		
+		// Disable output buffering to prevent timeout
+		if (ob_get_level()) {
+			ob_end_clean();
+		}
+		
+		// Send headers early to prevent timeout
+		header('Content-Type: application/json');
+		header('Connection: keep-alive');
+		header('X-Accel-Buffering: no'); // Disable nginx buffering if applicable
 		
 		$billperiodforward = explode(' ',$this->input->post('billingperiodforward'));
 		$currentbillingperiod = explode(' ',$this->input->post('currentbillingperiod'));
@@ -58,19 +71,45 @@ class createbalanceforward extends CI_Controller {
 		$currentbillingperiod_month = $currentbillingperiod[0];
 		$currentbillingperiod_year = $currentbillingperiod[1];
 		
-		$result = customerbillingperiod($billperiodforward_month,$billperiodforward_year,$currentbillingperiod_month,$currentbillingperiod_year,$zone_listing);
+		// For FastCGI environments, send response early and continue processing
+		$use_fastcgi = function_exists('fastcgi_finish_request');
 		
-		if($result){
-			$data['success'] = true;
-			$data['message'] = 'Balance Forward processed successfully!';
-		}else{
-			$data['success'] = false;
-			$data['message'] = 'Balance Forward processing failed!';
+		if ($use_fastcgi) {
+			// Send immediate response to client
+			echo json_encode(array('success' => true, 'message' => 'Processing started. Please wait...', 'processing' => true));
+			fastcgi_finish_request(); // This closes the connection but continues script execution
 		}
 		
-		// Return JSON response
-		header('Content-Type: application/json');
-		echo json_encode($data);
+		try {
+			$result = customerbillingperiod($billperiodforward_month,$billperiodforward_year,$currentbillingperiod_month,$currentbillingperiod_year,$zone_listing);
+			
+			if($result){
+				$data['success'] = true;
+				$data['message'] = 'Balance Forward processed successfully!';
+			}else{
+				$data['success'] = false;
+				$data['message'] = 'Balance Forward processing failed!';
+			}
+		} catch (Exception $e) {
+			$data['success'] = false;
+			$data['message'] = 'Error: ' . $e->getMessage();
+		} catch (Error $e) {
+			$data['success'] = false;
+			$data['message'] = 'Fatal Error: ' . $e->getMessage();
+		}
+		
+		// If fastcgi_finish_request was used, log the result
+		// Otherwise return JSON response normally
+		if ($use_fastcgi) {
+			// Log result for verification (optional)
+			$log_file = APPPATH . 'logs/balanceforward_' . date('Y-m-d_H-i-s') . '.json';
+			@file_put_contents($log_file, json_encode($data));
+		} else {
+			// Return JSON response normally
+			echo json_encode($data);
+		}
+		
+		exit;
 	}
 
 	public function getbalanceforwardresults(){

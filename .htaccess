@@ -7,3 +7,19 @@
  RewriteRule ^(.*)$ index.php/$1 [L]
  
 </IfModule>
+
+# Increase timeout for large data processing
+<IfModule mod_fcgid.c>
+ FcgidIOTimeout 600
+ FcgidConnectTimeout 600
+ FcgidBusyTimeout 600
+ FcgidIdleTimeout 600
+</IfModule>
+
+# PHP settings for large data processing
+<IfModule mod_php7.c>
+ php_value max_execution_time 0
+ php_value memory_limit 1024M
+ php_value post_max_size 100M
+ php_value upload_max_filesize 100M
+</IfModule>
