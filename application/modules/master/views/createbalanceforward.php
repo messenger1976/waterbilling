@@ -113,6 +113,20 @@
                                 
                             </div>	
                         </div>
+                        <div class="col-sm-6 col-lg-12" id="progressBarDiv" style="margin-top: 13px; display:none;">
+                            <div class="panel panel-default">
+                                <div class="widget-body">
+                                    <h4>Processing Balance Forward...</h4>
+                                    <div class="progress" style="height: 35px;">
+                                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                            <span id="progressText" style="line-height: 35px; font-size: 14px; font-weight: bold;">0%</span>
+                                        </div>
+                                    </div>
+                                    <p id="currentCustomerText" style="margin-top: 10px; font-weight: bold; color: #333;"></p>
+                                    <p id="progressDetails" style="margin-top: 5px; color: #666; font-size: 12px;"></p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-sm-6 col-lg-12" id="balanceForwardResultsDiv" style="margin-top: 13px;"></div>	
                         </div>
 						
@@ -202,82 +216,120 @@
 					cancelButtonText: 'Cancel'
 				}).then((result) => {
 					if (result.isConfirmed) {
-						showSpinner(); // Call this to show the spinner
-						
-						$.ajax({
-							url: "<?php echo base_url();?>master/createbalanceforward/processbalanceforward", 
-							type: "POST",
-							data: {
-								billingperiodforward: billingperiodforward,
-								currentbillingperiod: currentbillingperiod,
-								zone_listing: zone_id
-							},
-							dataType: 'json',
-							timeout: 600000, // 10 minutes timeout
-							success: function(response){
-								if(response.success){
-									if(response.processing){
-										// Processing started, show message and wait
-										Swal.fire({
-											icon: 'info',
-											title: 'Processing...',
-											text: response.message + ' This may take several minutes for large datasets.',
-											confirmButtonColor: '#3085d6',
-											allowOutsideClick: false,
-											allowEscapeKey: false,
-											showConfirmButton: false,
-											didOpen: () => {
-												Swal.showLoading();
-											}
-										});
-										
-										// Wait a bit then check for results
-										setTimeout(function(){
-											Swal.fire({
-												icon: 'success',
-												title: 'Processing Complete!',
-												text: 'Balance Forward has been processed. Loading results...',
-												confirmButtonColor: '#3085d6'
-											}).then(() => {
-												// Load and display results
-												loadBalanceForwardResults();
-											});
-										}, 5000); // Wait 5 seconds before showing completion
-									} else {
-										Swal.fire({
-											icon: 'success',
-											title: 'Success!',
-											text: response.message,
-											confirmButtonColor: '#3085d6'
-										}).then(() => {
-											// Load and display results
-											loadBalanceForwardResults();
-										});
-									}
-								}else{
-									Swal.fire({
-										icon: 'error',
-										title: 'Error',
-										text: response.message,
-										confirmButtonColor: '#3085d6'
-									});
-								}
-								setTimeout(hideSpinner, 1000);
-							},
-							error: function(xhr, status, error){
-								console.log(error);
-								Swal.fire({
-									icon: 'error',
-									title: 'Error',
-									text: 'An error occurred while processing balance forward.',
-									confirmButtonColor: '#3085d6'
-								});
-								hideSpinner();
-							}
-						});
+						// Initialize batch processing
+						startBatchProcessing(billingperiodforward, currentbillingperiod, zone_id);
 					}
 				});
 			});
+			
+			function startBatchProcessing(billingperiodforward, currentbillingperiod, zone_id){
+				// Clear previous batch
+				$.ajax({
+					url: "<?php echo base_url();?>master/createbalanceforward/clearbatch",
+					type: "POST"
+				});
+				
+				// Show progress bar
+				$('#progressBarDiv').show();
+				$('#balanceForwardResultsDiv').html('');
+				updateProgressBar(0, 0, '', '');
+				
+				// Initialize batch processing
+				$.ajax({
+					url: "<?php echo base_url();?>master/createbalanceforward/processbalanceforward", 
+					type: "POST",
+					data: {
+						billingperiodforward: billingperiodforward,
+						currentbillingperiod: currentbillingperiod,
+						zone_listing: zone_id
+					},
+					dataType: 'json',
+					success: function(response){
+						if(response.success){
+							// Start processing batches
+							processNextBatch();
+						}else{
+							Swal.fire({
+								icon: 'error',
+								title: 'Error',
+								text: response.message,
+								confirmButtonColor: '#3085d6'
+							});
+							$('#progressBarDiv').hide();
+						}
+					},
+					error: function(xhr, status, error){
+						console.log(error);
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'An error occurred while initializing batch processing.',
+							confirmButtonColor: '#3085d6'
+						});
+						$('#progressBarDiv').hide();
+					}
+				});
+			}
+			
+			function processNextBatch(){
+				$.ajax({
+					url: "<?php echo base_url();?>master/createbalanceforward/processbatch",
+					type: "POST",
+					dataType: 'json',
+					timeout: 90000, // 90 seconds per batch
+					success: function(response){
+						if(response.success){
+							updateProgressBar(response.total, response.processed, response.current_customer, response.percentage);
+							
+							if(response.complete){
+								// Processing complete
+								Swal.fire({
+									icon: 'success',
+									title: 'Success!',
+									text: 'Balance Forward processed successfully!',
+									confirmButtonColor: '#3085d6'
+								}).then(() => {
+									$('#progressBarDiv').hide();
+									loadBalanceForwardResults();
+								});
+							}else{
+								// Process next batch after a short delay
+								setTimeout(processNextBatch, 500);
+							}
+						}else{
+							Swal.fire({
+								icon: 'error',
+								title: 'Error',
+								text: response.message || 'Error processing batch',
+								confirmButtonColor: '#3085d6'
+							});
+							$('#progressBarDiv').hide();
+						}
+					},
+					error: function(xhr, status, error){
+						console.log('Batch error:', error);
+						// Retry after delay
+						setTimeout(processNextBatch, 1000);
+					}
+				});
+			}
+			
+			function updateProgressBar(total, processed, currentCustomer, percentage){
+				if(percentage === undefined || percentage === null){
+					percentage = total > 0 ? Math.round((processed / total) * 100) : 0;
+				}
+				
+				$('#progressBar').css('width', percentage + '%');
+				$('#progressBar').attr('aria-valuenow', percentage);
+				$('#progressText').text(percentage + '% (' + processed + ' / ' + total + ')');
+				$('#progressDetails').text('Processed: ' + processed + ' of ' + total + ' customers');
+				
+				if(currentCustomer){
+					$('#currentCustomerText').text('Processing: ' + currentCustomer);
+				}else if(processed == total && total > 0){
+					$('#currentCustomerText').text('Processing completed!');
+				}
+			}
 			
 			function loadBalanceForwardResults(){
 				var billingperiodforward = $('#forwardbillingperiod').val();

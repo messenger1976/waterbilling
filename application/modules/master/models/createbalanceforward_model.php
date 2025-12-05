@@ -129,6 +129,92 @@ class createbalanceforward_model extends CI_Model {
 		
 		return $stats;
 	}
+	
+	/** Get total customer count for batch processing **/
+	public function get_total_customers_count($zone_id) {
+		$this->db->where('status', '1');
+		if($zone_id != '' && $zone_id != '0' && $zone_id != 'all' && $zone_id != null){
+			$this->db->where('zone', $zone_id);
+		}
+		$query = $this->db->get('tbl_addcustomer');
+		return $query->num_rows();
+	}
+	
+	/** Get customers batch for processing **/
+	public function get_customers_batch($zone_id, $offset = 0, $limit = 50) {
+		$this->db->where('status', '1');
+		if($zone_id != '' && $zone_id != '0' && $zone_id != 'all' && $zone_id != null){
+			$this->db->where('zone', $zone_id);
+		}
+		$this->db->limit($limit, $offset);
+		$query = $this->db->get('tbl_addcustomer');
+		return $query->result();
+	}
+	
+	/** Process single customer balance forward **/
+	public function process_single_customer($customer_data, $bp_month, $bp_year, $bp_current_month, $bp_current_year) {
+		// Get billing period
+		$this->db->where('bp_period_month', $bp_month);
+		$this->db->where('bp_period_year', $bp_year);
+		$this->db->where('bp_zone_id', $customer_data->zone);
+		$bp = $this->db->get('tbl_billing_period')->row();
+		
+		if(!$bp){
+			return false;
+		}
+		
+		$bp_id = $bp->bp_id;
+
+		$customerinfodataInsertDetails = array( 
+			'customer_id' => $customer_data->customer_id,
+			'month' => $bp_month, 
+			'year' => $bp_year, 
+			'bp_id' => $bp_id, 
+		); 
+		
+		$checkresult_id = check_customerbillingrecord($customer_data->customer_id,$bp_id,$bp_month,$bp_year);
+		
+		if(!$checkresult_id){
+			$this->db->where('doc_name', 'BILLING');
+			$billing_number = $this->db->get('tbl_doc_series_number')->row();
+			if($billing_number){
+				$doc_num = $billing_number->doc_series_num+1;
+				$customerinfodataInsertDetails1 = array( 
+					'refno' => $doc_num,
+					'customer_status' => $customer_data->status
+				);
+				$customerinfodataInsertDetails = array_merge($customerinfodataInsertDetails,$customerinfodataInsertDetails1);
+				$this->db->insert('tbl_addcustomer_reading', $customerinfodataInsertDetails);
+				$checkresult_id = $this->db->insert_id();
+
+				$update_counter_array = array( 
+					'doc_series_num' => $doc_num
+				);
+				$this->db->where('doc_name', 'BILLING');
+				$this->db->update('tbl_doc_series_number', $update_counter_array);
+			}
+		}
+
+		$customer_current_billing_data = currentbalance_forwarding_period($customer_data->customer_id,$bp_current_month,$bp_current_year);
+		
+		if($customer_current_billing_data && isset($customer_current_billing_data->id)){
+			if($customer_current_billing_data->invoice_id!=NULL && $customer_current_billing_data->invoice_id!=''){
+				$arrears = 0;
+			}else{
+				$arrears = isset($customer_current_billing_data->penalty) ? $customer_current_billing_data->penalty : 0;
+			}
+			$update_counter_array1 = array( 
+				'previous_reading' => $customer_current_billing_data->reading,
+				'arrears' => $arrears,
+				'customer_status' => $customer_data->status,
+				'maintenance_fee' => '25.00',
+			);
+			$this->db->where('id', $checkresult_id);
+			$this->db->update('tbl_addcustomer_reading', $update_counter_array1);
+		}
+		
+		return true;
+	}
 }
 ?>
 

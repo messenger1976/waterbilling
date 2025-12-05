@@ -45,71 +45,109 @@ class createbalanceforward extends CI_Controller {
 	}
 
 	public function processbalanceforward(){
-		$data['msg'] = '';
-		
-		// Increase PHP limits for large data processing
-		@ini_set('memory_limit', '1024M');
-		@set_time_limit(0); // 0 = unlimited
-		@ini_set('max_execution_time', '0');
-		
-		// Disable output buffering to prevent timeout
-		if (ob_get_level()) {
-			ob_end_clean();
-		}
-		
-		// Send headers early to prevent timeout
+		// Initialize batch processing
 		header('Content-Type: application/json');
-		header('Connection: keep-alive');
-		header('X-Accel-Buffering: no'); // Disable nginx buffering if applicable
 		
 		$billperiodforward = explode(' ',$this->input->post('billingperiodforward'));
 		$currentbillingperiod = explode(' ',$this->input->post('currentbillingperiod'));
 		$zone_listing = $this->input->post('zone_listing');
 		$billperiodforward_month = $billperiodforward[0];
 		$billperiodforward_year = $billperiodforward[1];
-
 		$currentbillingperiod_month = $currentbillingperiod[0];
 		$currentbillingperiod_year = $currentbillingperiod[1];
 		
-		// For FastCGI environments, send response early and continue processing
-		$use_fastcgi = function_exists('fastcgi_finish_request');
+		// Get total count
+		$total = $this->my_model->get_total_customers_count($zone_listing);
 		
-		if ($use_fastcgi) {
-			// Send immediate response to client
-			echo json_encode(array('success' => true, 'message' => 'Processing started. Please wait...', 'processing' => true));
-			fastcgi_finish_request(); // This closes the connection but continues script execution
+		// Store processing parameters in session
+		$process_data = array(
+			'bp_month' => $billperiodforward_month,
+			'bp_year' => $billperiodforward_year,
+			'bp_current_month' => $currentbillingperiod_month,
+			'bp_current_year' => $currentbillingperiod_year,
+			'zone_id' => $zone_listing,
+			'total' => $total,
+			'processed' => 0,
+			'current_customer' => ''
+		);
+		$this->session->set_userdata('balanceforward_batch', $process_data);
+		
+		$data['success'] = true;
+		$data['message'] = 'Batch processing initialized';
+		$data['total'] = $total;
+		$data['batch_size'] = 50;
+		$data['processed'] = 0;
+		
+		echo json_encode($data);
+	}
+	
+	public function processbatch(){
+		header('Content-Type: application/json');
+		
+		@ini_set('memory_limit', '512M');
+		@set_time_limit(60); // 60 seconds per batch
+		
+		$batch_data = $this->session->userdata('balanceforward_batch');
+		
+		if(!$batch_data){
+			echo json_encode(array('success' => false, 'message' => 'Batch processing not initialized'));
+			return;
 		}
 		
-		try {
-			$result = customerbillingperiod($billperiodforward_month,$billperiodforward_year,$currentbillingperiod_month,$currentbillingperiod_year,$zone_listing);
-			
-			if($result){
-				$data['success'] = true;
-				$data['message'] = 'Balance Forward processed successfully!';
-			}else{
-				$data['success'] = false;
-				$data['message'] = 'Balance Forward processing failed!';
+		$offset = isset($batch_data['processed']) ? $batch_data['processed'] : 0;
+		$batch_size = 50; // Process 50 customers per batch
+		
+		// Get batch of customers
+		$customers = $this->my_model->get_customers_batch($batch_data['zone_id'], $offset, $batch_size);
+		
+		$processed_in_batch = 0;
+		$current_customer_name = '';
+		
+		foreach($customers as $customer){
+			try {
+				$result = $this->my_model->process_single_customer(
+					$customer,
+					$batch_data['bp_month'],
+					$batch_data['bp_year'],
+					$batch_data['bp_current_month'],
+					$batch_data['bp_current_year']
+				);
+				
+				if($result){
+					$processed_in_batch++;
+					$current_customer_name = $customer->first_name . ' ' . $customer->last_name . ' (' . $customer->customer_id . ')';
+				}
+			} catch (Exception $e) {
+				// Continue with next customer on error
+				continue;
 			}
-		} catch (Exception $e) {
-			$data['success'] = false;
-			$data['message'] = 'Error: ' . $e->getMessage();
-		} catch (Error $e) {
-			$data['success'] = false;
-			$data['message'] = 'Fatal Error: ' . $e->getMessage();
 		}
 		
-		// If fastcgi_finish_request was used, log the result
-		// Otherwise return JSON response normally
-		if ($use_fastcgi) {
-			// Log result for verification (optional)
-			$log_file = APPPATH . 'logs/balanceforward_' . date('Y-m-d_H-i-s') . '.json';
-			@file_put_contents($log_file, json_encode($data));
-		} else {
-			// Return JSON response normally
-			echo json_encode($data);
-		}
+		// Update session
+		$batch_data['processed'] = $offset + count($customers);
+		$batch_data['current_customer'] = $current_customer_name;
+		$this->session->set_userdata('balanceforward_batch', $batch_data);
 		
-		exit;
+		$percentage = $batch_data['total'] > 0 ? round(($batch_data['processed'] / $batch_data['total']) * 100) : 0;
+		$is_complete = $batch_data['processed'] >= $batch_data['total'];
+		
+		$response = array(
+			'success' => true,
+			'processed' => $batch_data['processed'],
+			'total' => $batch_data['total'],
+			'percentage' => $percentage,
+			'current_customer' => $current_customer_name,
+			'complete' => $is_complete,
+			'message' => $is_complete ? 'Processing completed!' : 'Processing batch...'
+		);
+		
+		echo json_encode($response);
+	}
+	
+	public function clearbatch(){
+		$this->session->unset_userdata('balanceforward_batch');
+		header('Content-Type: application/json');
+		echo json_encode(array('success' => true));
 	}
 
 	public function getbalanceforwardresults(){
