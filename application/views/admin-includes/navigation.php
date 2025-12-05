@@ -289,6 +289,7 @@
                     <?php if((array_key_exists('admin',$roleResponsible) && ($roleResponsible['admin'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 					<li class="<?php if($this->uri->segment(2)=='responsibilities'){echo 'active open';}?>
 									<?php if($this->uri->segment(2)=='addbillingperiod'){echo 'active open';}?>
+									<?php if($this->uri->segment(2)=='createbalanceforward'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='employee_logins'){echo 'active open';}?>">
 						<a href="#"><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Admin</span></a>
 						<ul>
@@ -310,6 +311,12 @@
 							 <?php if((array_key_exists('addbillingperiod',$roleResponsible) && ($roleResponsible['addbillingperiod'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>	
 								<li class="<?php if($this->uri->segment(2)=='addbillingperiod' && $this->uri->segment(2)=='addbillingperiod') echo 'active';?>">
 									<a href="<?php echo ADMIN_URL;?>addbillingperiod/">Setup Schedule Billing Period</a>
+								</li>
+							 <?php } ?>	
+							 
+							 <?php if((array_key_exists('createbalanceforward',$roleResponsible) && ($roleResponsible['createbalanceforward'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>	
+								<li class="<?php if($this->uri->segment(2)=='createbalanceforward' && $this->uri->segment(2)=='createbalanceforward') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>createbalanceforward/">Create Balance Forward</a>
 								</li>
 							 <?php } ?>	
 

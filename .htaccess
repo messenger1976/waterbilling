@@ -7,3 +7,16 @@
  RewriteRule ^(.*)$ index.php/$1 [L]
  
 </IfModule>
+
+# PHP settings for large data processing (if allowed by server)
+# Note: Some servers don't allow php_value in .htaccess
+# If these cause errors, they need to be set in php.ini or server config
+<IfModule mod_php7.c>
+ php_value max_execution_time 0
+ php_value memory_limit 1024M
+</IfModule>
+
+<IfModule mod_php5.c>
+ php_value max_execution_time 0
+ php_value memory_limit 1024M
+</IfModule>

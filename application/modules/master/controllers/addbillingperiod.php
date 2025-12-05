@@ -251,6 +251,9 @@ class addbillingperiod extends CI_Controller {
 
 	public function billingforwardposting(){
 		$data['msg'] ='';
+
+		
+		ini_set('memory_limit', '512M'); // or '512M' if needed
 		
 		$billperiodforward = explode(' ',$this->input->post('billingperiodforward'));
 		$currentbillingperiod = explode(' ',$this->input->post('currentbillingperiod'));
