@@ -82,6 +82,9 @@
 										<button type="submit" class="btn btn-primary">
 											<i class="fa fa-save"></i> Save Settings
 										</button>
+										<button type="button" class="btn btn-info" id="testApiBtn">
+											<i class="fa fa-plug"></i> Test API Connection
+										</button>
 										<a href="<?php echo ADMIN_URL;?>mobilenotifications" class="btn btn-default">
 											<i class="fa fa-arrow-left"></i> Back to Notifications
 										</a>
