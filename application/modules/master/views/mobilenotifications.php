@@ -340,8 +340,24 @@
 	</div>
 </div>
 
+<?php include('footer.php');?>
+
 <script>
-$(document).ready(function(){
+// Ensure jQuery is loaded before executing
+if (typeof jQuery === 'undefined') {
+	// If jQuery is not loaded, wait a bit and try again
+	setTimeout(function() {
+		if (typeof jQuery !== 'undefined') {
+			initNotificationsScript();
+		}
+	}, 100);
+} else {
+	initNotificationsScript();
+}
+
+function initNotificationsScript() {
+	var $ = jQuery;
+	$(document).ready(function(){
 	// Character counter for custom message
 	$('#message').on('keyup', function(){
 		$('#charCount').text($(this).val().length);
@@ -523,8 +539,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-});
+	});
+}
 </script>
-
-<?php include('footer.php');?>
 
