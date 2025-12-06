@@ -31,9 +31,10 @@ class mobilenotifications_model extends CI_Model {
 		$update_date = $dt_date->format("Y-m-d H:i:s");
 		
 		$update_data = array(
+			'email' => isset($data['email']) ? $data['email'] : '',
 			'api_code' => $data['api_code'],
 			'api_password' => $data['api_password'],
-			'sender_id' => $data['sender_id'],
+			'sender_id' => isset($data['sender_id']) ? $data['sender_id'] : '',
 			'updated_by' => $this->session->userdata('userid'),
 			'updated_at' => $update_date
 		);

@@ -59,6 +59,7 @@ class mobilenotifications extends CI_Controller {
 		
 		if($this->input->post('save_settings')){
 			$settings_data = array(
+				'email' => $this->input->post('email'),
 				'api_code' => $this->input->post('api_code'),
 				'api_password' => $this->input->post('api_password'),
 				'sender_id' => $this->input->post('sender_id')
@@ -296,144 +297,147 @@ class mobilenotifications extends CI_Controller {
 	private function send_sms($mobile, $message){
 		$settings = $this->my_model->get_sms_settings();
 		
-		if(!$settings || empty($settings['api_code']) || empty($settings['api_password'])){
+		if(!$settings || empty($settings['email']) || empty($settings['api_code']) || empty($settings['api_password'])){
 			return array(
 				'status' => 'failed',
-				'response' => 'ITEXMO API settings not configured',
+				'response' => 'ITEXMO API settings not configured. Please configure Email, API Code, and Password.',
 				'code' => 'NO_CONFIG'
 			);
 		}
 		
-		// Clean mobile number (remove spaces, dashes, etc.)
-		$mobile = preg_replace('/[^0-9]/', '', $mobile);
-		
-		// Remove leading zeros if present
-		$mobile = ltrim($mobile, '0');
-		
-		// For Philippines numbers, ensure it starts with country code if not present
-		// If number starts with 9 and is 10 digits, it's a local number - add 63
-		if(strlen($mobile) == 10 && substr($mobile, 0, 1) == '9'){
-			$mobile = '63' . $mobile;
-		}
-		// If number starts with 0 and then 9, remove the 0
-		elseif(strlen($mobile) == 11 && substr($mobile, 0, 2) == '09'){
-			$mobile = '63' . substr($mobile, 1);
-		}
-		
-		// ITEXMO API endpoint - try alternative endpoints if main one fails
-		$url = 'https://www.itexmo.com/php_api/api.php';
-		
-		// Alternative endpoint (if main one fails)
-		// $url = 'https://www.itexmo.com/php_api/server.php';
-		
-		$data = array(
-			'1' => $mobile,
-			'2' => $message,
-			'3' => $settings['api_code'],
-			'passwd' => $settings['api_password']
-		);
-		
-		if(!empty($settings['sender_id'])){
-			$data['6'] = $settings['sender_id'];
-		}
-		
-		// Send via cURL
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-			'Content-Type: application/x-www-form-urlencoded',
-			'Accept: text/plain'
-		));
-		
-		$response = curl_exec($ch);
-		$curl_error = curl_error($ch);
-		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-		
-		// Check for cURL errors
-		if($response === false || !empty($curl_error)){
-			return array(
-				'status' => 'failed',
-				'response' => 'cURL Error: ' . ($curl_error ? $curl_error : 'Request failed'),
-				'code' => 'CURL_ERROR',
-				'http_code' => $http_code,
-				'raw_response' => $response
-			);
-		}
-		
-		// Check if response is empty
-		if(empty($response) && $response !== '0'){
-			return array(
-				'status' => 'failed',
-				'response' => 'Empty response from ITEXMO API. HTTP Code: ' . $http_code,
-				'code' => 'EMPTY_RESPONSE',
-				'http_code' => $http_code
-			);
-		}
-		
-		// Check if response is HTML (server error page)
-		if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
-			// Extract error code from HTML if possible
-			$error_code = 'SERVER_ERROR';
-			if(preg_match('/<div[^>]*>(\d{3})<\/div>/', $response, $matches)){
-				$error_code = 'HTTP_' . $matches[1];
+		try {
+			// Clean mobile number (remove spaces, dashes, etc.)
+			$mobile = preg_replace('/[^0-9]/', '', $mobile);
+			
+			// Remove leading zeros if present
+			$mobile = ltrim($mobile, '0');
+			
+			// For Philippines numbers, ensure it starts with country code if not present
+			// If number starts with 9 and is 10 digits, it's a local number - add 63
+			if(strlen($mobile) == 10 && substr($mobile, 0, 1) == '9'){
+				$mobile = '63' . $mobile;
+			}
+			// If number starts with 0 and then 9, remove the 0
+			elseif(strlen($mobile) == 11 && substr($mobile, 0, 2) == '09'){
+				$mobile = '63' . substr($mobile, 1);
 			}
 			
-			return array(
-				'status' => 'failed',
-				'response' => 'ITEXMO Server Error (HTTP ' . $http_code . '). The ITEXMO server returned an error page. This may be a temporary issue. Please try again later or contact ITEXMO support.',
-				'code' => $error_code,
-				'http_code' => $http_code,
-				'raw_response' => substr(strip_tags($response), 0, 200) // Store first 200 chars of text
-			);
-		}
-		
-		// Trim response to handle whitespace
-		$response = trim($response);
-		
-		// ITEXMO Response Codes
-		// 0 = Success
-		// Other codes = Error
-		if($response === '0'){
-			return array(
-				'status' => 'sent',
-				'response' => 'Message sent successfully',
-				'code' => '0'
-			);
-		} else {
-			$error_messages = array(
-				'1' => 'Invalid Number',
-				'2' => 'Number prefix not supported',
-				'3' => 'Invalid API Code',
-				'4' => 'Maximum Message per day reached',
-				'5' => 'Maximum allowed characters for message reached',
-				'6' => 'System Offline',
-				'7' => 'Expired API Code',
-				'8' => 'iTexMo Error',
-				'9' => 'Invalid function parameters',
-				'10' => 'Recipient\'s number is blocked',
-				'11' => 'Recipient\'s number is invalid',
-				'12' => 'Invalid sender ID',
-				'13' => 'Sender ID not allowed'
+			// Format recipients as JSON array
+			$recipients = json_encode(array($mobile));
+			
+			// ITEXMO API endpoint - new broadcast API
+			$url = 'http://api.itexmo.com/api/broadcast';
+			
+			$itexmo = array(
+				'Email' => $settings['email'],
+				'Password' => $settings['api_password'],
+				'ApiCode' => $settings['api_code'],
+				'Recipients' => $recipients,
+				'Message' => $message
 			);
 			
-			$error_msg = isset($error_messages[$response]) ? $error_messages[$response] : 'Unknown error (Response: ' . $response . ', HTTP Code: ' . $http_code . ')';
+			// Send via cURL
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($itexmo));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 			
+			$response = curl_exec($ch);
+			$curl_error = curl_error($ch);
+			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+			
+			// Check for cURL errors
+			if($response === false || !empty($curl_error)){
+				return array(
+					'status' => 'failed',
+					'response' => 'cURL Error: ' . ($curl_error ? $curl_error : 'Request failed'),
+					'code' => 'CURL_ERROR',
+					'http_code' => $http_code,
+					'raw_response' => $response
+				);
+			}
+			
+			// Check if response is empty
+			if(empty($response)){
+				return array(
+					'status' => 'failed',
+					'response' => 'Empty response from ITEXMO API. HTTP Code: ' . $http_code,
+					'code' => 'EMPTY_RESPONSE',
+					'http_code' => $http_code
+				);
+			}
+			
+			// Check if response is HTML (server error page)
+			if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
+				$error_code = 'SERVER_ERROR';
+				if(preg_match('/<div[^>]*>(\d{3})<\/div>/', $response, $matches)){
+					$error_code = 'HTTP_' . $matches[1];
+				}
+				
+				return array(
+					'status' => 'failed',
+					'response' => 'ITEXMO Server Error (HTTP ' . $http_code . '). The ITEXMO server returned an error page.',
+					'code' => $error_code,
+					'http_code' => $http_code,
+					'raw_response' => substr(strip_tags($response), 0, 200)
+				);
+			}
+			
+			// Try to parse JSON response
+			$response_data = json_decode($response, true);
+			if(json_last_error() === JSON_ERROR_NONE && is_array($response_data)){
+				// JSON response format
+				if(isset($response_data['status']) && $response_data['status'] == 'success'){
+					return array(
+						'status' => 'sent',
+						'response' => 'Message sent successfully',
+						'code' => 'SUCCESS',
+						'raw_response' => $response
+					);
+				} else {
+					$error_msg = isset($response_data['message']) ? $response_data['message'] : 'Unknown error from ITEXMO API';
+					return array(
+						'status' => 'failed',
+						'response' => $error_msg,
+						'code' => isset($response_data['code']) ? $response_data['code'] : 'API_ERROR',
+						'http_code' => $http_code,
+						'raw_response' => $response
+					);
+				}
+			}
+			
+			// Trim response to handle whitespace
+			$response = trim($response);
+			
+			// Check for success indicators in response
+			if(stripos($response, 'success') !== false || stripos($response, 'sent') !== false || $response === '0' || $response === 'OK'){
+				return array(
+					'status' => 'sent',
+					'response' => 'Message sent successfully',
+					'code' => 'SUCCESS',
+					'raw_response' => $response
+				);
+			}
+			
+			// Default: treat as error
 			return array(
 				'status' => 'failed',
-				'response' => $error_msg,
-				'code' => $response,
+				'response' => 'Failed to send message. Response: ' . substr($response, 0, 100),
+				'code' => 'UNKNOWN_ERROR',
 				'http_code' => $http_code,
 				'raw_response' => $response
+			);
+			
+		} catch (Exception $ex) {
+			return array(
+				'status' => 'failed',
+				'response' => 'Exception: ' . $ex->getMessage(),
+				'code' => 'EXCEPTION',
+				'raw_response' => $ex->getMessage()
 			);
 		}
 	}
@@ -444,103 +448,114 @@ class mobilenotifications extends CI_Controller {
 		
 		$settings = $this->my_model->get_sms_settings();
 		
-		if(!$settings || empty($settings['api_code']) || empty($settings['api_password'])){
+		if(!$settings || empty($settings['email']) || empty($settings['api_code']) || empty($settings['api_password'])){
 			echo json_encode(array(
 				'success' => false,
-				'message' => 'ITEXMO API settings not configured. Please configure in Settings.',
+				'message' => 'ITEXMO API settings not configured. Please configure Email, API Code, and Password in Settings.',
 				'settings_configured' => false
 			));
 			return;
 		}
 		
-		// Test with a dummy number (won't actually send)
-		$test_mobile = '639123456789';
-		$test_message = 'Test message';
-		
-		$url = 'https://www.itexmo.com/php_api/api.php';
-		$data = array(
-			'1' => $test_mobile,
-			'2' => $test_message,
-			'3' => $settings['api_code'],
-			'passwd' => $settings['api_password']
-		);
-		
-		if(!empty($settings['sender_id'])){
-			$data['6'] = $settings['sender_id'];
-		}
-		
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-		
-		$response = curl_exec($ch);
-		$curl_error = curl_error($ch);
-		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-		
-		if($response === false || !empty($curl_error)){
-			echo json_encode(array(
-				'success' => false,
-				'message' => 'Connection failed: ' . ($curl_error ? $curl_error : 'Unable to connect to ITEXMO'),
-				'curl_error' => $curl_error,
-				'http_code' => $http_code
-			));
-			return;
-		}
-		
-		// Check if response is HTML (server error page)
-		if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
-			$error_code = 'SERVER_ERROR';
-			if(preg_match('/<div[^>]*>(\d{3})<\/div>/', $response, $matches)){
-				$error_code = 'HTTP_' . $matches[1];
+		try {
+			// Test with a dummy number (won't actually send)
+			$test_mobile = '639123456789';
+			$test_message = 'Test message';
+			$recipients = json_encode(array($test_mobile));
+			
+			$url = 'http://api.itexmo.com/api/broadcast';
+			$itexmo = array(
+				'Email' => $settings['email'],
+				'Password' => $settings['api_password'],
+				'ApiCode' => $settings['api_code'],
+				'Recipients' => $recipients,
+				'Message' => $test_message
+			);
+			
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($itexmo));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+			
+			$response = curl_exec($ch);
+			$curl_error = curl_error($ch);
+			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+			
+			if($response === false || !empty($curl_error)){
+				echo json_encode(array(
+					'success' => false,
+					'message' => 'Connection failed: ' . ($curl_error ? $curl_error : 'Unable to connect to ITEXMO'),
+					'curl_error' => $curl_error,
+					'http_code' => $http_code
+				));
+				return;
 			}
 			
+			// Check if response is HTML (server error page)
+			if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
+				$error_code = 'SERVER_ERROR';
+				if(preg_match('/<div[^>]*>(\d{3})<\/div>/', $response, $matches)){
+					$error_code = 'HTTP_' . $matches[1];
+				}
+				
+				echo json_encode(array(
+					'success' => false,
+					'message' => 'ITEXMO Server Error (HTTP ' . $http_code . '). The ITEXMO server is experiencing issues.',
+					'response_code' => $error_code,
+					'http_code' => $http_code
+				));
+				return;
+			}
+			
+			// Try to parse JSON response
+			$response_data = json_decode($response, true);
+			if(json_last_error() === JSON_ERROR_NONE && is_array($response_data)){
+				if(isset($response_data['status']) && $response_data['status'] == 'success'){
+					echo json_encode(array(
+						'success' => true,
+						'message' => 'API connection successful! Your ITEXMO credentials are valid.',
+						'response_code' => 'SUCCESS'
+					));
+				} else {
+					$error_msg = isset($response_data['message']) ? $response_data['message'] : 'API Error';
+					echo json_encode(array(
+						'success' => false,
+						'message' => $error_msg,
+						'response_code' => isset($response_data['code']) ? $response_data['code'] : 'API_ERROR',
+						'http_code' => $http_code
+					));
+				}
+				return;
+			}
+			
+			$response = trim($response);
+			
+			// Check for success indicators
+			if(stripos($response, 'success') !== false || $response === '0' || $response === 'OK'){
+				echo json_encode(array(
+					'success' => true,
+					'message' => 'API connection successful! Your ITEXMO credentials are valid.',
+					'response_code' => 'SUCCESS'
+				));
+			} else {
+				echo json_encode(array(
+					'success' => false,
+					'message' => 'API test completed. Response: ' . substr($response, 0, 100),
+					'response_code' => 'UNKNOWN',
+					'http_code' => $http_code,
+					'raw_response' => $response
+				));
+			}
+			
+		} catch (Exception $ex) {
 			echo json_encode(array(
 				'success' => false,
-				'message' => 'ITEXMO Server Error (HTTP ' . $http_code . '). The ITEXMO server is experiencing issues. Please try again later or contact ITEXMO support.',
-				'response_code' => $error_code,
-				'http_code' => $http_code
-			));
-			return;
-		}
-		
-		$response = trim($response);
-		
-		$error_messages = array(
-			'1' => 'Invalid Number',
-			'2' => 'Number prefix not supported',
-			'3' => 'Invalid API Code - Please check your API Code',
-			'4' => 'Maximum Message per day reached',
-			'5' => 'Maximum allowed characters for message reached',
-			'6' => 'System Offline',
-			'7' => 'Expired API Code - Your API Code has expired',
-			'8' => 'iTexMo Error',
-			'9' => 'Invalid function parameters',
-			'10' => 'Recipient\'s number is blocked',
-			'11' => 'Recipient\'s number is invalid',
-			'12' => 'Invalid sender ID',
-			'13' => 'Sender ID not allowed'
-		);
-		
-		if($response == '0'){
-			echo json_encode(array(
-				'success' => true,
-				'message' => 'API connection successful! Your ITEXMO credentials are valid.',
-				'response_code' => $response
-			));
-		} else {
-			$error_msg = isset($error_messages[$response]) ? $error_messages[$response] : 'Unknown error (Code: ' . $response . ')';
-			echo json_encode(array(
-				'success' => false,
-				'message' => $error_msg,
-				'response_code' => $response,
-				'http_code' => $http_code,
-				'raw_response' => $response
+				'message' => 'Exception: ' . $ex->getMessage(),
+				'response_code' => 'EXCEPTION'
 			));
 		}
 	}

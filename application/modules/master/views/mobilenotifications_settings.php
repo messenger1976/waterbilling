@@ -54,6 +54,14 @@
 								<input type="hidden" name="save_settings" value="1">
 								
 								<div class="form-group">
+									<label class="col-sm-3 control-label">Email: <span class="text-danger">*</span></label>
+									<div class="col-sm-9">
+										<input type="email" class="form-control" name="email" value="<?php echo isset($settings['email']) ? $settings['email'] : ''; ?>" required>
+										<small class="help-block">Your ITEXMO account email address</small>
+									</div>
+								</div>
+								
+								<div class="form-group">
 									<label class="col-sm-3 control-label">API Code: <span class="text-danger">*</span></label>
 									<div class="col-sm-9">
 										<input type="text" class="form-control" name="api_code" value="<?php echo isset($settings['api_code']) ? $settings['api_code'] : ''; ?>" required>
