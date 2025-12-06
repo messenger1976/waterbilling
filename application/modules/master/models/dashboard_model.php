@@ -10,6 +10,7 @@ class dashboard_model extends CI_Model {
 	public $table_payrol = 'tbl_payrols';
 	public $table_zone = 'tbl_zone';
 	public $table_leaking_ledger = 'tbl_leaking_ledger';
+	public $table_sms_notifications = 'tbl_sms_notifications';
 	// Autoloading a system library usin constructor method
 	public function __construct() {
         parent::__construct();

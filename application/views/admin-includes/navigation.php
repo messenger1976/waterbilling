@@ -285,12 +285,29 @@
 						<li class="<?php if($this->uri->segment(2)=='web_settings') echo 'active';?>">
 							<a href="<?php echo ADMIN_URL;?>web_settings"><i class="fa fa-lg fa-fw fa-location-arrow"></i> <span class="menu-item-parent">Admin Address</span></a>
 						</li>
+					<?php } ?>
+					<?php if((array_key_exists('mobile_notifications',$roleResponsible) && ($roleResponsible['mobile_notifications'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+						<li class="<?php if($this->uri->segment(2)=='mobilenotifications'){echo 'active open';}?>">
+							<a href="#"><i class="fa fa-lg fa-fw fa-mobile"></i> <span class="menu-item-parent">Mobile Notifications</span></a>
+							<ul>
+								<li class="<?php if($this->uri->segment(2)=='mobilenotifications' && ($this->uri->segment(3)=='' || $this->uri->segment(3)=='index')) echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>mobilenotifications/">Notifications</a>
+								</li>
+								<li class="<?php if($this->uri->segment(2)=='mobilenotifications' && $this->uri->segment(3)=='settings') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>mobilenotifications/settings">Settings</a>
+								</li>
+								<li class="<?php if($this->uri->segment(2)=='mobilenotifications' && $this->uri->segment(3)=='dashboard') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>mobilenotifications/dashboard">Analytics Dashboard</a>
+								</li>
+							</ul>
+						</li>
 					<?php } ?>	
                     <?php if((array_key_exists('admin',$roleResponsible) && ($roleResponsible['admin'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 					<li class="<?php if($this->uri->segment(2)=='responsibilities'){echo 'active open';}?>
 									<?php if($this->uri->segment(2)=='addbillingperiod'){echo 'active open';}?>
 									<?php if($this->uri->segment(2)=='createbalanceforward'){echo 'active open';}?>
-								   <?php if($this->uri->segment(2)=='employee_logins'){echo 'active open';}?>">
+								   <?php if($this->uri->segment(2)=='employee_logins'){echo 'active open';}?>
+								   <?php if($this->uri->segment(2)=='mobilenotifications'){echo 'active open';}?>">
 						<a href="#"><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Admin</span></a>
 						<ul>
 

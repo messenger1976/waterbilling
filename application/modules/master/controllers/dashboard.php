@@ -47,6 +47,10 @@ class dashboard extends CI_Controller {
 		$data['customer'] = $this->my_model->get_customers_list();
 		$data['expenses'] = $this->my_model->get_expenses_list();
 		$data['leaking'] = $this->my_model->get_total_leaking_balance();
+		
+		// Load SMS notification statistics
+		$this->load->model('mobilenotifications_model','sms_model');
+		$data['sms_stats'] = $this->sms_model->get_notification_stats();
 
 		$data['JanTotal'] = $this->my_model->get_total_sales(1,$yearrep,99);
 		$data['FebTotal'] = $this->my_model->get_total_sales(2,$yearrep,99);
