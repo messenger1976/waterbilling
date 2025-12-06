@@ -117,3 +117,69 @@
 
 <?php include('footer.php');?>
 
+<script>
+// Ensure jQuery is loaded before executing
+if (typeof jQuery === 'undefined') {
+	setTimeout(function() {
+		if (typeof jQuery !== 'undefined') {
+			initTestApiScript();
+		}
+	}, 100);
+} else {
+	initTestApiScript();
+}
+
+function initTestApiScript() {
+	var $ = jQuery;
+	
+	$(document).ready(function(){
+		$('#testApiBtn').on('click', function(){
+			var btn = $(this);
+			btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Testing...');
+			
+			// Get current protocol
+			var protocol = window.location.protocol;
+			var host = window.location.host;
+			var baseUrl = protocol + '//' + host + '/master/mobilenotifications/';
+			
+			$.ajax({
+				url: baseUrl + 'test_api',
+				type: 'GET',
+				dataType: 'json',
+				success: function(response){
+					if(response.success){
+						alert('SUCCESS: ' + response.message);
+					} else {
+						var errorMsg = 'ERROR: ' + response.message;
+						if(response.response_code){
+							errorMsg += '\nResponse Code: ' + response.response_code;
+						}
+						if(response.http_code){
+							errorMsg += '\nHTTP Code: ' + response.http_code;
+						}
+						alert(errorMsg);
+					}
+				},
+				error: function(xhr, status, error){
+					var errorMsg = 'Connection Error: ' + error;
+					if(xhr.responseText){
+						try {
+							var response = JSON.parse(xhr.responseText);
+							if(response.message){
+								errorMsg = response.message;
+							}
+						} catch(e) {
+							// Not JSON, use default error
+						}
+					}
+					alert(errorMsg);
+				},
+				complete: function(){
+					btn.prop('disabled', false).html('<i class="fa fa-plug"></i> Test API Connection');
+				}
+			});
+		});
+	});
+}
+</script>
+
