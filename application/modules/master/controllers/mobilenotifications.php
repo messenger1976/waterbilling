@@ -320,8 +320,11 @@ class mobilenotifications extends CI_Controller {
 			$mobile = '63' . substr($mobile, 1);
 		}
 		
-		// ITEXMO API endpoint
+		// ITEXMO API endpoint - try alternative endpoints if main one fails
 		$url = 'https://www.itexmo.com/php_api/api.php';
+		
+		// Alternative endpoint (if main one fails)
+		// $url = 'https://www.itexmo.com/php_api/server.php';
 		
 		$data = array(
 			'1' => $mobile,
@@ -344,6 +347,12 @@ class mobilenotifications extends CI_Controller {
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+			'Content-Type: application/x-www-form-urlencoded',
+			'Accept: text/plain'
+		));
 		
 		$response = curl_exec($ch);
 		$curl_error = curl_error($ch);
@@ -368,6 +377,23 @@ class mobilenotifications extends CI_Controller {
 				'response' => 'Empty response from ITEXMO API. HTTP Code: ' . $http_code,
 				'code' => 'EMPTY_RESPONSE',
 				'http_code' => $http_code
+			);
+		}
+		
+		// Check if response is HTML (server error page)
+		if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
+			// Extract error code from HTML if possible
+			$error_code = 'SERVER_ERROR';
+			if(preg_match('/<div[^>]*>(\d{3})<\/div>/', $response, $matches)){
+				$error_code = 'HTTP_' . $matches[1];
+			}
+			
+			return array(
+				'status' => 'failed',
+				'response' => 'ITEXMO Server Error (HTTP ' . $http_code . '). The ITEXMO server returned an error page. This may be a temporary issue. Please try again later or contact ITEXMO support.',
+				'code' => $error_code,
+				'http_code' => $http_code,
+				'raw_response' => substr(strip_tags($response), 0, 200) // Store first 200 chars of text
 			);
 		}
 		
@@ -462,6 +488,22 @@ class mobilenotifications extends CI_Controller {
 				'success' => false,
 				'message' => 'Connection failed: ' . ($curl_error ? $curl_error : 'Unable to connect to ITEXMO'),
 				'curl_error' => $curl_error,
+				'http_code' => $http_code
+			));
+			return;
+		}
+		
+		// Check if response is HTML (server error page)
+		if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
+			$error_code = 'SERVER_ERROR';
+			if(preg_match('/<div[^>]*>(\d{3})<\/div>/', $response, $matches)){
+				$error_code = 'HTTP_' . $matches[1];
+			}
+			
+			echo json_encode(array(
+				'success' => false,
+				'message' => 'ITEXMO Server Error (HTTP ' . $http_code . '). The ITEXMO server is experiencing issues. Please try again later or contact ITEXMO support.',
+				'response_code' => $error_code,
 				'http_code' => $http_code
 			));
 			return;
