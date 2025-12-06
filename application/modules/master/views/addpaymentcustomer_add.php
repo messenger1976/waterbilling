@@ -675,7 +675,7 @@ $('#btn_search_box').on('click', function(evt) {
 	const search_text_result = search_text.split("==>");
 	var id = search_text_result[0];
 	$('#customer_id').val(id);
-	showSpinner(); // Call this to show the spinner
+	//showSpinner(); // Call this to show the spinner
 	$.ajax({
 		type: 'POST',
 		url: '<?php echo ADMIN_URL;?>addpaymentcustomer/get_custmer_name/',
@@ -703,7 +703,7 @@ $('#btn_search_box').on('click', function(evt) {
 		data: {id: id},
 		//async: false, // Make the request synchronous
 		beforeSend: function() {
-			//showSpinner(); // Call this to show the spinner
+			showSpinner(); // Call this to show the spinner
   		},
 		success: function(data) {
 			$("#meterincomeDiv").html(data);		

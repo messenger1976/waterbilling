@@ -123,7 +123,7 @@ class addpaymentcustomer extends CI_Controller {
 			
 			$id = $this->input->post('id');
 			//$this->load->model('addpaymentcustomer_model','my_model');
-			$data['reading'] = $this->my_model->get_addcustomer_add_all_records($id);
+			//$data['reading'] = $this->my_model->get_addcustomer_add_all_records($id);
 			$data['record'] = $this->my_model->get_meter_reading_all_records($id);
 			//$data['collectinfo'] =  $this->my_model->collectinfo($id);
 			//$data['month_collectinfo'] = $this->my_model->month_collectinfo($id);
@@ -1044,12 +1044,17 @@ public function monthly_receipt_ver1($customer,$month,$year,$invoice_id) {
 	$state = strtoupper(trim($state));
 	$curdate = date('Y-m-d');
 	$datefor = date('d-m-Y', strtotime($tdate));
-	$panalty_msg ='';
+	$panalty_msg ='<span style="font-size:9px;line-height:8px;"><br/>';
 	if($amount !== $reading_amount){
+		if($maintenance_fee>0.00){
+			$panalty_msg = 'WMMF = '. number_format($maintenance_fee,2).' + '.number_format($penalty,2).',';
+			$amount -= $maintenance_fee;
+		}
 		$penalty = $amount - $reading_amount;
 		//$amount = $penalty;
-		$panalty_msg = '<span style="font-size:9px;line-height:8px;"><br/>Penalty = 10% = '. number_format($reading_amount,2).' + '.number_format($penalty,2).'</span>';
+		$panalty_msg .= 'Penalty  = '. number_format($reading_amount,2).' + '.number_format($penalty,2);
 	}
+	$panalty_msg .='</span>';
 
 	$amountinwords = convertNumberToWordsPH($grand_total);	
 	

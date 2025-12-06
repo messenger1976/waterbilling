@@ -15,11 +15,11 @@ class Master extends CI_Controller {
 	//set Redirect page to list page
 	//public $listPage_redirect = '/master/addcustomer';
 	//public $listPage_redirect = '/master/dashboard';
-	public $listPage_redirect = '/master/addpaymentcustomer';
+	public $listPage_redirect = '/master/dashboard';
 	public $listMobilePage_redirect = '/master/mobile_dashboard';
 	public $forgot_redirect = '/master/forgot_password';
 	//public $listPage_redirect_subadmin = '/master/change_password';
-	public $listPage_redirect_subadmin = '/master/addpaymentcustomer';
+	public $listPage_redirect_subadmin = '/master/dashboard';
 	public $login_redirect = '/master/index';
 	public $loginMobile_redirect = '/master/app_login';
 	//set Redirect page to add page

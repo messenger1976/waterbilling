@@ -22,13 +22,18 @@ class addmetercustomerreading_model extends CI_Model {
     }
 	
 	/** In Function Get all records from select table **/
-    public function get_all_records() {
+    public function get_all_records($billing_period='') {
         $this->db->select($this->table_name.".*,".$this->table_months.".*,".$this->table_customer_type.".*,".$this->table_customername.".*,".$this->table_name.".customer_id as customer_id,".$this->table_name.".id as id, 
 		(Select id  from ".$this->table_generate_customer." where ".$this->table_generate_customer.".insert_month_id = ".$this->table_name.".id) as id_generate");
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_customername, $this->table_customername.".customer_id = ".$this->table_name.".customer_id", 'left');
 		$this->db->join($this->table_months, $this->table_name.".month = ".$this->table_months.".month_id", 'left');
 		$this->db->join($this->table_customer_type, $this->table_customername.".account_type = ".$this->table_customer_type.".cust_type_id", 'left');
+		if($billing_period!=''){
+			$billperiod = explode(' ',$billing_period);
+			$this->db->where($this->table_name.'.month',$billperiod[0]);
+			$this->db->where($this->table_name.'.year',$billperiod[1]);
+		}
 		$this->db->order_by($this->table_name.'.id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -109,6 +114,7 @@ class addmetercustomerreading_model extends CI_Model {
 						'arrears' => $this->input->post('arrears'),
 						'amount' => $this->input->post('total_amount'),
 						'penalty' => $this->input->post('penalty'),
+						'maintenance_fee' => $this->input->post('maintenance_fee'),
 						'date' => $this->input->post('reading_date'),
 						'customer_status' => $this->input->post('customer_status'),
 					);
@@ -209,7 +215,7 @@ class addmetercustomerreading_model extends CI_Model {
 
 	public function get_addcustomer_meterreading_records($customer_id,$bp_month='',$bp_year='')
 	{ 
-        $this->db->select($this->table_customername.".customer_id,".$this->table_customername.".first_name,".$this->table_customername.".last_name,".$this->table_customername.".middle_name,".$this->table_customername.".gender,".$this->table_customername.".address,".$this->table_customername.".mobile1,".$this->table_customername.".mobile2,".$this->table_customername.".email_id,".$this->table_customername.".customer_type,".$this->table_name.".bp_id,".$this->table_name.".previous_reading,".$this->table_name.".reading,".$this->table_name.".consumed,".$this->table_name.".unit_price,".$this->table_name.".sc_discount,".$this->table_name.".penalty,".$this->table_name.".arrears,".$this->table_name.".amount,".$this->table_name.".month,".$this->table_name.".year,".$this->table_name.".arrears,".$this->table_name.".date,".$this->table_name.".refno,".$this->table_name.".id,".$this->table_months.".month_name,".$this->table_customername.".account_type,".$this->table_customername.".special_priviledge,".$this->table_name.".status,".$this->table_name.".customer_status");
+        $this->db->select($this->table_customername.".customer_id,".$this->table_customername.".first_name,".$this->table_customername.".last_name,".$this->table_customername.".middle_name,".$this->table_customername.".gender,".$this->table_customername.".address,".$this->table_customername.".mobile1,".$this->table_customername.".mobile2,".$this->table_customername.".email_id,".$this->table_customername.".customer_type,".$this->table_name.".bp_id,".$this->table_name.".previous_reading,".$this->table_name.".reading,".$this->table_name.".consumed,".$this->table_name.".unit_price,".$this->table_name.".sc_discount,".$this->table_name.".penalty,".$this->table_name.".arrears,".$this->table_name.".amount,".$this->table_name.".month,".$this->table_name.".year,".$this->table_name.".maintenance_fee,".$this->table_name.".date,".$this->table_name.".refno,".$this->table_name.".id,".$this->table_months.".month_name,".$this->table_customername.".account_type,".$this->table_customername.".special_priviledge,".$this->table_name.".status,".$this->table_name.".customer_status");
 		$this->db->from($this->table_customername);
 		$this->db->join($this->table_name,$this->table_customername.'.customer_id='.$this->table_name.'.customer_id');
 		$this->db->join($this->table_months,$this->table_name.'.month='.$this->table_months.'.month_id');
@@ -248,6 +254,15 @@ class addmetercustomerreading_model extends CI_Model {
 		$this->db->limit(1);
 		$query = $this->db->get();
 		$result = $query->result_array();
+		return $result;
+		
+	}
+	public function get_single_record_refno($refno){
+		$this->db->select("*");
+		$this->db->from($this->table_name);
+		$this->db->where('refno', $refno);
+		$query = $this->db->get();
+		$result = $query->row();
 		return $result;
 		
 	}
@@ -316,7 +331,10 @@ class addmetercustomerreading_model extends CI_Model {
 			if($customerinfo[0]['account_type']==3){
 				$discount = ($cubicmeter_rate->per_unit * 5)/100;
 			}
+			
 			$total_amount = $cubicmeter_rate->per_unit - $discount;
+			$maintenance_fee = $this->get_single_record_refno($data['refno'])->maintenance_fee;
+			$total_amount += $maintenance_fee;
 			$amount_total_penalty = 0;
 			if($customerinfo[0]['special_priviledge']==='0'){
 				$amount_total_penalty = ($total_amount * 10)/100;

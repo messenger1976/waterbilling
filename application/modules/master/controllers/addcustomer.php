@@ -50,6 +50,7 @@ class addcustomer extends CI_Controller {
 		$this->load->model('common_model','comm_model');
 		$this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//		
 		$this->load->library('form_validation');
+		$this->load->library('ciqrcode');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
 		error_reporting(0);
@@ -1568,6 +1569,42 @@ EOD;
 	
 }
 
+	public function qrcode(){ //
+		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
+		
+		$this->form_validation->set_rules('qrcodedata', 'QRCode Data', 'required|xss_clean');
+		
+
+		
+		if ($this->form_validation->run() === false) {
+            $data['error'] = validation_errors();
+	    } else {
+			$unique_file = 'QRCode_'.rand();
+			$data['qr_image'] = $qr_image =  $unique_file.'.png';
+			$data['webar_url']=$this->input->post('qrcodedata');
+			$this->generateQRCode($qr_image,$data['webar_url']);
+			$redirect_uri = base_url().'master/addcustomer/qrcode';
+			header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+			exit;
+
+		}	
+
+		 $this->load->view($this->headerPage,$this->head);
+		 $this->load->view('qrcode',$data);
+
+		
+	}
+
+	public function generateQRCode($qr_image,$webar_url){
+		$this->load->library('ciqrcode');
+		header("Content-Type: image/png");
+		$params['savename'] = QRCODE_PATH.$qr_image;
+		$params['data'] = $webar_url;
+		$params['level'] = 'L';
+		$params['size'] = 25;
+		$this->ciqrcode->generate($params);
+		return true;
+	}
 	
 }
 ?>

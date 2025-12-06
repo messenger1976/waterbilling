@@ -231,17 +231,23 @@
 							<?php } ?>
 
 							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
+							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='customer_report') echo 'active';?>">
+								<a href="<?php echo ADMIN_URL;?>reports/customer_report"> <span class="menu-item-parent">Customer Report</span></a>
+							</li>	
+							<?php } ?>
+
+							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
 							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='aging_ar_report') echo 'active';?>">
 								<a href="<?php echo ADMIN_URL;?>reports/aging_ar_report"> <span class="menu-item-parent">Aging A/R Report</span></a>
 							</li>	
 							<?php } ?>
-
+								<!--
 							<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
 							<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='leaking_ar_report') echo 'active';?>">
 								<a href="<?php echo ADMIN_URL;?>reports/leaking_ar_report"> <span class="menu-item-parent">Leaking Report</span></a>
 							</li>	
 							<?php } ?>
-						   
+							-->
 						</ul>
 					</li>
 
@@ -267,20 +273,41 @@
 							<a href="<?php echo ADMIN_URL;?>technicalproblems"><i class="fa fa-lg fa-fw fa-gavel"></i> <span class="menu-item-parent">Technical Problems </span></a>
 						</li>
 					<?php } ?>
+					<!--	
 					<?php if((array_key_exists('technicalsearch',$roleResponsible) && ($roleResponsible['technicalsearch'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 						<li class="<?php if($this->uri->segment(3)=='technicalsearch' && $this->uri->segment(2)=='addcustomer') echo 'active';?>">
 							<a href="<?php echo ADMIN_URL;?>addcustomer/technicalsearch/"><i class="glyphicon glyphicon-zoom-in"></i><span class="menu-item-parent">Technical Problems View</span></a>
 						</li>	
 					<?php } ?>
+					-->
+
 					<?php if((array_key_exists('web_settings',$roleResponsible) && ($roleResponsible['web_settings'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 						<li class="<?php if($this->uri->segment(2)=='web_settings') echo 'active';?>">
 							<a href="<?php echo ADMIN_URL;?>web_settings"><i class="fa fa-lg fa-fw fa-location-arrow"></i> <span class="menu-item-parent">Admin Address</span></a>
+						</li>
+					<?php } ?>
+					<?php if((array_key_exists('mobile_notifications',$roleResponsible) && ($roleResponsible['mobile_notifications'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+						<li class="<?php if($this->uri->segment(2)=='mobilenotifications'){echo 'active open';}?>">
+							<a href="#"><i class="fa fa-lg fa-fw fa-mobile"></i> <span class="menu-item-parent">Mobile Notifications</span></a>
+							<ul>
+								<li class="<?php if($this->uri->segment(2)=='mobilenotifications' && ($this->uri->segment(3)=='' || $this->uri->segment(3)=='index')) echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>mobilenotifications/">Notifications</a>
+								</li>
+								<li class="<?php if($this->uri->segment(2)=='mobilenotifications' && $this->uri->segment(3)=='settings') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>mobilenotifications/settings">Settings</a>
+								</li>
+								<li class="<?php if($this->uri->segment(2)=='mobilenotifications' && $this->uri->segment(3)=='dashboard') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>mobilenotifications/dashboard">Analytics Dashboard</a>
+								</li>
+							</ul>
 						</li>
 					<?php } ?>	
                     <?php if((array_key_exists('admin',$roleResponsible) && ($roleResponsible['admin'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
 					<li class="<?php if($this->uri->segment(2)=='responsibilities'){echo 'active open';}?>
 									<?php if($this->uri->segment(2)=='addbillingperiod'){echo 'active open';}?>
-								   <?php if($this->uri->segment(2)=='employee_logins'){echo 'active open';}?>">
+									<?php if($this->uri->segment(2)=='createbalanceforward'){echo 'active open';}?>
+								   <?php if($this->uri->segment(2)=='employee_logins'){echo 'active open';}?>
+								   <?php if($this->uri->segment(2)=='mobilenotifications'){echo 'active open';}?>">
 						<a href="#"><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Admin</span></a>
 						<ul>
 
@@ -303,6 +330,12 @@
 									<a href="<?php echo ADMIN_URL;?>addbillingperiod/">Setup Schedule Billing Period</a>
 								</li>
 							 <?php } ?>	
+							 
+							 <?php if((array_key_exists('createbalanceforward',$roleResponsible) && ($roleResponsible['createbalanceforward'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>	
+								<li class="<?php if($this->uri->segment(2)=='createbalanceforward' && $this->uri->segment(2)=='createbalanceforward') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>createbalanceforward/">Create Balance Forward</a>
+								</li>
+							 <?php } ?>	
 
 							 <li class="<?php if($this->uri->segment(2)=='or_correction' && $this->uri->segment(2)=='or_correction'){echo 'active';}?>">
 								<a href="<?php echo ADMIN_URL;?>or_correction/"> OR Correction</a>
@@ -310,6 +343,12 @@
 							<li class="<?php if($this->uri->segment(2)=='addmetercustomerreading' && $this->uri->segment(3)=='edit'){echo 'active';}?>">
 								<a href="<?php echo ADMIN_URL;?>addmetercustomerreading/edit"> Meter Reading Correction</a>
 							</li>
+							
+							<?php if((array_key_exists('database_backup',$roleResponsible) && ($roleResponsible['database_backup'] == 1 || (is_array($roleResponsible['database_backup']) && count($roleResponsible['database_backup']) > 0)) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+								<li class="<?php if($this->uri->segment(2)=='database_backup') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>database_backup/"><i class="fa fa-database"></i> Database Backup</a>
+								</li>
+							<?php } ?>
 								 
 						</ul>
 					</li>

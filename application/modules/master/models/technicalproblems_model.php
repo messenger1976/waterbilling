@@ -1,6 +1,7 @@
 <?php 
 class technicalproblems_model extends CI_Model {
 	public $table_name = 'tbl_technical';
+    public $table_message = 'tbl_technical_messages';
     public $table_customername = 'tbl_addcustomer';
 	public $table_meter = 'tbl_addmetercustomer';
 	public $table_monthly = 'tbl_monthlycustomer';
@@ -15,10 +16,9 @@ class technicalproblems_model extends CI_Model {
 	/** In Function Get all records from select table **/
     
 	 public function get_all_records() {
-        $this->db->select("*,(Select first_name from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as names,
-		(Select address from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as address,
-		(Select mobile1 from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as mobile1");
+        $this->db->select("*,(Select first_name from ".$this->table_customername." where ".$this->table_customername.".customer_id = ".$this->table_name.".customer_id) as names");
 		$this->db->from($this->table_name);
+		$this->db->where('deleted_rec',0);
 		$this->db->order_by('id','desc');
 		$query = $this->db->get();
 		//echo $this->db->last_query();
@@ -48,6 +48,16 @@ class technicalproblems_model extends CI_Model {
 		$result = $query->result_array();
 		return $result;
     }	
+	public function get_customer_info_details($customer_id){
+ 		$this->db->select("*");
+		$this->db->from($this->table_customername);
+		
+		$this->db->where('customer_id',$customer_id);
+		
+		$query = $this->db->get();
+		$result = $query->row_array();
+		return $result;			
+	}
 	/*public function get_addcustomer() {
         $this->db->select("*");
 		$this->db->from($this->table_customername);
@@ -82,6 +92,18 @@ class technicalproblems_model extends CI_Model {
 			$query = $this->db->get();
 			//echo $this->db->last_query();
 			$result = $query->row_array();
+		}
+		return $result;
+    }
+
+	public function get_message_records($id='') {
+        $this->db->select("*");
+		$this->db->from($this->table_message);
+		if($id != ''){
+			$this->db->where("technical_id",$id);
+			$query = $this->db->get();
+			//echo $this->db->last_query();
+			$result = $query->result_array();
 		}
 		return $result;
     }
@@ -139,32 +161,76 @@ class technicalproblems_model extends CI_Model {
     }*/
 	
   	/** In Function Add records for select table **/
-	public function add_record(){
+	public function add_record($employee_rec){
 		//echo'<pre>';print_r($add_record);exit;
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$created_date = $dt_date->format("Y-m-d H:i:s");
+
+		$preparedby_name = $employee_rec[0]['first_name'].' '.$employee_rec[0]['middle_name'].' '.$employee_rec[0]['last_name'].' - '.$employee_rec[0]['jobtitle'];
 	  $set_data = array(
-						'customer_id' => $this->input->post('name'),
-						//'name' => mysql_real_escape_string($this->input->post('name')),
-					    'problem' => mysql_real_escape_string($this->input->post('problem')),
-					   'status' => 0,
-						'create_date_time' => date('Y-m-d H:i:s'),
-						
-					);
+			'customer_id' => $this->input->post('cust_id'),
+			'lastname' => $this->input->post('lastname'),
+			'firstname' => $this->input->post('firstname'),
+			'middlename' => $this->input->post('middlename'),
+			'meter_number' => $this->input->post('meter_number'),
+			'address' => $this->input->post('address'),
+			'problem_summary' => $this->input->post('problem_summary'),
+			'problem_details' => $this->input->post('problem_details'),
+			'reported_by_id' => $this->input->post('reportedby'),
+			'reported_by_name' => $preparedby_name,
+			'reported_date' => date('Y-m-d',strtotime($this->input->post('reported_date'))),
+			'status' => $this->input->post('status'),
+			'create_date_time' => $created_date,
+			
+		);
 		$result = $this->db->insert($this->table_name, $set_data); 
+		return $result;
+	}
+
+	public function add_messages_record($employee_rec){
+		//echo'<pre>';print_r($add_record);exit;
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$created_date = $dt_date->format("Y-m-d H:i:s");
+
+		//$preparedby_name = $employee_rec[0]['first_name'].' '.$employee_rec[0]['middle_name'].' '.$employee_rec[0]['last_name'].' - '.$employee_rec[0]['jobtitle'];
+        
+		$set_data1 = array(
+			'status' => $this->input->post('msg_status'),
+			'update_date_time' => $created_date,
+		);
+		$this->db->where('id',$this->input->post('technical_id'));
+		$result1 = $this->db->update($this->table_name, $set_data1); 
+
+	  	$set_data = array(
+			'technical_id' => $this->input->post('technical_id'),
+			'technical_msg_text' => $this->input->post('msg_logs'),
+			'technical_msg_status' => $this->input->post('msg_status'),
+			'technical_msg_reported_by_id' => $this->input->post('msg_reportedby'),
+			'technical_msg_reported_name' => $this->input->post('reportedby_name'),
+			'technical_msg_reported_date' => date('Y-m-d',strtotime($this->input->post('posted_date'))),
+			'technical_msg_created_date' => $created_date,
+			
+		);
+		$result = $this->db->insert($this->table_message, $set_data); 
 		return $result;
 	}
   	/** In Function Update records for select table **/
 	public function update_record($id){
-		
+		$dt_date = new DateTime("now", new DateTimeZone("Asia/Manila"));
+		$updated_date = $dt_date->format("Y-m-d H:i:s");
+
 		
 		$set_data = array(
-						'customer_id' => $this->input->post('customer_id'),
-						//'name' => mysql_real_escape_string($this->input->post('name')),
-						'problem' => mysql_real_escape_string($this->input->post('problem')),
-						'status' => mysql_real_escape_string($this->input->post('status')),
-						'create_date_time' => date('Y-m-d H:i:s'),
-						
-					);
-				//echo'<pre>';print_r($set_data);exit;	
+			//'customer_id' => $this->input->post('customer_id'),
+			//'name' => mysql_real_escape_string($this->input->post('name')),
+			'problem_summary' => $this->input->post('problem_summary'),
+			'problem_details' => $this->input->post('problem_details'),
+			'status' => $this->input->post('status'),
+			'reported_date' => date('Y-m-d',strtotime($this->input->post('reported_date'))),
+			'update_date_time' => $updated_date,
+			
+		);
+		//echo'<pre>';print_r($set_data);exit;	
 		$this->db->where('id',$id);
 		$result = $this->db->update($this->table_name, $set_data); 
 		return $result;
@@ -174,7 +240,10 @@ class technicalproblems_model extends CI_Model {
   	/** In Function Delete records for select table **/
 	public function delete_record($id){
 		$this->db->where('id',$id);
-		$result = $this->db->delete($this->table_name); 
+		$set_data = array(
+						'deleted_rec' => 1
+					);
+		$result = $this->db->update($this->table_name,$set_data); 
 		return $result;
 	}
 	

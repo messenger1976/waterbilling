@@ -51,6 +51,8 @@ class adminheader_model extends CI_Model {
 				'web_settings' => 'Admin Address',
 				'admin' => 'Admin',
 				'leakingentry' => 'Leaking Entry',
+				'database_backup' => 'Database Backup',
+				'mobile_notifications' => 'Mobile Notifications',
 				);
 	}
 

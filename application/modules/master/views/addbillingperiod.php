@@ -240,7 +240,20 @@
 									</div>
 									
 								</div>
-								
+								<div class="row">
+									<div class="col-md-12 controls">
+										<div class="form-group">
+											<label for="category">Zone</label>
+											<select  class="form-control" name="zone_listing" id="zone_listing" class="col-lg-12" required>
+												
+												<?php foreach($zone_listing as $key =>$value){ ?>
+												<option value="<?php echo $value['id']; ?>"><?php echo $value['zone'];?></option>
+												<?php } ?>
+											</select>
+										</div>
+									</div>
+									
+								</div>
 				
 							</div>
 							<div class="modal-footer">
@@ -450,6 +463,7 @@
 						var selectedItems = [];
 						var billingperiodforward = $('#forwardbillingperiod').val();
 						var currentbillingperiod = $('#currentbillingperiod').val();
+						var zone_id = $('#zone_listing').val();
 						
 
 						/*$("input[name='delete_ids[]']:checked").each(function(){
@@ -462,12 +476,13 @@
 						}*/
 
 						$.ajax({
-							url: "<?php echo ADMIN_URL;?>addbillingperiod/billingforwardposting", 
+							url: "<?php echo base_url();?>master/addbillingperiod/billingforwardposting", 
 							type: "POST",
 							data: {
 								//delete_ids: selectedItems,
 								billingperiodforward: billingperiodforward,
-								currentbillingperiod: currentbillingperiod
+								currentbillingperiod: currentbillingperiod,
+								zone_listing: zone_id
 							},
 							success: function(response){
 								//alert(response);
@@ -508,7 +523,7 @@
 				//showSpinner();
 				$.ajax({
             		type : "POST",
-					url	: '<?php echo ADMIN_URL;?>addbillingperiod/updated_headerbillingperiod',
+					url	: '<?php echo base_url();?>master/addbillingperiod/updated_headerbillingperiod',
 					data	: "billing_period="+header_billing_period,
 					complete: function(data){
 						console.log(data);
@@ -562,7 +577,7 @@
         $.ajax({
             
             type : "POST",
-            url	: '<?php echo ADMIN_URL;?>addbillingperiod/addbillingperiod_search',
+            url	: '<?php echo base_url();?>master/addbillingperiod/addbillingperiod_search',
             //data	: "customer_type="+customer_type+"&zone="+zone+"&fromdate="+fromdate+"&todate="+todate+",
             data	: "zone="+zone+"&billingperiod="+billingperiod,
             complete: function(data){

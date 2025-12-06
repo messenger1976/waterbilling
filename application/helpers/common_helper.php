@@ -114,11 +114,12 @@ if(!function_exists('convertToWords'))
 
 if(!function_exists('getCustomerInfo'))
 {
-    function getCustomerInfo()
+    function getCustomerInfo($zone_id)
     {
         $CI = &get_instance();
         
         $CI->db->where('status', '1');
+        $CI->db->where('zone', $zone_id);
         
         
         $customerinfo = $CI->db->get('tbl_addcustomer')->result();
@@ -141,8 +142,8 @@ if(!function_exists('getMonthName'))
 
 if(!function_exists('customerbillingperiod'))
 {
-    function customerbillingperiod($bp_month,$bp_year,$bp_current_month,$bp_current_year) {
-        $customerinfoList = getCustomerInfo();
+    function customerbillingperiod($bp_month,$bp_year,$bp_current_month,$bp_current_year, $zone_id) {
+        $customerinfoList = getCustomerInfo($zone_id);
         
         foreach($customerinfoList as $customerinfodata){ 
             $CI20 = &get_instance();
@@ -198,7 +199,8 @@ if(!function_exists('customerbillingperiod'))
                 $update_counter_array1 = array( 
                     'previous_reading' => $customer_current_billing_data->reading,
                     'arrears' => $arrears,
-                    'customer_status' => $customerinfodata->status
+                    'customer_status' => $customerinfodata->status,
+                    'maintenance_fee' => '25.00',
                 );
                 $C5 = &get_instance();
                 $C5->db->where('id', $checkresult_id);
@@ -366,6 +368,7 @@ if(!function_exists("detailsbillingpayment_ver1")){
             $CI1 = &get_instance();
             $CI1->db->select('tbl_months.month_id as monthid, 
             (SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$paymentdetailsinfodata->customer_id.'" and tbl_addcustomer_reading.month="'.$paymentdetailsinfodata->month.'" and tbl_addcustomer_reading.year="'.$paymentdetailsinfodata->year.'") as reading_amount,
+            (SELECT maintenance_fee FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$paymentdetailsinfodata->customer_id.'" and tbl_addcustomer_reading.month="'.$paymentdetailsinfodata->month.'" and tbl_addcustomer_reading.year="'.$paymentdetailsinfodata->year.'") as maintenance_fee,
             tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');				   
             $CI1->db->from('tbl_addmetercustomer');
             $CI1->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
@@ -374,12 +377,21 @@ if(!function_exists("detailsbillingpayment_ver1")){
             $CI1->db->where('year',$paymentdetailsinfodata->year);
             $query = $CI1->db->get()->row_array();
             extract($query);
-            $panalty_msg ='';
+            $panalty_msg ='<span style="font-size:9px;line-height:8px;"><br/>(Bill Amt: '.number_format($reading_amount,2).')';
+            if($maintenance_fee>0.00){
+                    $panalty_msg .= 'WMMF = +'. number_format($maintenance_fee,2).'/';
+                    $amount -= $maintenance_fee;
+                }
             if($amount !== $reading_amount){
+                
                 $penalty = $amount - $reading_amount;
-                //$amount = $penalty;
-                $panalty_msg = '<span style="font-size:9px;line-height:8px;">/(Penalty 10% = '. number_format($reading_amount,2).' + '.number_format($penalty,2).')</span>';
+                if($penalty>0){
+                    //$amount = $penalty;
+                    $panalty_msg .= 'Penalty = +'.number_format($penalty,2).'/';
+                }
+                
             }
+            $panalty_msg .= '</span>';
             $str_invoicepayment .="<tr>
 									<td  style='width: 75%;'>$paymentdetailsinfodata->monthname $paymentdetailsinfodata->year $panalty_msg</td>
 									<td style='width: 5%;'>$paymentdetailsinfodata->consumedunits</td>

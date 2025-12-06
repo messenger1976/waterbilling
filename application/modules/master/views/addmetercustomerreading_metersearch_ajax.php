@@ -27,9 +27,11 @@
 														<th data-hide="expand">Current Reading</th>
 														<th data-hide="expand">Consumed</th>
 														<th data-hide="expand">Bill Amount</th>
+														<th data-hide="expand">WMMF</th>
 														<th data-hide="expand">SC Discount</th>
 														<th data-hide="expand">Total</th>
                                                         <th data-hide="expand">Penalty</th>
+                                                        
                                                         <th data-hide="expand">Arrears</th>
                                                         <th data-hide="expand">Reading Date</th>
 														<th data-hide="expand">Status</th>
@@ -53,9 +55,11 @@
 														<td class="current_reading" align="center"><?php echo stripslashes($row['reading']); ?></td>
 														<td class="consumed" align="center"><?php echo stripslashes($row['consumed']); ?></td>
 														<td class="current_bill" align="right"><?php echo stripslashes($row['unit_price']); ?></td>
+														<td class="maintenance_fee" align="right"><?php echo stripslashes(number_format($row['maintenance_fee'],2)); ?></td>
 														<td class="sc_discount" align="right"><?php echo stripslashes($row['sc_discount']); ?></td>
 														<td class="total_amount" align="right"><?php echo stripslashes(number_format($row['amount'],2)); ?></td>
 														<td class="penalty" align="right"><?php echo stripslashes(number_format($row['penalty'],2)); ?></td>
+														
                                                         <td class="arrears" align="right"><?php echo stripslashes(number_format($row['arrears'],2)); ?></td>
                                                         <td class="reading_date" align="center"><?php echo date('d-m-Y',strtotime($row['date'])); ?></td>
 														<!--<?php echo ADMIN_URL;?>addmetercustomerreading/edit/<?php echo $row['id'];?>-->
@@ -75,6 +79,7 @@
 														data-arrears="<?php echo stripslashes($row['arrears']); ?>"
 														data-total_amount="<?php echo stripslashes($row['amount']); ?>"
 														data-penalty="<?php echo stripslashes($row['penalty']); ?>"
+														data-maintenance_fee="<?php echo stripslashes($row['maintenance_fee']); ?>"
 														data-reading_date="<?php echo date('d-m-Y',strtotime($row['date'])); ?>"
 														data-account_type="<?php echo stripslashes($row['account_type']); ?>"
 														data-special_priviledge="<?php echo stripslashes($row['special_priviledge']); ?>"
@@ -295,6 +300,7 @@
 				let arrears = $(this).data("arrears");
 				let total_amount = $(this).data("total_amount");
 				let penalty = $(this).data("penalty");
+				let maintenance_fee = $(this).data("maintenance_fee");
 				let reading_date = $(this).data("reading_date");
 				let account_type = $(this).data("account_type");
 				let special_priviledge = $(this).data("special_priviledge");
@@ -311,6 +317,7 @@
 				$("#arrears").val(arrears);
 				$("#total_amount").val(total_amount);
 				$("#penalty").val(penalty);
+				$("#maintenance_fee").val(maintenance_fee);
 				$("#reading_date").val(reading_date);
 				$("#cust_type_id").val(account_type);
 				$("#special_priviledge").val(special_priviledge);

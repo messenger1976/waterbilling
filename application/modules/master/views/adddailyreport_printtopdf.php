@@ -63,7 +63,8 @@
 					<th  style="text-align:right;" data-hide="phone">Current</th>
 					<th  style="text-align:right;" data-hide="phone">Arrears</th>
                     <th  style="text-align:right;" data-hide="phone">Previous Year</th>
-					<th style="text-align:right;">Penalty</th>
+					<th style="text-align:right;">WMMF</th>
+                    <th style="text-align:right;">Penalty</th>
                     <th style="text-align:right;">SC Disc</th>
                     <th style="text-align:right;">Leaking Disc</th>
                     <th style="text-align:right;">A/R-Leaking</th>
@@ -77,6 +78,7 @@
 						$cr = 0;
                         $grand_total_current = 0;
                         $grand_total_penalty =0;
+						$grand_total_wmmf =0;
                         $grand_total_vat =0;
                         $grand_total_leaking =0;
                         $grand_total_ar_leaking =0;
@@ -97,6 +99,7 @@
                  $total_current_zone = 0;
 				 $total_arrears_zone = 0;
                  $total_penalty_zone = 0;
+                 $total_wmmf_zone = 0;
                  $total_vat_zone = 0;
                  $total_leaking_zone = 0;
                  $total_ar_leaking_zone = 0;
@@ -132,6 +135,7 @@
                     <td align="right">'.number_format( $gdailytrans['current_amount'],2).'</td>
                     <td align="right">'.number_format( $gdailytrans['arrears_amount'],2).'</td>
 					<td align="right">'.number_format( $prev_year,2).'</td>
+                    <td align="right">'. number_format($gdailytrans['total_wmmf'],2).'</td>
                     <td align="right">'. number_format($gdailytrans['total_penalty'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['sc_discount'],2).'</td>
                     <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
@@ -143,6 +147,7 @@
                     $total_grand_zone += $gdailytrans['grand_total'];
                     $total_current_zone += $gdailytrans['current_amount'];
 					$total_arrears_zone += $gdailytrans['arrears_amount'];
+                    $total_wmmf_zone += $gdailytrans['total_wmmf'];
                     $total_penalty_zone += $gdailytrans['total_penalty'];
                     $total_vat_zone += $gdailytrans['vat_amount'];
                     $total_leaking_zone +=$gdailytrans['leaking_amount'];
@@ -154,6 +159,7 @@
                  <th style="text-align:right">'.number_format($total_current_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_arrears_zone,2).'</th>
                  <th style="text-align:right">0.00</th>
+                 <th style="text-align:right">'.number_format($total_wmmf_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_penalty_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_sc_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_leaking_zone,2).'</th>
@@ -167,6 +173,7 @@
                     $cr += $total_grand_zone; 
                     $grand_total_current += $total_current_zone; 
                     $grand_total_arrears += $total_arrears_zone; 
+                    $grand_total_wmmf += $total_wmmf_zone;
                     $grand_total_penalty += $total_penalty_zone;
                     $grand_total_vat += $total_vat_zone;
                     $grand_total_leaking += $total_leaking_zone;
@@ -182,7 +189,7 @@
                 <tr>
 					<td></td>
 					<td><b>LEAKING A/R PAYMENT REPORT</b></td>
-					<td colspan="10"></td>
+					<td colspan="11"></td>
 				</tr>
 				
 
@@ -216,7 +223,7 @@
                  <th style="text-align:right"></th>
                  <th style="text-align:right"></th>
                  <th style="text-align:right"></th>
-                 
+                 <th style="text-align:right"></th>
                  </tr>';
 				 $cr+=$total_leaking_ar;
 				?>
@@ -229,6 +236,7 @@
 					<th style="text-align:right"><?php echo number_format($grand_total_arrears,2);?></th>
 					<th style="text-align:right">0.00</th>
 					
+					<th style="text-align:right"><?php echo number_format($grand_total_wmmf,2);?></th>
 					
 					<th style="text-align:right"><?php echo number_format($grand_total_penalty,2);?></th>
 					<th style="text-align:right"><?php echo number_format($grand_total_sc,2);?></th>

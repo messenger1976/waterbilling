@@ -26,6 +26,7 @@
 						<th>Bill Amount</th>
 						<th>Discount</th>
 						<th>Penalty</th>
+						<th>WMMF</th>
 						<th>OR Number</th>
 						<th>Date Paid</th>
 						<th>Total Amount</th>
@@ -67,6 +68,7 @@
 								
 								
 								$record_reading = $this->my_model->get_metercustomer_add_all_records($id,$mon_id,$year);
+								//$record_reading = array();
 								$result = count($record_reading);
 								//echo 'count:'.$result.'<br/>';
 								//print_r($record_reading);
@@ -134,6 +136,8 @@
 								<td align="right"><?php echo stripslashes($row['sc_discount']); ?>
 								</td>
 								<td align="right"><?php echo stripslashes(number_format($penalty,2)); ?>
+								</td>
+								<td align="right"><?php echo stripslashes(number_format($row['maintenance_fee'],2)); ?>
 								</td>
 								<td align="center"><?php echo stripslashes($or_number_paid); ?></td>
 								<td align="center"><?php echo stripslashes($trans_date); ?></td>

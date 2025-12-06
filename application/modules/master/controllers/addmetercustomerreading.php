@@ -32,13 +32,21 @@ class addmetercustomerreading extends CI_Controller {
 		ini_set('date.timezone', 'Asia/Manila');				
 		$this->load->model('adminheader_model','top_model');
 		$this->load->model('addcustomer_model','customer_model');
+		$this->load->model('addbillingperiod_model','billingperiod_model');   //*****    Model Loading     *****//	
     }
 	
 	public function index(){ 		 //*****  View Loading  *****//
 		$header['title'] = 'List Meter Reading';
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
-		$data['record'] = $this->my_model->get_all_records();	
+		if(!isset($_SESSION['current_billingperiod'])){
+			$data['current_billingperiod'] = $this->comm_model->get_billingperiod_record();
+			
+			$_SESSION['current_billingperiod'] = $data['current_billingperiod'][0]['bp_period_month'].' '.$data['current_billingperiod'][0]['bp_period_year'];
+		}
+		$data['billingperiod'] = $this->billingperiod_model->get_month_billingperiod_records();	
+		$data['record'] = $this->my_model->get_all_records($_SESSION['current_billingperiod']);	
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		
 		$this->load->view($this->headerPage,$header);
 		$this->load->view($this->listPage,$data);
 	}

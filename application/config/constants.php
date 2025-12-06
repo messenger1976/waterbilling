@@ -42,8 +42,18 @@ define('DIR_WRITE_MODE', 0777);
 //define('HOME_ADS_NO_IMG4', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
 //define('HOME_ADS_NO_IMG5', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
 //define('HOME_ADS_NO_IMG6', 'http://'.$_SERVER['SERVER_NAME'].'/beta/waterbillingsystem/images/no-images/inner-ads-2.jpg');
+$isSecure = false;
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+    $isSecure = true;
+}
+elseif (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on') {
+    $isSecure = true;
+}
+$REQUEST_PROTOCOL = $isSecure ? 'https' : 'http';
+/* end code */
 
-$webserveruri = 'http://'.$_SERVER['SERVER_NAME'];
+$webserveruri = $REQUEST_PROTOCOL.'://'.$_SERVER['SERVER_NAME'];
+
 define('ADMIN_URL', $webserveruri.'/master/');
 define('ADMIN_CSS_URL', $webserveruri.'/styles/admin/styles/');
 define('ADMIN_PCSS_URL', $webserveruri.'/styles/admin/styles/');
@@ -64,8 +74,8 @@ define('HOME_ADS_NO_IMG4', $webserveruri.'/images/no-images/inner-ads-2.jpg');
 define('HOME_ADS_NO_IMG5', $webserveruri.'/images/no-images/inner-ads-2.jpg');
 define('HOME_ADS_NO_IMG6', $webserveruri.'/images/no-images/inner-ads-2.jpg');
 
-
-
+define('ABSOLUTE_PATH',FCPATH);
+define('QRCODE_PATH', ABSOLUTE_PATH.'uploads/qr_image/');
 
 
 /*

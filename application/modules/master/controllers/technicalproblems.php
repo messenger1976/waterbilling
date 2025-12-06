@@ -20,8 +20,10 @@ class technicalproblems extends CI_Controller {
 	public $editPage_redirect = '/master/technicalproblems/edit/';  //*****  Redirect Edit  *****//
 	public function __construct() {
         parent::__construct();
+		$this->load->model('adddailyreport_model');   //*****    Model Loading     *****//	
   		$this->load->model('technicalproblems_model','my_model');   //*****    Model Loading     *****//	
 		$this->load->model('common_model','comm_model');	
+		$this->load->model('addcustomer_model','customer_model');	
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<div class="error" style="color:red;">', '</div>');
 		error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
@@ -40,31 +42,73 @@ class technicalproblems extends CI_Controller {
 	
 	/** Add Function **/
 	public function add(){ 
+		
 		$data['msg'] ='';
 		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 		 $data['addcustomer'] = $this->my_model->get_addcustomer();
+		 $data['customer_listing'] = $this->customer_model->get_all_records();
 		 //$data['amountrate'] = $this->my_model->get_amountrate();
 		 //echo'<pre>';print_r( $data['addcustomer'] );exit;
 		  //$data['feesplaning'] = $this->my_model->get_feesplaning();
 		if($this->input->post('add') != ''){
             //echo'<pre>';print_r($_POST);
-				$result = $this->my_model->add_record();
-				if($result){
-					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
-					redirect($this->listPage_redirect);
-				}else{
-					$data['msg'] = "Not Inserted...";
-				}
+			//print_r($_POST);
+			//exit;
+			$employee_rec = $this->adddailyreport_model->get_employee($this->input->post('reportedby'));
+			$result = $this->my_model->add_record($employee_rec);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
+				redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Inserted...";
 			}
+		}
 		//$header['host'] = $this->comm_model->get_single_record();				
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		$data['employee'] = $this->adddailyreport_model->get_employee();
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->addPage,$data);
 	}
+
+	public function add_messages(){
+		if($this->input->post('btn_save') == 'add'){ 
+			
+			$reportedby = $this->input->post('msg_reportedby');
+		
+			$result = $this->my_model->add_messages_record($reportedby);
+			
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Created Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Created...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+
+		}elseif($this->input->post('btn_save') == 'edit'){
+			$id = $this->input->post('leaking_id');
+			$result = $this->my_model->update_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Updated Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Updated...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+		}else{
+			echo 'error update DB';
+		}
+	}
+
 	public function edit($id){
 		$this->head['roleResponsible'] = $this->top_model->get_responsibilities();
 		$data['record'] = $this->my_model->get_single_record($id);
-		$data['addcustomer'] = $this->my_model->get_addcustomer();
+		$data['record_messages'] = $this->my_model->get_message_records($id);
+		//$data['addcustomer'] = $this->my_model->get_addcustomer();
 		//$data['amountrate'] = $this->my_model->get_amountrate();
 		$data['msg'] ='';
 		//echo'<pre>';print_r($data['record']);exit;
@@ -83,6 +127,7 @@ class technicalproblems extends CI_Controller {
 		}
 		//$header['host'] = $this->comm_model->get_single_record();				
 		//$header['record_info'] = $this->top_model->get_last_login_details(1);
+		$data['employee'] = $this->adddailyreport_model->get_employee();
 		$this->load->view($this->headerPage,$this->head);
 		$this->load->view($this->editPage,$data);
 
@@ -165,7 +210,49 @@ class technicalproblems extends CI_Controller {
 			redirect($this->listPage_redirect);
 		}
 	}
+
+	public function get_customer_info(){
+		$customer_id = $this->input->post('customer_id');
+		if($customer_id != ''){
+			$result = $this->my_model->get_customer_info_details($customer_id);
+			echo json_encode($result);
+			
+		}else{
+			echo '{}';
+		}
+	}
 	
+	public function add_message(){
+		if($this->input->post('btn_save') == 'add'){ 
+			
+		
+			$result = $this->my_model->add_payment_record();
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Created Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Created...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+
+		}elseif($this->input->post('btn_save') == 'edit'){
+			$id = $this->input->post('leaking_id');
+			$result = $this->my_model->update_record($id);
+			if($result){
+				$this->session->set_flashdata('msg_succ', 'Updated Successfully...');
+				echo 'success';
+				//redirect($this->listPage_redirect);
+			}else{
+				$data['msg'] = "Not Updated...";
+				//redirect($this->listPage);
+				echo 'error';
+			}
+		}else{
+			echo 'error update DB';
+		}
+	}
 	/*public function getoldmeter(){
 		$id = $this->input->post('id');
 		$getData=$this->my_model->select_getoldmeter($id);

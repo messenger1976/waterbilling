@@ -95,10 +95,11 @@ class or_correction_model extends CI_Model {
 	public function update_record($old_or){
 		$dt_date = new DateTime('now', new DateTimeZone("Asia/Manila"));
 		$trans_date = $dt_date->format("Y-m-d H:i:s");
+		$newdate = date('Y-m-d',strtotime($this->input->post('newdate')));
 		$set_data = array(
-		                  
+		                'date' => $newdate, 
 						'or_number' => sprintf('%07d',$this->input->post('or_number')),
-					  'update_date_time' => $trans_date,
+					  	'update_date_time' => $trans_date,
 						
 					);
 		$this->db->where('or_number',$old_or);
