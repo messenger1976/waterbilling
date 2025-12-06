@@ -357,6 +357,11 @@ if (typeof jQuery === 'undefined') {
 
 function initNotificationsScript() {
 	var $ = jQuery;
+	// Get current protocol (http or https)
+	var protocol = window.location.protocol;
+	var host = window.location.host;
+	var baseUrl = protocol + '//' + host + '/master/mobilenotifications/';
+	
 	$(document).ready(function(){
 	// Character counter for custom message
 	$('#message').on('keyup', function(){
@@ -365,7 +370,7 @@ function initNotificationsScript() {
 	
 	// Load customers for custom message
 	$.ajax({
-		url: '<?php echo ADMIN_URL;?>mobilenotifications/get_customers_list',
+		url: baseUrl + 'get_customers_list',
 		type: 'GET',
 		dataType: 'json',
 		success: function(response){
@@ -398,7 +403,7 @@ function initNotificationsScript() {
 		$(this).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Sending...');
 		
 		$.ajax({
-			url: '<?php echo ADMIN_URL;?>mobilenotifications/send_billing_statements',
+			url: baseUrl + 'send_billing_statements',
 			type: 'POST',
 			data: formData,
 			dataType: 'json',
@@ -425,7 +430,7 @@ function initNotificationsScript() {
 		$(this).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Sending...');
 		
 		$.ajax({
-			url: '<?php echo ADMIN_URL;?>mobilenotifications/send_due_accounts',
+			url: baseUrl + 'send_due_accounts',
 			type: 'POST',
 			data: formData,
 			dataType: 'json',
@@ -452,7 +457,7 @@ function initNotificationsScript() {
 		$(this).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Sending...');
 		
 		$.ajax({
-			url: '<?php echo ADMIN_URL;?>mobilenotifications/send_disconnection_notices',
+			url: baseUrl + 'send_disconnection_notices',
 			type: 'POST',
 			data: formData,
 			dataType: 'json',
@@ -484,7 +489,7 @@ function initNotificationsScript() {
 		$(this).prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Sending...');
 		
 		$.ajax({
-			url: '<?php echo ADMIN_URL;?>mobilenotifications/send_custom_message',
+			url: baseUrl + 'send_custom_message',
 			type: 'POST',
 			data: formData,
 			dataType: 'json',
@@ -511,7 +516,7 @@ function initNotificationsScript() {
 	$('.view-notification').on('click', function(){
 		var id = $(this).data('id');
 		$.ajax({
-			url: '<?php echo ADMIN_URL;?>mobilenotifications/get_notification_details',
+			url: baseUrl + 'get_notification_details',
 			type: 'POST',
 			data: {id: id},
 			dataType: 'json',
