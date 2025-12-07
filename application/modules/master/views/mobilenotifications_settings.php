@@ -54,6 +54,14 @@
 								<input type="hidden" name="save_settings" value="1">
 								
 								<div class="form-group">
+									<label class="col-sm-3 control-label">Email: <span class="text-danger">*</span></label>
+									<div class="col-sm-9">
+										<input type="email" class="form-control" name="email" value="<?php echo isset($settings['email']) ? $settings['email'] : ''; ?>" required>
+										<small class="help-block">Your ITEXMO account email address</small>
+									</div>
+								</div>
+								
+								<div class="form-group">
 									<label class="col-sm-3 control-label">API Code: <span class="text-danger">*</span></label>
 									<div class="col-sm-9">
 										<input type="text" class="form-control" name="api_code" value="<?php echo isset($settings['api_code']) ? $settings['api_code'] : ''; ?>" required>
@@ -81,6 +89,9 @@
 									<div class="col-sm-offset-3 col-sm-9">
 										<button type="submit" class="btn btn-primary">
 											<i class="fa fa-save"></i> Save Settings
+										</button>
+										<button type="button" class="btn btn-info" id="testApiBtn">
+											<i class="fa fa-plug"></i> Test API Connection
 										</button>
 										<a href="<?php echo ADMIN_URL;?>mobilenotifications" class="btn btn-default">
 											<i class="fa fa-arrow-left"></i> Back to Notifications
@@ -113,4 +124,70 @@
 </div>
 
 <?php include('footer.php');?>
+
+<script>
+// Ensure jQuery is loaded before executing
+if (typeof jQuery === 'undefined') {
+	setTimeout(function() {
+		if (typeof jQuery !== 'undefined') {
+			initTestApiScript();
+		}
+	}, 100);
+} else {
+	initTestApiScript();
+}
+
+function initTestApiScript() {
+	var $ = jQuery;
+	
+	$(document).ready(function(){
+		$('#testApiBtn').on('click', function(){
+			var btn = $(this);
+			btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Testing...');
+			
+			// Get current protocol
+			var protocol = window.location.protocol;
+			var host = window.location.host;
+			var baseUrl = protocol + '//' + host + '/master/mobilenotifications/';
+			
+			$.ajax({
+				url: baseUrl + 'test_api',
+				type: 'GET',
+				dataType: 'json',
+				success: function(response){
+					if(response.success){
+						alert('SUCCESS: ' + response.message);
+					} else {
+						var errorMsg = 'ERROR: ' + response.message;
+						if(response.response_code){
+							errorMsg += '\nResponse Code: ' + response.response_code;
+						}
+						if(response.http_code){
+							errorMsg += '\nHTTP Code: ' + response.http_code;
+						}
+						alert(errorMsg);
+					}
+				},
+				error: function(xhr, status, error){
+					var errorMsg = 'Connection Error: ' + error;
+					if(xhr.responseText){
+						try {
+							var response = JSON.parse(xhr.responseText);
+							if(response.message){
+								errorMsg = response.message;
+							}
+						} catch(e) {
+							// Not JSON, use default error
+						}
+					}
+					alert(errorMsg);
+				},
+				complete: function(){
+					btn.prop('disabled', false).html('<i class="fa fa-plug"></i> Test API Connection');
+				}
+			});
+		});
+	});
+}
+</script>
 
