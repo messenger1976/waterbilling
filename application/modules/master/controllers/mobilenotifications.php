@@ -326,7 +326,7 @@ class mobilenotifications extends CI_Controller {
 			$recipients = json_encode(array($mobile));
 			
 			// ITEXMO API endpoint - new broadcast API
-			$url = 'http://api.itexmo.com/api/broadcast';
+			$url = 'https://api.itexmo.com/api/broadcast';
 			
 			$itexmo = array(
 				'Email' => $settings['email'],
@@ -459,7 +459,7 @@ class mobilenotifications extends CI_Controller {
 		
 		try {
 			// Test with a dummy number (won't actually send)
-			$test_mobile = '639123456789';
+			$test_mobile = '639151874107';
 			$test_message = 'Test message';
 			$recipients = json_encode(array($test_mobile));
 			
