@@ -326,7 +326,8 @@ class mobilenotifications extends CI_Controller {
 			$recipients = json_encode(array($mobile));
 			
 			// ITEXMO API endpoint - new broadcast API
-			$url = 'https://api.itexmo.com/api/broadcast';
+			// Use HTTP as per ITEXMO documentation
+			$url = 'http://api.itexmo.com/api/broadcast';
 			
 			$itexmo = array(
 				'Email' => $settings['email'],
@@ -342,6 +343,9 @@ class mobilenotifications extends CI_Controller {
 			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($itexmo));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Follow redirects
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Allow self-signed certs
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 			
@@ -358,6 +362,17 @@ class mobilenotifications extends CI_Controller {
 					'code' => 'CURL_ERROR',
 					'http_code' => $http_code,
 					'raw_response' => $response
+				);
+			}
+			
+			// Check for redirect (301, 302)
+			if($http_code == 301 || $http_code == 302){
+				$redirect_url = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
+				return array(
+					'status' => 'failed',
+					'response' => 'ITEXMO API redirected. Please check the API endpoint URL. Redirect to: ' . ($redirect_url ? $redirect_url : 'unknown'),
+					'code' => 'REDIRECT_ERROR',
+					'http_code' => $http_code
 				);
 			}
 			
@@ -463,6 +478,7 @@ class mobilenotifications extends CI_Controller {
 			$test_message = 'Test message';
 			$recipients = json_encode(array($test_mobile));
 			
+			// Use HTTP as per ITEXMO documentation
 			$url = 'http://api.itexmo.com/api/broadcast';
 			$itexmo = array(
 				'Email' => $settings['email'],
@@ -477,12 +493,20 @@ class mobilenotifications extends CI_Controller {
 			curl_setopt($ch, CURLOPT_POST, 1);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($itexmo));
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_HEADER, true); // Include headers in response to check Location
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Follow redirects
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Allow self-signed certs
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 			curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+			curl_setopt($ch, CURLOPT_MAXREDIRS, 5); // Maximum redirects to follow
 			
 			$response = curl_exec($ch);
 			$curl_error = curl_error($ch);
 			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+			$final_url = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+			$redirect_url = curl_getinfo($ch, CURLINFO_REDIRECT_URL);
 			curl_close($ch);
 			
 			if($response === false || !empty($curl_error)){
@@ -491,6 +515,61 @@ class mobilenotifications extends CI_Controller {
 					'message' => 'Connection failed: ' . ($curl_error ? $curl_error : 'Unable to connect to ITEXMO'),
 					'curl_error' => $curl_error,
 					'http_code' => $http_code
+				));
+				return;
+			}
+			
+			// Separate headers from body
+			$headers = substr($response, 0, $header_size);
+			$body = substr($response, $header_size);
+			$response = $body; // Use body as response
+			
+			// Extract Location header if redirect
+			$location = '';
+			if(preg_match('/Location:\s*(.+?)\s*\r?\n/i', $headers, $matches)){
+				$location = trim($matches[1]);
+			}
+			
+			// Check for redirect (301, 302) - if FOLLOWLOCATION didn't work, try manual redirect
+			if(($http_code == 301 || $http_code == 302) && (empty($response) || empty($body))){
+				// If we got a redirect but no response, FOLLOWLOCATION might be disabled
+				// Try the redirect URL directly
+				if(!empty($location)){
+					$redirect_url = $location;
+				} elseif(!empty($redirect_url)){
+					$redirect_url = $redirect_url;
+				} elseif(!empty($final_url) && $final_url != $url){
+					$redirect_url = $final_url;
+				} else {
+					// Try HTTPS version
+					$redirect_url = str_replace('http://', 'https://', $url);
+				}
+				
+				// Retry with redirect URL
+				$ch2 = curl_init();
+				curl_setopt($ch2, CURLOPT_URL, $redirect_url);
+				curl_setopt($ch2, CURLOPT_POST, 1);
+				curl_setopt($ch2, CURLOPT_POSTFIELDS, http_build_query($itexmo));
+				curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch2, CURLOPT_SSL_VERIFYHOST, false);
+				curl_setopt($ch2, CURLOPT_TIMEOUT, 30);
+				
+				$response = curl_exec($ch2);
+				$http_code = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+				curl_close($ch2);
+			}
+			
+			// If still getting redirect after retry
+			if($http_code == 301 || $http_code == 302){
+				echo json_encode(array(
+					'success' => false,
+					'message' => 'ITEXMO API redirected (HTTP ' . $http_code . '). Location: ' . ($location ? $location : ($redirect_url ? $redirect_url : 'unknown')) . '. Please verify your API credentials and endpoint URL.',
+					'response_code' => 'REDIRECT_ERROR',
+					'http_code' => $http_code,
+					'location_header' => $location,
+					'redirect_url' => $redirect_url,
+					'final_url' => $final_url
 				));
 				return;
 			}
