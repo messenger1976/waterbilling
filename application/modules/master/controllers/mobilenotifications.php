@@ -297,10 +297,10 @@ class mobilenotifications extends CI_Controller {
 	private function send_sms($mobile, $message){
 		$settings = $this->my_model->get_sms_settings();
 		
-		if(!$settings || empty($settings['email']) || empty($settings['api_code']) || empty($settings['api_password'])){
+		if(!$settings || empty($settings['api_code']) || empty($settings['api_password'])){
 			return array(
 				'status' => 'failed',
-				'response' => 'ITEXMO API settings not configured. Please configure Email, API Code, and Password.',
+				'response' => 'ITEXMO API settings not configured. Please configure API Code and Password.',
 				'code' => 'NO_CONFIG'
 			);
 		}
@@ -322,20 +322,22 @@ class mobilenotifications extends CI_Controller {
 				$mobile = '63' . substr($mobile, 1);
 			}
 			
-			// Format recipients as JSON array
-			$recipients = json_encode(array($mobile));
+			// Mobile number is already formatted above, no need for JSON array for traditional endpoint
 			
-			// ITEXMO API endpoint - new broadcast API
-			// Use HTTP as per ITEXMO documentation
-			$url = 'http://api.itexmo.com/api/broadcast';
+			// ITEXMO API endpoint - use traditional endpoint format
+			// The broadcast endpoint returns 405, so use the traditional endpoint
+			$url = 'https://www.itexmo.com/php_api/api.php';
 			
 			$itexmo = array(
-				'Email' => $settings['email'],
-				'Password' => $settings['api_password'],
-				'ApiCode' => $settings['api_code'],
-				'Recipients' => $recipients,
-				'Message' => $message
+				'1' => $mobile,
+				'2' => $message,
+				'3' => $settings['api_code'],
+				'passwd' => $settings['api_password']
 			);
+			
+			if(!empty($settings['sender_id'])){
+				$itexmo['6'] = $settings['sender_id'];
+			}
 			
 			// Send via cURL
 			$ch = curl_init();
@@ -363,6 +365,37 @@ class mobilenotifications extends CI_Controller {
 					'http_code' => $http_code,
 					'raw_response' => $response
 				);
+			}
+			
+			// Check for Method Not Allowed (405) - broadcast endpoint might not exist
+			if($http_code == 405){
+				// Fallback to traditional ITEXMO endpoint format
+				$traditional_url = 'https://www.itexmo.com/php_api/api.php';
+				$traditional_data = array(
+					'1' => $mobile,
+					'2' => $message,
+					'3' => $settings['api_code'],
+					'passwd' => $settings['api_password']
+				);
+				
+				if(!empty($settings['sender_id'])){
+					$traditional_data['6'] = $settings['sender_id'];
+				}
+				
+				$ch2 = curl_init();
+				curl_setopt($ch2, CURLOPT_URL, $traditional_url);
+				curl_setopt($ch2, CURLOPT_POST, 1);
+				curl_setopt($ch2, CURLOPT_POSTFIELDS, http_build_query($traditional_data));
+				curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch2, CURLOPT_SSL_VERIFYHOST, false);
+				curl_setopt($ch2, CURLOPT_TIMEOUT, 30);
+				
+				$response = curl_exec($ch2);
+				$http_code = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+				curl_close($ch2);
+				
+				// Continue with traditional endpoint response processing
 			}
 			
 			// Check for redirect (301, 302)
@@ -463,10 +496,10 @@ class mobilenotifications extends CI_Controller {
 		
 		$settings = $this->my_model->get_sms_settings();
 		
-		if(!$settings || empty($settings['email']) || empty($settings['api_code']) || empty($settings['api_password'])){
+		if(!$settings || empty($settings['api_code']) || empty($settings['api_password'])){
 			echo json_encode(array(
 				'success' => false,
-				'message' => 'ITEXMO API settings not configured. Please configure Email, API Code, and Password in Settings.',
+				'message' => 'ITEXMO API settings not configured. Please configure API Code and Password in Settings.',
 				'settings_configured' => false
 			));
 			return;
@@ -476,16 +509,14 @@ class mobilenotifications extends CI_Controller {
 			// Test with a dummy number (won't actually send)
 			$test_mobile = '639151874107';
 			$test_message = 'Test message';
-			$recipients = json_encode(array($test_mobile));
 			
-			// Use HTTP as per ITEXMO documentation
-			$url = 'http://api.itexmo.com/api/broadcast';
+			// ITEXMO API endpoint - use traditional endpoint (broadcast endpoint returns 405)
+			$url = 'https://www.itexmo.com/php_api/api.php';
 			$itexmo = array(
-				'Email' => $settings['email'],
-				'Password' => $settings['api_password'],
-				'ApiCode' => $settings['api_code'],
-				'Recipients' => $recipients,
-				'Message' => $test_message
+				'1' => $test_mobile,
+				'2' => $test_message,
+				'3' => $settings['api_code'],
+				'passwd' => $settings['api_password']
 			);
 			
 			$ch = curl_init();
@@ -558,6 +589,54 @@ class mobilenotifications extends CI_Controller {
 				$response = curl_exec($ch2);
 				$http_code = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
 				curl_close($ch2);
+			}
+			
+			// Check for Method Not Allowed (405) - broadcast endpoint might not exist
+			if($http_code == 405){
+				// Try traditional ITEXMO endpoint format as fallback
+				$traditional_url = 'https://www.itexmo.com/php_api/api.php';
+				$traditional_data = array(
+					'1' => $test_mobile,
+					'2' => $test_message,
+					'3' => $settings['api_code'],
+					'passwd' => $settings['api_password']
+				);
+				
+				$ch3 = curl_init();
+				curl_setopt($ch3, CURLOPT_URL, $traditional_url);
+				curl_setopt($ch3, CURLOPT_POST, 1);
+				curl_setopt($ch3, CURLOPT_POSTFIELDS, http_build_query($traditional_data));
+				curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
+				curl_setopt($ch3, CURLOPT_SSL_VERIFYPEER, false);
+				curl_setopt($ch3, CURLOPT_SSL_VERIFYHOST, false);
+				curl_setopt($ch3, CURLOPT_TIMEOUT, 30);
+				
+				$response = curl_exec($ch3);
+				$http_code = curl_getinfo($ch3, CURLINFO_HTTP_CODE);
+				curl_close($ch3);
+				
+				$response = trim($response);
+				
+				// If traditional endpoint works, inform user
+				if($http_code == 200 && $response === '0'){
+					echo json_encode(array(
+						'success' => true,
+						'message' => 'API connection successful using traditional ITEXMO endpoint! Note: The broadcast endpoint returned 405, but traditional endpoint works. Your credentials are valid.',
+						'response_code' => 'SUCCESS_TRADITIONAL',
+						'note' => 'Using traditional ITEXMO endpoint format'
+					));
+					return;
+				} else {
+					echo json_encode(array(
+						'success' => false,
+						'message' => 'ITEXMO API endpoint returned HTTP 405 (Method Not Allowed). The broadcast endpoint may not be available. Tried traditional endpoint but got HTTP ' . $http_code . '. Response: ' . substr($response, 0, 100) . '. Please verify your API credentials.',
+						'response_code' => 'METHOD_NOT_ALLOWED',
+						'http_code' => $http_code,
+						'endpoint_tried' => $url,
+						'traditional_response' => substr($response, 0, 100)
+					));
+					return;
+				}
 			}
 			
 			// If still getting redirect after retry
