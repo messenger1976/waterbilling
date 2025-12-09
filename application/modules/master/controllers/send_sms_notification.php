@@ -17,10 +17,18 @@ class send_sms_notification extends CI_Controller {
         if(!$settings || empty($settings['api_code']) || empty($settings['api_password'])){
             echo json_encode(array(
                 'success' => false,
-                'message' => 'ITEXMO API settings not configured. Please configure API Code and Password in Settings.'
+                'message' => 'ITEXMO API settings not configured. Please configure API Code and Password in Settings.',
+                'debug' => array(
+                    'settings_found' => !empty($settings),
+                    'has_api_code' => !empty($settings['api_code']),
+                    'has_api_password' => !empty($settings['api_password'])
+                )
             ));
             exit;
         }
+        
+        // Debug mode - check if debug parameter is passed
+        $debug_mode = $this->input->get('debug') == '1' || $this->input->post('debug') == '1';
         
         // Example data - modify these values as needed or get from POST/GET parameters
         $mobile = $this->input->post('mobile') ?: $this->input->get('mobile') ?: '639151874107';
@@ -51,10 +59,32 @@ class send_sms_notification extends CI_Controller {
             $itexmo['6'] = $settings['sender_id'];
         }
         
+        // Build POST data
+        $post_data = http_build_query($itexmo);
+        
+        // Debug output before request
+        if($debug_mode){
+            echo json_encode(array(
+                'debug' => true,
+                'endpoint' => $endpoint,
+                'post_data' => $post_data,
+                'post_data_array' => array(
+                    '1' => $itexmo['1'],
+                    '2' => substr($itexmo['2'], 0, 50) . '...',
+                    '3' => substr($itexmo['3'], 0, 3) . '***',
+                    'passwd' => '***hidden***',
+                    '6' => isset($itexmo['6']) ? $itexmo['6'] : 'not set'
+                ),
+                'mobile_formatted' => $mobile,
+                'message_length' => strlen($message)
+            ));
+            exit;
+        }
+        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $endpoint);
         curl_setopt($ch, CURLOPT_POST, 1); // Set POST method (this was missing!)
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($itexmo)); // Send POST data
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data); // Send POST data
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Return response instead of outputting
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // Follow redirects
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Allow self-signed certs
@@ -62,6 +92,9 @@ class send_sms_notification extends CI_Controller {
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'); // Some APIs require User-Agent
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/x-www-form-urlencoded'
+        ));
         
         $response = curl_exec($ch);
         $curl_error = curl_error($ch);
@@ -79,35 +112,104 @@ class send_sms_notification extends CI_Controller {
             exit;
         }
         
-        // Check for server errors (4xx, 5xx)
+        // Check for server errors (4xx, 5xx) - retry without sender_id if needed
         if($http_code >= 400){
-            $error_message = 'ITEXMO API Error (HTTP ' . $http_code . ')';
-            
-            // Check if response is HTML (server error page)
-            if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
-                $error_message .= '. Server returned an error page.';
-                // Try to extract error message from HTML
-                if(preg_match('/<title[^>]*>(.*?)<\/title>/is', $response, $matches)){
-                    $error_message .= ' Error: ' . strip_tags($matches[1]);
+            // If we have sender_id and got a 500 error, try again without sender_id
+            if(isset($itexmo['6']) && $http_code == 500){
+                unset($itexmo['6']);
+                $post_data = http_build_query($itexmo);
+                
+                $ch2 = curl_init();
+                curl_setopt($ch2, CURLOPT_URL, $endpoint);
+                curl_setopt($ch2, CURLOPT_POST, 1);
+                curl_setopt($ch2, CURLOPT_POSTFIELDS, $post_data);
+                curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, true);
+                curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch2, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($ch2, CURLOPT_TIMEOUT, 30);
+                curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 10);
+                curl_setopt($ch2, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
+                curl_setopt($ch2, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/x-www-form-urlencoded'
+                ));
+                
+                $response = curl_exec($ch2);
+                $http_code = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+                curl_close($ch2);
+                
+                // If retry succeeded, continue to success handling below
+                if($http_code < 400 && !empty(trim($response))){
+                    // Fall through to success handling
                 }
-            } else {
-                $error_message .= '. Response: ' . trim($response);
             }
             
-            echo json_encode(array(
-                'success' => false,
-                'message' => $error_message,
-                'http_code' => $http_code,
-                'response' => trim($response),
-                'code' => 'HTTP_ERROR',
-                'mobile' => $mobile,
-                'debug' => array(
+            // If still an error after retry, show error message
+            if($http_code >= 400){
+                $error_message = 'ITEXMO API Error (HTTP ' . $http_code . ')';
+                
+                // Check if response is HTML (server error page)
+                if(stripos($response, '<!DOCTYPE html>') !== false || stripos($response, '<html') !== false){
+                    $error_message .= ' Server returned an error page.';
+                    // Try to extract error message from HTML
+                    if(preg_match('/<title[^>]*>(.*?)<\/title>/is', $response, $matches)){
+                        $error_message .= ' Error: ' . strip_tags($matches[1]);
+                    }
+                    // Try to extract body text
+                    if(preg_match('/<body[^>]*>(.*?)<\/body>/is', $response, $body_matches)){
+                        $body_text = strip_tags($body_matches[1]);
+                        $body_text = preg_replace('/\s+/', ' ', $body_text);
+                        if(strlen($body_text) > 0 && strlen($body_text) < 500){
+                            $error_message .= ' Details: ' . trim($body_text);
+                        }
+                    }
+                } else {
+                    $error_message .= ' Response: ' . trim($response);
+                }
+                
+                $debug_info = array(
                     'api_code' => substr($settings['api_code'], 0, 3) . '***',
+                    'api_code_length' => strlen($settings['api_code']),
+                    'api_password_length' => strlen($settings['api_password']),
                     'endpoint' => $endpoint,
-                    'post_data_keys' => array_keys($itexmo)
-                )
-            ));
-            exit;
+                    'post_data_keys' => array_keys($itexmo),
+                    'mobile' => $mobile,
+                    'mobile_length' => strlen($mobile),
+                    'message_length' => strlen($message),
+                    'response_length' => strlen($response),
+                    'response_preview' => substr(strip_tags($response), 0, 200),
+                    'tried_without_sender_id' => !isset($itexmo['6'])
+                );
+                
+                // Check if API code/password might be invalid
+                if(empty(trim($settings['api_code'])) || empty(trim($settings['api_password']))){
+                    $error_message .= ' Warning: API Code or Password appears to be empty or invalid.';
+                }
+                
+                // Most common causes of HTTP 500 from ITEXMO
+                if($http_code == 500){
+                    $error_message .= ' Common causes: Invalid API Code/Password, Expired API Code, or Account Issues.';
+                }
+                
+                echo json_encode(array(
+                    'success' => false,
+                    'message' => $error_message,
+                    'http_code' => $http_code,
+                    'response' => trim($response),
+                    'code' => 'HTTP_ERROR',
+                    'mobile' => $mobile,
+                    'debug' => $debug_info,
+                    'troubleshooting' => array(
+                        '1' => 'Verify your ITEXMO API Code and Password are correct in Settings',
+                        '2' => 'Check if your ITEXMO account has sufficient credits',
+                        '3' => 'Ensure your API Code is not expired (check ITEXMO dashboard)',
+                        '4' => 'Log into your ITEXMO account and verify API credentials',
+                        '5' => 'Add ?debug=1 to URL to see request details (without exposing password)',
+                        '6' => 'Try removing sender_id from settings if configured'
+                    )
+                ));
+                exit;
+            }
         }
         
         // Check if response is empty
