@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $host = 'localhost';
     $user = 'root';
     $pass = '';
-    $db = 'waterbilling';
+    $db = 'waterbilling1';
 
     // Connect to the database
     $conn = new mysqli($host, $user, $pass, $db);
