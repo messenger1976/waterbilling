@@ -14,7 +14,7 @@
 				<!-- breadcrumb -->
 				<ol class="breadcrumb">
 					<li><a href="<?php echo ADMIN_URL;?>dashboard">Home</a></li>
-					<li><a href="<?php echo ADMIN_URL;?>add_zone/add"> Add Zone </a></li>
+					<li><a href="<?php echo ADMIN_URL;?>classification_category/add"> Add Classification Category </a></li>
 					<li>List View</li>
 				</ol>
 				
@@ -26,7 +26,7 @@
 
 				<div class="row">
 					<div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> View <span>> Zone </span></h1>
+						<h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-home"></i> View <span>> Classification Category </span></h1>
 					</div>
 					<div class="col-xs-12 col-sm-5 col-md-5 col-lg-8">
 						<ul id="sparks" class="">
@@ -83,8 +83,8 @@
 								
 								<header style="height: 42px;">
 									<span class="widget-icon"> <i class="fa fa-users"></i> </span>
-									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Manage Zone</strong>
-									<button class="btn btn-sm btn-primary" style="float:right;"><a href="<?php echo ADMIN_URL?>add_zone/add/" style="color: #fff;"><i class="fa fa-plus"></i> Add Zone</a></button>
+									<p style="padding: 5px 0 0 45px;font-size: 16px;"><strong>Manage Classification Category</strong>
+									<button class="btn btn-sm btn-primary" style="float:right;"><a href="<?php echo ADMIN_URL?>classification_category/add/" style="color: #fff;"><i class="fa fa-plus"></i> Add Classification Category</a></button>
 									</p>
 								</header>
 				
@@ -113,7 +113,7 @@
                                             }
                                         }
                                         </script>
-				                    <form method="post" action="<?php echo ADMIN_URL;?>add_zone/multi_delete">
+				                    <form method="post" action="<?php echo ADMIN_URL;?>classification_category/multi_delete">
 										<!-- widget content -->
 										<div class="widget-body no-padding">
 										   <table id="dt_basic" class="table table-striped table-bordered table-hover" width="100%">
@@ -122,8 +122,7 @@
 													<tr>
 														<th data-hide="phone"><input type="checkbox"/></th>
 														<th data-hide="phone">S No</th>
-														<th data-hide="expand">Zone</th>
-														<th data-hide="expand">Status</th>
+														<th data-hide="expand">Classification Category Name</th>
 														<th data-hide="expand">Action</th>
 													</tr>
 												</thead>
@@ -134,16 +133,15 @@
                                                         foreach($record as $key => $row){ 
 													?>   
 													<tr>
-														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['id'];?>" /></td>
+														<td><input type="checkbox" class="ace" name="delete_ids[]" id="delete_ids[]" value="<?php echo $row['class_cat_id'];?>" /></td>
 														<td><?php echo $i; ?></td>
-														<td><?php echo stripslashes($row['zone']); ?></td>
-														<td><span <?php if($row['status']== 1){ echo " class='label label-success arrowed-in arrowed-in-right'"; } elseif($row['status']== 0){ echo "class='label label-danger arrowed'"; } ?>><a href="JavaScript:if(confirm('Are you sure want to Chanage the Status?')==true){window.location='<?php echo ADMIN_URL;?>add_zone/status/<?php echo $row['id']?>/<?php echo $row['status'];?>';}" style="color:#FFF; text-decoration:none;"><?php if($row['status']== 1){ echo "Active"; } elseif($row['status']== 0){ echo "De-Active"; } ?></a></span></td>
+														<td><?php echo stripslashes($row['class_cat_name']); ?></td>
 														<td>
 														    <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-																<a class="green" href="<?php echo ADMIN_URL;?>add_zone/edit/<?php echo $row['id']; ?>" title="Edit">
+																<a class="green" href="<?php echo ADMIN_URL;?>classification_category/edit/<?php echo $row['class_cat_id']; ?>" title="Edit">
 																	<i class="fa fa-edit"></i>
 																</a>
-																<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>add_zone/delete/<?php echo $row['id'];?>';}" title="Delete">
+																<a class="red" href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>classification_category/delete/<?php echo $row['class_cat_id'];?>';}" title="Delete">
 																	<i class="fa fa-remove"></i>
 																</a>
 															</div>
@@ -155,19 +153,14 @@
 																		
 																	<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
 																		<li>
-																			<a href="<?php echo ADMIN_URL;?>add_zone/edit/<?php echo $row['id']; ?>" class="tooltip-success" data-rel="tooltip" title="Edit">
+																			<a href="<?php echo ADMIN_URL;?>classification_category/edit/<?php echo $row['class_cat_id']; ?>" class="tooltip-success" data-rel="tooltip" title="Edit">
 																					<span class="green">
 																						<img src="<?php echo base_url();?>images/favicon/document-edit.gif">
 																					</span>
 																			</a>
-																			<a href="<?php echo ADMIN_URL;?>add_zone/view/<?php echo $row['id'];?>" class="tooltip-success" data-rel="tooltip" title="Edit">
-																					<span class="green">
-																						<img src="<?php echo base_url();?>images/favicon/view_icon.gif">
-																					</span>
-																			</a>
 																		</li>
 																		<li>
-																				<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>add_zone/delete/<?php echo $row['id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
+																				<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>classification_category/delete/<?php echo $row['class_cat_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
 																					<span class="red">
 																						<img src="<?php echo base_url();?>images/favicon/delete.png">
 																					</span>
@@ -253,7 +246,7 @@
 			
 			Also see: http://legacy.datatables.net/usage/features
 			*/	
-	
+
 			/* BASIC ;*/
 				var responsiveHelper_dt_basic = undefined;
 				var responsiveHelper_datatable_fixed_column = undefined;
@@ -264,7 +257,7 @@
 					tablet : 1024,
 					phone : 480
 				};
-	
+
 				$('#dt_basic').dataTable({
 					"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
 						"t"+
@@ -286,7 +279,7 @@
 						responsiveHelper_dt_basic.respond();
 					}
 				});
-	
+
 			/* END BASIC */
 			
 			/* COLUMN FILTER  */
@@ -357,7 +350,7 @@
 			});
 			
 			/* END COLUMN SHOW - HIDE */
-	
+
 			/* TABLETOOLS */
 			$('#datatable_tabletools').dataTable({
 				
@@ -423,3 +416,4 @@
 			s.parentNode.insertBefore(ga, s);
 			})();
 		</script>
+
