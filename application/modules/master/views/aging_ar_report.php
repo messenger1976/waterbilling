@@ -480,10 +480,15 @@ $(document).ready(function(){
             url	: '<?php echo ADMIN_URL;?>reports/getagingARreportsearch',
             
             data	: "asofdate="+asofdate+"&zone="+zone+"&status="+status,
-            complete: function(data){
-                var op = data.responseText.trim();
+			timeout: 300000, // 5 minutes (300,000 milliseconds)
+            success: function(data){
+                var op = data.trim();
                 //alert(op);
                 $("#paidcustomerDiv").html(op);
+                hideSpinner();
+            },
+            error: function(xhr, status, error){
+                console.error('AJAX Error:', error);
                 hideSpinner();
             }
         });
