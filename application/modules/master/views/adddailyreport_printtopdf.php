@@ -1,35 +1,19 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 		<meta charset="utf-8" />
 		<title></title>
 		<meta name="description" content="Static &amp; Dynamic Tables" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<!-- basic styles -->
-		<link href="<?php echo site_url();?>/assets/css/bootstrap.min.css" rel="stylesheet" />
-		<link rel="stylesheet" href="<?php echo site_url();?>/assets/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="<?php echo site_url();?>/assets/css/style.css" />
-        
-		<!--[if IE 7]>
-		  <link rel="stylesheet" href="<?php echo site_url();?>/assets/css/font-awesome-ie7.min.css" />
-		<![endif]-->
-		<!-- page specific plugin styles -->
-		<!-- fonts -->
-		<link rel="stylesheet" href="<?php echo site_url();?>/assets/css/ace-fonts.css" />
-		<!-- ace styles -->
-		<link rel="stylesheet" href="<?php echo site_url();?>/assets/css/ace.min.css" />
-		<link rel="stylesheet" href="<?php echo site_url();?>/assets/css/ace-rtl.min.css" />
-		<link rel="stylesheet" href="<?php echo site_url();?>/assets/css/ace-skins.min.css" />
-		<!--[if lte IE 8]>
-		  <link rel="stylesheet" href="<?php echo site_url();?>/assets/css/ace-ie.min.css" />
-		<![endif]-->
-		<!-- inline styles related to this page -->
-		<!-- ace settings handler -->
-		<script src="<?php echo site_url();?>/assets/js/ace-extra.min.js"></script>
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-		<script src="<?php echo site_url();?>/assets/js/html5shiv.js"></script>
-		<script src="<?php echo site_url();?>/assets/js/respond.min.js"></script>
-		<![endif]-->
+		
+		<!-- Basic Styles -->
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url();?>css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url();?>css/font-awesome.min.css">
+		
+		<!-- SmartAdmin Styles : Caution! DO NOT change the order -->
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url();?>css/smartadmin-production-plugins.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url();?>css/smartadmin-production.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="<?php echo base_url();?>css/smartadmin-skins.min.css">
         <style>
             .table>tbody>tr>td{
                 padding: 5px;
@@ -312,8 +296,33 @@
 </body>
 </html>	
 										
+	<!-- SCRIPTS -->
+	<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script>
+		if (!window.jQuery) {
+			document.write('<script src="<?php echo base_url();?>js/libs/jquery-2.1.1.min.js"><\/script>');
+		}
+	</script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script>
+		if (!window.jQuery.ui) {
+			document.write('<script src="<?php echo base_url();?>js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+		}
+	</script>
+
+	<!-- IMPORTANT: APP CONFIG -->
+	<script src="<?php echo base_url();?>js/app.config.js"></script>
+
+	<!-- BOOTSTRAP JS -->
+	<script src="<?php echo base_url();?>js/bootstrap/bootstrap.min.js"></script>
+
+	<!-- MAIN APP JS FILE -->
+	<script src="<?php echo base_url();?>js/app.min.js"></script>
+
 	<!-- PAGE RELATED PLUGIN(S) -->
-		<script src="<?php echo base_url();?>js/plugin/datatables/jquery.dataTables.min.js"></script>
+	<script src="<?php echo base_url();?>js/plugin/datatables/jquery.dataTables.min.js"></script>
 		<script src="<?php echo base_url();?>js/plugin/datatables/dataTables.colVis.min.js"></script>
 		<script src="<?php echo base_url();?>js/plugin/datatables/dataTables.tableTools.min.js"></script>
 		<script src="<?php echo base_url();?>js/plugin/datatables/dataTables.bootstrap.min.js"></script>
