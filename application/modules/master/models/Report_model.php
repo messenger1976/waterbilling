@@ -161,15 +161,17 @@ class Report_model extends CI_Model {
 
 	public function get_aging_ar_report_records($asofdate,$zone,$status){
 		set_time_limit(300);
-		$asofdate = date('Y-m-d',strtotime($asofdate));
-		$sql_query_zone ='';
-        $sql_query_status ='';
-		if($zone!=0){
-			$sql_query_zone =' AND tbl_addcustomer.zone=?';
-		}
-        if($status!=''){
-			$sql_query_status =' AND tbl_addcustomer.status=?';
-		}
+		
+		// Normalize inputs
+		$asofdate = $asofdate ? date('Y-m-d', strtotime($asofdate)) : date('Y-m-d');
+		$zone = ($zone === '' || $zone === null) ? 0 : (int)$zone;
+		$status = ($status === '99' || $status === null) ? '' : $status;
+		
+		$sql_query_zone = '';
+        $sql_query_status = '';
+		$params = array();
+		
+		// Build the SELECT query
 		$sql_query = "SELECT  tbl_addcustomer.customer_id,
 		tbl_addcustomer.last_name,
 		tbl_addcustomer.first_name,
@@ -193,23 +195,43 @@ class Report_model extends CI_Model {
 		AND tbl_addcustomer_reading.year=tbl_addmetercustomer.year
         LEFT JOIN tbl_classification ON tbl_addcustomer.classification = tbl_classification.class_id
         LEFT JOIN tbl_classification_category ON tbl_classification.class_cat_id = tbl_classification_category.class_cat_id
-	WHERE  tbl_addmetercustomer.invoice_id IS NULL and tbl_addcustomer_reading.reading<>'' AND tbl_billing_period.bp_due_date<? $sql_query_zone $sql_query_status
-        GROUP BY tbl_addcustomer.`customer_id`
+	WHERE  tbl_addmetercustomer.invoice_id IS NULL and tbl_addcustomer_reading.reading<>'' AND tbl_billing_period.bp_due_date<?";
+	
+		// Add parameters for the 6 DATEDIFF placeholders and 1 bp_due_date placeholder
+		for ($i = 0; $i < 7; $i++) {
+			$params[] = $asofdate;
+		}
+		
+		// Add conditional filters
+		if ($zone != 0) {
+			$sql_query .= " AND tbl_addcustomer.zone=?";
+			$params[] = $zone;
+		}
+		
+		if ($status !== '') {
+			$sql_query .= " AND tbl_addcustomer.status=?";
+			$params[] = $status;
+		}
+		
+		$sql_query .= " GROUP BY tbl_addcustomer.`customer_id`
 		
 	ORDER BY tbl_addcustomer.last_name ASC, tbl_addcustomer.first_name ASC";
 	
-	$query = $this->db->query($sql_query, [
-		$asofdate, $asofdate, $asofdate, $asofdate,
-		$asofdate, $asofdate, $asofdate,$zone,$status
-	]);
+	$query = $this->db->query($sql_query, $params);
 
+	// Log the query for debugging
+	log_message('debug', 'Aging AR Query: ' . $this->db->last_query());
+	log_message('debug', 'Aging AR Params: asofdate=' . $asofdate . ', zone=' . $zone . ', status=' . $status);
+	
+	// Check for database errors
+	if ($this->db->_error_number() != 0) {
+		log_message('error', 'Database Error in get_aging_ar_report_records: ' . $this->db->_error_message());
+		return array();
+	}
 		
-
-
-		
-		//$query = $this->db->get();
-		$result = $query->result_array();
-		return $result;
+	$result = $query->result_array();
+	log_message('debug', 'Aging AR Result count: ' . count($result));
+	return $result;
 	}
 	
 }

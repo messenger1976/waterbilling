@@ -89,6 +89,7 @@ if($status==1){
                     if(count($zone) > 0){
                         $index = 0;
 						
+						$grand_total_current = 0;
                         $grand_total_30days = 0;
 						$grand_total_60days = 0;
 						$grand_total_90days = 0;
@@ -109,6 +110,7 @@ if($status==1){
                  //$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id']);
                  $get_dailytrans = $this->report_model->get_aging_ar_report_records($asofdate,$row['id'],$status);
                  
+				 $grand_total_current_zone = 0;
 				 $grand_total_30days_zone = 0;
 				 $grand_total_60days_zone = 0;
 				 $grand_total_90days_zone = 0;

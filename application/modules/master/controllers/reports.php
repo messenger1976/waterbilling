@@ -153,6 +153,7 @@ class Reports extends CI_Controller {
 		
         $data['asofdate'] = $asofdate;
         $data['status'] = ($status=='99')?'':$status;
+		$data['record'] = array(); // Initialize record array to prevent undefined variable error
 		$data['preparedby'] = $this->my_model->get_employee($preparedby);
 		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
 		$data['approvedby'] = $this->my_model->get_employee($approvedby);
