@@ -160,6 +160,7 @@ class Report_model extends CI_Model {
 	}
 
 	public function get_aging_ar_report_records($asofdate,$zone,$status){
+		set_time_limit(300);
 		$asofdate = date('Y-m-d',strtotime($asofdate));
 		$sql_query_zone ='';
         $sql_query_status ='';
