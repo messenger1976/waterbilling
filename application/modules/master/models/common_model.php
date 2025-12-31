@@ -39,8 +39,9 @@ class Common_model extends CI_Model {
         $this->db->select("*,(Select month_name from ".$this->table_months." where ".$this->table_months.".month_id	= ".$this->table_billing_period.".bp_period_month ) as month_name");
 		$this->db->from($this->table_billing_period);
 		
-        $this->db->group_by('bp_period_month','bo_period_year');
-		$this->db->order_by('bp_zone_id','asc');
+        $this->db->group_by('bp_period_month','bp_period_year');
+		$this->db->order_by('bp_period_year','desc');
+		$this->db->order_by('bp_period_month','asc');
 
 		if($current_billingperiod!=''){
 			$billing_period = explode(' ',$current_billingperiod);
@@ -48,6 +49,7 @@ class Common_model extends CI_Model {
 			$this->db->where('bp_period_year',$billing_period[1]);
 		}else{
 			$this->db->where('bp_status',1);
+			//$this->db->where("bp_status <> ",2);
 		}
 
 		$query = $this->db->get();

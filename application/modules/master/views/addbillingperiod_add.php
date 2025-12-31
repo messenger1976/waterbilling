@@ -32,9 +32,9 @@
 						<ul id="sparks" class="">
 							<li class="sparks-info">
 							<?php 
-							     $income1 = $this->my_model->get_income_metercustomer();
+							     $income1 = $this->comm_model->get_income_metercustomer();
 							     extract($income1);
-								 $income2 = $this->my_model->get_income_monthlycustomer();
+								 $income2 = $this->comm_model->get_income_monthlycustomer();
 								 extract($income2);
 								 $intotal = $total1 + $total2;
 							?>
@@ -44,9 +44,9 @@
 								</div>
 							</li>
 							<?php
-							     $expense1 = $this->my_model->get_outcome_expenses();
+							     $expense1 = $this->comm_model->get_outcome_expenses();
 							     extract($expense1);
-								 $expense2 = $this->my_model->get_outcome_payroll();
+								 $expense2 = $this->comm_model->get_outcome_payroll();
 								 extract($expense2);
 								 $extotal = $extotal1 + $extotal2;
 							?>

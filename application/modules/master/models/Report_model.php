@@ -160,7 +160,8 @@ class Report_model extends CI_Model {
 	}
 
 	public function get_aging_ar_report_records($asofdate,$zone,$status){
-		set_time_limit(300);
+		set_time_limit(600); // Increase to 10 minutes
+		ini_set('memory_limit', '512M'); // Increase memory limit
 		
 		// Normalize inputs
 		$asofdate = $asofdate ? date('Y-m-d', strtotime($asofdate)) : date('Y-m-d');

@@ -68,6 +68,8 @@ class addbillingperiod extends CI_Controller {
 		//print_r($this->session->userdata('current_billingperiod'));
 		//exit;
 		$data['billingperiod'] = $this->my_model->get_month_billingperiod_records();	
+		//print_r($data['billingperiod']);
+		//exit;
 		$data['zone_listing'] = $this->my_model->get_zone_listing_records();	
 		//$header['host'] = $this->comm_model->get_single_record();				
 		$header['record_info'] = $this->top_model->get_last_login_details(1);

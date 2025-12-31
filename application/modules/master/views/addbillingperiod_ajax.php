@@ -55,17 +55,11 @@
                                                                     <i class="fa fa-edit"></i>
 
 																</a>
-																<a class="blue" href="<?php echo ADMIN_URL;?>addbillingperiod/view/<?php echo $row['bp_id'];?>">
-                                                                    <i class="fa fa-remove"></i>
-
+																<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addbillingperiod/delete/<?php echo $row['bp_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
+																	<span class="red">
+																		<i class="icon-trash bigger-120"></i>
+																	</span>
 																</a>
-                                                                      
-																
-																			<a href="JavaScript:if(confirm('Confirm Delete?')==true){window.location='<?php echo ADMIN_URL;?>addbillingperiod/delete/<?php echo $row['bp_id'];?>';}" class="tooltip-error" data-rel="tooltip" title="Delete">
-																				<span class="red">
-																					<i class="icon-trash bigger-120"></i>
-																				</span>
-																			</a>
 																																		
 															</div>
 															<div class="visible-xs visible-sm hidden-md hidden-lg">
