@@ -46,7 +46,25 @@ class adddailyreport extends CI_Controller {
 	}
 
 	public function exporttoexcel($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
-		$this->load->helper('csv');
+		// Suppress error display to prevent output before headers
+		@ini_set('display_errors', 0);
+		error_reporting(0);
+		
+		// Increase execution time and memory limit for large exports
+		set_time_limit(600); // 10 minutes
+		ini_set('memory_limit', '512M');
+		
+		// Clean any previous output to prevent corruption
+		while (ob_get_level()) {
+			@ob_end_clean();
+		}
+		
+		// Prevent any output before headers
+		if (headers_sent($file, $line)) {
+			die("Headers already sent in $file on line $line. Cannot send Excel file.");
+		}
+		
+		$this->load->helper('excel');
 		
 		// Convert date format from dd-mm-yyyy to Y-m-d for database query
 		$date_parts = explode('-', $trans_date);
@@ -98,6 +116,24 @@ class adddailyreport extends CI_Controller {
 		$grand_total_ar_leaking = 0;
 		$grand_total_ar_leaking_balance = 0;
 		
+		// Pre-load all leaking A/R data for the transaction date to avoid N+1 queries
+		$leaking_ar_lookup = array();
+		$get_all_leaking = array();
+		try {
+			$get_all_leaking = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate);
+			if (!is_array($get_all_leaking)) {
+				$get_all_leaking = array();
+			}
+			foreach($get_all_leaking as $leaking_record){
+				if(isset($leaking_record['leakingledgerdetails_or_number'])){
+					$or_key = sprintf('%07d', $leaking_record['leakingledgerdetails_or_number']);
+					$leaking_ar_lookup[$or_key] = $leaking_record;
+				}
+			}
+		} catch (Exception $e) {
+			$get_all_leaking = array();
+		}
+		
 		// Process each zone
 		if(count($zones) > 0){
 			foreach($zones as $key => $row){
@@ -135,9 +171,9 @@ class adddailyreport extends CI_Controller {
 					$ar_leaking = array('leaking_total_amount' => 0, 'leaking_balance' => 0);
 					if(isset($gdailytrans['leaking_amount']) && $gdailytrans['leaking_amount'] > 0){
 						$ornumber_search = sprintf('%07d', $gdailytrans['or_number']);
-						$ar_leaking_result = $this->leakingentry_model->get_soa_statement_OR($ornumber_search);
-						if($ar_leaking_result && is_array($ar_leaking_result)){
-							$ar_leaking = $ar_leaking_result;
+						// Use pre-loaded lookup instead of querying database
+						if(isset($leaking_ar_lookup[$ornumber_search])){
+							$ar_leaking = $leaking_ar_lookup[$ornumber_search];
 							if(isset($ar_leaking['leaking_balance'])){
 								$gdailytrans['grand_total'] = $gdailytrans['grand_total'] - $ar_leaking['leaking_balance'];
 							}
@@ -211,8 +247,8 @@ class adddailyreport extends CI_Controller {
 		// Add LEAKING A/R PAYMENT REPORT section
 		$export_data[] = array('', 'LEAKING A/R PAYMENT REPORT', '', '', '', '', '', '', '', '', '', '', '');
 		
-		$mysql_transdate1 = $mysql_transdate;
-		$get_dailytrans1 = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate1);
+		// Use already loaded leaking data (no need to query again)
+		$get_dailytrans1 = $get_all_leaking;
 		$total_leaking_ar = 0;
 		
 		foreach($get_dailytrans1 as $key => $gdailytrans1){
@@ -304,11 +340,10 @@ class adddailyreport extends CI_Controller {
 		}
 		
 		// Generate filename
-		$filename = 'Daily_Collection_Report_' . date('d-m-Y', strtotime($trans_date_mysql)) . '.csv';
+		$filename = 'Daily_Collection_Report_' . date('d-m-Y', strtotime($trans_date_mysql)) . '.xls';
 		
-		// Export to CSV
-		array_to_csv($export_data, $filename);
-		exit;
+		// Export to Excel (exit is handled in array_to_excel function)
+		array_to_excel($export_data, $filename);
 	}
 	
 	public function getadddailyreportsearch()

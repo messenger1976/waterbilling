@@ -132,7 +132,21 @@ class Reports extends CI_Controller {
 	}
 
 	public function exporttoexcel($billingperiod,$status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
-		$this->load->helper('csv');
+		// Increase execution time and memory limit for large exports
+		set_time_limit(600); // 10 minutes
+		ini_set('memory_limit', '512M');
+		
+		// Clean any previous output to prevent corruption
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
+		
+		// Prevent any output before headers
+		if (headers_sent($file, $line)) {
+			die("Headers already sent in $file on line $line. Cannot send Excel file.");
+		}
+		
+		$this->load->helper('excel');
 		
 		// Decode and parse billing period
 		$billingperiod = urldecode($billingperiod);
@@ -477,12 +491,11 @@ class Reports extends CI_Controller {
 		}
 		
 		// Generate filename
-		$filename = 'Monthly_Billing_Report_' . $billingperiod_month_name . '_' . $billingperiod_year . '.csv';
+		$filename = 'Monthly_Billing_Report_' . $billingperiod_month_name . '_' . $billingperiod_year . '.xls';
 		$filename = str_replace(' ', '_', $filename);
 		
-		// Export to CSV
-		array_to_csv($export_data, $filename);
-		exit;
+		// Export to Excel (exit is handled in array_to_excel function)
+		array_to_excel($export_data, $filename);
 	}
 
 	public function customerprinttopdf($status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
@@ -525,6 +538,20 @@ class Reports extends CI_Controller {
 	}
 
 	public function exporttoexcel_aging($asofdate,$zone,$status,$preparedby='',$verifiedby='',$approvedby=''){
+		// Increase execution time and memory limit for large exports
+		set_time_limit(600); // 10 minutes
+		ini_set('memory_limit', '512M');
+		
+		// Clean any previous output to prevent corruption
+		while (ob_get_level()) {
+			ob_end_clean();
+		}
+		
+		// Prevent any output before headers
+		if (headers_sent($file, $line)) {
+			die("Headers already sent in $file on line $line. Cannot send CSV file.");
+		}
+		
 		$this->load->helper('csv');
 		
 		// Convert date format from dd-mm-yyyy to Y-m-d for database query
@@ -722,11 +749,10 @@ class Reports extends CI_Controller {
 		}
 		
 		// Generate filename
-		$filename = 'Aging_AR_Report_' . date('d-m-Y', strtotime($asofdate_mysql)) . '.csv';
+		$filename = 'Aging_AR_Report_' . date('d-m-Y', strtotime($asofdate_mysql)) . '.xls';
 		
-		// Export to CSV
-		array_to_csv($export_data, $filename);
-		exit;
+		// Export to Excel (exit is handled in array_to_excel function)
+		array_to_excel($export_data, $filename);
 	}
 	
 	public function getmonthlyreportsearch()

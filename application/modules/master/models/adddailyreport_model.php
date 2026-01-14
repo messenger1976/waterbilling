@@ -34,7 +34,7 @@
 		$this->db->join('tbl_addcustomer_reading', 'tbl_addmetercustomer.customer_id = tbl_addcustomer_reading.customer_id and tbl_addmetercustomer.month=tbl_addcustomer_reading.month and tbl_addmetercustomer.year=tbl_addcustomer_reading.year','left');
 		$this->db->where('tbl_addmetercustomer.date',$from);
 		//$this->db->where('tbl_addmetercustomer.date <=',$to);
-		if($zone!=0 || $zone=''){
+		if($zone != 0 && $zone != ''){
 			$this->db->where('tbl_addcustomer.zone',$zone);
 		}
 		
