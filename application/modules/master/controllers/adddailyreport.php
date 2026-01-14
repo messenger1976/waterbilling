@@ -46,6 +46,10 @@ class adddailyreport extends CI_Controller {
 	}
 
 	public function exporttoexcel($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+		// Increase execution time and memory limit for large exports
+		set_time_limit(600); // 10 minutes
+		ini_set('memory_limit', '512M');
+		
 		// Clean any previous output to prevent corruption
 		if (ob_get_level()) {
 			ob_end_clean();

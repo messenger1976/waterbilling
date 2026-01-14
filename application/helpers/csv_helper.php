@@ -40,44 +40,81 @@
 			header('Pragma: public');
 			header('Expires: 0');
 			
+			// Disable output buffering for streaming
+			if (ob_get_level()) {
+				ob_end_clean();
+			}
+			
 			// Don't output UTF-8 BOM as it can cause corruption in some systems
 		}		
 
-		// Start output buffering
-		ob_start();
-		$f = fopen('php://output', 'w');
-		if (!$f) {
-			ob_end_clean();
-			show_error("Can't open php://output");
-			return;
-		}
-		
-		$n = 0;		
-		foreach ($array as $line)
+		// For download, stream directly to output (more memory efficient)
+		if ($download != "")
 		{
-			$n++;
-			if ( ! fputcsv($f, $line))
-			{
-				fclose($f);
-				ob_end_clean();
-				show_error("Can't write line $n: $line");
+			$f = fopen('php://output', 'w');
+			if (!$f) {
+				show_error("Can't open php://output");
 				return;
 			}
-		}
-		fclose($f);
-		$str = ob_get_contents();
-		ob_end_clean();
-
-		if ($download == "")
-		{
-			return $str;	
-		}
-		else
-		{	
-			// Output the CSV content
-			echo $str;
+			
+			$n = 0;		
+			foreach ($array as $line)
+			{
+				$n++;
+				if ( ! fputcsv($f, $line))
+				{
+					fclose($f);
+					show_error("Can't write line $n: $line");
+					return;
+				}
+				
+				// Flush output every 100 rows to prevent timeout
+				if ($n % 100 == 0) {
+					flush();
+					if (function_exists('ob_flush')) {
+						@ob_flush();
+					}
+				}
+			}
+			fclose($f);
+			
+			// Final flush
+			flush();
+			if (function_exists('ob_flush')) {
+				@ob_flush();
+			}
+			
 			// Exit to prevent any further output
 			exit;
+		}
+		else
+		{
+			// For non-download (return string), use buffering
+			ob_start();
+			$f = fopen('php://output', 'w');
+			if (!$f) {
+				ob_end_clean();
+				show_error("Can't open php://output");
+				return '';
+			}
+			
+			$n = 0;		
+			foreach ($array as $line)
+			{
+				$n++;
+				if ( ! fputcsv($f, $line))
+				{
+					fclose($f);
+					ob_end_clean();
+					show_error("Can't write line $n: $line");
+					return '';
+				}
+			}
+			fclose($f);
+			$str = ob_get_contents();
+			ob_end_clean();
+			
+			return $str;
 		}		
 	}
 }
