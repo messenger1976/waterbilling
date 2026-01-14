@@ -178,7 +178,7 @@ class Report_model extends CI_Model {
 		tbl_addcustomer.first_name,
 		tbl_addcustomer.middle_name, 
 		tbl_addcustomer.meter_number,
-		tbl_billing_period.bp_end_date AS reading_date,
+		MAX(tbl_billing_period.bp_end_date) AS reading_date,
         (SELECT zone FROM tbl_zone WHERE tbl_zone.id=tbl_addcustomer.zone) AS zone, 
         
         SUM( tbl_addcustomer_reading.penalty) AS total_balance,
@@ -187,7 +187,7 @@ class Report_model extends CI_Model {
         SUM(CASE WHEN DATEDIFF(?, tbl_billing_period.bp_due_date) BETWEEN 61 AND 90 THEN tbl_addcustomer_reading.penalty ELSE 0 END) AS `60-days`,
         SUM(CASE WHEN DATEDIFF(?, tbl_billing_period.bp_due_date) BETWEEN 91 AND 120 THEN tbl_addcustomer_reading.penalty ELSE 0 END) AS `90-days`,
         SUM(CASE WHEN DATEDIFF(?, tbl_billing_period.bp_due_date) BETWEEN 121 AND 150 THEN tbl_addcustomer_reading.penalty ELSE 0 END) AS `120-days`,
-        SUM(CASE WHEN DATEDIFF(?, tbl_billing_period.bp_due_date) > 151 THEN tbl_addcustomer_reading.amount ELSE 0 END) AS `150-DaysUp`
+        SUM(CASE WHEN DATEDIFF(?, tbl_billing_period.bp_due_date) > 151 THEN tbl_addcustomer_reading.penalty ELSE 0 END) AS `150-DaysUp`
         
         FROM tbl_addcustomer_reading
 		INNER JOIN tbl_addcustomer ON tbl_addcustomer_reading.customer_id = tbl_addcustomer.customer_id

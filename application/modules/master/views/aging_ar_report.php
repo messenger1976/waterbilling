@@ -106,6 +106,7 @@
 															<div  class="pull-right" style="padding-right:20px;">
 																<button type="submit" class="btn btn-sm btn-primary" name="display" id="display" style="margin-bottom: 5px;">Display</button>
 																<button id="printtopdf" class="btn btn-sm btn-warning" style="margin-bottom: 5px;">Print</button>
+																<button id="exporttoexcel" class="btn btn-sm btn-success" style="margin-bottom: 5px;">Export to Excel</button>
 															
 															</div>
 														</legend>
@@ -464,6 +465,28 @@ $(document).ready(function(){
 			alert("Popup was blocked! Please allow popups for this site.");
 		}
 
+	});
+
+	$('#exporttoexcel').on('click',function(evt){
+		evt.preventDefault();
+		var zone = $("#zone").val();
+		var status = $("#status").val();
+		var preparedby = $("#preparedby").val();
+		var verifiedby = $("#verifiedby").val();
+		var approvedby = $("#approvedby").val();
+		var asofdate = $("#asofdate").val();
+		
+		if(asofdate === ''){
+			alert("Please select an 'As of Date' first.");
+			return;
+		}
+		
+		if(status === ''){
+			status = '99';
+		}
+		
+		// Redirect to export URL
+		window.location.href = "<?php echo ADMIN_URL;?>reports/exporttoexcel_aging/"+asofdate+'/'+zone+'/'+status+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
 	});
 
     $('#display').on('click', function(evt){
