@@ -61,10 +61,10 @@ class adddailyreport extends CI_Controller {
 		
 		// Prevent any output before headers
 		if (headers_sent($file, $line)) {
-			die("Headers already sent in $file on line $line. Cannot send CSV file.");
+			die("Headers already sent in $file on line $line. Cannot send Excel file.");
 		}
 		
-		$this->load->helper('csv');
+		$this->load->helper('excel');
 		
 		// Convert date format from dd-mm-yyyy to Y-m-d for database query
 		$date_parts = explode('-', $trans_date);
@@ -340,10 +340,10 @@ class adddailyreport extends CI_Controller {
 		}
 		
 		// Generate filename
-		$filename = 'Daily_Collection_Report_' . date('d-m-Y', strtotime($trans_date_mysql)) . '.csv';
+		$filename = 'Daily_Collection_Report_' . date('d-m-Y', strtotime($trans_date_mysql)) . '.xls';
 		
-		// Export to CSV (exit is handled in array_to_csv function)
-		array_to_csv($export_data, $filename);
+		// Export to Excel (exit is handled in array_to_excel function)
+		array_to_excel($export_data, $filename);
 	}
 	
 	public function getadddailyreportsearch()

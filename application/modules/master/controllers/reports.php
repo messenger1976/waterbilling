@@ -143,10 +143,10 @@ class Reports extends CI_Controller {
 		
 		// Prevent any output before headers
 		if (headers_sent($file, $line)) {
-			die("Headers already sent in $file on line $line. Cannot send CSV file.");
+			die("Headers already sent in $file on line $line. Cannot send Excel file.");
 		}
 		
-		$this->load->helper('csv');
+		$this->load->helper('excel');
 		
 		// Decode and parse billing period
 		$billingperiod = urldecode($billingperiod);
@@ -491,11 +491,11 @@ class Reports extends CI_Controller {
 		}
 		
 		// Generate filename
-		$filename = 'Monthly_Billing_Report_' . $billingperiod_month_name . '_' . $billingperiod_year . '.csv';
+		$filename = 'Monthly_Billing_Report_' . $billingperiod_month_name . '_' . $billingperiod_year . '.xls';
 		$filename = str_replace(' ', '_', $filename);
 		
-		// Export to CSV (exit is handled in array_to_csv function)
-		array_to_csv($export_data, $filename);
+		// Export to Excel (exit is handled in array_to_excel function)
+		array_to_excel($export_data, $filename);
 	}
 
 	public function customerprinttopdf($status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
@@ -749,10 +749,10 @@ class Reports extends CI_Controller {
 		}
 		
 		// Generate filename
-		$filename = 'Aging_AR_Report_' . date('d-m-Y', strtotime($asofdate_mysql)) . '.csv';
+		$filename = 'Aging_AR_Report_' . date('d-m-Y', strtotime($asofdate_mysql)) . '.xls';
 		
-		// Export to CSV (exit is handled in array_to_csv function)
-		array_to_csv($export_data, $filename);
+		// Export to Excel (exit is handled in array_to_excel function)
+		array_to_excel($export_data, $filename);
 	}
 	
 	public function getmonthlyreportsearch()
