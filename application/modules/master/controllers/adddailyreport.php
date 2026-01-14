@@ -46,16 +46,17 @@ class adddailyreport extends CI_Controller {
 	}
 
 	public function exporttoexcel($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+		// Suppress error display to prevent output before headers
+		@ini_set('display_errors', 0);
+		error_reporting(0);
+		
 		// Increase execution time and memory limit for large exports
 		set_time_limit(600); // 10 minutes
 		ini_set('memory_limit', '512M');
 		
-		// Disable CodeIgniter's output class to prevent interference
-		$this->output->_display = false;
-		
 		// Clean any previous output to prevent corruption
 		while (ob_get_level()) {
-			ob_end_clean();
+			@ob_end_clean();
 		}
 		
 		// Prevent any output before headers
@@ -117,12 +118,20 @@ class adddailyreport extends CI_Controller {
 		
 		// Pre-load all leaking A/R data for the transaction date to avoid N+1 queries
 		$leaking_ar_lookup = array();
-		$get_all_leaking = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate);
-		foreach($get_all_leaking as $leaking_record){
-			if(isset($leaking_record['leakingledgerdetails_or_number'])){
-				$or_key = sprintf('%07d', $leaking_record['leakingledgerdetails_or_number']);
-				$leaking_ar_lookup[$or_key] = $leaking_record;
+		$get_all_leaking = array();
+		try {
+			$get_all_leaking = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate);
+			if (!is_array($get_all_leaking)) {
+				$get_all_leaking = array();
 			}
+			foreach($get_all_leaking as $leaking_record){
+				if(isset($leaking_record['leakingledgerdetails_or_number'])){
+					$or_key = sprintf('%07d', $leaking_record['leakingledgerdetails_or_number']);
+					$leaking_ar_lookup[$or_key] = $leaking_record;
+				}
+			}
+		} catch (Exception $e) {
+			$get_all_leaking = array();
 		}
 		
 		// Process each zone

@@ -25,7 +25,7 @@
 		{	
 			// Clean any previous output buffers
 			while (ob_get_level()) {
-				ob_end_clean();
+				@ob_end_clean();
 			}
 			
 			// Prevent any output before headers
@@ -34,17 +34,19 @@
 			}
 			
 			// Set proper headers for CSV download - force download, not display
-			header('Content-Type: text/csv; charset=UTF-8');
-			header('Content-Disposition: attachment; filename="' . str_replace('"', '', $download) . '"');
-			header('Content-Description: File Transfer');
-			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-			header('Pragma: public');
-			header('Expires: 0');
-			header('X-Content-Type-Options: nosniff');
+			$filename_clean = str_replace(array('"', "\r", "\n"), '', $download);
+			@header('Content-Type: text/csv; charset=UTF-8');
+			@header('Content-Disposition: attachment; filename="' . $filename_clean . '"');
+			@header('Content-Description: File Transfer');
+			@header('Content-Transfer-Encoding: binary');
+			@header('Cache-Control: must-revalidate, post-check=0, pre-check=0, private');
+			@header('Pragma: private');
+			@header('Expires: 0');
+			@header('X-Content-Type-Options: nosniff');
 			
 			// Disable output buffering for streaming
 			if (ob_get_level()) {
-				ob_end_clean();
+				@ob_end_clean();
 			}
 			
 			// Don't output UTF-8 BOM as it can cause corruption in some systems
@@ -55,8 +57,8 @@
 		{
 			$f = fopen('php://output', 'w');
 			if (!$f) {
-				show_error("Can't open php://output");
-				return;
+				header('Content-Type: text/plain');
+				die("Error: Can't open php://output for writing");
 			}
 			
 			$n = 0;		
@@ -66,8 +68,8 @@
 				if ( ! fputcsv($f, $line))
 				{
 					fclose($f);
-					show_error("Can't write line $n: $line");
-					return;
+					header('Content-Type: text/plain');
+					die("Error: Can't write line $n to CSV file");
 				}
 				
 				// Flush output every 100 rows to prevent timeout
@@ -96,7 +98,6 @@
 			$f = fopen('php://output', 'w');
 			if (!$f) {
 				ob_end_clean();
-				show_error("Can't open php://output");
 				return '';
 			}
 			
@@ -108,7 +109,6 @@
 				{
 					fclose($f);
 					ob_end_clean();
-					show_error("Can't write line $n: $line");
 					return '';
 				}
 			}

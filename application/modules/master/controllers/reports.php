@@ -136,9 +136,6 @@ class Reports extends CI_Controller {
 		set_time_limit(600); // 10 minutes
 		ini_set('memory_limit', '512M');
 		
-		// Disable CodeIgniter's output class to prevent interference
-		$this->output->_display = false;
-		
 		// Clean any previous output to prevent corruption
 		while (ob_get_level()) {
 			ob_end_clean();
@@ -544,9 +541,6 @@ class Reports extends CI_Controller {
 		// Increase execution time and memory limit for large exports
 		set_time_limit(600); // 10 minutes
 		ini_set('memory_limit', '512M');
-		
-		// Disable CodeIgniter's output class to prevent interference
-		$this->output->_display = false;
 		
 		// Clean any previous output to prevent corruption
 		while (ob_get_level()) {
