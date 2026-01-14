@@ -512,6 +512,123 @@ class Reports extends CI_Controller {
 		$this->load->view($this->customerprinttopdfPage,$data);
 	}
 
+	public function exporttoexcel_customer($status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+		// Suppress error display to prevent output before headers
+		@ini_set('display_errors', 0);
+		error_reporting(0);
+		
+		// Increase execution time and memory limit for large exports
+		set_time_limit(600); // 10 minutes
+		ini_set('memory_limit', '512M');
+		
+		// Clean any previous output to prevent corruption
+		while (ob_get_level()) {
+			@ob_end_clean();
+		}
+		
+		// Prevent any output before headers
+		if (headers_sent($file, $line)) {
+			die("Headers already sent in $file on line $line. Cannot send Excel file.");
+		}
+		
+		$this->load->helper('excel');
+		
+		// Get zone data
+		$zones = $this->my_model->get_zone($zone);
+		$status_filter = ($status=='99')?'':$status;
+		
+		// Prepare export data array
+		$export_data = array();
+		
+		// Add header rows
+		$export_data[] = array('CUSTOMER REPORT');
+		$export_data[] = array(''); // Empty row
+		
+		// Add column headers
+		$export_data[] = array(
+			'SN #',
+			'Customer ID',
+			'First Name',
+			'Last Name',
+			'Address',
+			'Zone',
+			'Classification',
+			'Status'
+		);
+		
+		$index = 0;
+		
+		// Get customer records
+		$records = $this->report_model->get_customer_report_records($zone, $status_filter);
+		
+		// Process each record
+		if(count($records) > 0){
+			foreach($records as $key => $customer){
+				$index++;
+				
+				// Determine status message
+				$status_msg = '';
+				if($customer['status'] == '1'){ 
+					$status_msg = "Active"; 
+				} else if($customer['status'] == '0'){ 
+					$status_msg = "Inactive"; 
+				} else if($customer['status'] == '2'){ 
+					$status_msg = "Disconnected"; 
+				}
+				
+				// Add customer row
+				$export_data[] = array(
+					$index,
+					stripslashes($customer['customer_id']),
+					stripslashes($customer['first_name']),
+					stripslashes($customer['last_name']),
+					stripslashes($customer['address']),
+					stripslashes($customer['zone_name']),
+					stripslashes($customer['classification_name']),
+					$status_msg
+				);
+			}
+		} else {
+			$export_data[] = array('No records found', '', '', '', '', '', '', '');
+		}
+		
+		// Add signature section
+		$preparedby_data = $this->my_model->get_employee($preparedby);
+		$verifiedby_data = $this->my_model->get_employee($verifiedby);
+		$approvedby_data = $this->my_model->get_employee($approvedby);
+		
+		$export_data[] = array('');
+		$export_data[] = array('Prepared by:', '', 'Verified by:');
+		$export_data[] = array('');
+		$export_data[] = array('');
+		$export_data[] = array('');
+		$export_data[] = array('');
+		if(isset($preparedby_data[0]) && isset($verifiedby_data[0])){
+			$preparedby_name = strtoupper($preparedby_data[0]['first_name'] . ' ' . $preparedby_data[0]['middle_name'] . ' ' . $preparedby_data[0]['last_name']);
+			$verifiedby_name = strtoupper($verifiedby_data[0]['first_name'] . ' ' . $verifiedby_data[0]['middle_name'] . ' ' . $verifiedby_data[0]['last_name']);
+			$export_data[] = array($preparedby_name, '', $verifiedby_name);
+			$export_data[] = array($preparedby_data[0]['jobtitle'], '', $verifiedby_data[0]['jobtitle']);
+		}
+		$export_data[] = array('');
+		$export_data[] = array('');
+		$export_data[] = array('');
+		$export_data[] = array('Approved by:');
+		$export_data[] = array('');
+		$export_data[] = array('');
+		$export_data[] = array('');
+		if(isset($approvedby_data[0])){
+			$approvedby_name = strtoupper($approvedby_data[0]['first_name'] . ' ' . $approvedby_data[0]['middle_name'] . ' ' . $approvedby_data[0]['last_name']);
+			$export_data[] = array($approvedby_name, '', 'Date/Time printed: ' . date('Y-m-d H:i:s'));
+			$export_data[] = array($approvedby_data[0]['jobtitle']);
+		}
+		
+		// Generate filename
+		$filename = 'Customer_Report_' . date('Y-m-d') . '.xls';
+		
+		// Export to Excel (exit is handled in array_to_excel function)
+		array_to_excel($export_data, $filename);
+	}
+
 	public function agingprinttopdf($asofdate,$zone,$status,$preparedby='',$verifiedby='',$approvedby=''){
 		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
 		//$data['zone'] = $this->my_model->get_zone($zone);

@@ -106,7 +106,7 @@
 															<div  class="pull-right" style="padding-right:20px;">
 																<input type="submit" class="btn btn-primary" name="search" id="search" value="search" style="margin-bottom: 5px;">
 																<a id="printtopdf" class="btn btn-sm btn-warning" style="margin-bottom: 5px;">Print</a>
-															
+																<a id="exporttoexcel" class="btn btn-sm btn-success" style="margin-bottom: 5px;">Export to Excel</a>
 															</div>
 														</legend>
 														<div class="form-group col-lg-6">
@@ -489,6 +489,37 @@
                 alert("Popup was blocked! Please allow popups for this site.");
             }
 
+        });
+
+        $('#exporttoexcel').on('click',function(evt){
+            evt.preventDefault();
+            var zone = $("#zone").val();
+            var preparedby = $("#preparedby").val();
+            var verifiedby = $("#verifiedby").val();
+            var approvedby = $("#approvedby").val();
+            var status = $("#status").val();
+
+            if(status===''){
+                status=99;
+            }
+            if(zone==='' || zone===0){
+                zone=0;
+            }
+            if(preparedby===''){
+                alert("Please select Prepared by");
+                return false;
+            }
+            if(verifiedby===''){
+                alert("Please select Verified by");
+                return false;
+            }
+            if(approvedby===''){
+                alert("Please select Approved by");
+                return false;
+            }
+            // Redirect to export URL
+            var exportUrl = window.location.protocol + '//' + window.location.host + '/master/reports/exporttoexcel_customer/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
+            window.location.href = exportUrl;
         });
 
         $('#search').on('click', function(evt){
