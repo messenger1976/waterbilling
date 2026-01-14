@@ -18,6 +18,108 @@
             .table>tbody>tr>td{
                 padding: 5px;
             }
+            
+            /* Print-specific styles */
+            @media print {
+                @page {
+                    size: A4 landscape; /* Use landscape for wide tables */
+                    margin: 10mm;
+                }
+                
+                * {
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+                
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 9pt;
+                    background: white !important;
+                    color: black !important;
+                }
+                
+                .table {
+                    width: 100% !important;
+                    font-size: 7pt;
+                    border-collapse: collapse !important;
+                    border: 1px solid #000;
+                }
+                
+                .table th,
+                .table td {
+                    padding: 3px 2px;
+                    border: 1px solid #000 !important;
+                    text-align: left;
+                }
+                
+                .table th {
+                    background-color: #f0f0f0 !important;
+                    font-weight: bold;
+                }
+                
+                .table thead {
+                    display: table-header-group !important;
+                }
+                
+                .table tbody {
+                    display: table-row-group !important;
+                }
+                
+                .table tfoot {
+                    display: table-footer-group !important;
+                }
+                
+                /* Prevent page breaks inside rows */
+                tr {
+                    page-break-inside: avoid;
+                }
+                
+                /* Prevent page breaks inside table cells */
+                td, th {
+                    page-break-inside: avoid;
+                }
+                
+                /* Ensure logo and header print properly */
+                img {
+                    max-width: 100%;
+                    height: auto;
+                    display: block;
+                    margin: 0 auto;
+                }
+                
+                h3, h6 {
+                    margin: 5px 0;
+                    page-break-after: avoid;
+                }
+                
+                /* Better spacing for signature section */
+                table[width="100%"] {
+                    margin-top: 20px;
+                    page-break-inside: avoid;
+                }
+                
+                /* Hide unnecessary elements */
+                script, .no-print {
+                    display: none !important;
+                }
+                
+                /* Ensure text alignment is preserved */
+                [style*="text-align:right"] {
+                    text-align: right !important;
+                }
+                
+                [align="right"] {
+                    text-align: right !important;
+                }
+            }
+            
+            /* Screen styles */
+            @media screen {
+                .table {
+                    font-size: smaller;
+                }
+            }
         </style>
 	</head>
 <body class="color" onLoad="window.print()">
@@ -37,7 +139,7 @@
 </div>     
 	 <div class="table-responsive" >
 	 
-        <table  class="table" style="font-size:smaller;" cellpadding="0">
+        <table class="table" style="font-size:smaller; width: 100%;" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr>
 					<th data-hide="phone">OR #</th>
@@ -68,6 +170,7 @@
                         $grand_total_ar_leaking =0;
                         $grand_total_ar_leaking_balance =0;
                         $grand_total_sc =0;
+                        $grand_total_arrears = 0; // Fixed: Initialize missing variable
                         foreach($zone as $key => $row){ 
 				?>                                            
 					<tr>
@@ -103,14 +206,18 @@
 						$arrears = $gdailytrans['per_unit'];
 					}
 
-					$prev_year = get_customer_unpaid_records($gdailytrans['customer_id'],'12',$current_billing_period_year-1);
-                    //$prev_year = 600;
-					$ar_leaking = 0;
-                    if($gdailytrans['leaking_amount']>0){
+					//$prev_year = get_customer_unpaid_records($gdailytrans['customer_id'],'12',$current_billing_period_year-1);
+                    $prev_year = 0;
+					$ar_leaking = array('leaking_total_amount' => 0, 'leaking_balance' => 0);
+                    if(isset($gdailytrans['leaking_amount']) && $gdailytrans['leaking_amount']>0){
 						$ornumber_search = sprintf('%07d',$gdailytrans['or_number']);
-						$ar_leaking = $this->leakingentry_model->get_soa_statement_OR($ornumber_search);
-
-						$gdailytrans['grand_total'] = $gdailytrans['grand_total']-$ar_leaking['leaking_balance'];
+						$ar_leaking_result = $this->leakingentry_model->get_soa_statement_OR($ornumber_search);
+						if($ar_leaking_result && is_array($ar_leaking_result)){
+							$ar_leaking = $ar_leaking_result;
+							if(isset($ar_leaking['leaking_balance'])){
+								$gdailytrans['grand_total'] = $gdailytrans['grand_total']-$ar_leaking['leaking_balance'];
+							}
+						}
 					}
 					//print_r($ar_leaking['leaking_total_amount']);
                     echo '<tr>';
@@ -121,11 +228,11 @@
 					<td align="right">'.number_format( $prev_year,2).'</td>
                     <td align="right">'. number_format($gdailytrans['total_wmmf'],2).'</td>
                     <td align="right">'. number_format($gdailytrans['total_penalty'],2).'</td>
-                    <td align="right">'.number_format($gdailytrans['sc_discount'],2).'</td>
-                    <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
-                    <td align="right">'.number_format($ar_leaking['leaking_total_amount'],2).'</td>
-                    <td align="right">'.number_format($ar_leaking['leaking_balance'],2).'</td>
-                    <td align="right">'.number_format($gdailytrans['vat_amount'],2).'</td>
+                    <td align="right">'.number_format(isset($gdailytrans['sc_discount']) ? $gdailytrans['sc_discount'] : 0,2).'</td>
+                    <td align="right">'.number_format(isset($gdailytrans['leaking_amount']) ? $gdailytrans['leaking_amount'] : 0,2).'</td>
+                    <td align="right">'.number_format(isset($ar_leaking['leaking_total_amount']) ? $ar_leaking['leaking_total_amount'] : 0,2).'</td>
+                    <td align="right">'.number_format(isset($ar_leaking['leaking_balance']) ? $ar_leaking['leaking_balance'] : 0,2).'</td>
+                    <td align="right">'.number_format(isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0,2).'</td>
                     ';
                     echo '</tr>';
                     $total_grand_zone += $gdailytrans['grand_total'];
@@ -133,11 +240,11 @@
 					$total_arrears_zone += $gdailytrans['arrears_amount'];
                     $total_wmmf_zone += $gdailytrans['total_wmmf'];
                     $total_penalty_zone += $gdailytrans['total_penalty'];
-                    $total_vat_zone += $gdailytrans['vat_amount'];
-                    $total_leaking_zone +=$gdailytrans['leaking_amount'];
-                    $total_sc_zone +=$gdailytrans['sc_discount'];
-					$total_ar_leaking_zone+=$ar_leaking['leaking_total_amount'];
-					$total_ar_leaking_balance_zone+=$ar_leaking['leaking_balance'];
+                    $total_vat_zone += isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0;
+                    $total_leaking_zone += isset($gdailytrans['leaking_amount']) ? $gdailytrans['leaking_amount'] : 0;
+                    $total_sc_zone += isset($gdailytrans['sc_discount']) ? $gdailytrans['sc_discount'] : 0;
+					$total_ar_leaking_zone += isset($ar_leaking['leaking_total_amount']) ? $ar_leaking['leaking_total_amount'] : 0;
+					$total_ar_leaking_balance_zone += isset($ar_leaking['leaking_balance']) ? $ar_leaking['leaking_balance'] : 0;
                  }
                  echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_current_zone,2).'</th>
@@ -293,215 +400,13 @@
             </tr>
        </table>
 	</div>
+	
+	<!-- Minimal script for print functionality only -->
+	<script type="text/javascript" class="no-print">
+		// Auto-print on page load
+		window.onload = function() {
+			window.print();
+		};
+	</script>
 </body>
-</html>	
-										
-	<!-- SCRIPTS -->
-	<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script>
-		if (!window.jQuery) {
-			document.write('<script src="<?php echo base_url();?>js/libs/jquery-2.1.1.min.js"><\/script>');
-		}
-	</script>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-	<script>
-		if (!window.jQuery.ui) {
-			document.write('<script src="<?php echo base_url();?>js/libs/jquery-ui-1.10.3.min.js"><\/script>');
-		}
-	</script>
-
-	<!-- IMPORTANT: APP CONFIG -->
-	<script src="<?php echo base_url();?>js/app.config.js"></script>
-
-	<!-- BOOTSTRAP JS -->
-	<script src="<?php echo base_url();?>js/bootstrap/bootstrap.min.js"></script>
-
-	<!-- MAIN APP JS FILE -->
-	<script src="<?php echo base_url();?>js/app.min.js"></script>
-
-	<!-- PAGE RELATED PLUGIN(S) -->
-	<script src="<?php echo base_url();?>js/plugin/datatables/jquery.dataTables.min.js"></script>
-		<script src="<?php echo base_url();?>js/plugin/datatables/dataTables.colVis.min.js"></script>
-		<script src="<?php echo base_url();?>js/plugin/datatables/dataTables.tableTools.min.js"></script>
-		<script src="<?php echo base_url();?>js/plugin/datatables/dataTables.bootstrap.min.js"></script>
-		<script src="<?php echo base_url();?>js/plugin/datatable-responsive/datatables.responsive.min.js"></script>
-		<script type="text/javascript">
-		
-		// DO NOT REMOVE : GLOBAL FUNCTIONS!
-		
-		$(document).ready(function() {
-			
-			pageSetUp();
-			
-			/* // DOM Position key index //
-		
-			l - Length changing (dropdown)
-			f - Filtering input (search)
-			t - The Table! (datatable)
-			i - Information (records)
-			p - Pagination (paging)
-			r - pRocessing 
-			< and > - div elements
-			<"#id" and > - div with an id
-			<"class" and > - div with a class
-			<"#id.class" and > - div with an id and class
-			
-			Also see: http://legacy.datatables.net/usage/features
-			*/	
-	
-			/* BASIC ;*/
-				var responsiveHelper_dt_basic = undefined;
-				var responsiveHelper_datatable_fixed_column = undefined;
-				var responsiveHelper_datatable_col_reorder = undefined;
-				var responsiveHelper_datatable_tabletools = undefined;
-				
-				var breakpointDefinition = {
-					tablet : 1024,
-					phone : 480
-				};
-	
-				$('#dt_basic').dataTable({
-					"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
-						"t"+
-						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-					"autoWidth" : true,
-			        "oLanguage": {
-					    "sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-					},
-					"preDrawCallback" : function() {
-						// Initialize the responsive datatables helper once.
-						if (!responsiveHelper_dt_basic) {
-							responsiveHelper_dt_basic = new ResponsiveDatatablesHelper($('#dt_basic'), breakpointDefinition);
-						}
-					},
-					"rowCallback" : function(nRow) {
-						responsiveHelper_dt_basic.createExpandIcon(nRow);
-					},
-					"drawCallback" : function(oSettings) {
-						responsiveHelper_dt_basic.respond();
-					}
-				});
-	
-			/* END BASIC */
-			
-			/* COLUMN FILTER  */
-		    var otable = $('#datatable_fixed_column').DataTable({
-		    	//"bFilter": false,
-		    	//"bInfo": false,
-		    	//"bLengthChange": false
-		    	//"bAutoWidth": false,
-		    	//"bPaginate": false,
-		    	//"bStateSave": true // saves sort state using localStorage
-				"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6 hidden-xs'f><'col-sm-6 col-xs-12 hidden-xs'<'toolbar'>>r>"+
-						"t"+
-						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
-				"autoWidth" : true,
-				"oLanguage": {
-					"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-				},
-				"preDrawCallback" : function() {
-					// Initialize the responsive datatables helper once.
-					if (!responsiveHelper_datatable_fixed_column) {
-						responsiveHelper_datatable_fixed_column = new ResponsiveDatatablesHelper($('#datatable_fixed_column'), breakpointDefinition);
-					}
-				},
-				"rowCallback" : function(nRow) {
-					responsiveHelper_datatable_fixed_column.createExpandIcon(nRow);
-				},
-				"drawCallback" : function(oSettings) {
-					responsiveHelper_datatable_fixed_column.respond();
-				}		
-			
-		    });
-		    
-		    // custom toolbar
-		    $("div.toolbar").html('<div class="text-right"><img src="img/logo.png" alt="SmartAdmin" style="width: 111px; margin-top: 3px; margin-right: 10px;"></div>');
-		    	   
-		    // Apply the filter
-		    $("#datatable_fixed_column thead th input[type=text]").on( 'keyup change', function () {
-		    	
-		        otable
-		            .column( $(this).parent().index()+':visible' )
-		            .search( this.value )
-		            .draw();
-		            
-		    } );
-		    /* END COLUMN FILTER */   
-	    
-			/* COLUMN SHOW - HIDE */
-			$('#datatable_col_reorder').dataTable({
-				"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'C>r>"+
-						"t"+
-						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-sm-6 col-xs-12'p>>",
-				"autoWidth" : true,
-				"oLanguage": {
-					"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-				},
-				"preDrawCallback" : function() {
-					// Initialize the responsive datatables helper once.
-					if (!responsiveHelper_datatable_col_reorder) {
-						responsiveHelper_datatable_col_reorder = new ResponsiveDatatablesHelper($('#datatable_col_reorder'), breakpointDefinition);
-					}
-				},
-				"rowCallback" : function(nRow) {
-					responsiveHelper_datatable_col_reorder.createExpandIcon(nRow);
-				},
-				"drawCallback" : function(oSettings) {
-					responsiveHelper_datatable_col_reorder.respond();
-				}			
-			});
-			
-			/* END COLUMN SHOW - HIDE */
-	
-			/* TABLETOOLS */
-			$('#datatable_tabletools').dataTable({
-				
-				// Tabletools options: 
-				//   https://datatables.net/extensions/tabletools/button_options
-				"sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-6 hidden-xs'T>r>"+
-						"t"+
-						"<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-sm-6 col-xs-12'p>>",
-				"oLanguage": {
-					"sSearch": '<span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>'
-				},		
-		        "oTableTools": {
-		        	 "aButtons": [
-		             "copy",
-		             "csv",
-		             "xls",
-		                {
-		                    "sExtends": "pdf",
-		                    "sTitle": "SmartAdmin_PDF",
-		                    "sPdfMessage": "SmartAdmin PDF Export",
-		                    "sPdfSize": "letter"
-		                },
-		             	{
-	                    	"sExtends": "print",
-	                    	"sMessage": "Generated by SmartAdmin <i>(press Esc to close)</i>"
-	                	}
-		             ],
-		            "sSwfPath": "js/plugin/datatables/swf/copy_csv_xls_pdf.swf"
-		        },
-				"autoWidth" : true,
-				"preDrawCallback" : function() {
-					// Initialize the responsive datatables helper once.
-					if (!responsiveHelper_datatable_tabletools) {
-						responsiveHelper_datatable_tabletools = new ResponsiveDatatablesHelper($('#datatable_tabletools'), breakpointDefinition);
-					}
-				},
-				"rowCallback" : function(nRow) {
-					responsiveHelper_datatable_tabletools.createExpandIcon(nRow);
-				},
-				"drawCallback" : function(oSettings) {
-					responsiveHelper_datatable_tabletools.respond();
-				}
-			});
-			
-			/* END TABLETOOLS */
-		
-		})
-
-</script>
-									
+</html>
