@@ -538,21 +538,25 @@ class Reports extends CI_Controller {
 	}
 
 	public function exporttoexcel_aging($asofdate,$zone,$status,$preparedby='',$verifiedby='',$approvedby=''){
+		// Suppress error display to prevent output before headers
+		@ini_set('display_errors', 0);
+		error_reporting(0);
+		
 		// Increase execution time and memory limit for large exports
 		set_time_limit(600); // 10 minutes
 		ini_set('memory_limit', '512M');
 		
 		// Clean any previous output to prevent corruption
 		while (ob_get_level()) {
-			ob_end_clean();
+			@ob_end_clean();
 		}
 		
 		// Prevent any output before headers
 		if (headers_sent($file, $line)) {
-			die("Headers already sent in $file on line $line. Cannot send CSV file.");
+			die("Headers already sent in $file on line $line. Cannot send Excel file.");
 		}
 		
-		$this->load->helper('csv');
+		$this->load->helper('excel');
 		
 		// Convert date format from dd-mm-yyyy to Y-m-d for database query
 		$date_parts = explode('-', $asofdate);
