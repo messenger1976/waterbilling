@@ -17,28 +17,54 @@
  * download == "" -> return CSV string
  * download == "toto.csv" -> download file toto.csv
  */
-if ( ! function_exists('array_to_csv'))
+	if ( ! function_exists('array_to_csv'))
 {
 	function array_to_csv($array, $download = "")
 	{
 		if ($download != "")
 		{	
-			header('Content-Type: application/csv');
-			header('Content-Disposition: attachement; filename="' . $download . '"');
+			// Clean any previous output buffers
+			while (ob_get_level()) {
+				ob_end_clean();
+			}
+			
+			// Prevent any output before headers
+			if (headers_sent($file, $line)) {
+				die("Headers already sent in $file on line $line. Cannot send CSV file.");
+			}
+			
+			// Set proper headers for CSV download
+			header('Content-Type: text/csv; charset=UTF-8');
+			header('Content-Disposition: attachment; filename="' . $download . '"');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Pragma: public');
+			header('Expires: 0');
+			
+			// Don't output UTF-8 BOM as it can cause corruption in some systems
 		}		
 
+		// Start output buffering
 		ob_start();
-		$f = fopen('php://output', 'w') or show_error("Can't open php://output");
+		$f = fopen('php://output', 'w');
+		if (!$f) {
+			ob_end_clean();
+			show_error("Can't open php://output");
+			return;
+		}
+		
 		$n = 0;		
 		foreach ($array as $line)
 		{
 			$n++;
 			if ( ! fputcsv($f, $line))
 			{
+				fclose($f);
+				ob_end_clean();
 				show_error("Can't write line $n: $line");
+				return;
 			}
 		}
-		fclose($f) or show_error("Can't close php://output");
+		fclose($f);
 		$str = ob_get_contents();
 		ob_end_clean();
 
@@ -48,7 +74,10 @@ if ( ! function_exists('array_to_csv'))
 		}
 		else
 		{	
+			// Output the CSV content
 			echo $str;
+			// Exit to prevent any further output
+			exit;
 		}		
 	}
 }

@@ -132,6 +132,11 @@ class Reports extends CI_Controller {
 	}
 
 	public function exporttoexcel($billingperiod,$status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+		// Clean any previous output to prevent corruption
+		if (ob_get_level()) {
+			ob_end_clean();
+		}
+		
 		$this->load->helper('csv');
 		
 		// Decode and parse billing period
@@ -480,9 +485,8 @@ class Reports extends CI_Controller {
 		$filename = 'Monthly_Billing_Report_' . $billingperiod_month_name . '_' . $billingperiod_year . '.csv';
 		$filename = str_replace(' ', '_', $filename);
 		
-		// Export to CSV
+		// Export to CSV (exit is handled in array_to_csv function)
 		array_to_csv($export_data, $filename);
-		exit;
 	}
 
 	public function customerprinttopdf($status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
@@ -525,6 +529,11 @@ class Reports extends CI_Controller {
 	}
 
 	public function exporttoexcel_aging($asofdate,$zone,$status,$preparedby='',$verifiedby='',$approvedby=''){
+		// Clean any previous output to prevent corruption
+		if (ob_get_level()) {
+			ob_end_clean();
+		}
+		
 		$this->load->helper('csv');
 		
 		// Convert date format from dd-mm-yyyy to Y-m-d for database query
@@ -724,9 +733,8 @@ class Reports extends CI_Controller {
 		// Generate filename
 		$filename = 'Aging_AR_Report_' . date('d-m-Y', strtotime($asofdate_mysql)) . '.csv';
 		
-		// Export to CSV
+		// Export to CSV (exit is handled in array_to_csv function)
 		array_to_csv($export_data, $filename);
-		exit;
 	}
 	
 	public function getmonthlyreportsearch()

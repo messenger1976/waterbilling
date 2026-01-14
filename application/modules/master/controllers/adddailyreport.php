@@ -46,6 +46,11 @@ class adddailyreport extends CI_Controller {
 	}
 
 	public function exporttoexcel($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+		// Clean any previous output to prevent corruption
+		if (ob_get_level()) {
+			ob_end_clean();
+		}
+		
 		$this->load->helper('csv');
 		
 		// Convert date format from dd-mm-yyyy to Y-m-d for database query
@@ -306,9 +311,8 @@ class adddailyreport extends CI_Controller {
 		// Generate filename
 		$filename = 'Daily_Collection_Report_' . date('d-m-Y', strtotime($trans_date_mysql)) . '.csv';
 		
-		// Export to CSV
+		// Export to CSV (exit is handled in array_to_csv function)
 		array_to_csv($export_data, $filename);
-		exit;
 	}
 	
 	public function getadddailyreportsearch()
