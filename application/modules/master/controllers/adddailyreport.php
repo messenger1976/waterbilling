@@ -50,9 +50,17 @@ class adddailyreport extends CI_Controller {
 		set_time_limit(600); // 10 minutes
 		ini_set('memory_limit', '512M');
 		
+		// Disable CodeIgniter's output class to prevent interference
+		$this->output->_display = false;
+		
 		// Clean any previous output to prevent corruption
-		if (ob_get_level()) {
+		while (ob_get_level()) {
 			ob_end_clean();
+		}
+		
+		// Prevent any output before headers
+		if (headers_sent($file, $line)) {
+			die("Headers already sent in $file on line $line. Cannot send CSV file.");
 		}
 		
 		$this->load->helper('csv');
@@ -107,6 +115,16 @@ class adddailyreport extends CI_Controller {
 		$grand_total_ar_leaking = 0;
 		$grand_total_ar_leaking_balance = 0;
 		
+		// Pre-load all leaking A/R data for the transaction date to avoid N+1 queries
+		$leaking_ar_lookup = array();
+		$get_all_leaking = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate);
+		foreach($get_all_leaking as $leaking_record){
+			if(isset($leaking_record['leakingledgerdetails_or_number'])){
+				$or_key = sprintf('%07d', $leaking_record['leakingledgerdetails_or_number']);
+				$leaking_ar_lookup[$or_key] = $leaking_record;
+			}
+		}
+		
 		// Process each zone
 		if(count($zones) > 0){
 			foreach($zones as $key => $row){
@@ -144,9 +162,9 @@ class adddailyreport extends CI_Controller {
 					$ar_leaking = array('leaking_total_amount' => 0, 'leaking_balance' => 0);
 					if(isset($gdailytrans['leaking_amount']) && $gdailytrans['leaking_amount'] > 0){
 						$ornumber_search = sprintf('%07d', $gdailytrans['or_number']);
-						$ar_leaking_result = $this->leakingentry_model->get_soa_statement_OR($ornumber_search);
-						if($ar_leaking_result && is_array($ar_leaking_result)){
-							$ar_leaking = $ar_leaking_result;
+						// Use pre-loaded lookup instead of querying database
+						if(isset($leaking_ar_lookup[$ornumber_search])){
+							$ar_leaking = $leaking_ar_lookup[$ornumber_search];
 							if(isset($ar_leaking['leaking_balance'])){
 								$gdailytrans['grand_total'] = $gdailytrans['grand_total'] - $ar_leaking['leaking_balance'];
 							}
@@ -220,8 +238,8 @@ class adddailyreport extends CI_Controller {
 		// Add LEAKING A/R PAYMENT REPORT section
 		$export_data[] = array('', 'LEAKING A/R PAYMENT REPORT', '', '', '', '', '', '', '', '', '', '', '');
 		
-		$mysql_transdate1 = $mysql_transdate;
-		$get_dailytrans1 = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate1);
+		// Use already loaded leaking data (no need to query again)
+		$get_dailytrans1 = $get_all_leaking;
 		$total_leaking_ar = 0;
 		
 		foreach($get_dailytrans1 as $key => $gdailytrans1){

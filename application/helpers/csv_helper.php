@@ -33,12 +33,14 @@
 				die("Headers already sent in $file on line $line. Cannot send CSV file.");
 			}
 			
-			// Set proper headers for CSV download
+			// Set proper headers for CSV download - force download, not display
 			header('Content-Type: text/csv; charset=UTF-8');
-			header('Content-Disposition: attachment; filename="' . $download . '"');
+			header('Content-Disposition: attachment; filename="' . str_replace('"', '', $download) . '"');
+			header('Content-Description: File Transfer');
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Pragma: public');
 			header('Expires: 0');
+			header('X-Content-Type-Options: nosniff');
 			
 			// Disable output buffering for streaming
 			if (ob_get_level()) {
