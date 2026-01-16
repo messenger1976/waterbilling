@@ -433,4 +433,40 @@ if(!function_exists("get_customer_unpaid_records")){
     }
 }
 
+if (!function_exists("get_maintenance_fee")) {
+    function get_maintenance_fee() {
+        $CI = &get_instance();
+        $CI->db->select('value');
+        $CI->db->from('tbl_global_settings');
+        $CI->db->where('code', 'MAINTENANCE_FEE');
+        $query = $CI->db->get();
+        $result = $query->row();
+        
+        if($result && isset($result->value)){
+            return number_format($result->value, 2, '.', '');
+        }
+        
+        // Default fallback value if setting doesn't exist
+        return '25.00';
+    }
+}
+
+if (!function_exists("get_franchise_fee_percentage")) {
+    function get_franchise_fee_percentage() {
+        $CI = &get_instance();
+        $CI->db->select('value');
+        $CI->db->from('tbl_global_settings');
+        $CI->db->where('code', 'FRANCHISE_FEE_PERCENTAGE');
+        $query = $CI->db->get();
+        $result = $query->row();
+        
+        if($result && isset($result->value)){
+            return floatval($result->value);
+        }
+        
+        // Default fallback value if setting doesn't exist
+        return 2.00;
+    }
+}
+
 
