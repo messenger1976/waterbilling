@@ -103,15 +103,27 @@ Retrieves the complete statement of account for a customer, including customer i
     ],
     "current_balance": 0.00,
     "entry_count": 2,
+    "password": "userpassword",
     "generated_at": "2024-01-15 10:30:00"
   }
 }
 ```
 
-**cURL Example**:
+**cURL Examples**:
 ```bash
-curl -X GET "http://yourdomain.com/master/statementofaccount_api/get/12345"
+# GET request with password in query string
+curl -X GET "http://yourdomain.com/master/statementofaccount_api/get/12345?password=userpassword"
+
+# POST request with password in body
+curl -X POST "http://yourdomain.com/master/statementofaccount_api/get" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customer_id": "12345",
+    "password": "userpassword"
+  }'
 ```
+
+**Note**: The `password` field in the response contains the password in plaintext (the password that was sent in the request). The password is validated against the stored MD5 hash before returning the statement of account.
 
 **JavaScript Example**:
 ```javascript
@@ -731,7 +743,7 @@ async function searchCustomer(customerId) {
 }
 
 // Usage
-getStatementOfAccount('12345');
+getStatementOfAccount('12345', 'userpassword');
 getCurrentBalance('12345');
 searchCustomer('12345');
 ```
@@ -740,10 +752,23 @@ searchCustomer('12345');
 
 ```php
 <?php
-// Get statement of account
-function getStatementOfAccount($customerId) {
-    $url = "http://yourdomain.com/master/statementofaccount_api/get/{$customerId}";
-    $response = file_get_contents($url);
+// Get statement of account (requires password)
+function getStatementOfAccount($customerId, $password) {
+    $url = "http://yourdomain.com/master/statementofaccount_api/get";
+    $post_data = json_encode(array(
+        'customer_id' => $customerId,
+        'password' => $password
+    ));
+    
+    $context = stream_context_create([
+        'http' => [
+            'method' => 'POST',
+            'header' => 'Content-Type: application/json',
+            'content' => $post_data
+        ]
+    ]);
+    
+    $response = file_get_contents($url, false, $context);
     $data = json_decode($response, true);
     
     if ($data['success']) {
@@ -765,7 +790,8 @@ function getCurrentBalance($customerId) {
 }
 
 // Usage
-$statement = getStatementOfAccount('12345');
+$statement = getStatementOfAccount('12345', 'userpassword');
+$password_returned = $statement['password']; // Password in plaintext
 $balance = getCurrentBalance('12345');
 ?>
 ```
@@ -776,9 +802,13 @@ $balance = getCurrentBalance('12345');
 import requests
 import json
 
-def get_statement_of_account(customer_id):
-    url = f"http://yourdomain.com/master/statementofaccount_api/get/{customer_id}"
-    response = requests.get(url)
+def get_statement_of_account(customer_id, password):
+    url = "http://yourdomain.com/master/statementofaccount_api/get"
+    payload = {
+        'customer_id': customer_id,
+        'password': password
+    }
+    response = requests.post(url, json=payload)
     data = response.json()
     
     if data['success']:
@@ -795,7 +825,8 @@ def get_current_balance(customer_id):
     return None
 
 # Usage
-statement = get_statement_of_account('12345')
+statement = get_statement_of_account('12345', 'userpassword')
+password_returned = statement['password']  # Password in plaintext
 balance = get_current_balance('12345')
 ```
 
@@ -860,6 +891,11 @@ For issues, questions, or feature requests, please contact the development team.
 ---
 
 ## Changelog
+
+### Version 1.3.0 (2026-01-17)
+- **Password Authentication**: Get statement of account endpoint now requires password authentication
+- **Password in Response**: Password is returned in plaintext in the API response (the password sent in the request)
+- **Enhanced Security**: Password validation using MD5 hash comparison before returning statement data
 
 ### Version 1.2.0 (2026-01-17)
 - **Updated Current Billing Balance Calculation**: Changed from running balance to Total Debit - Total Credit
