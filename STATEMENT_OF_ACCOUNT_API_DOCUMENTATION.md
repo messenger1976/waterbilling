@@ -26,7 +26,7 @@ The Statement of Account API provides RESTful endpoints for retrieving customer 
    - [Get Complete Statement](#1-get-complete-statement-of-account)
    - [Get Customer Information](#2-get-customer-information)
    - [Get Ledger Entries](#3-get-ledger-entries)
-   - [Get Current Balance](#4-get-current-balance)
+   - [Get Current Billing Balance](#4-get-current-billing-balance)
    - [Search Customer](#5-search-customer)
    - [Reset Password](#6-reset-password)
    - [API Information](#7-api-information)
@@ -87,14 +87,15 @@ Retrieves the complete statement of account for a customer, including customer i
         "previous_reading": "950",
         "consumed": "50",
         "unit_price": "30.00",
-        "penalty": 0,
+        "penalty": 150.00,
+        "penalty_included": false,
         "due_date": "2024-02-15"
       },
       {
         "date": "2024-01-20",
         "type": "payment",
         "refno": "OR12345",
-        "description": "Payment - OR# OR12345",
+        "description": "Payment - OR# OR12345 (Billing Period: January 2024)",
         "debit": 0,
         "credit": 1500.00,
         "balance": 0.00
@@ -188,14 +189,15 @@ Retrieves only the ledger entries (billings and payments) for a customer.
         "previous_reading": "950",
         "consumed": "50",
         "unit_price": "30.00",
-        "penalty": 0,
+        "penalty": 150.00,
+        "penalty_included": false,
         "due_date": "2024-02-15"
       },
       {
         "date": "2024-01-20",
         "type": "payment",
         "refno": "OR12345",
-        "description": "Payment - OR# OR12345",
+        "description": "Payment - OR# OR12345 (Billing Period: January 2024)",
         "debit": 0,
         "credit": 1500.00,
         "balance": 0.00
@@ -214,9 +216,9 @@ curl -X GET "http://yourdomain.com/master/statementofaccount_api/ledger/12345"
 
 ---
 
-### 4. Get Current Balance
+### 4. Get Current Billing Balance
 
-Retrieves only the current account balance for a customer.
+Retrieves only the current billing balance for a customer. The current billing balance is calculated as **Total Debit - Total Credit** from all ledger entries.
 
 **Endpoint**: `GET /master/statementofaccount_api/balance/{customer_id}`
 
@@ -239,6 +241,8 @@ Retrieves only the current account balance for a customer.
   }
 }
 ```
+
+**Note**: The `current_balance` field represents the **Current Billing Balance**, which is calculated as the sum of all debit amounts minus the sum of all credit amounts from the customer's ledger entries.
 
 **cURL Example**:
 ```bash
@@ -642,6 +646,7 @@ curl -X GET "http://yourdomain.com/master/statementofaccount_api/"
   "consumed": "string (for billing entries)",
   "unit_price": "string (for billing entries)",
   "penalty": "number (for billing entries)",
+  "penalty_included": "boolean (for billing entries)",
   "due_date": "YYYY-MM-DD (for billing entries)"
 }
 ```
@@ -649,6 +654,21 @@ curl -X GET "http://yourdomain.com/master/statementofaccount_api/"
 **Ledger Entry Types**:
 - `billing` - Water billing/reading entry (debit)
 - `payment` - Payment entry (credit)
+
+**Important Notes**:
+
+1. **Billing Entry Debit Amount**:
+   - If a payment exists for the billing period AND the payment date is after the due date, the `debit` field will contain the `penalty` amount from `tbl_addcustomer_reading`.
+   - Otherwise, the `debit` field will contain the `amount` from `tbl_addcustomer_reading`.
+   - The `penalty_included` field indicates whether the penalty amount is being used.
+
+2. **Payment Entry Description**:
+   - Payment descriptions include billing period information in the format: `Payment - OR# {or_number} (Billing Period: {month_name} {year})`
+   - For payments covering multiple billing periods, all periods are listed.
+
+3. **Running Balance**:
+   - The `balance` field represents the running balance calculated chronologically (oldest to newest).
+   - Entries are sorted by date descending (newest first) for display, but balances are calculated from oldest to newest.
 
 ---
 
@@ -841,6 +861,14 @@ For issues, questions, or feature requests, please contact the development team.
 
 ## Changelog
 
+### Version 1.2.0 (2026-01-17)
+- **Updated Current Billing Balance Calculation**: Changed from running balance to Total Debit - Total Credit
+- **Enhanced Penalty Logic**: Billing entries now use penalty amount if payment is made after due date, otherwise use original amount
+- **Improved Balance Calculation**: Running balance is now calculated chronologically (oldest to newest) for accuracy
+- **Payment Description Enhancement**: Payment entries now include billing period information
+- **Entry Sorting**: Payments appear before billings when entries have the same date
+- **API Response Updates**: Added `penalty_included` field to billing entries
+
 ### Version 1.1.0 (2026-01-17)
 - Added reset password endpoint
 - Password reset with optional current password verification
@@ -851,7 +879,7 @@ For issues, questions, or feature requests, please contact the development team.
 - Complete statement of account endpoint
 - Customer information endpoint
 - Ledger entries endpoint
-- Current balance endpoint
+- Current billing balance endpoint
 - Customer search endpoint
 - API information endpoint
 
