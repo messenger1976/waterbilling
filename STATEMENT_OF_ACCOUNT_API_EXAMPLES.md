@@ -11,11 +11,12 @@ Based on the page: `http://waterbilling1.com/master/statementofaccount/index/11-
 ## Available Endpoints
 
 ### 1. Get Complete Statement of Account
-Returns customer info, ledger entries, and current billing balance (Total Debit - Total Credit).
+Returns customer info, ledger entries, and current billing balance (Total Debit - Total Credit). **Requires password authentication.**
 
 **URL:** 
-- `GET /master/statementofaccount_api/get/11-7-12-01262`
-- `GET /master/statementofaccount_api/get?customer_id=11-7-12-01262`
+- `GET /master/statementofaccount_api/get/11-7-12-01262?password=userpassword`
+- `GET /master/statementofaccount_api/get?customer_id=11-7-12-01262&password=userpassword`
+- `POST /master/statementofaccount_api/get` (with `customer_id` and `password` in body)
 
 ### 2. Get Customer Information Only
 **URL:** 
@@ -41,11 +42,19 @@ Returns customer info, ledger entries, and current billing balance (Total Debit 
 ### cURL (Command Line)
 
 ```bash
-# Get complete statement of account
-curl -X GET "http://waterbilling1.com/master/statementofaccount_api/get/11-7-12-01262"
+# Get complete statement of account (GET with password)
+curl -X GET "http://waterbilling1.com/master/statementofaccount_api/get/11-7-12-01262?password=userpassword"
 
-# Or with query parameter
-curl -X GET "http://waterbilling1.com/master/statementofaccount_api/get?customer_id=11-7-12-01262"
+# Or with query parameters
+curl -X GET "http://waterbilling1.com/master/statementofaccount_api/get?customer_id=11-7-12-01262&password=userpassword"
+
+# POST request with password in body
+curl -X POST "http://waterbilling1.com/master/statementofaccount_api/get" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customer_id": "11-7-12-01262",
+    "password": "userpassword"
+  }'
 
 # Get customer info only
 curl -X GET "http://waterbilling1.com/master/statementofaccount_api/customer/11-7-12-01262"
@@ -77,14 +86,15 @@ curl -X POST "http://waterbilling1.com/master/statementofaccount_api/reset_passw
 ### JavaScript (Fetch API)
 
 ```javascript
-// Get complete statement of account
-fetch('http://waterbilling1.com/master/statementofaccount_api/get/11-7-12-01262')
+// Get complete statement of account (GET with password)
+fetch('http://waterbilling1.com/master/statementofaccount_api/get/11-7-12-01262?password=userpassword')
   .then(response => response.json())
   .then(data => {
     console.log('Success:', data);
     if (data.success) {
       console.log('Customer:', data.data.customer_info);
       console.log('Current Billing Balance:', data.data.current_balance);
+      console.log('Password:', data.data.password); // Password in plaintext
       console.log('Ledger Entries:', data.data.ledger_entries);
     }
   })
@@ -92,13 +102,23 @@ fetch('http://waterbilling1.com/master/statementofaccount_api/get/11-7-12-01262'
     console.error('Error:', error);
   });
 
-// Using async/await
-async function getStatementOfAccount(customerId) {
+// Using async/await with POST
+async function getStatementOfAccount(customerId, password) {
   try {
-    const response = await fetch(`http://waterbilling1.com/master/statementofaccount_api/get/${customerId}`);
+    const response = await fetch('http://waterbilling1.com/master/statementofaccount_api/get', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        customer_id: customerId,
+        password: password
+      })
+    });
     const data = await response.json();
     
     if (data.success) {
+      console.log('Password:', data.data.password); // Password in plaintext
       return data.data;
     } else {
       throw new Error(data.message);
@@ -110,10 +130,11 @@ async function getStatementOfAccount(customerId) {
 }
 
 // Usage
-getStatementOfAccount('11-7-12-01262')
+getStatementOfAccount('11-7-12-01262', 'userpassword')
   .then(statement => {
     console.log('Customer Info:', statement.customer_info);
     console.log('Current Billing Balance:', statement.current_balance);
+    console.log('Password:', statement.password); // Password in plaintext
     console.log('Total Entries:', statement.entry_count);
   });
 
@@ -162,12 +183,20 @@ resetPassword('11-7-12-01262', 'newpassword123', 'oldpassword');
 
 ```php
 <?php
-// Get complete statement of account
+// Get complete statement of account (POST with password)
 $customer_id = '11-7-12-01262';
-$url = "http://waterbilling1.com/master/statementofaccount_api/get/{$customer_id}";
+$password = 'userpassword';
+$url = "http://waterbilling1.com/master/statementofaccount_api/get";
+
+$post_data = json_encode(array(
+    'customer_id' => $customer_id,
+    'password' => $password
+));
 
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 
@@ -180,6 +209,7 @@ $data = json_decode($response, true);
 if ($data['success']) {
     echo "Customer: " . $data['data']['customer_info']['customer_id'] . "\n";
     echo "Current Billing Balance: PHP " . number_format($data['data']['current_balance'], 2) . "\n";
+    echo "Password: " . $data['data']['password'] . "\n"; // Password in plaintext
     echo "Total Entries: " . $data['data']['entry_count'] . "\n";
 } else {
     echo "Error: " . $data['message'] . "\n";
@@ -192,12 +222,19 @@ if ($data['success']) {
 ```php
 <?php
 $customer_id = '11-7-12-01262';
-$url = "http://waterbilling1.com/master/statementofaccount_api/get/{$customer_id}";
+$password = 'userpassword';
+$url = "http://waterbilling1.com/master/statementofaccount_api/get";
+
+$post_data = json_encode(array(
+    'customer_id' => $customer_id,
+    'password' => $password
+));
 
 $context = stream_context_create([
     'http' => [
-        'method' => 'GET',
-        'header' => 'Content-Type: application/json'
+        'method' => 'POST',
+        'header' => 'Content-Type: application/json',
+        'content' => $post_data
     ]
 ]);
 
@@ -207,6 +244,7 @@ $data = json_decode($response, true);
 if ($data['success']) {
     $customer = $data['data']['customer_info'];
     $balance = $data['data']['current_balance'];
+    $password_returned = $data['data']['password']; // Password in plaintext
     $entries = $data['data']['ledger_entries'];
     
     echo "Customer ID: " . $customer['customer_id'] . "\n";
@@ -332,6 +370,7 @@ else:
         ],
         "current_balance": 500.00,
         "entry_count": 2,
+        "password": "userpassword",
         "generated_at": "2026-01-17 10:30:00"
     }
 }
