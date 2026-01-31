@@ -203,7 +203,10 @@ class createbalanceforward_model extends CI_Model {
 			if($customer_current_billing_data->invoice_id!=NULL && $customer_current_billing_data->invoice_id!=''){
 				$arrears = 0;
 			}else{
-				$arrears = isset($customer_current_billing_data->penalty) ? $customer_current_billing_data->penalty : 0;
+				// Forward both current period arrears and current period penalty (bill total) as next period arrears
+				$current_arrears = isset($customer_current_billing_data->arrears) ? floatval($customer_current_billing_data->arrears) : 0;
+				$current_penalty = isset($customer_current_billing_data->penalty) ? floatval($customer_current_billing_data->penalty) : 0;
+				$arrears = $current_arrears + $current_penalty;
 			}
 			$update_counter_array1 = array( 
 				'previous_reading' => $customer_current_billing_data->reading,
