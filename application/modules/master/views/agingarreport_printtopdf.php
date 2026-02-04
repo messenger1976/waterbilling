@@ -41,7 +41,7 @@
 <h3 style="text-align: center;">AGING OF ACCOUNT RECEIVABLE REPORT</h3>
 <h6 style="text-align: center;"><?php
 
-echo 'As of '.$asofdate.' '.$status;?><br/>
+echo 'As of '.$asofdate;?><br/>
 <?php 
 if($status==='99' || $status===''){
 	echo 'All Members';
