@@ -450,6 +450,9 @@ $(document).ready(function(){
 		evt.preventDefault();
 		var zone = $("#zone").val();
 		var status = $("#status").val();
+		if(status === ''){
+			status = '99';
+		}
 		var preparedby = $("#preparedby").val();
 		var verifiedby = $("#verifiedby").val();
 		var approvedby = $("#approvedby").val();
