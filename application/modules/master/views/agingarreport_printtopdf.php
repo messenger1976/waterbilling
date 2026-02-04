@@ -41,17 +41,18 @@
 <h3 style="text-align: center;">AGING OF ACCOUNT RECEIVABLE REPORT</h3>
 <h6 style="text-align: center;"><?php
 
-echo 'As of '.$asofdate;?><br/>
+echo 'As of '.$asofdate.' '.$status;?><br/>
 <?php 
-if($status==99){
+if($status==='99' || $status===''){
 	echo 'All Members';
-}elseif($status==1){
+}elseif($status==='1'){
 	echo 'Active Members';
-}elseif($status== 2){
+}elseif($status==='2'){
 	echo 'Disconnected Members';
-}elseif($status== 0){
+}elseif($status==='0'){
 	echo 'Inactive Members';
 }
+
 ?>
 </h6>
 <div class="row">
