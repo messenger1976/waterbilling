@@ -49,6 +49,8 @@ if($status==1){
 	echo 'Disconnected Members';
 }elseif($status== 0){
 	echo 'Inactive Members';
+}else{
+	echo 'All Members';
 }
 ?>
 </h6>
