@@ -309,7 +309,8 @@
 								   <?php if($this->uri->segment(2)=='mobilenotifications'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='classification_category'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='classification'){echo 'active open';}?>
-								   <?php if($this->uri->segment(2)=='amountrate'){echo 'active open';}?>">
+								   <?php if($this->uri->segment(2)=='amountrate'){echo 'active open';}?>
+								   <?php if($this->uri->segment(2)=='Leakingentrycorrection'){echo 'active open';}?>">
 						<a href="#"><i class="fa fa-lg fa-fw fa-user"></i> <span class="menu-item-parent">Admin</span></a>
 						<ul>
 
@@ -344,6 +345,9 @@
 							</li>
 							<li class="<?php if($this->uri->segment(2)=='addmetercustomerreading' && $this->uri->segment(3)=='edit'){echo 'active';}?>">
 								<a href="<?php echo ADMIN_URL;?>addmetercustomerreading/edit"> Meter Reading Correction</a>
+							</li>
+							<li class="<?php if($this->uri->segment(2)=='Leakingentrycorrection'){echo 'active';}?>">
+								<a href="<?php echo ADMIN_URL;?>Leakingentrycorrection"> Leaking Entry Correction</a>
 							</li>
 							
 							<?php if((array_key_exists('database_backup',$roleResponsible) && ($roleResponsible['database_backup'] == 1 || (is_array($roleResponsible['database_backup']) && count($roleResponsible['database_backup']) > 0)) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
