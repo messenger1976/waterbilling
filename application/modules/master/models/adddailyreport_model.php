@@ -45,6 +45,28 @@
 		$result = $query->result_array();
 		return $result;
 	}
+
+	public function get_metercustomer_records_by_or($from){
+		$this->db->select('tbl_addcustomer.customer_id, tbl_addcustomer.customer_type, tbl_addcustomer.first_name,tbl_addcustomer.last_name,tbl_addcustomer.middle_name,
+		(SELECT zone FROM tbl_zone WHERE tbl_zone.id='.$this->table_name.'.zone) as zone, 
+		(SELECT employee_name FROM '.$this->table_users.' WHERE '.$this->table_users.'.id='.$this->table_meter.'.userid) as user,
+		tbl_addcustomer_reading.amount as reading_amount, 
+		tbl_addcustomer_reading.sc_discount as sc_discount,
+		SUM(tbl_addcustomer_reading.maintenance_fee) as total_wmmf,
+		SUM(CASE WHEN (tbl_addmetercustomer.amount - tbl_addcustomer_reading.unit_price - tbl_addcustomer_reading.maintenance_fee) <= 0 THEN 0 ELSE tbl_addmetercustomer.amount - tbl_addcustomer_reading.unit_price - tbl_addcustomer_reading.maintenance_fee END) AS total_penalty,
+		SUM(CASE WHEN (tbl_addmetercustomer.amount - tbl_addcustomer_reading.unit_price - tbl_addcustomer_reading.maintenance_fee) <= 0 THEN tbl_addcustomer_reading.unit_price ELSE 0 END) AS current_amount,
+		SUM(CASE WHEN (tbl_addmetercustomer.amount - tbl_addcustomer_reading.unit_price - tbl_addcustomer_reading.maintenance_fee) <= 0 THEN 0 ELSE tbl_addcustomer_reading.unit_price END) AS arrears_amount,
+		tbl_addmetercustomer.*');
+		$this->db->from('tbl_addmetercustomer');
+		$this->db->join('tbl_addcustomer', 'tbl_addmetercustomer.customer_id = tbl_addcustomer.customer_id');
+		$this->db->join('tbl_addcustomer_reading', 'tbl_addmetercustomer.customer_id = tbl_addcustomer_reading.customer_id and tbl_addmetercustomer.month=tbl_addcustomer_reading.month and tbl_addmetercustomer.year=tbl_addcustomer_reading.year','left');
+		$this->db->where('tbl_addmetercustomer.date',$from);
+		$this->db->order_by('tbl_addmetercustomer.or_number','asc');
+		$this->db->group_by('invoice_id');
+		$query = $this->db->get();
+		$result = $query->result_array();
+		return $result;
+	}
 	
 	public function get_zone($zone_id=0) {
         $this->db->select("*");
