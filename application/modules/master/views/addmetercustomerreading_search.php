@@ -595,12 +595,12 @@ $('#sc_discount').on('blur', function(evt){
 	var multiprice = parseFloat(unit_price);
 	var discount =$(this).val();
 	
-	total_amount = multiprice - discount;
-	total_amount +=parseFloat(maintenance_fee);
+	total_amount = multiprice - (parseFloat(discount) || 0);
+	total_amount += parseFloat(maintenance_fee) || 0;
 	amount_total_penalty = 0;
 	if($('#special_priviledge').val()==='0'){
-		amount_total_penalty = (total_amount * 10)/100;
-		amount_total_penalty = amount_total_penalty + total_amount;
+		// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
+		amount_total_penalty = (multiprice - (parseFloat(discount) || 0)) * 1.10 + (parseFloat(maintenance_fee) || 0);
 	}else{
 		amount_total_penalty = total_amount;
 	}
@@ -616,14 +616,14 @@ $('#maintenance_fee').on('blur', function(evt){
 	var maintenance_fee = $(this).val();
 	//var multiprice = parseInt(difer) * parseInt(unit_price);
 	var multiprice = parseFloat(unit_price);
-	var discount =$('#sc_discount').val();
+	var discount = $('#sc_discount').val();
 	
-	total_amount = multiprice - discount;
-	total_amount +=parseFloat(maintenance_fee);
+	total_amount = multiprice - (parseFloat(discount) || 0);
+	total_amount += parseFloat(maintenance_fee) || 0;
 	amount_total_penalty = 0;
 	if($('#special_priviledge').val()==='0'){
-		amount_total_penalty = (total_amount * 10)/100;
-		amount_total_penalty = amount_total_penalty + total_amount;
+		// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
+		amount_total_penalty = (multiprice - (parseFloat(discount) || 0)) * 1.10 + (parseFloat(maintenance_fee) || 0);
 	}else{
 		amount_total_penalty = total_amount;
 	}
@@ -666,12 +666,12 @@ $('#current_reading').on('blur', function() {
 					discount = (multiprice * 5)/100;
 				}
 				total_amount = multiprice - discount;
-				total_amount +=parseFloat(maintenance_fee);
+				total_amount += parseFloat(maintenance_fee) || 0;
 				amount_total_penalty = 0;
 				//console.log('SP:'+$('#special_priviledge').val());
 				if($('#special_priviledge').val()==='0'){
-					amount_total_penalty = (total_amount * 10)/100;
-					amount_total_penalty = amount_total_penalty + total_amount;
+					// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
+					amount_total_penalty = (multiprice - discount) * 1.10 + (parseFloat(maintenance_fee) || 0);
 				}else{
 					amount_total_penalty = total_amount;
 				}

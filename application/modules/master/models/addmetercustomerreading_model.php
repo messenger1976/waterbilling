@@ -418,8 +418,9 @@ class addmetercustomerreading_model extends CI_Model {
 			$total_amount += $maintenance_fee;
 			$amount_total_penalty = 0;
 			if($customerinfo[0]['special_priviledge']==='0'){
-				$amount_total_penalty = ($total_amount * 10)/100;
-				$amount_total_penalty = $amount_total_penalty + $total_amount;
+				// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
+				$amount_total_penalty = (($cubicmeter_rate->per_unit - $discount) * 10) / 100;
+				$amount_total_penalty = $amount_total_penalty + ($cubicmeter_rate->per_unit - $discount) + $maintenance_fee;
 			}else{
 				$amount_total_penalty = $total_amount;
 			}

@@ -419,8 +419,8 @@
 						amount_total_penalty = 0;
 						//console.log('SP:'+$('#special_priviledge').val());
 						if($('#special_priviledge').val()==='0'){
-							amount_total_penalty = (total_amount * 10)/100;
-							amount_total_penalty = amount_total_penalty + total_amount;
+							// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee (0 on this form)
+							amount_total_penalty = (multiprice - discount) * 1.10;
 						}else{
 							amount_total_penalty = total_amount;
 						}
