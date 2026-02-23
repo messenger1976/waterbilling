@@ -149,6 +149,7 @@ class addmetercustomerreading_model extends CI_Model {
 			$doc_num = $billing_number->doc_series_num+1;
 			
 
+			$maintenance_fee = $this->input->post('maintenance_fee') !== false && $this->input->post('maintenance_fee') !== '' ? floatval($this->input->post('maintenance_fee')) : 0;
 			$set_data = array(
 				'customer_id' => trim($this->input->post('customer_id')),
 				'previous_reading' => $this->input->post('preview'),
@@ -159,6 +160,7 @@ class addmetercustomerreading_model extends CI_Model {
 				'penalty' => $this->input->post('amount_total_penalty'),
 				'amount' => $this->input->post('total_amount'),
 				'arrears' => $this->input->post('prev_balance'),
+				'maintenance_fee' => $maintenance_fee,
 				'month' => $this->input->post('month'),
 				'year' =>  $year,
 				'date' => $this->input->post('date'),

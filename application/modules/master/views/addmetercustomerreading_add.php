@@ -181,6 +181,13 @@
 																</div>
 															</div>
 															<div class="form-group" style=" width: 60%;">
+																<label class="col-md-4 control-label">  Maintenance Fee (WMMF) : </label>
+																<div class="col-md-4">
+																	<input  type="text" style="text-align:right;" class="form-control text-input"  id="maintenance_fee" name="maintenance_fee" value="<?php echo set_value('maintenance_fee', '0'); ?>"/>
+																	<?php echo form_error('maintenance_fee'); ?>
+																</div>
+															</div>
+															<div class="form-group" style=" width: 60%;">
 																<label class="col-md-4 control-label">  Amount Due If Paid on or before due date : </label>
 																<div class="col-md-4">
 																	<input  type="text"  style="text-align:right;" class="form-control"  id="total_amount" name="total_amount" value="<?php echo $this->input->post('total_amount'); ?>" readonly/>
@@ -530,20 +537,37 @@ $(document).on('click','.pay_button',function(e){
 $('#discount').on('blur', function(evt){
 	evt.preventDefault();
 	var unit_price = $('#unit_price').val();
-	//var multiprice = parseInt(difer) * parseInt(unit_price);
-	var multiprice = parseFloat(unit_price);
-	var discount =$(this).val();
-	
+	var multiprice = parseFloat(unit_price) || 0;
+	var discount = parseFloat($(this).val()) || 0;
+	var maintenance_fee = parseFloat($('#maintenance_fee').val()) || 0;
 	total_amount = multiprice - discount;
+	total_amount += maintenance_fee;
 	amount_total_penalty = 0;
 	if($('#special_priviledge').val()==='0'){
-		// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee (0 on add form)
-		amount_total_penalty = (multiprice - discount) * 1.10;
+		// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
+		amount_total_penalty = (multiprice - discount) * 1.10 + maintenance_fee;
 	}else{
 		amount_total_penalty = total_amount;
 	}
 	$('#discount').val(amount_formatted(discount));
 	$("#amount_pay").val(amount_formatted(multiprice));
+	$("#total_amount").val(amount_formatted(total_amount));
+	$("#amount_total_penalty").val(amount_formatted(amount_total_penalty));	
+});
+$('#maintenance_fee').on('blur', function(evt){
+	evt.preventDefault();
+	var unit_price = $('#unit_price').val();
+	var multiprice = parseFloat(unit_price) || 0;
+	var discount = parseFloat($('#discount').val()) || 0;
+	var maintenance_fee = parseFloat($(this).val()) || 0;
+	total_amount = multiprice - discount;
+	total_amount += maintenance_fee;
+	amount_total_penalty = 0;
+	if($('#special_priviledge').val()==='0'){
+		amount_total_penalty = (multiprice - discount) * 1.10 + maintenance_fee;
+	}else{
+		amount_total_penalty = total_amount;
+	}
 	$("#total_amount").val(amount_formatted(total_amount));
 	$("#amount_total_penalty").val(amount_formatted(amount_total_penalty));	
 });
@@ -571,18 +595,18 @@ $('#current_meter').on('blur', function() {
 				
 				$('#unit_price').val(amount_formatted(result.per_unit));
 				var unit_price = $('#unit_price').val();
-				//var multiprice = parseInt(difer) * parseInt(unit_price);
-				var multiprice = parseFloat(unit_price);
-				var discount =0;
+				var multiprice = parseFloat(unit_price) || 0;
+				var discount = 0;
 				if($('#cust_type_id').val()==3){
 					discount = (multiprice * 5)/100;
 				}
+				var maintenance_fee = parseFloat($('#maintenance_fee').val()) || 0;
 				total_amount = multiprice - discount;
+				total_amount += maintenance_fee;
 				amount_total_penalty = 0;
-				//console.log('SP:'+$('#special_priviledge').val());
 				if($('#special_priviledge').val()==='0'){
-					// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee (0 on add form)
-					amount_total_penalty = (multiprice - discount) * 1.10;
+					// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
+					amount_total_penalty = (multiprice - discount) * 1.10 + maintenance_fee;
 				}else{
 					amount_total_penalty = total_amount;
 				}
