@@ -123,6 +123,17 @@
                                                             </div>
                                                         
                                                         </div>
+														<div class="form-group col-lg-6">
+															<div class="col-lg-12 controls">
+																<div class="form-group">
+																	<span class="input-group-addon"><i class="icon-filter"></i><strong> Special Privilege:</strong></span>
+																	<div style="padding: 10px 0;">
+																		<input type="checkbox" id="special_privilege" name="special_privilege" value="1" style="margin-right: 10px;">
+																		<label for="special_privilege" style="margin-bottom: 0;">Show only customers with special privilege</label>
+																	</div>
+																</div>
+															</div>
+														</div>
                                                         <div class="form-group col-lg-6">
 															<div class="col-lg-12 controls">
 																<div class="form-group">
@@ -457,6 +468,7 @@
             var verifiedby = $("#verifiedby").val();
             var approvedby = $("#approvedby").val();
             var status = $("#status").val();
+            var special_privilege = $("#special_privilege").is(':checked') ? 1 : 0;
 
             if(status===''){
                 status=99;
@@ -477,7 +489,7 @@
                 return false;
             }
             // Use current protocol to avoid mixed content issues
-            var printUrl = window.location.protocol + '//' + window.location.host + '/master/reports/customerprinttopdf/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
+            var printUrl = window.location.protocol + '//' + window.location.host + '/master/reports/customerprinttopdf/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby+'/'+special_privilege;
             const popup = window.open(
                 printUrl, // URL to display 
                 "PopupWindowPrint", // Name of the window
@@ -498,6 +510,7 @@
             var verifiedby = $("#verifiedby").val();
             var approvedby = $("#approvedby").val();
             var status = $("#status").val();
+            var special_privilege = $("#special_privilege").is(':checked') ? 1 : 0;
 
             if(status===''){
                 status=99;
@@ -518,7 +531,7 @@
                 return false;
             }
             // Redirect to export URL
-            var exportUrl = window.location.protocol + '//' + window.location.host + '/master/reports/exporttoexcel_customer/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
+            var exportUrl = window.location.protocol + '//' + window.location.host + '/master/reports/exporttoexcel_customer/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby+'/'+special_privilege;
             window.location.href = exportUrl;
         });
 
@@ -526,6 +539,7 @@
             evt.preventDefault();
             var zone = $("#zone").val();
             var status = $("#status").val();
+            var special_privilege = $("#special_privilege").is(':checked') ? 1 : 0;
 
             // Show loading indicator
             $("#paidcustomerDiv").html('<div class="alert alert-info">Loading...</div>');
@@ -535,7 +549,7 @@
             $.ajax({
                 type    : "POST",
                 url	    : ajaxUrl,
-                data	: "zone="+zone+'&status='+status,
+                data	: "zone="+zone+'&status='+status+'&special_privilege='+special_privilege,
                 success: function(response){
                     if(response && typeof response === 'string' && response.trim().length > 0){
                         $("#paidcustomerDiv").html(response.trim());

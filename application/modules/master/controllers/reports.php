@@ -498,12 +498,12 @@ class Reports extends CI_Controller {
 		array_to_excel($export_data, $filename);
 	}
 
-	public function customerprinttopdf($status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+	public function customerprinttopdf($status,$zone='',$preparedby='',$verifiedby='',$approvedby='',$special_privilege=0){
 		//$header['roleResponsible'] = $this->top_model->get_responsibilities();
 		//$data['zone'] = $this->my_model->get_zone($zone);
 		$data['zone'] = $this->my_model->get_zone($zone);
         $data['status'] = ($status=='99')?'':$status;
-		$data['record'] = $this->report_model->get_customer_report_records($zone,$data['status']);
+		$data['record'] = $this->report_model->get_customer_report_records($zone,$data['status'],$special_privilege);
 		$data['preparedby'] = $this->my_model->get_employee($preparedby);
 		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
 		$data['approvedby'] = $this->my_model->get_employee($approvedby);
@@ -512,7 +512,7 @@ class Reports extends CI_Controller {
 		$this->load->view($this->customerprinttopdfPage,$data);
 	}
 
-	public function exporttoexcel_customer($status,$zone='',$preparedby='',$verifiedby='',$approvedby=''){
+	public function exporttoexcel_customer($status,$zone='',$preparedby='',$verifiedby='',$approvedby='',$special_privilege=0){
 		// Suppress error display to prevent output before headers
 		@ini_set('display_errors', 0);
 		error_reporting(0);
@@ -559,7 +559,7 @@ class Reports extends CI_Controller {
 		$index = 0;
 		
 		// Get customer records
-		$records = $this->report_model->get_customer_report_records($zone, $status_filter);
+		$records = $this->report_model->get_customer_report_records($zone, $status_filter, $special_privilege);
 		
 		// Process each record
 		if(count($records) > 0){
@@ -901,6 +901,7 @@ class Reports extends CI_Controller {
 			
 			$zone = $this->input->post('zone');
 			$status = $this->input->post('status');
+			$special_privilege = $this->input->post('special_privilege');
 			
 			// Convert zone to integer, default to 0 if empty
 			$zone = ($zone === '' || $zone === null) ? 0 : (int)$zone;
@@ -910,8 +911,11 @@ class Reports extends CI_Controller {
 				$status = '';
 			}
 			
+			// Convert special_privilege to integer, default to 0 if empty (no filter)
+			$special_privilege = ($special_privilege === '' || $special_privilege === null) ? 0 : (int)$special_privilege;
+			
 			// Get records
-			$data['record'] = $this->report_model->get_customer_report_records($zone,$status);
+			$data['record'] = $this->report_model->get_customer_report_records($zone,$status,$special_privilege);
 			
 			// If no records, set empty array
 			if(!isset($data['record']) || !is_array($data['record'])){
