@@ -53,9 +53,23 @@
 								$due_date = $row['bp_due_date']; 
 								$special_priviledge = $row['special_priviledge'];
 								$cur_date = date("Y-m-d");
-								// For unpaid bills, penalty is 0 (will be calculated on payment)
-								$balance = $row['amount']; 
+								$consumed = $row['consumed'];
+								
+								// For unpaid bills: if consumed > 0 and current date > due date, calculate penalty
 								$penalty = 0;
+								
+								if($consumed > 0 && $special_priviledge == 0){
+									if($cur_date > $due_date){
+										$penalty = $unit_price * 0.10; // 10% of bill amount
+									}
+								}
+								
+								// If has penalty, use penalty field; otherwise use amount field
+								if($penalty > 0){
+									$balance = $row['penalty'];
+								} else {
+									$balance = $row['amount'];
+								}
 								
 								
 								$record_reading = $this->my_model->get_metercustomer_add_all_records($id,$mon_id,$year);
