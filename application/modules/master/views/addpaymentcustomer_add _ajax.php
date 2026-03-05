@@ -92,7 +92,8 @@
 										$trans_date_compare = strtotime($record_reading[0]['trans_date']);
 										$due_date_compare = strtotime($row['bp_due_date']);
 										
-										$balance = $record_reading[0]['amount'];
+										// For paid bills, use grand_total field from tbl_addmetercustomer (fallback to amount if empty)
+										$balance = !empty($record_reading[0]['grand_total']) ? $record_reading[0]['grand_total'] : $record_reading[0]['amount'];
 										
 										// Calculate penalty: 10% of bill amount if date paid > due date and no special privilege
 										if($special_priviledge==0){
