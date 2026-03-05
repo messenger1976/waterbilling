@@ -53,18 +53,9 @@
 								$due_date = $row['bp_due_date']; 
 								$special_priviledge = $row['special_priviledge'];
 								$cur_date = date("Y-m-d");
-								if($special_priviledge==0){
-									if($cur_date>$due_date){
-										$balance = $row['penalty']; 
-										$penalty = $row['penalty'] - $row['amount'];
-									}else{
-										$balance = $row['amount']; 
-										$penalty = 0;
-									}
-								}else{
-									$balance = $row['amount']; 
-									$penalty = 0;
-								}
+								// For unpaid bills, penalty is 0 (will be calculated on payment)
+								$balance = $row['amount']; 
+								$penalty = 0;
 								
 								
 								$record_reading = $this->my_model->get_metercustomer_add_all_records($id,$mon_id,$year);
@@ -84,23 +75,19 @@
 								<?php }else{
 										$trans_date = date('M j, Y',strtotime($record_reading[0]['trans_date']));
 										$or_number_paid = $record_reading[0]['or_number'];
-										$due_date = strtotime('M j, Y',$due_date);
+										$trans_date_compare = strtotime($record_reading[0]['trans_date']);
+										$due_date_compare = strtotime($row['bp_due_date']);
 										
-
+										$balance = $record_reading[0]['amount'];
+										
+										// Calculate penalty: 10% of bill amount if date paid > due date and no special privilege
 										if($special_priviledge==0){
-											if($trans_date>$due_date){
-												//$balance = $row['penalty']; 
-												$balance = $record_reading[0]['amount'];
-												$penalty = $balance - $unit_price;
-												if($penalty<0){
-													$penalty = 0;
-												}
+											if($trans_date_compare > $due_date_compare){
+												$penalty = $unit_price * 0.10; // 10% of bill amount
 											}else{
-												$balance = $record_reading[0]['amount'];
 												$penalty = 0;
 											}
 										}else{
-											$balance = $record_reading[0]['amount'];
 											$penalty = 0;
 										}
 
