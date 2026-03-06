@@ -263,7 +263,7 @@ class addpaymentcustomer_model extends CI_Model {
 	
 	public function get_metercustomer_add_all_records($id,$mon_id,$year_id){
 		$sql = "SELECT ac.id AS addcustomer_id, ac.customer_id, am.id AS addmetercustomer_id, am.customer_id, 
-		        am.date, am.month, am.year, ac.mobile1, ac.mobile2, ac.email_id, am.amount, am.per_unit, am.or_number, am.date as trans_date
+		        am.date, am.month, am.year, ac.mobile1, ac.mobile2, ac.email_id, am.amount, am.per_unit, am.or_number, am.date as trans_date, am.grand_total
 				FROM  `tbl_addmetercustomer` am
 				LEFT JOIN  `tbl_addcustomer` ac ON ac.customer_id = am.customer_id
                 WHERE am.month = '$mon_id' AND am.year = '$year_id' AND ac.customer_id = '$id'";
