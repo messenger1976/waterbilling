@@ -275,6 +275,17 @@
                                             </div>
                                         </div>
                                     </div>
+									<div class="row">
+										<div class="col-lg-12 controls">
+											<div class="form-group">
+												<span class="input-group-addon"><strong>Compute Penalty : </strong></span>
+												<div style="padding:10px 12px; border:1px solid #ddd; border-top:0;">
+													<label style="margin-right:20px;"><input type="radio" name="compute_penalty" value="1" checked> Yes</label>
+													<label><input type="radio" name="compute_penalty" value="0"> No</label>
+												</div>
+											</div>
+										</div>
+									</div>
                                     <div class="row">
                                         <div class="col-lg-12 controls">
                                             <div class="form-group"> 
@@ -564,6 +575,7 @@ $('#btn_save').on('click', function(evt){
 	formData.append("maintenance_fee", $('#maintenance_fee').val());
 	formData.append("reading_date", $('#reading_date').val());
 	formData.append("customer_status", $('#customer_status').val());
+	formData.append("compute_penalty", $('input[name="compute_penalty"]:checked').val() || '1');
 	formData.append("edit", 'edit');
 
 	$.ajax({
@@ -587,50 +599,36 @@ $('#btn_save').on('click', function(evt){
 	});
 });
 
-$('#sc_discount').on('blur', function(evt){
-	evt.preventDefault();
-	var unit_price = $('#current_bill').val();
-	var maintenance_fee = $('#maintenance_fee').val();
-	//var multiprice = parseInt(difer) * parseInt(unit_price);
-	var multiprice = parseFloat(unit_price);
-	var discount =$(this).val();
-	
-	total_amount = multiprice - (parseFloat(discount) || 0);
-	total_amount += parseFloat(maintenance_fee) || 0;
-	amount_total_penalty = 0;
-	if($('#special_priviledge').val()==='0'){
-		// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
-		amount_total_penalty = (multiprice - (parseFloat(discount) || 0)) * 1.10 + (parseFloat(maintenance_fee) || 0);
+function recalculatePenaltyAmounts() {
+	var unit_price = parseFloat($('#current_bill').val() || 0);
+	var maintenance_fee = parseFloat($('#maintenance_fee').val() || 0);
+	var multiprice = unit_price;
+	var discount = parseFloat($('#sc_discount').val() || 0);
+	var total_amount = multiprice - discount;
+	total_amount += maintenance_fee;
+	var amount_total_penalty = 0;
+	if($('#special_priviledge').val()==='0' && ($('input[name="compute_penalty"]:checked').val() || '1') === '1'){
+		amount_total_penalty = (multiprice - discount) * 1.10 + maintenance_fee;
 	}else{
 		amount_total_penalty = total_amount;
 	}
-	//$('#discount').val(amount_formatted(discount));
 	$("#amount_pay").val(amount_formatted(multiprice));
 	$("#total_amount").val(amount_formatted(total_amount));
-	$("#penalty").val(amount_formatted(amount_total_penalty));	
+	$("#penalty").val(amount_formatted(amount_total_penalty));
+}
+
+$('#sc_discount').on('blur', function(evt){
+	evt.preventDefault();
+	recalculatePenaltyAmounts();
 });
 
 $('#maintenance_fee').on('blur', function(evt){
 	evt.preventDefault();
-	var unit_price = $('#current_bill').val();
-	var maintenance_fee = $(this).val();
-	//var multiprice = parseInt(difer) * parseInt(unit_price);
-	var multiprice = parseFloat(unit_price);
-	var discount = $('#sc_discount').val();
-	
-	total_amount = multiprice - (parseFloat(discount) || 0);
-	total_amount += parseFloat(maintenance_fee) || 0;
-	amount_total_penalty = 0;
-	if($('#special_priviledge').val()==='0'){
-		// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
-		amount_total_penalty = (multiprice - (parseFloat(discount) || 0)) * 1.10 + (parseFloat(maintenance_fee) || 0);
-	}else{
-		amount_total_penalty = total_amount;
-	}
-	//$('#discount').val(amount_formatted(discount));
-	$("#amount_pay").val(amount_formatted(multiprice));
-	$("#total_amount").val(amount_formatted(total_amount));
-	$("#penalty").val(amount_formatted(amount_total_penalty));	
+	recalculatePenaltyAmounts();
+});
+
+$('input[name="compute_penalty"]').on('change', function(){
+	recalculatePenaltyAmounts();
 });
 
 
@@ -669,7 +667,7 @@ $('#current_reading').on('blur', function() {
 				total_amount += parseFloat(maintenance_fee) || 0;
 				amount_total_penalty = 0;
 				//console.log('SP:'+$('#special_priviledge').val());
-				if($('#special_priviledge').val()==='0'){
+				if($('#special_priviledge').val()==='0' && ($('input[name="compute_penalty"]:checked').val() || '1') === '1'){
 					// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
 					amount_total_penalty = (multiprice - discount) * 1.10 + (parseFloat(maintenance_fee) || 0);
 				}else{
