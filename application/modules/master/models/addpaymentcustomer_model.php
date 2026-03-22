@@ -374,13 +374,21 @@ class addpaymentcustomer_model extends CI_Model {
 	}
 	
 	public function get_meter_reading_all_records($id){
+		$reading_status_select = $this->db->field_exists('status', 'tbl_addcustomer_reading')
+			? 'ac.status AS reading_status'
+			: '1 AS reading_status';
+		$compute_penalty_select = $this->db->field_exists('compute_penalty', 'tbl_addcustomer_reading')
+			? 'ac.compute_penalty'
+			: '1 AS compute_penalty';
+
 		$sql = "SELECT ac.id AS meter_id, ac.customer_id, ac.reading, ac.month, ac.year, ac.date,ac.amount,am.customer_id, 
-		        am.mobile1, am.mobile2, am.email_id, tm.month_name, am.status, ac.previous_reading,ac.consumed,am.special_priviledge,
+		        am.mobile1, am.mobile2, am.email_id, tm.month_name, am.status, {$reading_status_select}, ac.previous_reading,ac.consumed,am.special_priviledge,
 				ac.sc_discount,
 				ac.unit_price,
 				ac.bp_id as bp_id,
 				ac.penalty,
 				ac.maintenance_fee,
+				{$compute_penalty_select},
 				ac.refno,
 				bp.*
 				FROM  `tbl_addcustomer_reading` ac

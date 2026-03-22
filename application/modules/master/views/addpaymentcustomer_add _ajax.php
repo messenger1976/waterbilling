@@ -52,13 +52,15 @@
 								$year = stripslashes($row['year']);
 								$due_date = $row['bp_due_date']; 
 								$special_priviledge = $row['special_priviledge'];
+								$reading_status = isset($row['reading_status']) ? (int)$row['reading_status'] : 1;
+								$compute_penalty = isset($row['compute_penalty']) ? (int)$row['compute_penalty'] : 1;
 								$cur_date = date("Y-m-d");
 								$consumed = $row['consumed'];
 								
 								// For unpaid bills: if consumed > 0 and current date > due date, calculate penalty
 								$penalty = 0;
 								
-								if($consumed > 0 && $special_priviledge == 0){
+								if($consumed > 0 && $special_priviledge == 0 && $compute_penalty == 1){
 									if($cur_date > $due_date){
 										$penalty = $unit_price * 0.10; // 10% of bill amount
 									}
@@ -95,7 +97,7 @@
 										$balance = $record_reading[0]['amount'];
 										
 										// Calculate penalty: 10% of bill amount if date paid > due date and no special privilege
-										if($special_priviledge==0){
+										if($special_priviledge==0 && $compute_penalty == 1){
 											if($trans_date_compare > $due_date_compare){
 												$penalty = $unit_price * 0.10; // 10% of bill amount
 											}else{
