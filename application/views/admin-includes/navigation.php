@@ -312,6 +312,7 @@
 									<?php if($this->uri->segment(2)=='addbillingperiod'){echo 'active open';}?>
 									<?php if($this->uri->segment(2)=='createbalanceforward'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='employee_logins'){echo 'active open';}?>
+								   <?php if($this->uri->segment(2)=='manual_or_series'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='mobilenotifications'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='classification_category'){echo 'active open';}?>
 								   <?php if($this->uri->segment(2)=='classification'){echo 'active open';}?>
@@ -333,6 +334,12 @@
 									<a href="<?php echo ADMIN_URL;?>employee_logins/">Employee Login</a>
 								</li>
 							 <?php } ?>	
+
+							<?php if((array_key_exists('manual_or_series',$roleResponsible) && ($roleResponsible['manual_or_series'] == 1 || (is_array($roleResponsible['manual_or_series']) && count($roleResponsible['manual_or_series']) > 0)) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+								<li class="<?php if($this->uri->segment(2)=='manual_or_series') echo 'active';?>">
+									<a href="<?php echo ADMIN_URL;?>manual_or_series/"><i class="fa fa-list-ol"></i> Manual OR Series</a>
+								</li>
+							<?php } ?>
 
 							 <?php if((array_key_exists('addbillingperiod',$roleResponsible) && ($roleResponsible['addbillingperiod'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>	
 								<li class="<?php if($this->uri->segment(2)=='addbillingperiod' && $this->uri->segment(2)=='addbillingperiod') echo 'active';?>">
