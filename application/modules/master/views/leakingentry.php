@@ -1062,18 +1062,18 @@
 				var duedate = $('#due_date').val();
 				var paymentdate = $('#payment_date').val();
 				var special_priviledge = $('#special_priviledge').val();
+				var currentBill = parseFloat($('#current_bill').val()) || 0;
+				var leakingdisc = (currentBill * leakval)/100;
 				var date1 = parseDmyString(duedate);
 				var date2 = parseDmyString(paymentdate);
 				 console.log('special Previous:'+special_priviledge);
 				if(date1 < date2 && special_priviledge==0){
 					$('#gross_amount').val($('#penalty').val());
-					var leakingdisc =($('#penalty').val() * leakval)/100;
 					var billamount = $('#penalty').val() - leakingdisc;
 					$('#leaking_amount').val(leakingdisc.toFixed(2));
 					$('#bill_amount').val(billamount.toFixed(2));
 				}else{
 					$('#gross_amount').val($('#total_amount').val());
-					var leakingdisc =($('#total_amount').val() * leakval)/100;
 					var billamount = $('#total_amount').val() - leakingdisc;
 					$('#leaking_amount').val(leakingdisc.toFixed(2));
 					$('#bill_amount').val(billamount.toFixed(2));
