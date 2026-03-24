@@ -60,7 +60,7 @@
 								// For unpaid bills: if consumed > 0 and current date > due date, calculate penalty
 								$penalty = 0;
 								
-								if($consumed > 0 && $special_priviledge == 0 && $compute_penalty == 1){
+								if($consumed >= 0 && $special_priviledge == 0 && $compute_penalty == 1){
 									if($cur_date > $due_date){
 										$penalty = $unit_price * 0.10; // 10% of bill amount
 									}
