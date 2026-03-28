@@ -22,7 +22,8 @@
             /* Print-specific styles */
             @media print {
                 @page {
-                    size: A4 landscape; /* Use landscape for wide tables */
+                    /* Long bond paper: 8.5in × 13in, portrait */
+                    size: 8.5in 13in portrait;
                     margin: 10mm;
                 }
                 
