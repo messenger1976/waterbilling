@@ -332,6 +332,7 @@
 																				</div>
 																				<div class="col-md-3">
 																					<input  type="text" class="form-control"  id="vat_amount" name="vat_amount"  value="0.00" readonly/>
+																					<input type="hidden" id="vat_base_amount" name="vat_base_amount" value="0"/>
 																					<?php echo form_error('vat_amount'); ?>
 																				</div>
 																			</div>
@@ -735,6 +736,7 @@ $(document).on('click','.pay_button',function(e){
 	var buttonid = $(this).attr('id');
 	var paybtnid = $(this).data('pay-val-id');
 	var amount = $('#prsentamount_'+paybtnid).val();
+	var bill_amount = $('#unit_price_'+paybtnid).val();
 	var reading = $('#reading_'+paybtnid).val();
 	var monthid = $('#monthid_'+paybtnid).val();
 	var month = $('#month_'+paybtnid).val();
@@ -757,6 +759,7 @@ $(document).on('click','.pay_button',function(e){
 	$("#paid_total_amount").val(amount);
 	$('#total_total_amount').val(0);
 	$("#grand_total").val(amount);
+	$('#vat_base_amount').val(bill_amount==''?0:bill_amount);
 	
 	$("#current_reading").val(reading);
 	$('#month_name').val(month);
@@ -770,6 +773,7 @@ $(document).on('click','.pay_button',function(e){
 	
 	$('#vat_percent').val('');
 	$('#vat_amount').val('0.00');
+	$('#vat_base_amount').val(bill_amount==''?0:bill_amount);
 	$('#leaking_percent').val('');
 	$('#leaking_amount').val('0.00');
 	$('#pay_amount').val('0.00');
@@ -849,6 +853,7 @@ $(document).on('click','.pay_button',function(e){
 $(document).on('click','.total_pay',function(e){
 	
 	var total = $('#checkbox_cal').val();
+	var total_bill_amount = $('#checkbox_cal_bill').val();
 	
 	var customer = $('#customer_id').val();
 	$('#customer_id').val(customer);
@@ -856,6 +861,7 @@ $(document).on('click','.total_pay',function(e){
 	$('#total_total_amount').val(0);
 	$("#paid_total_amount").val(total);
 	$("#grand_total").val(total);
+	$('#vat_base_amount').val(total_bill_amount==''?0:total_bill_amount);
 	$("#total_setting_1").hide();
 	$("#total_setting_2").show();
 	$("#total_settin_pay").show();
@@ -865,6 +871,7 @@ $(document).on('click','.total_pay',function(e){
 
 	$('#vat_percent').val('');
 	$('#vat_amount').val('0.00');
+	$('#vat_base_amount').val(total_bill_amount==''?0:total_bill_amount);
 	$('#leaking_percent').val('');
 	$('#leaking_amount').val('0.00');
 	$('#pay_amount').val('0.00');
@@ -903,6 +910,7 @@ $('#aftermeter').on('blur', function() {
 $('#vat_percent').on('blur', function() {
 	var leaking_balance = $('#leaking_balance').val()==''?0:$('#leaking_balance').val();
 	var taxpercent = $('#vat_percent').val()==''?0:$('#vat_percent').val();
+	var vat_base_amount = $('#vat_base_amount').val()==''?0:$('#vat_base_amount').val();
 	var total_total_amount = $('#total_total_amount').val();
 	var paid_total_amount = $("#paid_total_amount").val();
 	var leaking_amount = $("#leaking_amount").val();
@@ -913,7 +921,8 @@ $('#vat_percent').on('blur', function() {
 		if(leaking_amount>0){
 			total_total_amount-=leaking_amount;
 		}
-		taxdeduct = (total_total_amount * taxpercent)/100;
+		if(vat_base_amount < 0){ vat_base_amount = 0; }
+		taxdeduct = (vat_base_amount * taxpercent)/100;
 		$('#vat_amount').val(taxdeduct.toFixed(2));
 		var grand_total =  total_total_amount - taxdeduct + parseFloat(leaking_balance);
 		$("#grand_total").val(grand_total.toFixed(2));
@@ -922,7 +931,8 @@ $('#vat_percent').on('blur', function() {
 		if(leaking_amount>0){
 			paid_total_amount-=leaking_amount;
 		}
-		taxdeduct = (paid_total_amount * taxpercent)/100;
+		if(vat_base_amount < 0){ vat_base_amount = 0; }
+		taxdeduct = (vat_base_amount * taxpercent)/100;
 		$('#vat_amount').val(taxdeduct.toFixed(2));
 		var grand_total =  paid_total_amount - taxdeduct + parseFloat(leaking_balance);
 		$("#grand_total").val(grand_total.toFixed(2));
