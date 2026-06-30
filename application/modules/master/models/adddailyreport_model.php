@@ -67,7 +67,7 @@
 		
 		$this->db->order_by('last_name','asc');
 		$this->db->order_by('first_name','asc');
-		$this->db->group_by('invoice_id');
+		$this->db->group_by('tbl_addmetercustomer.or_number, tbl_addcustomer.customer_id');
 		$query = $this->db->get();
 		$result = $query->result_array();
 		return $result;
@@ -125,7 +125,7 @@
 		$this->db->join('tbl_billing_period', 'tbl_billing_period.bp_id = tbl_addcustomer_reading.bp_id', 'left');
 		$this->db->where('tbl_addmetercustomer.date',$from);
 		$this->db->order_by('tbl_addmetercustomer.or_number','asc');
-		$this->db->group_by('invoice_id');
+		$this->db->group_by('tbl_addmetercustomer.or_number, tbl_addcustomer.customer_id');
 		$query = $this->db->get();
 		$result = $query->result_array();
 		return $result;
