@@ -67,6 +67,7 @@ class responsibilities extends CI_Controller
 				'dashboard' => 'Dashboard',
 				'addcustomer' => 'Customers Listing',
 				'add_zone' => 'Zone Names',
+				'delete_customer' => 'Delete Customer',
 				'addmetercustomerreading' => 'Add Meter Customers Reading',
 				'addpaymentcustomer' => 'Meter Customers Bills',
 				'leakingentry' => 'Leaking Entry',
@@ -87,6 +88,8 @@ class responsibilities extends CI_Controller
 				'customerbalancemonitor' => 'Customer Balance Monitor',
 				'addassets' => 'Assets',
 				'addledger' => 'Ledger',
+				'ar_adjustment' => 'AR Adjustment',
+				'ar_adjustment_approve' => 'AR Adjustment Approve',
 				'technicalproblems' => 'Technical Problems',
 				'technicalsearch' => 'Technical Problems View',
 				'web_settings' => 'Admin Address',
@@ -125,7 +128,7 @@ class responsibilities extends CI_Controller
 				'label' => 'Customers',
 				'icon' => 'fa-user',
 				'parent_key' => null,
-				'children' => array('addcustomer', 'add_zone')
+				'children' => array('addcustomer', 'add_zone', 'delete_customer')
 			),
 			array(
 				'id' => 'finance',
@@ -180,6 +183,13 @@ class responsibilities extends CI_Controller
 				'icon' => 'fa-pencil-square-o',
 				'parent_key' => 'addledger',
 				'children' => array()
+			),
+			array(
+				'id' => 'accounting',
+				'label' => 'Accounting',
+				'icon' => 'fa-book',
+				'parent_key' => null,
+				'children' => array('ar_adjustment', 'ar_adjustment_approve')
 			),
 			array(
 				'id' => 'technical',

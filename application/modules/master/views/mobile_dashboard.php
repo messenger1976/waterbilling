@@ -187,6 +187,15 @@
 										<div class="row">
 											<div class="col-lg-12 controls">
 												<div class="form-group" style="padding: 5px 15px;"> 
+													<span class="input-group-addon"><strong>Franchise Tax :</strong></span>
+													<input class="form-control text-input" type="text" id="franchise_fee" name="franchise_fee" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
+													
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-lg-12 controls">
+												<div class="form-group" style="padding: 5px 15px;"> 
 													<span class="input-group-addon"><strong>Amt before due date :</strong></span>
 													<input class="form-control text-input" type="text" id="total_amount" name="total_amount" style="background-color:yellow;font-size: larger; font-weight: bold; text-align: center;" readonly>
 													
@@ -330,6 +339,7 @@
 										$('#current_bill').val('');
 										$('#sc_discount').val('');
 										$('#arrears').val('');
+										$('#franchise_fee').val('');
 										$('#total_amount').val('');
 										$('#penalty').val('');
 										//$('#maintenance_fee').val('');
@@ -364,6 +374,7 @@
 					$('#total_amount').val('');
 					$('#penalty').val('');
 					$('#maintenance_fee').val('');
+					$('#franchise_fee').val('');
 					$('#save').attr("disabled", "disabled");
 					// If no parent is selected
 					// , clear the child dropdown
@@ -471,6 +482,7 @@
 										$('#total_amount').val('');
 										$('#penalty').val('');
 										$('#maintenance_fee').val('');
+										$('#franchise_fee').val('');
 										$("#save").attr("disabled", "disabled");
 									} else {
 										//alert("Error saving record.");
@@ -551,6 +563,17 @@
 			return formatted;
 		}
 
+		/**
+		 * Compute All Billing Amounts
+		 * Date Modified: February 6, 2026
+		 * 
+		 * Purpose: Calculate all billing amounts including unit price, senior citizen discount, 
+		 *          maintenance fee, franchise fee, and penalty based on meter readings.
+		 * 
+		 * Business Rules:
+		 * - Senior citizen discount (5%) only applies if consumption <= 30 cubic meters
+		 * - Franchise tax is ALWAYS based on current bill; SC discount applied when computing total
+		 */
 		function compute_all(){
 			var current_meter = $('#current_reading').val();
 			var previous_reading = $('#previous_reading').val();
@@ -585,18 +608,52 @@
 						var unit_price = $('#current_bill').val();
 						//var multiprice = parseInt(difer) * parseInt(unit_price);
 						var multiprice = parseFloat(unit_price);
-						var discount =0;
-						if($('#cust_type_id').val()==3){
+						
+						/**
+						 * Senior Citizen Discount Calculation
+						 * Date Modified: January 29, 2026
+						 * Modified By: AI Assistant
+						 * 
+						 * Purpose: Apply senior citizen discount (5%) only if the customer is a senior citizen 
+						 *          (cust_type_id == 3) AND the consumption (difference between current_reading 
+						 *          and previous_reading) is 30 cubic meters or less.
+						 * 
+						 * Reason: Business rule requirement - Senior citizens cannot avail discount if their 
+						 *         consumption exceeds 30 cubic meters. This prevents abuse of the senior 
+						 *         citizen discount privilege for excessive water consumption.
+						 * 
+						 * Previous Logic: Discount was applied to all senior citizens regardless of consumption amount.
+						 * New Logic: Discount is only applied when consumption <= 30 cubic meters.
+						 */
+						var discount = 0;
+						var consumed = parseFloat(difer) || 0;
+						if($('#cust_type_id').val()==3 && consumed <= 30){
 							discount = (multiprice * 5)/100;
 						}
+						
 						total_amount = multiprice - discount;
 						total_amount = total_amount??0;
-						total_amount += (parseFloat(maintenance_fee) || 0);
+						total_amount+=maintenance_fee;
+						
+						/**
+						 * Franchise Fee Calculation - Based on Current Bill
+						 * Date Modified: February 6, 2026
+						 * 
+						 * Business Rule: Franchise tax is ALWAYS computed on the current bill amount.
+						 *               Senior citizen discount (if applicable) is applied when computing
+						 *               the total, but franchise tax is based on the current bill before any discount.
+						 */
+						var franchise_fee_percentage = <?php echo isset($franchise_fee_percentage) ? floatval($franchise_fee_percentage) : '2.00'; ?>;
+						var bill_amount_for_franchise = multiprice;  // Always use current bill for franchise tax
+						var franchise_fee_amount = (bill_amount_for_franchise * franchise_fee_percentage) / 100;
+						total_amount += parseFloat(franchise_fee_amount);
+						$('#franchise_fee').val(amount_formatted(franchise_fee_amount));
+						// Penalty: 10% applied to (current_bill - sc_discount) only, then add maintenance + franchise
 						amount_total_penalty = 0;
-						//console.log('SP:'+$('#special_priviledge').val());
 						if($('#special_priviledge').val()==='0'){
-							// Amount after due date = ((rate - discount) x 1.10) + maintenance_fee
-							amount_total_penalty = (multiprice - discount) * 1.10 + (parseFloat(maintenance_fee) || 0);
+							var penalty_base = multiprice - discount;  // current_bill - sc_discount
+							amount_total_penalty = (penalty_base * 10) / 100;
+							amount_total_penalty = amount_total_penalty + penalty_base + maintenance_fee + franchise_fee_amount;
 						}else{
 							amount_total_penalty = total_amount;
 						}
@@ -619,6 +676,7 @@
 
 					} else {
 						$('#current_bill').val(amount_formatted(0));
+						$('#franchise_fee').val(amount_formatted(0));
 						var unit_price = $('#current_bill').val();
 						$("#save").attr("disabled", "disabled");
 						$("#amount_pay").val(amount_formatted(0));
@@ -664,6 +722,7 @@
 			$('#sc_discount').val('');
 			$('#arrears').val('');
 			$('#maintenance_fee').val('');
+			$('#franchise_fee').val('');
 			$('#total_amount').val('');
 			$('#penalty').val('');
 			$('#save').attr("disabled", "disabled");

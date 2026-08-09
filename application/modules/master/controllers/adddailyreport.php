@@ -35,20 +35,30 @@ class adddailyreport extends CI_Controller {
 		$this->load->view($this->listPage,$data);
 	}
 
-	public function printtopdf($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby='',$cashier=0){
+	public function printtopdf($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby='',$grouping=1,$cashier=0){
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
+		// URL date is dd-mm-yyyy (e.g. 09-08-2026)
+		$date_parts = explode('-', $trans_date);
+		if(count($date_parts) == 3 && strlen($date_parts[2]) == 4){
+			$trans_date_mysql = $date_parts[2] . '-' . $date_parts[1] . '-' . $date_parts[0];
+		} else {
+			$trans_date_mysql = date('Y-m-d', strtotime($trans_date));
+		}
 		$data['zone'] = $this->my_model->get_zone($zone);
-		$data['trans_date'] = date('M d, Y', strtotime($trans_date));
+		$data['trans_date'] = date('M d, Y', strtotime($trans_date_mysql));
+		$data['trans_date_mysql'] = $trans_date_mysql;
 		$data['preparedby'] = $this->my_model->get_employee($preparedby);
 		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
 		$data['approvedby'] = $this->my_model->get_employee($approvedby);
+		$data['grouping'] = (int)$grouping;
 		$data['cashier'] = (int)$cashier;
 		$data['cashier_info'] = $this->my_model->get_cashiers((int)$cashier);
+		$data['orphan_record'] = array();
 		//$this->load->view($this->headerPage,$header);
 		$this->load->view($this->printtopdfPage,$data);
 	}
 
-	public function exporttoexcel($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby='',$cashier=0){
+	public function exporttoexcel($trans_date,$zone='',$preparedby='',$verifiedby='',$approvedby='',$grouping=1,$cashier=0){
 		// Suppress error display to prevent output before headers
 		@ini_set('display_errors', 0);
 		error_reporting(0);
@@ -144,7 +154,7 @@ class adddailyreport extends CI_Controller {
 				$export_data[] = array('', stripslashes($row['zone']), '', '', '', '', '', '', '', '', '', '', '');
 				
 				// Get daily transactions for this zone
-				$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate, $row['id'], $cashier);
+				$get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate, $row['id'], (int)$grouping, (int)$cashier);
 				
 				// Initialize zone totals
 				$total_grand_zone = 0;
@@ -383,15 +393,18 @@ class adddailyreport extends CI_Controller {
 					$cashier = (int)$this->input->post('cashier');
 					$fromdate = $this->input->post('fromdate');
 					$todate = $this->input->post('todate');
-					$from = date('Y-m-d', strtotime($fromdate));
-					//$to = date('Y-m-d', strtotime($todate));
+					$grouping = (int)$this->input->post('grouping');
+					// fromdate is dd-mm-yyyy
+					$date_parts = explode('-', $fromdate);
+					if(count($date_parts) == 3 && strlen($date_parts[2]) == 4){
+						$from = $date_parts[2] . '-' . $date_parts[1] . '-' . $date_parts[0];
+					} else {
+						$from = date('Y-m-d', strtotime($fromdate));
+					}
 					
-					$data['record'] = $this->my_model->get_metercustomer_records($from,$zone,$cashier);
-					//$data['monthly'] = $this->my_model->get_monthycustomer_records($from,$to,$type);
-					//$data['payroll'] = $this->my_model->get_payrol_records($from,$to,$type);
-					//$data['expense'] = $this->my_model->get_expense_records($from,$to,$type);
-					//$data['value'] = $this->my_model->get_daily_records($from,$to,$type);
-					//echo'<pre>';print_r($data['record']);exit;
+					$data['record'] = $this->my_model->get_metercustomer_records($from,$zone,$grouping,$cashier);
+					$leaking_ar = $this->leakingentry_model->get_soa_statement_transdate($from);
+					$data['leaking_record'] = is_array($leaking_ar) ? $leaking_ar : array();
 					$this->load->view($this->searchPage,$data);
 				}		
 			}else{
