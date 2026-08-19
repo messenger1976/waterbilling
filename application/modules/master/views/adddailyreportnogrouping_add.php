@@ -139,6 +139,9 @@
 								<a href="javascript:void(0);" id="printtopdf" class="btn btn-warning">
 									<i class="fal fa-print mr-1"></i> Print
 								</a>
+								<a href="javascript:void(0);" id="exporttopdf" class="btn btn-danger">
+									<i class="fal fa-file-pdf mr-1"></i> Export to PDF
+								</a>
 								<a href="javascript:void(0);" id="exporttoexcel" class="btn btn-success">
 									<i class="fal fa-file-excel mr-1"></i> Export to Excel
 								</a>
@@ -214,6 +217,28 @@ $(document).ready(function(){
 		if (!popup || popup.closed || typeof popup.closed == "undefined") {
 			alert("Popup was blocked! Please allow popups for this site.");
 		}
+	});
+
+	$('#exporttopdf').on('click',function(evt){
+		evt.preventDefault();
+		var preparedby = $("#preparedby").val();
+		var verifiedby = $("#verifiedby").val();
+		var approvedby = $("#approvedby").val();
+		var fromdate = $("#fromdate").val();
+
+		if (fromdate == '') {
+			alert('Please select a transaction date first.');
+			return;
+		}
+
+		if (typeof openReportPdfPreview === 'function') {
+			openReportPdfPreview({
+				printUrl: "<?php echo ADMIN_URL;?>adddailyreportnogrouping/printtopdf/"+fromdate+'/'+preparedby+'/'+verifiedby+'/'+approvedby,
+				filename: 'Daily_Collection_Report_NoGrouping.pdf'
+			});
+			return;
+		}
+		window.location.href = "<?php echo ADMIN_URL;?>adddailyreportnogrouping/exporttopdf/"+fromdate+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
 	});
 
 	$('#exporttoexcel').on('click',function(evt){

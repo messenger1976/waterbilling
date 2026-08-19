@@ -1,25 +1,22 @@
 # DOCUMENTS
 
-Canonical Labason Water District documentation lives in **Company Knowledge** only:
+Canonical **Roxas Water District** documentation lives in **Company Knowledge** only:
 
-**[`Company-Knowledge/LWDKB/PLATFORM_KNOWLEDGE/`](../../Company-Knowledge/LWDKB/PLATFORM_KNOWLEDGE/)**
+**[`Company-Knowledge/COMPANIES/Roxas-Water-District/RWDKB/PLATFORM_KNOWLEDGE/`](../../Company-Knowledge/COMPANIES/Roxas-Water-District/RWDKB/PLATFORM_KNOWLEDGE/)**
 
 | Start here | Path |
 |------------|------|
-| Docs catalogue | `LWDKB/PLATFORM_KNOWLEDGE/04_APP_DOCS_INDEX.md` |
-| Agent entry | `LWDKB/AGENTS.md` |
-| SA4 UI + WB1 port | `LWDKB/PLATFORM_KNOWLEDGE/07_UI_TEMPLATE_SA4/` |
-| AR Adjustment | `LWDKB/PLATFORM_KNOWLEDGE/08_ACCOUNTING_AND_AR/` |
-| User guides | `LWDKB/PLATFORM_KNOWLEDGE/09_USER_GUIDES/` |
-| Customers / APIs | `LWDKB/PLATFORM_KNOWLEDGE/10_CUSTOMERS_AND_API/` |
-| Billing & payments (incl. VAT) | `LWDKB/PLATFORM_KNOWLEDGE/11_BILLING_AND_PAYMENTS/` |
-| Mobile / notifications | `LWDKB/PLATFORM_KNOWLEDGE/12_MOBILE_AND_NOTIFICATIONS/` |
-| Operations (backup / Excel export) | `LWDKB/PLATFORM_KNOWLEDGE/13_OPERATIONS/` |
+| Docs catalogue | `COMPANIES/Roxas-Water-District/RWDKB/PLATFORM_KNOWLEDGE/04_APP_DOCS_INDEX.md` |
+| Agent entry | `COMPANIES/Roxas-Water-District/RWDKB/AGENTS.md` |
+| SA4 intake from Labason | `COMPANIES/Roxas-Water-District/RWDKB/PLATFORM_KNOWLEDGE/07_UI_TEMPLATE_SA4/` |
+| Roxas vs Labason billing | `COMPANIES/Roxas-Water-District/RWDKB/PLATFORM_KNOWLEDGE/11_BILLING_AND_PAYMENTS/ROXAS_VS_LABASON.md` |
+| SOA APIs | `COMPANIES/Roxas-Water-District/RWDKB/PLATFORM_KNOWLEDGE/10_CUSTOMERS_AND_API/` |
 
 ## Standing policy
 
-- **Create and update all docs in LWDKB** (`Company-Knowledge/LWDKB/…`).
+- **Create and update all Roxas docs in RWDKB.**
 - **Do not add new markdown guides in this folder.**
-- This `README.md` is a pointer only (docs moved from `waterbilling1/DOCUMENTS/` on 2026-08-09).
+- This `README.md` is a pointer only.
+- **Labason Water District** (`labasonsandbox`) is a **different company** — its docs are under `COMPANIES/Labason-Water-District/LWDKB/`.
 
 Implementation truth (PHP / SQL / schema) remains in this application repository.

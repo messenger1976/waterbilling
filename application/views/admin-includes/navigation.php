@@ -63,14 +63,16 @@ $avatar_url = base_url($avatar_relative) . '?v=' . $avatar_mtime;
 			</li>
 			<?php } ?>
 
-			<li>
+			<li class="<?php if($this->uri->segment(2)=='addcustomer' && ($this->uri->segment(3)=='' || $this->uri->segment(3)=='index' || $this->uri->segment(3)=='add' || $this->uri->segment(3)=='edit')){echo 'active open';}?>
+						<?php if($this->uri->segment(2)=='add_zone'){echo 'active open';}?>
+						<?php if($this->uri->segment(2)=='statementofaccountlist'){echo 'active open';}?>">
 				<a href="#" title="Customers">
 					<i class="fal fa-user"></i>
 					<span class="nav-link-text">Customers</span>
 				</a>
 				<ul>
 					<?php if((array_key_exists('addcustomer',$roleResponsible) && ($roleResponsible['addcustomer'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
-					<li class="<?php if($this->uri->segment(2)=='addcustomer'){echo 'active';}?>">
+					<li class="<?php if($this->uri->segment(2)=='addcustomer' && ($this->uri->segment(3)=='' || $this->uri->segment(3)=='index' || $this->uri->segment(3)=='add' || $this->uri->segment(3)=='edit')){echo 'active';}?>">
 						<a href="<?php echo ADMIN_URL;?>addcustomer" title="Customers Listing">
 							<span class="nav-link-text">Customers Listing</span>
 						</a>
@@ -80,6 +82,13 @@ $avatar_url = base_url($avatar_relative) . '?v=' . $avatar_mtime;
 					<li class="<?php if($this->uri->segment(2)=='add_zone'){echo 'active';}?>">
 						<a href="<?php echo ADMIN_URL;?>add_zone" title="Zone Names">
 							<span class="nav-link-text">Zone Names</span>
+						</a>
+					</li>
+					<?php } ?>
+					<?php if((array_key_exists('statementofaccountlist',$roleResponsible) && ($roleResponsible['statementofaccountlist'] == 1) ) || ($this->session->userdata('usertype') == 'admin')){ ?>
+					<li class="<?php if($this->uri->segment(2)=='statementofaccountlist'){echo 'active';}?>">
+						<a href="<?php echo ADMIN_URL;?>statementofaccountlist" title="Statement of Account">
+							<span class="nav-link-text">Statement of Account</span>
 						</a>
 					</li>
 					<?php } ?>
@@ -329,6 +338,14 @@ $avatar_url = base_url($avatar_relative) . '?v=' . $avatar_mtime;
 					</li>
 					<?php } ?>
 
+					<?php if((array_key_exists('lowtonoconsumption',$roleResponsible) && ($roleResponsible['lowtonoconsumption'] == 1)) || ($this->session->userdata('usertype') == 'admin') ){ ?>
+					<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='low_to_no_consumption') echo 'active';?>">
+						<a href="<?php echo ADMIN_URL;?>reports/low_to_no_consumption" title="Low to No Consumption">
+							<span class="nav-link-text">Low to No Consumption</span>
+						</a>
+					</li>
+					<?php } ?>
+
 					<?php if((array_key_exists('adddailyreport',$roleResponsible) && ($roleResponsible['adddailyreport'] == 1)) || ($this->session->userdata('usertype') == 'admin') || ($this->session->userdata('usertype') == 'subadmin') ){ ?>
 					<li class="<?php if($this->uri->segment(2)=='reports' && $this->uri->segment(3)=='customer_report') echo 'active';?>">
 						<a href="<?php echo ADMIN_URL;?>reports/customer_report" title="Customer Report">
@@ -363,8 +380,8 @@ $avatar_url = base_url($avatar_relative) . '?v=' . $avatar_mtime;
 
 					<?php if((array_key_exists('customerbalancemonitor',$roleResponsible) && ($roleResponsible['customerbalancemonitor'] == 1)) || ($this->session->userdata('usertype') == 'admin') ){ ?>
 					<li class="<?php if($this->uri->segment(2)=='customerbalancemonitor') echo 'active';?>">
-						<a href="<?php echo ADMIN_URL;?>customerbalancemonitor" title="Customer balance monitor">
-							<span class="nav-link-text">Customer balance monitor</span>
+						<a href="<?php echo ADMIN_URL;?>customerbalancemonitor" title="Customer Balance Monitor">
+							<span class="nav-link-text">Customer Balance Monitor</span>
 						</a>
 					</li>
 					<?php } ?>

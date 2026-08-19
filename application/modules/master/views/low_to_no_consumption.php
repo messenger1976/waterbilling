@@ -18,65 +18,41 @@
 <main id="js-page-content" role="main" class="page-content">
 	<ol class="breadcrumb page-breadcrumb">
 		<li class="breadcrumb-item"><a href="<?php echo ADMIN_URL; ?>">Home</a></li>
-		<li class="breadcrumb-item"><a href="<?php echo ADMIN_URL; ?>reports/monthly_billing_report">Monthly Billing Report</a></li>
+		<li class="breadcrumb-item"><a href="<?php echo ADMIN_URL; ?>reports/low_to_no_consumption">Low to No Consumption</a></li>
 		<li class="breadcrumb-item active">Search</li>
 		<li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span></li>
 	</ol>
 
 	<div class="subheader">
 		<h1 class="subheader-title">
-			<i class="subheader-icon fal fa-chart-bar"></i>
-			Manage <span class="fw-300">Monthly Billing Report</span>
+			<i class="subheader-icon fal fa-tint"></i>
+			Manage <span class="fw-300">Low to No Consumption</span>
 		</h1>
 		<div class="subheader-block d-lg-flex align-items-center">
 			<div class="d-inline-flex flex-column justify-content-center mr-3">
-				<span class="fw-300 fs-xs d-block opacity-50">
-					<small>INCOME</small>
-				</span>
-				<span class="fw-500 fs-xl d-block color-primary-500">
-					₱ <?php echo number_format($intotal, 2); ?>
-				</span>
+				<span class="fw-300 fs-xs d-block opacity-50"><small>INCOME</small></span>
+				<span class="fw-500 fs-xl d-block color-primary-500">₱ <?php echo number_format($intotal, 2); ?></span>
 			</div>
-			<span class="sparklines hidden-lg-down" sparkType="bar" sparkBarColor="#886ab5" sparkHeight="32px" sparkBarWidth="5px" values="3,4,3,6,7,3,3,6,2,6,4"></span>
 		</div>
 		<div class="subheader-block d-lg-flex align-items-center border-faded border-right-0 border-top-0 border-bottom-0 ml-3 pl-3">
 			<div class="d-inline-flex flex-column justify-content-center mr-3">
-				<span class="fw-300 fs-xs d-block opacity-50">
-					<small>EXPENSE</small>
-				</span>
-				<span class="fw-500 fs-xl d-block color-danger-500">
-					₱ <?php echo number_format($extotal, 2); ?>
-				</span>
+				<span class="fw-300 fs-xs d-block opacity-50"><small>EXPENSE</small></span>
+				<span class="fw-500 fs-xl d-block color-danger-500">₱ <?php echo number_format($extotal, 2); ?></span>
 			</div>
-			<span class="sparklines hidden-lg-down" sparkType="bar" sparkBarColor="#fe6bb0" sparkHeight="32px" sparkBarWidth="5px" values="1,4,3,6,5,3,9,6,5,9,7"></span>
 		</div>
 		<div class="subheader-block d-lg-flex align-items-center border-faded border-right-0 border-top-0 border-bottom-0 ml-3 pl-3">
 			<div class="d-inline-flex flex-column justify-content-center mr-3">
-				<span class="fw-300 fs-xs d-block opacity-50">
-					<small>TOTAL CUSTOMER</small>
-				</span>
-				<span class="fw-500 fs-xl d-block color-success-500">
-					<?php echo (int) (isset($count_id) ? $count_id : 0); ?>
-				</span>
+				<span class="fw-300 fs-xs d-block opacity-50"><small>TOTAL CUSTOMER</small></span>
+				<span class="fw-500 fs-xl d-block color-success-500"><?php echo (int) (isset($count_id) ? $count_id : 0); ?></span>
 			</div>
-			<span class="sparklines hidden-lg-down" sparkType="bar" sparkBarColor="#1dc9b7" sparkHeight="32px" sparkBarWidth="5px" values="2,5,3,7,4,6,3,8,5,4,6"></span>
 		</div>
 	</div>
-
-	<?php if (!empty($msg)) { ?>
-	<div class="alert alert-success alert-dismissible fade show" role="alert">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-			<span aria-hidden="true"><i class="fal fa-times"></i></span>
-		</button>
-		<strong>Success!</strong> <?php echo $msg; ?>
-	</div>
-	<?php } ?>
 
 	<div class="row">
 		<div class="col-xl-12">
-			<div id="panel-monthly-billing" class="panel">
+			<div id="panel-low-to-no" class="panel">
 				<div class="panel-hdr">
-					<h2>Monthly Billing Report <span class="fw-300"><i>Search</i></span></h2>
+					<h2>Low to No Consumption <span class="fw-300"><i>Search</i></span></h2>
 					<div class="panel-toolbar">
 						<button class="btn btn-panel" data-action="panel-collapse" data-toggle="tooltip" data-offset="0,10" data-original-title="Collapse"></button>
 						<button class="btn btn-panel" data-action="panel-fullscreen" data-toggle="tooltip" data-offset="0,10" data-original-title="Fullscreen"></button>
@@ -84,13 +60,14 @@
 				</div>
 				<div class="panel-container show">
 					<div class="panel-content">
-						<form name="monthly_billing_form" id="monthly_billing_form" method="post" action="javascript:void(0);">
+						<p class="text-muted mb-3">Lists active meter customers with an encoded reading and consumption of 0 (no use) or up to the max cu.m (low). Unread accounts and disconnected / inactive customers are excluded.</p>
+						<form name="low_to_no_form" id="low_to_no_form" method="post" action="javascript:void(0);">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="form-label" for="billingperiod">Billing Period</label>
 										<select class="form-control" name="billingperiod" id="billingperiod" required>
-											<option value="">--All--</option>
+											<option value="">--Select--</option>
 											<?php foreach ($billingperiod as $key => $value) { ?>
 											<option value="<?php echo $value['bp_period_month'].' '.$value['bp_period_year']; ?>"><?php echo $value['month_name'].' '.$value['bp_period_year']; ?></option>
 											<?php } ?>
@@ -99,21 +76,8 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="form-label" for="status">Status</label>
-										<select class="form-control" name="status" id="status" required>
-											<option value="">--All--</option>
-											<option value="1">Paid</option>
-											<option value="4">Paid & Un-paid</option>
-											<option value="0">Un-paid</option>
-											<option value="3">No Reading</option>
-											<option value="2">Disconnected</option>
-										</select>
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
 										<label class="form-label" for="zone">Zone</label>
-										<select class="form-control" name="zone" id="zone" required>
+										<select class="form-control" name="zone" id="zone">
 											<option value="0">--All--</option>
 											<?php foreach ($zone as $key => $value) { ?>
 											<option value="<?php echo $value['id']; ?>"><?php echo htmlspecialchars($value['zone']); ?></option>
@@ -123,28 +87,44 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
+										<label class="form-label" for="usage_type">Usage type</label>
+										<select class="form-control" name="usage_type" id="usage_type">
+											<option value="both">Both (no consumption and low)</option>
+											<option value="no">No consumption (0 cu.m)</option>
+											<option value="low">Low only</option>
+										</select>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="form-label" for="max_cu">Max cu.m for low</label>
+										<input type="number" class="form-control" name="max_cu" id="max_cu" value="10" min="0" step="1">
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
 										<label class="form-label" for="preparedby">Prepared by</label>
-										<select class="form-control" name="preparedby" id="preparedby" required>
+										<select class="form-control" name="preparedby" id="preparedby">
 											<?php foreach ($employee as $key => $emp) { ?>
 											<option value="<?php echo $emp['id']; ?>"><?php echo strtoupper($emp['first_name']).' '.strtoupper($emp['middle_name']).' '.strtoupper($emp['last_name']).' - '.$emp['jobtitle']; ?></option>
 											<?php } ?>
 										</select>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<div class="form-group">
 										<label class="form-label" for="verifiedby">Checked / Verified by</label>
-										<select class="form-control" name="verifiedby" id="verifiedby" required>
+										<select class="form-control" name="verifiedby" id="verifiedby">
 											<?php foreach ($employee as $key => $emp) { ?>
 											<option value="<?php echo $emp['id']; ?>"><?php echo strtoupper($emp['first_name']).' '.strtoupper($emp['middle_name']).' '.strtoupper($emp['last_name']).' - '.$emp['jobtitle']; ?></option>
 											<?php } ?>
 										</select>
 									</div>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-4">
 									<div class="form-group">
 										<label class="form-label" for="approvedby">Approved by</label>
-										<select class="form-control" name="approvedby" id="approvedby" required>
+										<select class="form-control" name="approvedby" id="approvedby">
 											<?php foreach ($employee as $key => $emp) { ?>
 											<option value="<?php echo $emp['id']; ?>"><?php echo strtoupper($emp['first_name']).' '.strtoupper($emp['middle_name']).' '.strtoupper($emp['last_name']).' - '.$emp['jobtitle']; ?></option>
 											<?php } ?>
@@ -152,7 +132,6 @@
 									</div>
 								</div>
 							</div>
-
 							<div class="form-group mb-0">
 								<button type="button" class="btn btn-primary" name="search" id="search">
 									<i class="fal fa-search mr-1"></i> Search
@@ -168,8 +147,7 @@
 								</a>
 							</div>
 						</form>
-
-						<div id="paidcustomerDiv" class="mt-3"></div>
+						<div id="lowtonoconsumptionDiv" class="mt-3"></div>
 					</div>
 				</div>
 			</div>
@@ -177,35 +155,23 @@
 	</div>
 </main>
 <?php include('footer.php'); ?>
-<script src="<?php echo base_url(); ?>sa4/js/statistics/sparkline/sparkline.bundle.js"></script>
 <script src="<?php echo base_url(); ?>sa4/js/datagrid/datatables/datatables.bundle.js"></script>
 </body>
 </html>
 <script type="text/javascript">
 $(document).ready(function(){
 	if (typeof pageSetUp === 'function') { pageSetUp(); }
-	if ($.fn.sparkline) {
-		$('.sparklines').each(function() {
-			var $el = $(this);
-			$el.sparkline('html', {
-				type: $el.attr('sparkType') || 'bar',
-				barColor: $el.attr('sparkBarColor') || '#886ab5',
-				height: $el.attr('sparkHeight') || '32px',
-				barWidth: $el.attr('sparkBarWidth') || '5px'
-			});
-		});
-	}
 
-	function destroyMonthlyTable() {
-		if ($.fn.DataTable && $.fn.DataTable.isDataTable('#dt_monthly_billing')) {
-			$('#dt_monthly_billing').DataTable().destroy();
+	function destroyLowToNoTable() {
+		if ($.fn.DataTable && $.fn.DataTable.isDataTable('#dt_low_to_no')) {
+			$('#dt_low_to_no').DataTable().destroy();
 		}
 	}
 
-	function initMonthlyBillingTable() {
-		if (!$.fn.DataTable || !$('#dt_monthly_billing').length) { return; }
-		destroyMonthlyTable();
-		$('#dt_monthly_billing').DataTable({
+	function initLowToNoTable() {
+		if (!$.fn.DataTable || !$('#dt_low_to_no').length) { return; }
+		destroyLowToNoTable();
+		$('#dt_low_to_no').DataTable({
 			responsive: true,
 			pageLength: 25,
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
@@ -216,7 +182,7 @@ $(document).ready(function(){
 				"<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
 			language: {
 				search: '',
-				searchPlaceholder: 'Search monthly billing...',
+				searchPlaceholder: 'Search low to no consumption...',
 				lengthMenu: '_MENU_',
 				info: 'Showing _START_ to _END_ of _TOTAL_ records',
 				infoEmpty: 'No records found',
@@ -231,24 +197,30 @@ $(document).ready(function(){
 		});
 	}
 
+	function currentFilters() {
+		return {
+			zone: $("#zone").val() || '0',
+			preparedby: $("#preparedby").val() || '0',
+			verifiedby: $("#verifiedby").val() || '0',
+			approvedby: $("#approvedby").val() || '0',
+			billingperiod: $("#billingperiod").val() || '',
+			usage_type: $("#usage_type").val() || 'both',
+			max_cu: $("#max_cu").val() || '10'
+		};
+	}
+
 	$('#printtopdf').on('click', function(evt){
 		evt.preventDefault();
-		var zone = $("#zone").val();
-		var preparedby = $("#preparedby").val();
-		var verifiedby = $("#verifiedby").val();
-		var approvedby = $("#approvedby").val();
-		var billingperiod = $("#billingperiod").val();
-		var status = $("#status").val();
-
-		if (billingperiod === '') { billingperiod = 0; }
-		if (status === '') { status = 99; }
-
-		const popup = window.open(
-			"printtopdf/"+billingperiod+'/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby,
+		var f = currentFilters();
+		if (f.billingperiod === '') {
+			alert('Please select a billing period.');
+			return;
+		}
+		var popup = window.open(
+			"<?php echo ADMIN_URL; ?>reports/lowtonoconsumptionprinttopdf/"+encodeURIComponent(f.billingperiod)+'/'+encodeURIComponent(f.usage_type)+'/'+encodeURIComponent(f.max_cu)+'/'+f.zone+'/'+f.preparedby+'/'+f.verifiedby+'/'+f.approvedby,
 			"PopupWindowPrint",
 			"width=1200,height=600,resizable=yes,scrollbars=yes"
 		);
-
 		if (!popup || popup.closed || typeof popup.closed == "undefined") {
 			alert("Popup was blocked! Please allow popups for this site.");
 		}
@@ -256,57 +228,47 @@ $(document).ready(function(){
 
 	$('#exporttopdf').on('click', function(evt){
 		evt.preventDefault();
-		var zone = $("#zone").val();
-		var preparedby = $("#preparedby").val();
-		var verifiedby = $("#verifiedby").val();
-		var approvedby = $("#approvedby").val();
-		var billingperiod = $("#billingperiod").val();
-		var status = $("#status").val();
-
-		if (billingperiod === '') { billingperiod = 0; }
-		if (status === '') { status = 99; }
-
+		var f = currentFilters();
+		if (f.billingperiod === '') {
+			alert('Please select a billing period.');
+			return;
+		}
 		if (typeof openReportPdfPreview === 'function') {
 			openReportPdfPreview({
-				printUrl: "<?php echo ADMIN_URL;?>reports/printtopdf/"+encodeURIComponent(billingperiod)+'/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby,
-				filename: 'Monthly_Billing_Report.pdf'
+				printUrl: "<?php echo ADMIN_URL; ?>reports/lowtonoconsumptionprinttopdf/"+encodeURIComponent(f.billingperiod)+'/'+encodeURIComponent(f.usage_type)+'/'+encodeURIComponent(f.max_cu)+'/'+f.zone+'/'+f.preparedby+'/'+f.verifiedby+'/'+f.approvedby,
+				filename: 'Low_to_No_Consumption.pdf'
 			});
 			return;
 		}
-		window.location.href = "<?php echo ADMIN_URL;?>reports/exporttopdf/"+encodeURIComponent(billingperiod)+'/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
+		window.location.href = "<?php echo ADMIN_URL; ?>reports/lowtonoconsumptionexporttopdf/"+encodeURIComponent(f.billingperiod)+'/'+encodeURIComponent(f.usage_type)+'/'+encodeURIComponent(f.max_cu)+'/'+f.zone+'/'+f.preparedby+'/'+f.verifiedby+'/'+f.approvedby;
 	});
 
 	$('#exporttoexcel').on('click', function(evt){
 		evt.preventDefault();
-		var zone = $("#zone").val();
-		var preparedby = $("#preparedby").val();
-		var verifiedby = $("#verifiedby").val();
-		var approvedby = $("#approvedby").val();
-		var billingperiod = $("#billingperiod").val();
-		var status = $("#status").val();
-
-		if (billingperiod === '') { billingperiod = 0; }
-		if (status === '') { status = 99; }
-
-		window.location.href = "<?php echo ADMIN_URL;?>reports/exporttoexcel/"+encodeURIComponent(billingperiod)+'/'+status+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby;
+		var f = currentFilters();
+		if (f.billingperiod === '') {
+			alert('Please select a billing period.');
+			return;
+		}
+		window.location.href = "<?php echo ADMIN_URL; ?>reports/lowtonoconsumptionexporttoexcel/"+encodeURIComponent(f.billingperiod)+'/'+encodeURIComponent(f.usage_type)+'/'+encodeURIComponent(f.max_cu)+'/'+f.zone+'/'+f.preparedby+'/'+f.verifiedby+'/'+f.approvedby;
 	});
 
 	$('#search').on('click', function(evt){
 		evt.preventDefault();
-		var zone = $("#zone").val();
-		var billingperiod = $("#billingperiod").val();
-		var status = $("#status").val();
-
-		destroyMonthlyTable();
-		$("#paidcustomerDiv").html('<div class="text-center py-4 text-muted"><i class="fal fa-spinner fa-spin fa-2x mb-2"></i><div>Loading results…</div></div>');
-
+		var f = currentFilters();
+		if (f.billingperiod === '') {
+			alert('Please select a billing period.');
+			return;
+		}
+		destroyLowToNoTable();
+		$("#lowtonoconsumptionDiv").html('<div class="text-center py-4 text-muted"><i class="fal fa-spinner fa-spin fa-2x mb-2"></i><div>Loading results…</div></div>');
 		$.ajax({
 			type: "POST",
-			url: '<?php echo ADMIN_URL;?>reports/getmonthlyreportsearch',
-			data: "billingperiod="+billingperiod+"&zone="+zone+'&status='+status,
+			url: '<?php echo ADMIN_URL; ?>reports/getlowtonoconsumptionsearch',
+			data: "billingperiod="+encodeURIComponent(f.billingperiod)+"&zone="+f.zone+"&usage_type="+encodeURIComponent(f.usage_type)+"&max_cu="+encodeURIComponent(f.max_cu),
 			complete: function(data){
-				$("#paidcustomerDiv").html(data.responseText.trim());
-				initMonthlyBillingTable();
+				$("#lowtonoconsumptionDiv").html(data.responseText.trim());
+				initLowToNoTable();
 			}
 		});
 	});

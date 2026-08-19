@@ -165,6 +165,9 @@
 								<a href="javascript:void(0);" id="printtopdf" class="btn btn-warning">
 									<i class="fal fa-print mr-1"></i> Print
 								</a>
+								<a href="javascript:void(0);" id="exporttopdf" class="btn btn-danger">
+									<i class="fal fa-file-pdf mr-1"></i> Export to PDF
+								</a>
 								<a href="javascript:void(0);" id="exporttoexcel" class="btn btn-success">
 									<i class="fal fa-file-excel mr-1"></i> Export to Excel
 								</a>
@@ -228,6 +231,12 @@ $(document).ready(function(){
 		var approvedby = $("#approvedby").val();
 		var fromdate = $("#fromdate").val();
 		var grouping = $("#grouping").is(':checked') ? 1 : 0;
+
+		if(fromdate == ''){
+			alert("Please select a transaction date first.");
+			return;
+		}
+
 		const popup = window.open(
 			"adddailyreport/printtopdf/"+fromdate+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby+'/'+grouping+'/'+cashier,
 			"PopupWindowPrint",
@@ -237,6 +246,31 @@ $(document).ready(function(){
 		if (!popup || popup.closed || typeof popup.closed == "undefined") {
 			alert("Popup was blocked! Please allow popups for this site.");
 		}
+	});
+
+	$('#exporttopdf').on('click',function(evt){
+		evt.preventDefault();
+		var zone = $("#zone").val();
+		var cashier = $("#cashier").val();
+		var preparedby = $("#preparedby").val();
+		var verifiedby = $("#verifiedby").val();
+		var approvedby = $("#approvedby").val();
+		var fromdate = $("#fromdate").val();
+		var grouping = $("#grouping").is(':checked') ? 1 : 0;
+
+		if(fromdate == ''){
+			alert("Please select a transaction date first.");
+			return;
+		}
+
+		if (typeof openReportPdfPreview === 'function') {
+			openReportPdfPreview({
+				printUrl: "<?php echo ADMIN_URL;?>adddailyreport/printtopdf/"+fromdate+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby+'/'+grouping+'/'+cashier,
+				filename: 'Daily_Collection_Report.pdf'
+			});
+			return;
+		}
+		window.location.href = "<?php echo ADMIN_URL;?>adddailyreport/exporttopdf/"+fromdate+'/'+zone+'/'+preparedby+'/'+verifiedby+'/'+approvedby+'/'+grouping+'/'+cashier;
 	});
 
 	$('#exporttoexcel').on('click',function(evt){
