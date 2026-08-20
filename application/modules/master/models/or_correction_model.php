@@ -149,7 +149,7 @@ class or_correction_model extends CI_Model {
 	}
 	
 	public function get_income_metercustomer(){
-		$this->db->select('SUM(pay_amount) as total1');
+		$this->db->select('SUM(grand_total) as total1');
 		$this->db->from($this->table_meter);
 		$query = $this->db->get();
 		$result = $query->row_array();
