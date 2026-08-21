@@ -731,6 +731,8 @@ class addpaymentcustomer_model extends CI_Model {
 				'leaking_id' => $leaking_id,
 				'leakingledgerdetails_or_number' => $or_num,
 				'leakingledgerdetails_amount' => $pay_amount,
+				'leakingledgerdetails_prev_balance' => 0,
+				'leakingledgerdetails_balance' => $leaking_balance,
 				'leakingledgerdetails_transdate' => date('Y-m-d',$trans_date),
 				'leakingledgerdetails_created_datetime' => date('Y-m-d H:i:s'),
 			);
@@ -771,6 +773,8 @@ class addpaymentcustomer_model extends CI_Model {
 					'leaking_id' => $leaking_id,
 					'leakingledgerdetails_or_number' => $or_num,
 					'leakingledgerdetails_amount' => $pay_amount,
+					'leakingledgerdetails_prev_balance' => $leaking_balance_total,
+					'leakingledgerdetails_balance' => $leaking_balance,
 					'leakingledgerdetails_transdate' => date('Y-m-d',$trans_date),
 					'leakingledgerdetails_created_datetime' => date('Y-m-d H:i:s'),
 				);
