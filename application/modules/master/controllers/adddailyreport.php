@@ -215,7 +215,10 @@ class adddailyreport extends CI_Controller {
 						$ornumber_search = sprintf('%07d', $gdailytrans['or_number']);
 						// Use pre-loaded lookup instead of querying database
 						if(isset($leaking_ar_lookup[$ornumber_search])){
-							$ar_leaking = $leaking_ar_lookup[$ornumber_search];
+							$ar_leaking = $this->leakingentry_model->format_ar_leaking_for_daily_report(
+								$leaking_ar_lookup[$ornumber_search],
+								true
+							);
 							if(isset($ar_leaking['leaking_balance'])){
 								$gdailytrans['grand_total'] = $gdailytrans['grand_total'] - $ar_leaking['leaking_balance'];
 							}
