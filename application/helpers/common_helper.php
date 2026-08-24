@@ -358,25 +358,38 @@ if(!function_exists("detailsbillingpayment_ver1")){
     function detailsbillingpayment_ver1($invoice_id) {
         $str_invoicepayment ='';
         $CI = &get_instance();
-        $CI->db->select('tbl_addmetercustomer.*,tbl_months.month_name as monthname');
+        // LEFT JOIN so payments saved without month/year still appear on the OR
+        $CI->db->select('tbl_addmetercustomer.*, IFNULL(tbl_months.month_name, "") as monthname', false);
         $CI->db->from('tbl_addmetercustomer');
-        $CI->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
+        $CI->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id', 'left');
         $CI->db->where('invoice_id', $invoice_id);
         $paymentdetailsinfo = $CI->db->get()->result();
         
         foreach($paymentdetailsinfo as $paymentdetailsinfodata){
-            $CI1 = &get_instance();
-            $CI1->db->select('tbl_months.month_id as monthid, 
-            (SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$paymentdetailsinfodata->customer_id.'" and tbl_addcustomer_reading.month="'.$paymentdetailsinfodata->month.'" and tbl_addcustomer_reading.year="'.$paymentdetailsinfodata->year.'") as reading_amount,
-            (SELECT maintenance_fee FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$paymentdetailsinfodata->customer_id.'" and tbl_addcustomer_reading.month="'.$paymentdetailsinfodata->month.'" and tbl_addcustomer_reading.year="'.$paymentdetailsinfodata->year.'") as maintenance_fee,
-            tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');				   
-            $CI1->db->from('tbl_addmetercustomer');
-            $CI1->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
-            $CI1->db->where('customer_id',$paymentdetailsinfodata->customer_id);
-            $CI1->db->where('month',$paymentdetailsinfodata->month);
-            $CI1->db->where('year',$paymentdetailsinfodata->year);
-            $query = $CI1->db->get()->row_array();
-            extract($query);
+            $has_period = (trim((string) $paymentdetailsinfodata->month) !== '' && trim((string) $paymentdetailsinfodata->year) !== '');
+            $reading_amount = (float) $paymentdetailsinfodata->amount;
+            $maintenance_fee = 0.00;
+            $amount = (float) $paymentdetailsinfodata->amount;
+
+            if ($has_period) {
+                $CI1 = &get_instance();
+                $CI1->db->select('tbl_months.month_id as monthid, 
+                (SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$paymentdetailsinfodata->customer_id.'" and tbl_addcustomer_reading.month="'.$paymentdetailsinfodata->month.'" and tbl_addcustomer_reading.year="'.$paymentdetailsinfodata->year.'") as reading_amount,
+                (SELECT maintenance_fee FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$paymentdetailsinfodata->customer_id.'" and tbl_addcustomer_reading.month="'.$paymentdetailsinfodata->month.'" and tbl_addcustomer_reading.year="'.$paymentdetailsinfodata->year.'") as maintenance_fee,
+                tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');
+                $CI1->db->from('tbl_addmetercustomer');
+                $CI1->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id', 'left');
+                $CI1->db->where('customer_id',$paymentdetailsinfodata->customer_id);
+                $CI1->db->where('month',$paymentdetailsinfodata->month);
+                $CI1->db->where('year',$paymentdetailsinfodata->year);
+                $query = $CI1->db->get()->row_array();
+                if (!empty($query)) {
+                    $reading_amount = isset($query['reading_amount']) ? (float) $query['reading_amount'] : $reading_amount;
+                    $maintenance_fee = isset($query['maintenance_fee']) ? (float) $query['maintenance_fee'] : 0.00;
+                    $amount = isset($query['amount']) ? (float) $query['amount'] : $amount;
+                }
+            }
+
             $panalty_msg ='<span style="font-size:9px;line-height:8px;"><br/>(Bill Amt: '.number_format($reading_amount,2).')';
             if($maintenance_fee>0.00){
                     $panalty_msg .= 'WMMF = +'. number_format($maintenance_fee,2).'/';
@@ -392,8 +405,11 @@ if(!function_exists("detailsbillingpayment_ver1")){
                 
             }
             $panalty_msg .= '</span>';
+            $period_label = $has_period
+                ? trim($paymentdetailsinfodata->monthname.' '.$paymentdetailsinfodata->year)
+                : 'Payment';
             $str_invoicepayment .="<tr>
-									<td  style='width: 75%;'>$paymentdetailsinfodata->monthname $paymentdetailsinfodata->year $panalty_msg</td>
+									<td  style='width: 75%;'>$period_label $panalty_msg</td>
 									<td style='width: 5%;'>$paymentdetailsinfodata->consumedunits</td>
 									<td  style='text-align: right;'>$paymentdetailsinfodata->amount</td>
 								</tr>";

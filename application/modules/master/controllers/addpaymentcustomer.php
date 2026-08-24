@@ -151,12 +151,21 @@ class addpaymentcustomer extends CI_Controller {
 				$grand = isset($row['grand_total']) ? (float)$row['grand_total'] : 0;
 				$paid_date = (!empty($row['date']) && $row['date'] != '0000-00-00') ? date('m/d/Y', strtotime($row['date'])) : '';
 
+				$pay_month = isset($row['month']) ? $row['month'] : '';
+				$pay_year = isset($row['year']) ? $row['year'] : '';
+				$pay_invoice = isset($row['invoice_id']) ? $row['invoice_id'] : '';
 				$action_html = '<input type="hidden" name="customerid_'.$i.'" id="customerid_'.$i.'" value="'.htmlspecialchars($customer_id, ENT_QUOTES, 'UTF-8').'">'
-					.'<input type="hidden" name="month_'.$i.'" id="month_'.$i.'" value="'.htmlspecialchars(isset($row['month']) ? $row['month'] : '', ENT_QUOTES, 'UTF-8').'">'
-					.'<input type="hidden" name="year_'.$i.'" id="year_'.$i.'" value="'.htmlspecialchars(isset($row['year']) ? $row['year'] : '', ENT_QUOTES, 'UTF-8').'">'
-					.'<input type="hidden" name="invoiceid_'.$i.'" id="invoiceid_'.$i.'" value="'.htmlspecialchars(isset($row['invoice_id']) ? $row['invoice_id'] : '', ENT_QUOTES, 'UTF-8').'">'
+					.'<input type="hidden" name="month_'.$i.'" id="month_'.$i.'" value="'.htmlspecialchars($pay_month, ENT_QUOTES, 'UTF-8').'">'
+					.'<input type="hidden" name="year_'.$i.'" id="year_'.$i.'" value="'.htmlspecialchars($pay_year, ENT_QUOTES, 'UTF-8').'">'
+					.'<input type="hidden" name="invoiceid_'.$i.'" id="invoiceid_'.$i.'" value="'.htmlspecialchars($pay_invoice, ENT_QUOTES, 'UTF-8').'">'
 					.'<div class="btn-group btn-group-sm" role="group">'
-					.'<a href="javascript:void(0);" class="btn btn-outline-primary print_button_new1" id="print_button_new1'.$i.'" data-print-val-id="'.$i.'" title="Print Receipt" data-toggle="tooltip"><i class="fal fa-print"></i></a>'
+					.'<a href="javascript:void(0);" class="btn btn-outline-primary print_button_new1" id="print_button_new1'.$i.'"'
+					.' data-print-val-id="'.$i.'"'
+					.' data-customer="'.htmlspecialchars($customer_id, ENT_QUOTES, 'UTF-8').'"'
+					.' data-month="'.htmlspecialchars($pay_month, ENT_QUOTES, 'UTF-8').'"'
+					.' data-year="'.htmlspecialchars($pay_year, ENT_QUOTES, 'UTF-8').'"'
+					.' data-invoice="'.htmlspecialchars($pay_invoice, ENT_QUOTES, 'UTF-8').'"'
+					.' title="Print Receipt" data-toggle="tooltip"><i class="fal fa-print"></i></a>'
 					.'</div>';
 
 				$data[] = array(
@@ -247,14 +256,17 @@ class addpaymentcustomer extends CI_Controller {
 		
 
 		if($this->input->post('add') != ''){ 
-			
+			if ($this->input->post('payment_mode') === 'multi') {
+				$this->session->set_flashdata('msg_succ', 'Not inserted: use Total Pay Add for multiple bills (wrong save path blocked).');
+				redirect($this->listPage_redirect);
+			}
 		
 			$result = $this->my_model->add_record();
 			if($result){
 				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
 				redirect($this->listPage_redirect);
 			}else{
-				$this->session->set_flashdata('msg_succ', 'Not inserted: OR/SI # may already be used, invalid, or payment allocation failed.');
+				$this->session->set_flashdata('msg_succ', 'Not inserted: OR/SI # may already be used, invalid, missing billing period, or unpaid bill was not linked.');
 				redirect($this->listPage_redirect);
 			}
 
@@ -265,6 +277,10 @@ class addpaymentcustomer extends CI_Controller {
 			    $insert_ids = $this->input->post('checkbox');
 				$uid = (int) $this->session->userdata('userid');
 				$posted_or = (int) $this->input->post('or_num');
+				if (!is_array($insert_ids) || count($insert_ids) < 1) {
+					$this->session->set_flashdata('msg_succ', 'Select at least one unpaid bill for Total Pay.');
+					redirect($this->listPage_redirect);
+				}
 				if ($posted_or <= 0) {
 					$this->session->set_flashdata('msg_succ', 'Invalid OR/SI number.');
 					redirect($this->listPage_redirect);
@@ -273,15 +289,23 @@ class addpaymentcustomer extends CI_Controller {
 					$this->session->set_flashdata('msg_succ', 'OR/SI number already exists for this teller.');
 					redirect($this->listPage_redirect);
 				}
+				$this->db->trans_begin();
+				$result = true;
 				for($i=0;$i<count($insert_ids);$i++){
-					$result = $this->my_model->add_record_multiple($insert_ids[$i], $posted_or);
+					$line_ok = $this->my_model->add_record_multiple($insert_ids[$i], $posted_or);
+					if (!$line_ok) {
+						$result = false;
+						break;
+					}
 				}
-				if($result){
+				if($result && $this->db->trans_status() !== false){
+					$this->db->trans_commit();
 					$this->my_model->sync_or_series_max_after_posted($uid, $posted_or);
 					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
 					redirect($this->listPage_redirect);
 				}else{
-					$this->session->set_flashdata('msg_succ', 'Not inserted: one or more payment lines failed.');
+					$this->db->trans_rollback();
+					$this->session->set_flashdata('msg_succ', 'Not inserted: one or more bills failed (already paid, missing period, or link update failed). No partial OR was kept.');
 					redirect($this->listPage_redirect);
 				}
 			}
@@ -1204,8 +1228,18 @@ EOD;
 public function monthly_receipt_ver1($customer,$month,$year,$invoice_id) {
 		
 	//print_r($customer);	print_r($month);	print_r($year);	
-    $receiptdata = $this->my_model->getReceipt_Data(trim($customer), $month, $year);
-	
+	$customer = rawurldecode(trim((string) $customer));
+	$month = rawurldecode(trim((string) $month));
+	$year = rawurldecode(trim((string) $year));
+	$invoice_id = rawurldecode(trim((string) $invoice_id));
+	if ($month === '-' || $month === '0') { $month = ''; }
+	if ($year === '-' || $year === '0') { $year = ''; }
+
+    $receiptdata = $this->my_model->getReceipt_Data($customer, $month, $year, $invoice_id);
+	if (empty($receiptdata) || !is_array($receiptdata)) {
+		show_error('Receipt data not found for this payment.', 404);
+		return;
+	}
 
 	$getaddress = $this->my_model->get_address();
 	$customerdetials = $this->my_model->customer_deatils(trim($customer));
@@ -1225,6 +1259,9 @@ public function monthly_receipt_ver1($customer,$month,$year,$invoice_id) {
 	$state = strtoupper(trim($state));
 	$curdate = date('Y-m-d');
 	$datefor = date('d-m-Y', strtotime($tdate));
+	$reading_amount = isset($reading_amount) ? $reading_amount : $amount;
+	$maintenance_fee = isset($maintenance_fee) ? $maintenance_fee : 0;
+	$penalty = isset($penalty) ? $penalty : 0;
 	$panalty_msg ='<span style="font-size:9px;line-height:8px;"><br/>';
 	if($amount !== $reading_amount){
 		if($maintenance_fee>0.00){

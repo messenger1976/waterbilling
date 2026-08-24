@@ -626,6 +626,14 @@ class addpaymentcustomer_model extends CI_Model {
 			return false;
 		}
 
+		// Single-bill save must be tied to one reading period (prevents orphan OR rows)
+		$pay_month = trim((string) $this->input->post('month'));
+		$pay_year = trim((string) $this->input->post('year'));
+		if ($pay_month === '' || $pay_year === '') {
+			log_message('error', 'add_record blocked: empty month/year for customer '.$id.' OR '.$posted_or);
+			return false;
+		}
+
 		$this->db->trans_begin();
 
 		$series_row = null;
@@ -671,8 +679,8 @@ class addpaymentcustomer_model extends CI_Model {
 			'total' => $allamount,
 			'pay_amount' => $this->input->post('pay_amount'),
 			'currency' => $this->input->post('currency'),
-			'month' => $this->input->post('month'),
-			'year' => $this->input->post('year'),
+			'month' => $pay_month,
+			'year' => $pay_year,
 			'status' => $this->input->post('status_id'),
 			'or_number' => $or_num,
 			'vat_percent' => $this->input->post('vat_percent'),
@@ -702,9 +710,15 @@ class addpaymentcustomer_model extends CI_Model {
 			'or_number' => $or_num,
 		);
 		$this->db->where('customer_id',trim($id));
-		$this->db->where('month',$this->input->post('month'));
-		$this->db->where('year',$this->input->post('year'));
+		$this->db->where('month',$pay_month);
+		$this->db->where('year',$pay_year);
+		$this->db->where('status', 0); // only mark currently unpaid reading rows
 		$this->db->update($this->table_meter_reading, $set_data4); //print_r($result2); //exit;
+		if ($this->db->affected_rows() < 1) {
+			log_message('error', 'add_record blocked: no unpaid reading linked for customer '.$id.' period '.$pay_month.'/'.$pay_year.' OR '.$or_num);
+			$this->db->trans_rollback();
+			return false;
+		}
 
 		$set_data2 = array(
 			'tableName' => 'addmetercustomer',
@@ -813,20 +827,19 @@ class addpaymentcustomer_model extends CI_Model {
 		$pay_amount = $this->input->post('pay_amount');
 		$remaining = $allamount - $pay_amount;
 		
-		$del_id = $_POST['checkbox'][$id];
+		$customer_id = isset($_POST['customer_id_next']) ? trim($_POST['customer_id_next']) : '';
+		$name = isset($_POST['fullname']) ? $_POST['fullname'] : '';
+		$oldmeter = isset($_POST['previousreading_'.$id]) ? $_POST['previousreading_'.$id] : '';
 		
-		$customer_id = $_POST['customer_id_next'];
-		$name = $_POST['fullname'];
-		$oldmeter = $_POST['previousreading_'.$id];
+		$aftermeter = isset($_POST['reading_'.$id]) ? $_POST['reading_'.$id] : '';
+		$consumedunits = isset($_POST['consumedunit_'.$id]) ? $_POST['consumedunit_'.$id] : '';
+		$per_unit = isset($_POST['unit_price_'.$id]) ? $_POST['unit_price_'.$id] : '';
 		
-		$aftermeter = $_POST['reading_'.$id];
-		$consumedunits = $_POST['consumedunit_'.$id];
-		$per_unit = $_POST['unit_price_'.$id];
-		
-		$currency = $_POST['currency'];
-		$month = $_POST['monthid_'.$id];
-		$year =  $_POST['year_'.$id];
-		$status = $_POST['status_'.$id];
+		$currency = isset($_POST['currency']) ? $_POST['currency'] : 'PHP';
+		$month = isset($_POST['monthid_'.$id]) ? trim((string) $_POST['monthid_'.$id]) : '';
+		$year = isset($_POST['year_'.$id]) ? trim((string) $_POST['year_'.$id]) : '';
+		$status = isset($_POST['status_'.$id]) ? $_POST['status_'.$id] : '';
+		$line_amount = isset($_POST['prsentamount_'.$id]) ? $_POST['prsentamount_'.$id] : '';
 		//$date = date('Y-m-d');
 		$create_date_time = date('Y-m-d H:i:s');
 
@@ -835,6 +848,23 @@ class addpaymentcustomer_model extends CI_Model {
 		}
 		if ($or_num === null || $or_num === '') {
 			$or_num = (int) $this->input->post('or_num');
+		}
+
+		if ($customer_id === '' || $month === '' || $year === '' || $or_num === '' || (int) $or_num <= 0) {
+			log_message('error', 'add_record_multiple blocked: missing customer/period/OR (id='.$id.', customer='.$customer_id.', month='.$month.', year='.$year.', or='.$or_num.')');
+			return false;
+		}
+
+		// Refuse re-paying a period that already has an unpaid->paid reading link
+		$this->db->from($this->table_meter_reading);
+		$this->db->where('customer_id', $customer_id);
+		$this->db->where('month', $month);
+		$this->db->where('year', $year);
+		$this->db->where('status', 0);
+		$unpaid_reading = $this->db->count_all_results();
+		if ($unpaid_reading < 1) {
+			log_message('error', 'add_record_multiple blocked: no unpaid reading for customer '.$customer_id.' period '.$month.'/'.$year);
+			return false;
 		}
 			
 		$set_data = array(
@@ -846,7 +876,7 @@ class addpaymentcustomer_model extends CI_Model {
 			'aftermeter' => $aftermeter,
 			'consumedunits' => $consumedunits,
 			'per_unit' => $per_unit,
-			'amount' => $_POST['prsentamount_'.$id],
+			'amount' => $line_amount,
 			'balance' => $this->input->post('change_amount'),
 			'pay_amount' => $pay_amount,
 			'total' => $allamount,
@@ -865,7 +895,10 @@ class addpaymentcustomer_model extends CI_Model {
 			'userid' => $this->session->userdata('userid'),
 			'username' => $this->session->userdata('username'),
 		); 
-		$result = $this->db->insert($this->table_name, $set_data); 
+		$result = $this->db->insert($this->table_name, $set_data);
+		if (!$result) {
+			return false;
+		}
 		$lastId = $this->db->insert_id(); 
 
 		$set_data4 = array(
@@ -876,7 +909,12 @@ class addpaymentcustomer_model extends CI_Model {
 		$this->db->where('customer_id',trim($customer_id));
 		$this->db->where('month',$month);
 		$this->db->where('year',$year);
-		$this->db->update($this->table_meter_reading, $set_data4); 
+		$this->db->where('status', 0);
+		$this->db->update($this->table_meter_reading, $set_data4);
+		if ($this->db->affected_rows() < 1) {
+			log_message('error', 'add_record_multiple blocked: reading link failed for customer '.$customer_id.' period '.$month.'/'.$year.' OR '.$or_num);
+			return false;
+		}
 
 		$set_data2 = array(
 			'tableName' => 'addmetercustomer',
@@ -884,7 +922,7 @@ class addpaymentcustomer_model extends CI_Model {
 			'ledger_id' => $this->input->post('ledger_id'),
 			'ledger_id_for' => 'customer_id',
 			'debit' => $this->input->post('grand_total'),//$allamount,
-			'date' => date('Y-m-d',$this->input->post('trans_date')),
+			'date' => date('Y-m-d',$trans_date),
 			'create_date_time' => date('Y-m-d H:i:s'),
 			'update_date_time' => date('Y-m-d H:i:s'),
 		);
@@ -901,7 +939,7 @@ class addpaymentcustomer_model extends CI_Model {
 					);
 		$result3 = $this->db->insert($this->table_transactions, $set_data3); //print_r($result3); exit;*/
 		//print_r($result);
-		return $result2;
+		return $result2 ? true : false;
 		
 	}
 	/** In Function Add records for transaction table **/
@@ -1054,19 +1092,54 @@ class addpaymentcustomer_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->row_array();
 	}
-	function getReceipt_Data($customer, $month, $year){
-		
-		$this->db->select('tbl_months.month_id as monthid, 
-		(SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as reading_amount,
-		(SELECT maintenance_fee FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$customer.'" and tbl_addcustomer_reading.month="'.$month.'" and tbl_addcustomer_reading.year="'.$year.'") as maintenance_fee,
-		tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');				   
-		$this->db->from('tbl_addmetercustomer');
-		$this->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id');
-		$this->db->where('customer_id',$customer);
-		$this->db->where('month',$month);
-		$this->db->where('year',$year);
-		$query = $this->db->get();
-		return $query->row_array();
+	function getReceipt_Data($customer, $month, $year, $invoice_id = ''){
+		$customer = trim((string) $customer);
+		$month = trim((string) $month);
+		$year = trim((string) $year);
+		$invoice_id = trim((string) $invoice_id);
+
+		// Prefer period lookup when month/year are present
+		if ($customer !== '' && $month !== '' && $year !== '') {
+			$this->db->select('tbl_months.month_id as monthid, 
+			(SELECT unit_price FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$this->db->escape_str($customer).'" and tbl_addcustomer_reading.month="'.$this->db->escape_str($month).'" and tbl_addcustomer_reading.year="'.$this->db->escape_str($year).'") as reading_amount,
+			(SELECT maintenance_fee FROM tbl_addcustomer_reading WHERE tbl_addcustomer_reading.customer_id="'.$this->db->escape_str($customer).'" and tbl_addcustomer_reading.month="'.$this->db->escape_str($month).'" and tbl_addcustomer_reading.year="'.$this->db->escape_str($year).'") as maintenance_fee,
+			tbl_months.month_name as monthname,tbl_addmetercustomer.id as ine_id,tbl_addmetercustomer.invoice_id as invoice_ids,tbl_addmetercustomer.date as tdate, tbl_addmetercustomer.*');
+			$this->db->from('tbl_addmetercustomer');
+			$this->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id', 'left');
+			$this->db->where('tbl_addmetercustomer.customer_id',$customer);
+			$this->db->where('tbl_addmetercustomer.month',$month);
+			$this->db->where('tbl_addmetercustomer.year',$year);
+			if ($invoice_id !== '') {
+				$this->db->where('tbl_addmetercustomer.invoice_id', $invoice_id);
+			}
+			$result = $this->db->get()->row_array();
+			if (!empty($result)) {
+				return $result;
+			}
+		}
+
+		// Fallback: payments saved without month/year (still printable by invoice)
+		if ($invoice_id !== '') {
+			$this->db->select('tbl_months.month_id as monthid,
+			tbl_addmetercustomer.amount as reading_amount,
+			0 as maintenance_fee,
+			IFNULL(tbl_months.month_name, "") as monthname,
+			tbl_addmetercustomer.id as ine_id,
+			tbl_addmetercustomer.invoice_id as invoice_ids,
+			tbl_addmetercustomer.date as tdate,
+			tbl_addmetercustomer.*', false);
+			$this->db->from('tbl_addmetercustomer');
+			$this->db->join('tbl_months','tbl_addmetercustomer.month = tbl_months.month_id', 'left');
+			$this->db->where('tbl_addmetercustomer.invoice_id', $invoice_id);
+			if ($customer !== '') {
+				$this->db->where('tbl_addmetercustomer.customer_id', $customer);
+			}
+			$this->db->order_by('tbl_addmetercustomer.id', 'asc');
+			$this->db->limit(1);
+			return $this->db->get()->row_array();
+		}
+
+		return array();
 	}
 	
 	function customer_deatils($customer){
@@ -1115,7 +1188,23 @@ class addpaymentcustomer_model extends CI_Model {
 	
 	/** Server-side pagination: Get paginated records with filtering **/
 	public function get_paginated_records($start = 0, $length = 10, $search = '', $order_column = 'tbl_addmetercustomer.id', $order_dir = 'desc', $billing_period = '', $paid_date = '') {
-		$this->db->select($this->table_name.".*,SUM(".$this->table_name.".amount) as gross_amount,".$this->table_customername.".*,".$this->table_name.".id as id");
+		// Alias payment columns AFTER customer.* so mysqli assoc does not let
+		// overlapping customer fields (status/date/month/year/etc.) wipe receipt keys.
+		$this->db->select(
+			$this->table_name.".*,SUM(".$this->table_name.".amount) as gross_amount,"
+			.$this->table_customername.".*,"
+			.$this->table_name.".id as id,"
+			.$this->table_name.".customer_id as customer_id,"
+			.$this->table_name.".month as month,"
+			.$this->table_name.".year as year,"
+			.$this->table_name.".invoice_id as invoice_id,"
+			.$this->table_name.".date as date,"
+			.$this->table_name.".or_number as or_number,"
+			.$this->table_name.".total as total,"
+			.$this->table_name.".leaking_amount as leaking_amount,"
+			.$this->table_name.".vat_amount as vat_amount,"
+			.$this->table_name.".grand_total as grand_total"
+		);
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_customername, $this->table_name.".customer_id = ".$this->table_customername.".customer_id", 'left');
 		
