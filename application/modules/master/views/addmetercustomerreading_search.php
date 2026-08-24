@@ -456,7 +456,8 @@ $(document).ready(function(){
 		}
 
 		var entityLabel = <?php echo json_encode($sa4_dt_entity); ?>;
-		var exportCols = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18];
+		/* Roxas meter-search table has 18 cols (0–17); Action is last. Do not use Labason’s 20-col indexes. */
+		var exportCols = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
 		var btnExport = function(extend, icon, label) {
 			return {
 				extend: extend,
@@ -473,7 +474,7 @@ $(document).ready(function(){
 			lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'All']],
 			order: [[0, 'asc']],
 			columnDefs: [
-				{ orderable: false, targets: [19] }
+				{ orderable: false, targets: [17] }
 			],
 			dom: "<'row mb-3'<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'f><'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'B>>" +
 				"<'row'<'col-sm-12'tr>>" +
