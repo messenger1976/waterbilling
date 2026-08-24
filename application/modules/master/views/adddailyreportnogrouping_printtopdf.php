@@ -101,7 +101,7 @@
                     <th style="text-align:right;">Leaking Disc</th>
                     <th style="text-align:right;">A/R-Leaking</th>
                     <th style="text-align:right;">A/R-Leaking Balance</th>
-                    <th style="text-align:right;">Franchise Tax</th>
+                    <th style="text-align:right;">VAT</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -171,7 +171,7 @@
                             <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
                             <td align="right">'.number_format(isset($ar_leaking['leaking_total_amount']) ? $ar_leaking['leaking_total_amount'] : 0,2).'</td>
                             <td align="right">'.number_format(isset($ar_leaking['leaking_balance']) ? $ar_leaking['leaking_balance'] : 0,2).'</td>
-                            <td align="right">'.number_format(isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0,2).'</td>
+                            <td align="right">'.number_format(isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0,2).'</td>
                             ';
                             echo '</tr>';
                             
@@ -184,7 +184,7 @@
                             $grand_total_sc += $gdailytrans['sc_discount'];
                             $grand_total_ar_leaking += isset($ar_leaking['leaking_total_amount']) ? $ar_leaking['leaking_total_amount'] : 0;
                             $grand_total_ar_leaking_balance += isset($ar_leaking['leaking_balance']) ? $ar_leaking['leaking_balance'] : 0;
-                            $grand_total_franchise_fee += isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0;
+                            $grand_total_franchise_fee += isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0;
                         }
                     } else {
                         // No records found

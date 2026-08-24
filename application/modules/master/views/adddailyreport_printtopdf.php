@@ -114,7 +114,7 @@
                     <th style="text-align:right;">Leaking Disc</th>
                     <th style="text-align:right;">A/R-Leaking</th>
                     <th style="text-align:right;">A/R-Leaking Balance</th>
-                    <th style="text-align:right;">Franchise Tax</th>
+                    <th style="text-align:right;">VAT</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -222,7 +222,7 @@
                     <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
                     <td align="right">'.number_format($ar_leaking['leaking_total_amount'],2).'</td>
                     <td align="right">'.number_format($ar_leaking['leaking_balance'],2).'</td>
-                    <td align="right">'.number_format(isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0,2).'</td>
+                    <td align="right">'.number_format(isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0,2).'</td>
                     ';
                     echo '</tr>';
                     $total_grand_zone += $gdailytrans['grand_total'];
@@ -234,7 +234,7 @@
                     $total_sc_zone +=$gdailytrans['sc_discount'];
 					$total_ar_leaking_zone+=$ar_leaking['leaking_total_amount'];
 					$total_ar_leaking_balance_zone+=$ar_leaking['leaking_balance'];
-					$total_franchise_fee_zone += isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0;
+					$total_franchise_fee_zone += isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0;
                  }
                  echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_current_zone,2).'</th>
@@ -331,7 +331,7 @@
 							<td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
 							<td align="right">'.number_format($ar_leaking['leaking_total_amount'],2).'</td>
 							<td align="right">'.number_format($ar_leaking['leaking_balance'],2).'</td>
-							<td align="right">'.number_format(isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0,2).'</td>
+							<td align="right">'.number_format(isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0,2).'</td>
 							';
 							echo '</tr>';
 
@@ -344,7 +344,7 @@
 							$total_sc_zone +=$gdailytrans['sc_discount'];
 							$total_ar_leaking_zone+=$ar_leaking['leaking_total_amount'];
 							$total_ar_leaking_balance_zone+=$ar_leaking['leaking_balance'];
-							$total_franchise_fee_zone += isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0;
+							$total_franchise_fee_zone += isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0;
 						}
 
 						echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
