@@ -133,6 +133,7 @@
 														<input type="hidden" name="due_date" id="due_date" value="">
 														<input type="hidden" name="special_priviledge" id="special_priviledge" value="">
 														<input type="hidden" name="base_amount" id="base_amount" value="">
+														<input type="hidden" name="payment_mode" id="payment_mode" value="single">
 
 														<div style="clear:both"></div>
 														
@@ -309,9 +310,10 @@
 																<i class="fal fa-check mr-1"></i> Add
 															</button>
 														</div>
-														<div id="total_settin_pay">
+														<div id="total_settin_pay" style="display:none;">
 															<button type="button" class="btn btn-secondary waves-effect waves-themed btn_cancel_pay">Cancel</button>
-															<button type="submit" class="btn btn-primary waves-effect waves-themed" id="total_add" name="total_add" value="Add">
+															<!-- type=button until Total Pay mode so Enter cannot post single-bill "add" -->
+															<button type="button" class="btn btn-primary waves-effect waves-themed" id="total_add" value="Add">
 																<i class="fal fa-check mr-1"></i> Add
 															</button>
 														</div>
@@ -489,6 +491,39 @@
 		return $.trim(text.replace(/\s+/g, ' '));
 	}
 
+/**
+ * Single-bill vs Total Pay submit safety.
+ * Enter in a form activates the first submit button in DOM order (#add).
+ * In multi mode, demote #add to type=button and promote #total_add to the only submit.
+ */
+function setPaymentSubmitMode(mode) {
+	mode = (mode === 'multi') ? 'multi' : 'single';
+	$('#payment_mode').val(mode);
+	if (mode === 'multi') {
+		$('#add').attr('type', 'button').removeAttr('name').prop('disabled', true);
+		$('#total_add').attr({ type: 'submit', name: 'total_add' }).prop('disabled', false);
+		$('#month').val('');
+		$('#year').val('');
+		$('#month_name').val('');
+		$('#oldmeter').val('');
+		$('#current_reading').val('');
+	} else {
+		$('#total_add').attr('type', 'button').removeAttr('name').prop('disabled', true);
+		$('#add').attr({ type: 'submit', name: 'add' }).prop('disabled', false);
+	}
+}
+
+function showPaymentFooter(mode) {
+	setPaymentSubmitMode(mode);
+	if (mode === 'multi') {
+		$('.pay_setting_1').hide();
+		$('#total_settin_pay').show();
+	} else {
+		$('.pay_setting_1').show();
+		$('#total_settin_pay').hide();
+	}
+}
+
 $(document).ready(function(){
 	$('#search_box_id').select2({
 		width: '100%',
@@ -500,16 +535,45 @@ $(document).ready(function(){
 	$("#total_setting_1").hide();
 	$("#total_setting_2").hide();
 	$("#total_settin_pay").hide();
+	setPaymentSubmitMode('single');
+	$('.pay_setting_1').hide();
+	$('#total_settin_pay').hide();
 
 	$('.btn_cancel_pay').on('click',function(evt){
 		evt.preventDefault();
 		hidePaymentSaveProgress();
+		setPaymentSubmitMode('single');
+		$('.pay_setting_1').hide();
+		$('#total_settin_pay').hide();
 		$('#myModalPay').modal('hide');
+	});
+
+	$('#myform').on('submit', function(e) {
+		var mode = $('#payment_mode').val();
+		if (mode === 'multi') {
+			if ($('input.my_check:checked:not(:disabled)').length < 1) {
+				e.preventDefault();
+				hidePaymentSaveProgress();
+				alert('Select at least one unpaid bill for Total Pay.');
+				return false;
+			}
+			// Ensure Enter / accidental single fields cannot confuse the server
+			$('#month').val('');
+			$('#year').val('');
+		} else if (!$.trim($('#month').val()) || !$.trim($('#year').val())) {
+			e.preventDefault();
+			hidePaymentSaveProgress();
+			alert('Missing billing period. Click Unpaid on one bill, or use Total Pay for multiple bills.');
+			return false;
+		}
 	});
 
 	$('#myModalPay').on('hidden.bs.modal', function() {
 		$(this).removeData('skipTransdatePenaltyRecalc');
 		hidePaymentSaveProgress();
+		setPaymentSubmitMode('single');
+		$('.pay_setting_1').hide();
+		$('#total_settin_pay').hide();
 	});
 	$('#myModalPay').on('show.bs.modal', function() {
 		hidePaymentSaveProgress();
@@ -643,12 +707,11 @@ $('#btn_search_box').on('click', function(evt) {
 $(document).on('click','.pay_button',function(e){
 	// Single-row Unpaid: bill amount already includes server-side penalty; do not re-derive from transaction date
 	$('#myModalPay').data('skipTransdatePenaltyRecalc', true);
+	showPaymentFooter('single');
 	$('#myModalPay').modal('show');
 	$('#hideclass').show();
-	$(".pay_setting_1").show();
 	$("#total_setting_1").show();
 	$("#total_setting_2").hide();
-	$("#total_settin_pay").hide();
 	
 	var buttonid = $(this).attr('id');
 	var paybtnid = $(this).data('pay-val-id');
@@ -811,6 +874,10 @@ $(document).on('click','.total_pay',function(e){
 	
 	var total = $('#checkbox_cal').val();
 	var total_bill_amount = $('#checkbox_cal_bill').val();
+	if (!$('input.my_check:checked:not(:disabled)').length) {
+		alert('Select at least one unpaid bill before Total Pay.');
+		return;
+	}
 	
 	var customer = $('#customer_id').val();
 	$('#customer_id').val(customer);
@@ -821,11 +888,10 @@ $(document).on('click','.total_pay',function(e){
 	$('#vat_base_amount').val(total_bill_amount==''?0:total_bill_amount);
 	$("#total_setting_1").hide();
 	$("#total_setting_2").show();
-	$("#total_settin_pay").show();
+	showPaymentFooter('multi');
 	$('#myModalPay').data('skipTransdatePenaltyRecalc', false);
 	$('#myModalPay').modal('show');
 	$("#hideclass").show();
-	$(".pay_setting_1").hide();
 
 	$('#vat_percent').val('');
 	$('#vat_amount').val('0.00');

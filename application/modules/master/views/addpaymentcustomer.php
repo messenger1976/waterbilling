@@ -397,36 +397,51 @@ $(document).ready(function() {
 });
 </script>
 <script>
+function getPaymentPrintParams(btn) {
+	var $btn = $(btn).closest('a,button,.print_button_new1,.print_button_new,.print_button');
+	if (!$btn.length) { $btn = $(btn); }
+	var paybtnid = $btn.attr('data-print-val-id');
+	var customer = $.trim($btn.attr('data-customer') || $('#customerid_' + paybtnid).val() || '');
+	var month = $.trim($btn.attr('data-month') || $('#month_' + paybtnid).val() || '');
+	var year = $.trim($btn.attr('data-year') || $('#year_' + paybtnid).val() || '');
+	var invoice_id = $.trim($btn.attr('data-invoice') || $('#invoiceid_' + paybtnid).val() || '');
+	return { customer: customer, month: month, year: year, invoice_id: invoice_id };
+}
+function openPaymentReceipt(url) {
+	var popup = window.open(url, 'popupWindow', 'width=1800,height=600,scrollbars=yes');
+	if (!popup) {
+		alert('Please allow pop-ups for this site to print the receipt.');
+	}
+}
+function receiptPeriodSegment(value) {
+	// CI URI segments cannot be empty; use "-" when period was not saved on the payment
+	return (value === undefined || value === null || String(value).trim() === '') ? '-' : String(value).trim();
+}
 $(document).on('click','.print_button',function(e){
 	e.preventDefault();
-	var paybtnid = $(this).data('print-val-id');
-	var customer = $('#customerid_'+paybtnid).val();
-	var month = $('#month_'+paybtnid).val();
-	var year = $('#year_'+paybtnid).val();
-	if(customer != '' && month != '' && year != ''){
-		window.open('<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/'+customer+'/'+month+'/'+year, 'popupWindow', 'width=1024,height=600,scrollbars=yes');
+	var p = getPaymentPrintParams(this);
+	if (p.customer !== '') {
+		openPaymentReceipt('<?php echo ADMIN_URL;?>addpaymentcustomer/monthlyreceipt/' + p.customer + '/' + receiptPeriodSegment(p.month) + '/' + receiptPeriodSegment(p.year));
+	} else {
+		alert('Missing payment details for receipt printing.');
 	}
 });
 $(document).on('click','.print_button_new',function(e){
 	e.preventDefault();
-	var paybtnid = $(this).data('print-val-id');
-	var customer = $('#customerid_'+paybtnid).val();
-	var month = $('#month_'+paybtnid).val();
-	var year = $('#year_'+paybtnid).val();
-	var invoice_id = $('#invoiceid_'+paybtnid).val();
-	if(customer != '' && month != '' && year != ''){
-		window.open('<?php echo ADMIN_URL;?>addpaymentcustomer/monthly_receipt/'+customer+'/'+month+'/'+year+'/'+invoice_id, 'popupWindow', 'width=1024,height=600,scrollbars=yes');
+	var p = getPaymentPrintParams(this);
+	if (p.customer !== '' && p.invoice_id !== '') {
+		openPaymentReceipt('<?php echo ADMIN_URL;?>addpaymentcustomer/monthly_receipt/' + p.customer + '/' + receiptPeriodSegment(p.month) + '/' + receiptPeriodSegment(p.year) + '/' + p.invoice_id);
+	} else {
+		alert('Missing payment details for receipt printing.');
 	}
 });
 $(document).on('click','.print_button_new1',function(e){
 	e.preventDefault();
-	var paybtnid = $(this).data('print-val-id');
-	var customer = $('#customerid_'+paybtnid).val();
-	var month = $('#month_'+paybtnid).val();
-	var year = $('#year_'+paybtnid).val();
-	var invoice_id = $('#invoiceid_'+paybtnid).val();
-	if(customer != '' && month != '' && year != ''){
-		window.open('<?php echo ADMIN_URL;?>addpaymentcustomer/monthly_receipt_ver1/'+customer+'/'+month+'/'+year+'/'+invoice_id, 'popupWindow', 'width=1800,height=600,scrollbars=yes');
+	var p = getPaymentPrintParams(this);
+	if (p.customer !== '' && p.invoice_id !== '') {
+		openPaymentReceipt('<?php echo ADMIN_URL;?>addpaymentcustomer/monthly_receipt_ver1/' + p.customer + '/' + receiptPeriodSegment(p.month) + '/' + receiptPeriodSegment(p.year) + '/' + p.invoice_id);
+	} else {
+		alert('Missing payment details for receipt printing.');
 	}
 });
 </script>
