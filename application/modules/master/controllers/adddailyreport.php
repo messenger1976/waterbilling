@@ -47,16 +47,25 @@ class adddailyreport extends CI_Controller {
 		} else {
 			$trans_date_mysql = date('Y-m-d', strtotime($trans_date));
 		}
+		$grouping = (int)$grouping;
+		$cashier = (int)$cashier;
 		$data['zone'] = $this->my_model->get_zone($zone);
 		$data['trans_date'] = date('M d, Y', strtotime($trans_date_mysql));
 		$data['trans_date_mysql'] = $trans_date_mysql;
 		$data['preparedby'] = $this->my_model->get_employee($preparedby);
 		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
 		$data['approvedby'] = $this->my_model->get_employee($approvedby);
-		$data['grouping'] = (int)$grouping;
-		$data['cashier'] = (int)$cashier;
-		$data['cashier_info'] = $this->my_model->get_cashiers((int)$cashier);
-		$data['orphan_record'] = array();
+		$data['grouping'] = $grouping;
+		$data['cashier'] = $cashier;
+		$data['cashier_info'] = $this->my_model->get_cashiers($cashier);
+
+		$leaking_data = $this->leakingentry_model->get_leaking_ar_data_for_daily_report($trans_date_mysql);
+		$data['leaking_record'] = $leaking_data['records'];
+		$data['leaking_ar_lookup'] = $leaking_data['lookup'];
+
+		$all_transactions = $this->my_model->get_metercustomer_records($trans_date_mysql, $zone, $grouping, $cashier);
+		$data['transactions_by_zone'] = $this->my_model->group_metercustomer_records_by_zone($all_transactions);
+		$data['orphan_record'] = $this->my_model->get_metercustomer_orphan_records($trans_date_mysql, $cashier, $grouping);
 		send_print_or_pdf($this->printtopdfPage, $data);
 	}
 
@@ -139,22 +148,9 @@ class adddailyreport extends CI_Controller {
 		$grand_total_ar_leaking_balance = 0;
 		
 		// Pre-load all leaking A/R data for the transaction date to avoid N+1 queries
-		$leaking_ar_lookup = array();
-		$get_all_leaking = array();
-		try {
-			$get_all_leaking = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate);
-			if (!is_array($get_all_leaking)) {
-				$get_all_leaking = array();
-			}
-			foreach($get_all_leaking as $leaking_record){
-				if(isset($leaking_record['leakingledgerdetails_or_number'])){
-					$or_key = sprintf('%07d', $leaking_record['leakingledgerdetails_or_number']);
-					$leaking_ar_lookup[$or_key] = $leaking_record;
-				}
-			}
-		} catch (Exception $e) {
-			$get_all_leaking = array();
-		}
+		$leaking_data = $this->leakingentry_model->get_leaking_ar_data_for_daily_report($mysql_transdate);
+		$leaking_ar_lookup = $leaking_data['lookup'];
+		$get_all_leaking = $leaking_data['records'];
 		
 		// Process each zone
 		if(count($zones) > 0){

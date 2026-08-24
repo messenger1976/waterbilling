@@ -35,12 +35,24 @@ class adddailyreport_nogroup extends CI_Controller {
 
 	public function printtopdf($trans_date,$preparedby='',$verifiedby='',$approvedby=''){
 		$header['roleResponsible'] = $this->top_model->get_responsibilities();
-		$data['trans_date'] = date('M d, Y', strtotime($trans_date));
+		$date_parts = explode('-', $trans_date);
+		if(count($date_parts) == 3 && strlen($date_parts[2]) == 4){
+			$trans_date_mysql = $date_parts[2] . '-' . $date_parts[1] . '-' . $date_parts[0];
+		} else {
+			$trans_date_mysql = date('Y-m-d', strtotime($trans_date));
+		}
+		$data['trans_date'] = date('M d, Y', strtotime($trans_date_mysql));
+		$data['trans_date_mysql'] = $trans_date_mysql;
 		$data['preparedby'] = $this->my_model->get_employee($preparedby);
 		$data['verifiedby'] = $this->my_model->get_employee($verifiedby);
 		$data['approvedby'] = $this->my_model->get_employee($approvedby);
-		//$this->load->view($this->headerPage,$header);
-		$this->load->view($this->printtopdfPage,$data);
+
+		$leaking_data = $this->leakingentry_model->get_leaking_ar_data_for_daily_report($trans_date_mysql);
+		$data['leaking_record'] = $leaking_data['records'];
+		$data['leaking_ar_lookup'] = $leaking_data['lookup'];
+		$data['record'] = $this->my_model->get_metercustomer_records_by_or($trans_date_mysql);
+
+		$this->load->view($this->printtopdfPage, $data);
 	}
 
 	public function exporttoexcel($trans_date,$preparedby='',$verifiedby='',$approvedby=''){
