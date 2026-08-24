@@ -161,13 +161,12 @@
 					$grand_total_sc = 0;
 					$grand_total_arrears = 0;
 
-					$mysql_transdate = date('Y-m-d', strtotime($trans_date));
-					$current_billing_period_year = date('Y', strtotime($trans_date));
-					
-					// Get all records ordered by OR number
-					$get_dailytrans = $this->my_model->get_metercustomer_records_by_or($mysql_transdate);
+					$mysql_transdate = !empty($trans_date_mysql) ? $trans_date_mysql : date('Y-m-d', strtotime($trans_date));
+					$leaking_ar_lookup = isset($leaking_ar_lookup) && is_array($leaking_ar_lookup) ? $leaking_ar_lookup : array();
+					$leaking_record = isset($leaking_record) && is_array($leaking_record) ? $leaking_record : array();
+					$get_dailytrans = isset($record) && is_array($record) ? $record : array();
 
-					foreach($get_dailytrans as $key => $gdailytrans){ 
+					foreach($get_dailytrans as $key => $gdailytrans){
 						$penalty = $gdailytrans['amount'] - $gdailytrans['per_unit'];
 						$current = 0;
 						$arrears = 0;
@@ -201,9 +200,10 @@
 						}
 						$ar_leaking = array('leaking_total_amount' => 0, 'leaking_balance' => 0);
 						if(isset($gdailytrans['leaking_amount']) && $gdailytrans['leaking_amount'] > 0){
-							$ar_leaking = $this->leakingentry_model->get_ar_leaking_for_daily_report(
+							$ar_leaking = $this->leakingentry_model->resolve_ar_leaking_for_daily_report(
 								$gdailytrans['or_number'],
-								isset($gdailytrans['customer_id']) ? $gdailytrans['customer_id'] : null
+								isset($gdailytrans['customer_id']) ? $gdailytrans['customer_id'] : null,
+								$leaking_ar_lookup
 							);
 							if(isset($ar_leaking['leaking_balance'])){
 								$gdailytrans['grand_total'] = $gdailytrans['grand_total'] - $ar_leaking['leaking_balance'];
@@ -246,8 +246,7 @@
 				</tr>
 				
                 <?php
-					$mysql_transdate1 = date('Y-m-d', strtotime($trans_date));
-					$get_dailytrans1 = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate1);
+					$get_dailytrans1 = $leaking_record;
 					$total_leaking_ar = 0;
 					
 					foreach($get_dailytrans1 as $key => $gdailytrans1){

@@ -114,7 +114,7 @@
                     <th style="text-align:right;">Leaking Disc</th>
                     <th style="text-align:right;">A/R-Leaking</th>
                     <th style="text-align:right;">A/R-Leaking Balance</th>
-                    <th style="text-align:right;">Franchise Tax</th>
+                    <th style="text-align:right;">VAT</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -130,10 +130,12 @@
 					$grand_total_sc = 0;
 					$grand_total_franchise_fee = 0;
 					$mysql_transdate = !empty($trans_date_mysql) ? $trans_date_mysql : date('Y-m-d', strtotime($trans_date));
-					$current_billing_period_year = date('Y', strtotime($mysql_transdate));
+					$leaking_ar_lookup = isset($leaking_ar_lookup) && is_array($leaking_ar_lookup) ? $leaking_ar_lookup : array();
+					$transactions_by_zone = isset($transactions_by_zone) && is_array($transactions_by_zone) ? $transactions_by_zone : array();
+					$leaking_record = isset($leaking_record) && is_array($leaking_record) ? $leaking_record : array();
                     if(is_array($zone) && count($zone) > 0){
                         foreach($zone as $key => $row){
-                 $get_dailytrans = $this->my_model->get_metercustomer_records($mysql_transdate,$row['id'], isset($grouping) ? (int)$grouping : 1, isset($cashier) ? (int)$cashier : 0);
+                 $get_dailytrans = isset($transactions_by_zone[$row['zone']]) ? $transactions_by_zone[$row['zone']] : array();
 				 // Skip zones with no collection records
 				 if(!is_array($get_dailytrans) || count($get_dailytrans) == 0){
 					 continue;
@@ -169,8 +171,6 @@
 						$arrears = $gdailytrans['per_unit'];
 					}
 
-					$prev_year = get_customer_unpaid_records($gdailytrans['customer_id'],'12',$current_billing_period_year-1);
-                    //$prev_year = 600;
 					// If billing period is already arrears, do not break down penalty:
 					// move penalty into arrears and show 0 on penalty column.
 					// Use arrears_amount from the query when > 0 (matches SQL; works if due_date is NULL on some servers).
@@ -194,16 +194,20 @@
 					}
 					$ar_leaking = array('leaking_total_amount' => 0, 'leaking_balance' => 0);
                     if($gdailytrans['leaking_amount']>0){
-						$ar_leaking = $this->leakingentry_model->get_ar_leaking_for_daily_report(
+						$or_key = sprintf('%07d', $gdailytrans['or_number']);
+						$leaking_detail = isset($leaking_ar_lookup[$or_key]) ? $leaking_ar_lookup[$or_key] : null;
+						$ar_leaking = $this->leakingentry_model->resolve_ar_leaking_for_daily_report(
 							$gdailytrans['or_number'],
-							isset($gdailytrans['customer_id']) ? $gdailytrans['customer_id'] : null
+							isset($gdailytrans['customer_id']) ? $gdailytrans['customer_id'] : null,
+							$leaking_ar_lookup
 						);
 						// Amount paid on this OR only (do not subtract current A/R balance —
 						// later leaking-ledger payments stay under LEAKING A/R PAYMENT REPORT)
 						$gdailytrans['grand_total'] = $this->leakingentry_model->get_collected_amount_for_leaking_payment(
 							$gdailytrans['grand_total'],
 							isset($gdailytrans['pay_amount']) ? $gdailytrans['pay_amount'] : 0,
-							isset($gdailytrans['or_number']) ? $gdailytrans['or_number'] : null
+							isset($gdailytrans['or_number']) ? $gdailytrans['or_number'] : null,
+							$leaking_detail
 						);
 					}
 					//print_r($ar_leaking['leaking_total_amount']);
@@ -218,7 +222,7 @@
                     <td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
                     <td align="right">'.number_format($ar_leaking['leaking_total_amount'],2).'</td>
                     <td align="right">'.number_format($ar_leaking['leaking_balance'],2).'</td>
-                    <td align="right">'.number_format(isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0,2).'</td>
+                    <td align="right">'.number_format(isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0,2).'</td>
                     ';
                     echo '</tr>';
                     $total_grand_zone += $gdailytrans['grand_total'];
@@ -230,7 +234,7 @@
                     $total_sc_zone +=$gdailytrans['sc_discount'];
 					$total_ar_leaking_zone+=$ar_leaking['leaking_total_amount'];
 					$total_ar_leaking_balance_zone+=$ar_leaking['leaking_balance'];
-					$total_franchise_fee_zone += isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0;
+					$total_franchise_fee_zone += isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0;
                  }
                  echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
                  <th style="text-align:right">'.number_format($total_current_zone,2).'</th>
@@ -301,14 +305,18 @@
 
 							$ar_leaking = array('leaking_total_amount' => 0, 'leaking_balance' => 0);
 							if($gdailytrans['leaking_amount']>0){
-								$ar_leaking = $this->leakingentry_model->get_ar_leaking_for_daily_report(
+								$or_key = sprintf('%07d', $gdailytrans['or_number']);
+								$leaking_detail = isset($leaking_ar_lookup[$or_key]) ? $leaking_ar_lookup[$or_key] : null;
+								$ar_leaking = $this->leakingentry_model->resolve_ar_leaking_for_daily_report(
 									$gdailytrans['or_number'],
-									isset($gdailytrans['customer_id']) ? $gdailytrans['customer_id'] : null
+									isset($gdailytrans['customer_id']) ? $gdailytrans['customer_id'] : null,
+									$leaking_ar_lookup
 								);
 								$gdailytrans['grand_total'] = $this->leakingentry_model->get_collected_amount_for_leaking_payment(
 									$gdailytrans['grand_total'],
 									isset($gdailytrans['pay_amount']) ? $gdailytrans['pay_amount'] : 0,
-									isset($gdailytrans['or_number']) ? $gdailytrans['or_number'] : null
+									isset($gdailytrans['or_number']) ? $gdailytrans['or_number'] : null,
+									$leaking_detail
 								);
 							}
 
@@ -323,7 +331,7 @@
 							<td align="right">'.number_format($gdailytrans['leaking_amount'],2).'</td>
 							<td align="right">'.number_format($ar_leaking['leaking_total_amount'],2).'</td>
 							<td align="right">'.number_format($ar_leaking['leaking_balance'],2).'</td>
-							<td align="right">'.number_format(isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0,2).'</td>
+							<td align="right">'.number_format(isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0,2).'</td>
 							';
 							echo '</tr>';
 
@@ -336,7 +344,7 @@
 							$total_sc_zone +=$gdailytrans['sc_discount'];
 							$total_ar_leaking_zone+=$ar_leaking['leaking_total_amount'];
 							$total_ar_leaking_balance_zone+=$ar_leaking['leaking_balance'];
-							$total_franchise_fee_zone += isset($gdailytrans['total_franchise_fee']) ? $gdailytrans['total_franchise_fee'] : 0;
+							$total_franchise_fee_zone += isset($gdailytrans['vat_amount']) ? $gdailytrans['vat_amount'] : 0;
 						}
 
 						echo '<tr><td></td><th>TOTAL</th><th style="text-align:right">'.number_format($total_grand_zone,2).'</th>
@@ -376,11 +384,7 @@
 
 				
                 <?php
-				$mysql_transdate1 = !empty($trans_date_mysql) ? $trans_date_mysql : date('Y-m-d', strtotime($trans_date));
-				$get_dailytrans1 = $this->leakingentry_model->get_soa_statement_transdate($mysql_transdate1);
-				if(!is_array($get_dailytrans1)){
-					$get_dailytrans1 = array();
-				}
+				$get_dailytrans1 = $leaking_record;
 				$total_leaking_ar = 0;
 				//print_r($get_dailytrans1);
 				foreach($get_dailytrans1 as $key => $gdailytrans1){
