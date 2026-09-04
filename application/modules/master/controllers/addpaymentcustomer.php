@@ -268,10 +268,10 @@ class addpaymentcustomer extends CI_Controller {
 				'userid' => (int) $this->session->userdata('userid'),
 				'username' => (string) $this->session->userdata('username'),
 			);
-			$before_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
+			$before_snapshot = array(); // hotfix: disable additional audit snapshot calls
 
 			if ($this->input->post('payment_mode') === 'multi') {
-				if (function_exists('log_system_activity')) {
+				if (false && function_exists('log_system_activity')) {
 					log_system_activity(array(
 						'category' => 'accounting',
 						'action' => 'create_blocked',
@@ -295,7 +295,7 @@ class addpaymentcustomer extends CI_Controller {
 		
 			$result = $this->my_model->add_record();
 			if($result){
-				if (function_exists('log_system_activity')) {
+				if (false && function_exists('log_system_activity')) {
 					$after_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
 					log_system_activity(array(
 						'category' => 'accounting',
@@ -318,7 +318,7 @@ class addpaymentcustomer extends CI_Controller {
 				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
 				redirect($this->listPage_redirect);
 			}else{
-				if (function_exists('log_system_activity')) {
+				if (false && function_exists('log_system_activity')) {
 					$after_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
 					log_system_activity(array(
 						'category' => 'accounting',
@@ -359,9 +359,9 @@ class addpaymentcustomer extends CI_Controller {
 					'userid' => $uid,
 					'username' => (string) $this->session->userdata('username'),
 				);
-				$before_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
+				$before_snapshot = array(); // hotfix: disable additional audit snapshot calls
 				if (!is_array($insert_ids) || count($insert_ids) < 1) {
-					if (function_exists('log_system_activity')) {
+					if (false && function_exists('log_system_activity')) {
 						log_system_activity(array(
 							'category' => 'accounting',
 							'action' => 'create_blocked',
@@ -382,7 +382,7 @@ class addpaymentcustomer extends CI_Controller {
 					redirect($this->listPage_redirect);
 				}
 				if ($posted_or <= 0) {
-					if (function_exists('log_system_activity')) {
+					if (false && function_exists('log_system_activity')) {
 						log_system_activity(array(
 							'category' => 'accounting',
 							'action' => 'create_blocked',
@@ -403,7 +403,7 @@ class addpaymentcustomer extends CI_Controller {
 					redirect($this->listPage_redirect);
 				}
 				if ($this->my_model->is_or_number_taken($posted_or)) {
-					if (function_exists('log_system_activity')) {
+					if (false && function_exists('log_system_activity')) {
 						log_system_activity(array(
 							'category' => 'accounting',
 							'action' => 'create_blocked',
@@ -435,7 +435,7 @@ class addpaymentcustomer extends CI_Controller {
 				if($result && $this->db->trans_status() !== false){
 					$this->db->trans_commit();
 					$this->my_model->sync_or_series_max_after_posted($uid, $posted_or);
-					if (function_exists('log_system_activity')) {
+					if (false && function_exists('log_system_activity')) {
 						$after_snapshot = $this->my_model->get_or_audit_snapshot($posted_or);
 						log_system_activity(array(
 							'category' => 'accounting',
@@ -459,7 +459,7 @@ class addpaymentcustomer extends CI_Controller {
 					redirect($this->listPage_redirect);
 				}else{
 					$this->db->trans_rollback();
-					if (function_exists('log_system_activity')) {
+					if (false && function_exists('log_system_activity')) {
 						$after_snapshot = $this->my_model->get_or_audit_snapshot($posted_or);
 						log_system_activity(array(
 							'category' => 'accounting',
