@@ -256,16 +256,88 @@ class addpaymentcustomer extends CI_Controller {
 		
 
 		if($this->input->post('add') != ''){ 
+			$posted_or = (int) $this->input->post('or_num');
+			$audit_context = array(
+				'mode' => 'single',
+				'posted_or' => $posted_or,
+				'customer_id' => trim((string) $this->input->post('customer_id')),
+				'month' => trim((string) $this->input->post('month')),
+				'year' => trim((string) $this->input->post('year')),
+				'pay_amount' => $this->input->post('pay_amount'),
+				'grand_total' => $this->input->post('grand_total'),
+				'userid' => (int) $this->session->userdata('userid'),
+				'username' => (string) $this->session->userdata('username'),
+			);
+			$before_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
+
 			if ($this->input->post('payment_mode') === 'multi') {
+				if (function_exists('log_system_activity')) {
+					log_system_activity(array(
+						'category' => 'accounting',
+						'action' => 'create_blocked',
+						'module' => 'addpaymentcustomer',
+						'controller' => 'addpaymentcustomer',
+						'method' => 'add',
+						'entity_type' => 'meter_payment',
+						'reference_no' => $posted_or > 0 ? sprintf('%07d', $posted_or) : '',
+						'amount' => is_numeric($this->input->post('grand_total')) ? (float) $this->input->post('grand_total') : null,
+						'summary' => 'Single save blocked: payment_mode=multi',
+						'details' => array(
+							'reason' => 'wrong_save_path_payment_mode_multi',
+							'context' => $audit_context,
+							'or_snapshot_before' => $before_snapshot,
+						),
+					));
+				}
 				$this->session->set_flashdata('msg_succ', 'Not inserted: use Total Pay Add for multiple bills (wrong save path blocked).');
 				redirect($this->listPage_redirect);
 			}
 		
 			$result = $this->my_model->add_record();
 			if($result){
+				if (function_exists('log_system_activity')) {
+					$after_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
+					log_system_activity(array(
+						'category' => 'accounting',
+						'action' => 'create',
+						'module' => 'addpaymentcustomer',
+						'controller' => 'addpaymentcustomer',
+						'method' => 'add',
+						'entity_type' => 'meter_payment',
+						'entity_id' => (string) $result,
+						'reference_no' => $posted_or > 0 ? sprintf('%07d', $posted_or) : '',
+						'amount' => is_numeric($this->input->post('grand_total')) ? (float) $this->input->post('grand_total') : null,
+						'summary' => 'Meter payment posted successfully',
+						'details' => array(
+							'context' => $audit_context,
+							'or_snapshot_before' => $before_snapshot,
+							'or_snapshot_after' => $after_snapshot,
+						),
+					));
+				}
 				$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
 				redirect($this->listPage_redirect);
 			}else{
+				if (function_exists('log_system_activity')) {
+					$after_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
+					log_system_activity(array(
+						'category' => 'accounting',
+						'action' => 'create_failed',
+						'module' => 'addpaymentcustomer',
+						'controller' => 'addpaymentcustomer',
+						'method' => 'add',
+						'entity_type' => 'meter_payment',
+						'reference_no' => $posted_or > 0 ? sprintf('%07d', $posted_or) : '',
+						'amount' => is_numeric($this->input->post('grand_total')) ? (float) $this->input->post('grand_total') : null,
+						'summary' => 'Meter payment post failed',
+						'details' => array(
+							'reason' => 'validation_or_linking_or_duplicate_failed',
+							'context' => $audit_context,
+							'or_snapshot_before' => $before_snapshot,
+							'or_snapshot_after' => $after_snapshot,
+						),
+					));
+				}
 				$this->session->set_flashdata('msg_succ', 'Not inserted: OR/SI # may already be used, invalid, missing billing period, or unpaid bill was not linked.');
 				redirect($this->listPage_redirect);
 			}
@@ -277,15 +349,77 @@ class addpaymentcustomer extends CI_Controller {
 			    $insert_ids = $this->input->post('checkbox');
 				$uid = (int) $this->session->userdata('userid');
 				$posted_or = (int) $this->input->post('or_num');
+				$audit_context = array(
+					'mode' => 'batch',
+					'posted_or' => $posted_or,
+					'selected_count' => is_array($insert_ids) ? count($insert_ids) : 0,
+					'customer_id_next' => trim((string) $this->input->post('customer_id_next')),
+					'pay_amount' => $this->input->post('pay_amount'),
+					'grand_total' => $this->input->post('grand_total'),
+					'userid' => $uid,
+					'username' => (string) $this->session->userdata('username'),
+				);
+				$before_snapshot = ($posted_or > 0) ? $this->my_model->get_or_audit_snapshot($posted_or) : array();
 				if (!is_array($insert_ids) || count($insert_ids) < 1) {
+					if (function_exists('log_system_activity')) {
+						log_system_activity(array(
+							'category' => 'accounting',
+							'action' => 'create_blocked',
+							'module' => 'addpaymentcustomer',
+							'controller' => 'addpaymentcustomer',
+							'method' => 'add',
+							'entity_type' => 'meter_payment_batch',
+							'reference_no' => $posted_or > 0 ? sprintf('%07d', $posted_or) : '',
+							'summary' => 'Batch payment blocked: no selected unpaid bill',
+							'details' => array(
+								'reason' => 'no_selected_unpaid_bill',
+								'context' => $audit_context,
+								'or_snapshot_before' => $before_snapshot,
+							),
+						));
+					}
 					$this->session->set_flashdata('msg_succ', 'Select at least one unpaid bill for Total Pay.');
 					redirect($this->listPage_redirect);
 				}
 				if ($posted_or <= 0) {
+					if (function_exists('log_system_activity')) {
+						log_system_activity(array(
+							'category' => 'accounting',
+							'action' => 'create_blocked',
+							'module' => 'addpaymentcustomer',
+							'controller' => 'addpaymentcustomer',
+							'method' => 'add',
+							'entity_type' => 'meter_payment_batch',
+							'reference_no' => '',
+							'summary' => 'Batch payment blocked: invalid OR/SI number',
+							'details' => array(
+								'reason' => 'invalid_or_number',
+								'context' => $audit_context,
+								'or_snapshot_before' => $before_snapshot,
+							),
+						));
+					}
 					$this->session->set_flashdata('msg_succ', 'Invalid OR/SI number.');
 					redirect($this->listPage_redirect);
 				}
 				if ($this->my_model->is_or_number_taken($posted_or)) {
+					if (function_exists('log_system_activity')) {
+						log_system_activity(array(
+							'category' => 'accounting',
+							'action' => 'create_blocked',
+							'module' => 'addpaymentcustomer',
+							'controller' => 'addpaymentcustomer',
+							'method' => 'add',
+							'entity_type' => 'meter_payment_batch',
+							'reference_no' => sprintf('%07d', $posted_or),
+							'summary' => 'Batch payment blocked: duplicate OR/SI number',
+							'details' => array(
+								'reason' => 'duplicate_or_number_for_teller',
+								'context' => $audit_context,
+								'or_snapshot_before' => $before_snapshot,
+							),
+						));
+					}
 					$this->session->set_flashdata('msg_succ', 'OR/SI number already exists for this teller.');
 					redirect($this->listPage_redirect);
 				}
@@ -301,10 +435,51 @@ class addpaymentcustomer extends CI_Controller {
 				if($result && $this->db->trans_status() !== false){
 					$this->db->trans_commit();
 					$this->my_model->sync_or_series_max_after_posted($uid, $posted_or);
+					if (function_exists('log_system_activity')) {
+						$after_snapshot = $this->my_model->get_or_audit_snapshot($posted_or);
+						log_system_activity(array(
+							'category' => 'accounting',
+							'action' => 'create',
+							'module' => 'addpaymentcustomer',
+							'controller' => 'addpaymentcustomer',
+							'method' => 'add',
+							'entity_type' => 'meter_payment_batch',
+							'reference_no' => sprintf('%07d', $posted_or),
+							'amount' => is_numeric($this->input->post('grand_total')) ? (float) $this->input->post('grand_total') : null,
+							'summary' => 'Batch meter payment posted successfully',
+							'details' => array(
+								'context' => $audit_context,
+								'selected_ids' => $insert_ids,
+								'or_snapshot_before' => $before_snapshot,
+								'or_snapshot_after' => $after_snapshot,
+							),
+						));
+					}
 					$this->session->set_flashdata('msg_succ', 'Inserted Successfully...');
 					redirect($this->listPage_redirect);
 				}else{
 					$this->db->trans_rollback();
+					if (function_exists('log_system_activity')) {
+						$after_snapshot = $this->my_model->get_or_audit_snapshot($posted_or);
+						log_system_activity(array(
+							'category' => 'accounting',
+							'action' => 'create_failed',
+							'module' => 'addpaymentcustomer',
+							'controller' => 'addpaymentcustomer',
+							'method' => 'add',
+							'entity_type' => 'meter_payment_batch',
+							'reference_no' => sprintf('%07d', $posted_or),
+							'amount' => is_numeric($this->input->post('grand_total')) ? (float) $this->input->post('grand_total') : null,
+							'summary' => 'Batch meter payment failed and rolled back',
+							'details' => array(
+								'reason' => 'batch_insert_failed_or_linking_failed',
+								'context' => $audit_context,
+								'selected_ids' => $insert_ids,
+								'or_snapshot_before' => $before_snapshot,
+								'or_snapshot_after' => $after_snapshot,
+							),
+						));
+					}
 					$this->session->set_flashdata('msg_succ', 'Not inserted: one or more bills failed (already paid, missing period, or link update failed). No partial OR was kept.');
 					redirect($this->listPage_redirect);
 				}
