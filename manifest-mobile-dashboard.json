@@ -56,6 +56,13 @@
       "description": "Customer statement of account",
       "url": "/master/mobile_statementofaccount",
       "icons": [{ "src": "img/logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Payment",
+      "short_name": "Payment",
+      "description": "Accept a QR Ph payment",
+      "url": "/master/mobile_payment",
+      "icons": [{ "src": "img/logo.png", "sizes": "96x96" }]
     }
   ]
 }

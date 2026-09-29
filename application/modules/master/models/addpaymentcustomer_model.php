@@ -820,7 +820,20 @@ class addpaymentcustomer_model extends CI_Model {
 	}
 	
 	/** In Function Add records for select table **/
-	public function add_record_multiple($id, $or_num = null){
+	/**
+	 * Write one billing payment row.
+	 *
+	 * @param array $opts Payment channel. Online (QR Ph) rows deliberately carry no OR:
+	 *                    array('channel' => 'qrph', 'online_payment_id' => int, 'online_reference' => string).
+	 *                    Cash keeps its existing behaviour and still requires a valid OR.
+	 */
+	public function add_record_multiple($id, $or_num = null, $opts = array()){
+		$opts = is_array($opts) ? $opts : array();
+		$channel = isset($opts['channel']) ? trim((string) $opts['channel']) : 'cash';
+		$online_payment_id = isset($opts['online_payment_id']) ? (int) $opts['online_payment_id'] : 0;
+		$online_reference = isset($opts['online_reference']) ? trim((string) $opts['online_reference']) : '';
+		$is_online = ($channel === 'qrph');
+
 		$trans_date = strtotime($this->input->post('transdate'));
 		$allamount = $this->input->post('paid_total_amount');
 		
@@ -850,9 +863,19 @@ class addpaymentcustomer_model extends CI_Model {
 			$or_num = (int) $this->input->post('or_num');
 		}
 
-		if ($customer_id === '' || $month === '' || $year === '' || $or_num === '' || (int) $or_num <= 0) {
-			log_message('error', 'add_record_multiple blocked: missing customer/period/OR (id='.$id.', customer='.$customer_id.', month='.$month.', year='.$year.', or='.$or_num.')');
+		if ($customer_id === '' || $month === '' || $year === '') {
+			log_message('error', 'add_record_multiple blocked: missing customer/period (id='.$id.', customer='.$customer_id.', month='.$month.', year='.$year.')');
 			return false;
+		}
+
+		// Cash still requires a valid OR. Online (QR Ph) payments have no OR by design:
+		// the PayMongo reference is stored in online_reference instead.
+		if (!$is_online && ($or_num === '' || (int) $or_num <= 0)) {
+			log_message('error', 'add_record_multiple blocked: missing/invalid OR (id='.$id.', or='.$or_num.')');
+			return false;
+		}
+		if ($is_online) {
+			$or_num = null;
 		}
 
 		// Refuse re-paying a period that already has an unpaid->paid reading link
@@ -895,6 +918,15 @@ class addpaymentcustomer_model extends CI_Model {
 			'userid' => $this->session->userdata('userid'),
 			'username' => $this->session->userdata('username'),
 		); 
+
+		// Payment channel marker (sql/add_online_payments.sql). Guarded so this still
+		// runs on a database where that migration has not been applied yet.
+		if ($this->db->field_exists('payment_channel', $this->table_name)) {
+			$set_data['payment_channel'] = $is_online ? 'qrph' : 'cash';
+			$set_data['online_payment_id'] = $is_online ? $online_payment_id : null;
+			$set_data['online_reference'] = $is_online ? $online_reference : null;
+		}
+
 		$result = $this->db->insert($this->table_name, $set_data);
 		if (!$result) {
 			return false;
@@ -1186,8 +1218,38 @@ class addpaymentcustomer_model extends CI_Model {
 		return $result;
 	}
 	
+	/**
+	 * Payment channel filter for the payment list (cash vs QR Ph).
+	 *
+	 * 'cash' also matches rows written before the migration, when payment_channel is NULL.
+	 * Guarded with field_exists() so the list keeps working before
+	 * sql/add_online_payments.sql has been run.
+	 */
+	private function _apply_channel_filter($channel) {
+		$channel = trim((string) $channel);
+		if ($channel === '' || $channel === 'all') {
+			return;
+		}
+		if (!$this->db->field_exists('payment_channel', $this->table_name)) {
+			// Not migrated yet: nothing can be QR Ph, so 'qrph' must match no rows.
+			if ($channel === 'qrph') {
+				$this->db->where('1 = 0', null, false);
+			}
+			return;
+		}
+		if ($channel === 'cash') {
+			$this->db->where(
+				"({$this->table_name}.payment_channel IS NULL OR {$this->table_name}.payment_channel = 'cash')",
+				null,
+				false
+			);
+			return;
+		}
+		$this->db->where($this->table_name . '.payment_channel', $channel);
+	}
+
 	/** Server-side pagination: Get paginated records with filtering **/
-	public function get_paginated_records($start = 0, $length = 10, $search = '', $order_column = 'tbl_addmetercustomer.id', $order_dir = 'desc', $billing_period = '', $paid_date = '') {
+	public function get_paginated_records($start = 0, $length = 10, $search = '', $order_column = 'tbl_addmetercustomer.id', $order_dir = 'desc', $billing_period = '', $paid_date = '', $channel = '') {
 		// Alias payment columns AFTER customer.* so mysqli assoc does not let
 		// overlapping customer fields (status/date/month/year/etc.) wipe receipt keys.
 		$this->db->select(
@@ -1217,6 +1279,8 @@ class addpaymentcustomer_model extends CI_Model {
 			$this->db->where($this->table_name.'.date', $paid_date);
 		}
 		
+		$this->_apply_channel_filter($channel);
+		
 		// Apply search filter
 		if($search != '') {
 			$search_escaped = $this->db->escape_like_str($search);
@@ -1245,7 +1309,7 @@ class addpaymentcustomer_model extends CI_Model {
 	}
 	
 	/** Server-side pagination: Get total count with filtering **/
-	public function get_total_count($search = '', $billing_period = '', $paid_date = '') {
+	public function get_total_count($search = '', $billing_period = '', $paid_date = '', $channel = '') {
 		$this->db->select("COUNT(DISTINCT ".$this->table_name.".invoice_id) as total");
 		$this->db->from($this->table_name);
 		$this->db->join($this->table_customername, $this->table_name.".customer_id = ".$this->table_customername.".customer_id", 'left');
@@ -1258,6 +1322,8 @@ class addpaymentcustomer_model extends CI_Model {
 		} elseif ($paid_date != '') {
 			$this->db->where($this->table_name.'.date', $paid_date);
 		}
+		
+		$this->_apply_channel_filter($channel);
 		
 		// Apply search filter
 		if($search != '') {
