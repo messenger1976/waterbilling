@@ -239,6 +239,7 @@ class Reports extends CI_Controller {
 		$export_data[] = array('Status: ' . $status_display . '   |   Source: ' . $context_display);
 		$export_data[] = array('Period: ' . ($filters['date_from'] !== '' ? $filters['date_from'] : 'beginning') . ' to ' . ($filters['date_to'] !== '' ? $filters['date_to'] : 'today'));
 		$export_data[] = array('Collected: ' . number_format($totals['paid_amount'], 2, '.', '') . '   |   Outstanding (pending/expired/failed): ' . number_format($totals['open_amount'], 2, '.', ''));
+		$export_data[] = array('Processing fees on paid: ' . number_format($totals['paid_fee'], 2, '.', '') . '   |   Total charged via PayMongo: ' . number_format($totals['paid_charged'], 2, '.', ''));
 		$export_data[] = array('Exported: ' . date('Y-m-d H:i:s'));
 		$export_data[] = array('');
 		$export_data[] = array(
@@ -247,7 +248,9 @@ class Reports extends CI_Controller {
 			'Customer ID',
 			'Customer Name',
 			'Zone',
-			'Amount',
+			'Bill Amount',
+			'Fee',
+			'Total Charged',
 			'Status',
 			'Source',
 			'Created',
@@ -288,6 +291,8 @@ class Reports extends CI_Controller {
 					$name,
 					isset($row['zones']) ? $row['zones'] : '',
 					number_format(isset($row['amount']) ? (float) $row['amount'] : 0, 2, '.', ''),
+					number_format(Onlinepayment_model::fee_of($row), 2, '.', ''),
+					number_format(Onlinepayment_model::charged_of($row), 2, '.', ''),
 					self::_op_status_label($row),
 					isset($row['context']) ? $row['context'] : '',
 					isset($row['create_date_time']) ? $row['create_date_time'] : '',
