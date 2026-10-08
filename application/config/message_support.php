@@ -10,3 +10,7 @@ $config['ms_hub_url'] = preg_match('/^(localhost|127\.0\.0\.1)(:\d+)?$/', $ms_ho
 $config['ms_api_token'] = 'roxas-ms-4e8b1c7a9d2f5603a1b9';
 $config['ms_poll_seconds'] = 8;
 $config['ms_max_upload_kb'] = 4096;
+
+// Message Board (announcements from the hub; same hub URL and token as Message Support).
+$config['ms_board_enabled'] = TRUE;
+$config['ms_board_refresh_minutes'] = 5;
