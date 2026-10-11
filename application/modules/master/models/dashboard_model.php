@@ -310,6 +310,297 @@ class dashboard_model extends CI_Model {
 		
 		return $years;
 	}
+
+	/* ------------------------------------------------------------------
+	 * Analytics dashboard (one grouped query per widget).
+	 * Bills: tbl_addcustomer_reading (status 1 = paid, 0 = unpaid; `amount`
+	 * is the period's bill only — carried arrears live in `arrears`).
+	 * Collections: tbl_addmetercustomer.grand_total (bill − VAT ± leaking;
+	 * pay_amount is cash tendered and can include change).
+	 * ------------------------------------------------------------------ */
+
+	/**
+	 * Roxas: a bill is unpaid only when status = 0 AND no receipt exists for the
+	 * same customer/month/year — same rule as the Aging A/R report. Opening
+	 * December 2024 bills were paid but never flagged status = 1.
+	 */
+	private function unpaid_sql($r = 'r') {
+		return "($r.status = 0 AND NOT EXISTS (SELECT 1 FROM ".$this->table_meter_customer." p
+			WHERE p.customer_id = $r.customer_id AND p.month = $r.month AND p.year = $r.year))";
+	}
+
+	/** Billed / collected / m³ per billing month for one year. */
+	public function get_billing_by_month($year) {
+		$unpaid = $this->unpaid_sql('r');
+		$sql = "SELECT CAST(r.month AS UNSIGNED) AS m,
+				COUNT(*) AS bills,
+				SUM(r.amount + 0) AS billed,
+				SUM(CASE WHEN $unpaid THEN 0 ELSE r.amount + 0 END) AS paid,
+				SUM(CASE WHEN $unpaid THEN r.amount + 0 ELSE 0 END) AS unpaid,
+				SUM(r.consumed + 0) AS consumed
+			FROM ".$this->table_customer_reading." r
+			WHERE r.year = ? AND CAST(r.month AS UNSIGNED) BETWEEN 1 AND 12
+			GROUP BY CAST(r.month AS UNSIGNED)";
+		$rows = $this->db->query($sql, array((string)$year))->result_array();
+		$out = array();
+		for ($i = 1; $i <= 12; $i++) {
+			$out[$i] = array('bills' => 0, 'billed' => 0, 'paid' => 0, 'unpaid' => 0, 'consumed' => 0);
+		}
+		foreach ($rows as $r) {
+			$out[(int)$r['m']] = array(
+				'bills'    => (int)$r['bills'],
+				'billed'   => (float)$r['billed'],
+				'paid'     => (float)$r['paid'],
+				'unpaid'   => (float)$r['unpaid'],
+				'consumed' => (float)$r['consumed'],
+			);
+		}
+		return $out;
+	}
+
+	/** Latest two billing periods that actually have bills, newest first. */
+	public function get_latest_billing_periods($limit = 2) {
+		$periods = $this->db->query(
+			"SELECT CAST(year AS UNSIGNED) AS y, CAST(month AS UNSIGNED) AS m
+			FROM ".$this->table_customer_reading."
+			WHERE CAST(month AS UNSIGNED) BETWEEN 1 AND 12
+			GROUP BY CAST(year AS UNSIGNED), CAST(month AS UNSIGNED)
+			HAVING COUNT(*) >= 10
+			ORDER BY y DESC, m DESC
+			LIMIT ".(int)$limit)->result_array();
+		$unpaid = $this->unpaid_sql('r');
+		$out = array();
+		foreach ($periods as $p) {
+			$row = $this->db->query(
+				"SELECT COUNT(*) AS bills,
+					SUM(r.amount + 0) AS billed,
+					SUM(CASE WHEN $unpaid THEN 0 ELSE r.amount + 0 END) AS paid,
+					SUM(r.consumed + 0) AS consumed
+				FROM ".$this->table_customer_reading." r
+				WHERE r.year = ? AND CAST(r.month AS UNSIGNED) = ?",
+				array((string)$p['y'], (int)$p['m']))->row_array();
+			$out[] = array_merge(array('y' => (int)$p['y'], 'm' => (int)$p['m']), $row);
+		}
+		return $out;
+	}
+
+	/** Collections between two dates (inclusive). */
+	public function get_collections_between($from, $to) {
+		$sql = "SELECT COUNT(*) AS receipts, COALESCE(SUM(grand_total), 0) AS total
+			FROM ".$this->table_meter_customer."
+			WHERE status = '1' AND date BETWEEN ? AND ?";
+		return $this->db->query($sql, array($from, $to))->row_array();
+	}
+
+	/** Daily collections for the last N days (zero-filled). */
+	public function get_daily_collections($days = 30) {
+		$to   = date('Y-m-d');
+		$from = date('Y-m-d', strtotime('-'.((int)$days - 1).' days'));
+		$sql = "SELECT date AS d, COUNT(*) AS receipts, SUM(grand_total) AS total
+			FROM ".$this->table_meter_customer."
+			WHERE status = '1' AND date BETWEEN ? AND ?
+			GROUP BY date";
+		$rows = $this->db->query($sql, array($from, $to))->result_array();
+		$map = array();
+		foreach ($rows as $r) { $map[$r['d']] = $r; }
+		$out = array();
+		for ($t = strtotime($from); $t <= strtotime($to); $t += 86400) {
+			$d = date('Y-m-d', $t);
+			$out[] = array(
+				'date'     => $d,
+				'receipts' => isset($map[$d]) ? (int)$map[$d]['receipts'] : 0,
+				'total'    => isset($map[$d]) ? (float)$map[$d]['total'] : 0,
+			);
+		}
+		return $out;
+	}
+
+	/** Collections by payment channel and by cashier within a date range. */
+	public function get_collection_breakdown($from, $to) {
+		$channels = $this->db->query(
+			"SELECT payment_channel AS label, COUNT(*) AS receipts, SUM(grand_total) AS total
+			FROM ".$this->table_meter_customer."
+			WHERE status = '1' AND date BETWEEN ? AND ?
+			GROUP BY payment_channel ORDER BY total DESC", array($from, $to))->result_array();
+		$cashiers = $this->db->query(
+			"SELECT COALESCE(NULLIF(username, ''), 'Unknown') AS label, COUNT(*) AS receipts, SUM(grand_total) AS total
+			FROM ".$this->table_meter_customer."
+			WHERE status = '1' AND date BETWEEN ? AND ?
+			GROUP BY label ORDER BY total DESC", array($from, $to))->result_array();
+		return array('channels' => $channels, 'cashiers' => $cashiers);
+	}
+
+	private $unpaid_cache = null;
+
+	/** Unpaid bills per customer (one query per request, reused by aging / top / zones). */
+	private function get_unpaid_by_customer() {
+		if ($this->unpaid_cache === null) {
+			$sql = "SELECT r.customer_id, COUNT(*) AS bills, SUM(r.amount + 0) AS amt
+				FROM ".$this->table_customer_reading." r
+				WHERE r.amount + 0 > 0 AND ".$this->unpaid_sql('r')."
+				GROUP BY r.customer_id
+				ORDER BY amt DESC";
+			$this->unpaid_cache = $this->db->query($sql)->result_array();
+		}
+		return $this->unpaid_cache;
+	}
+
+	/** Unpaid-bill aging by number of unpaid bills per account. */
+	public function get_receivable_aging() {
+		$out = array(1 => array('accounts' => 0, 'total' => 0), 2 => array('accounts' => 0, 'total' => 0), 3 => array('accounts' => 0, 'total' => 0));
+		foreach ($this->get_unpaid_by_customer() as $r) {
+			$b = min(3, (int)$r['bills']);
+			$out[$b]['accounts']++;
+			$out[$b]['total'] += (float)$r['amt'];
+		}
+		return $out;
+	}
+
+	/** Accounts with the largest unpaid bills. */
+	public function get_top_unpaid_accounts($limit = 10) {
+		$top = array_slice($this->get_unpaid_by_customer(), 0, (int)$limit);
+		if (empty($top)) { return array(); }
+		$ids = array();
+		foreach ($top as $t) { $ids[] = $t['customer_id']; }
+		$names = array();
+		$this->db->select("c.customer_id, CONCAT(c.last_name, ', ', c.first_name) AS full_name, z.zone", false);
+		$this->db->from($this->table_customer.' c');
+		$this->db->join($this->table_zone.' z', 'z.id = c.zone', 'left');
+		$this->db->where_in('c.customer_id', $ids);
+		foreach ($this->db->get()->result_array() as $n) { $names[$n['customer_id']] = $n; }
+		$out = array();
+		foreach ($top as $t) {
+			$n = isset($names[$t['customer_id']]) ? $names[$t['customer_id']] : array('full_name' => '', 'zone' => '');
+			$out[] = array('customer_id' => $t['customer_id'], 'bills' => $t['bills'], 'amt' => $t['amt'], 'full_name' => $n['full_name'], 'zone' => $n['zone']);
+		}
+		return $out;
+	}
+
+	/** Connections and unpaid bills per active zone. */
+	public function get_zone_summary() {
+		$zones = $this->db->query(
+			"SELECT z.id, z.zone, COALESCE(cc.connections, 0) AS connections
+			FROM ".$this->table_zone." z
+			LEFT JOIN (
+				SELECT zone, COUNT(*) AS connections
+				FROM ".$this->table_customer."
+				WHERE status = 1
+				GROUP BY zone
+			) cc ON cc.zone = z.id
+			WHERE z.status = 1
+			ORDER BY z.order_series ASC, z.id ASC")->result_array();
+
+		$unpaid = $this->get_unpaid_by_customer();
+		$byZone = array();
+		if (!empty($unpaid)) {
+			$amt = array();
+			foreach ($unpaid as $u) { $amt[$u['customer_id']] = (float)$u['amt']; }
+			$this->db->select('customer_id, zone');
+			$this->db->from($this->table_customer);
+			$this->db->where_in('customer_id', array_keys($amt));
+			foreach ($this->db->get()->result_array() as $c) {
+				$z = $c['zone'];
+				if (!isset($byZone[$z])) { $byZone[$z] = array('unpaid' => 0, 'accounts' => 0); }
+				$byZone[$z]['unpaid'] += $amt[$c['customer_id']];
+				$byZone[$z]['accounts']++;
+			}
+		}
+		foreach ($zones as &$z) {
+			$z['unpaid'] = isset($byZone[$z['id']]) ? $byZone[$z['id']]['unpaid'] : 0;
+			$z['unpaid_accounts'] = isset($byZone[$z['id']]) ? $byZone[$z['id']]['accounts'] : 0;
+		}
+		unset($z);
+		return $zones;
+	}
+
+	/**
+	 * Water consumption (m³) per billing month by classification category.
+	 * Pass $monthTotals (from get_billing_by_month) so readings whose customer
+	 * record is missing are still counted, as UNCLASSIFIED.
+	 */
+	public function get_consumption_by_category($year, $monthTotals = array()) {
+		// Driving from customers into the reading index is ~4x faster than the reverse.
+		$sql = "SELECT x.m, COALESCE(cc.class_cat_name, 'UNCLASSIFIED') AS cat, SUM(x.consumed) AS consumed
+			FROM (
+				SELECT STRAIGHT_JOIN CAST(r.month AS UNSIGNED) AS m, c.classification AS cls, SUM(r.consumed + 0) AS consumed
+				FROM ".$this->table_customer." c
+				JOIN ".$this->table_customer_reading." r ON r.customer_id = c.customer_id
+				WHERE r.year = ? AND CAST(r.month AS UNSIGNED) BETWEEN 1 AND 12
+				GROUP BY m, cls
+			) x
+			LEFT JOIN tbl_classification cl ON cl.class_id = x.cls
+			LEFT JOIN tbl_classification_category cc ON cc.class_cat_id = cl.class_cat_id
+			GROUP BY x.m, cat";
+		$out = array();
+		$matched = array_fill(1, 12, 0);
+		foreach ($this->db->query($sql, array((string)$year))->result_array() as $r) {
+			if (!isset($out[$r['cat']])) { $out[$r['cat']] = array_fill(1, 12, 0); }
+			$out[$r['cat']][(int)$r['m']] += (float)$r['consumed'];
+			$matched[(int)$r['m']] += (float)$r['consumed'];
+		}
+		foreach ($monthTotals as $mo => $row) {
+			$gap = (float)$row['consumed'] - $matched[$mo];
+			if ($gap > 0.5) {
+				if (!isset($out['UNCLASSIFIED'])) { $out['UNCLASSIFIED'] = array_fill(1, 12, 0); }
+				$out['UNCLASSIFIED'][$mo] += $gap;
+			}
+		}
+		return $out;
+	}
+
+	/** Active customers grouped by classification category and by account type. */
+	public function get_customer_mix() {
+		$category = $this->db->query(
+			"SELECT COALESCE(cc.class_cat_name, 'UNCLASSIFIED') AS label, COUNT(*) AS total
+			FROM ".$this->table_customer." c
+			LEFT JOIN tbl_classification cl ON cl.class_id = c.classification
+			LEFT JOIN tbl_classification_category cc ON cc.class_cat_id = cl.class_cat_id
+			WHERE c.status = 1
+			GROUP BY label ORDER BY total DESC")->result_array();
+		$type = $this->db->query(
+			"SELECT COALESCE(t.cust_type_name, 'Unspecified') AS label, COUNT(*) AS total
+			FROM ".$this->table_customer." c
+			LEFT JOIN tbl_customer_type t ON t.cust_type_id = c.account_type
+			WHERE c.status = 1
+			GROUP BY label ORDER BY total DESC")->result_array();
+		return array('category' => $category, 'type' => $type);
+	}
+
+	/** Customer counts (status 1 Active, 2 Disconnected, 0 Inactive) and new since a date. */
+	public function get_customer_counts($since) {
+		$sql = "SELECT
+				SUM(status = 1) AS active,
+				SUM(status = 2) AS disconnected,
+				SUM(status NOT IN (1, 2)) AS inactive,
+				SUM(status = 1 AND create_date >= ?) AS new_since
+			FROM ".$this->table_customer;
+		return $this->db->query($sql, array($since))->row_array();
+	}
+
+	/** Leak-repair ledgers: outstanding = approved totals + posted balances. */
+	public function get_leaking_summary() {
+		$sql = "SELECT
+				SUM(leaking_status = 1) AS pending,
+				SUM(CASE WHEN leaking_status = 2 THEN leaking_total_amount
+				         WHEN leaking_status = 4 THEN leaking_balance ELSE 0 END) AS outstanding,
+				SUM(leaking_status IN (2, 4)) AS open_accounts,
+				SUM(CASE WHEN leaking_status = 5 THEN leaking_total_amount ELSE 0 END) AS collected
+			FROM ".$this->table_leaking_ledger;
+		return $this->db->query($sql)->row_array();
+	}
+
+	/** Service tickets by status (excluding deleted). */
+	public function get_ticket_status_counts() {
+		$out = array_fill(0, 7, 0);
+		$rows = $this->db->query(
+			"SELECT status, COUNT(*) AS total FROM ".$this->table_technical."
+			WHERE deleted_rec = 0 GROUP BY status")->result_array();
+		foreach ($rows as $r) {
+			$s = (int)$r['status'];
+			if ($s >= 0 && $s <= 6) { $out[$s] = (int)$r['total']; }
+		}
+		return $out;
+	}
 	
 }
 ?>
